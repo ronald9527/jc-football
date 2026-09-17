@@ -225,7 +225,7 @@ svg{width:1em;height:1em;display:block}
 
 /* ---------------- 详情面板 ---------------- */
 .detail{
-  position:fixed;inset:0;z-index:90;background:var(--bg);background-image:var(--grad1);
+  position:fixed;inset:0;z-index:10000;background:var(--bg);background-image:var(--grad1);
   transform:translateY(100%);
   /* 关键：隐藏时必须不可见且不可点击。
      仅靠 translateY 移出屏幕时，部分安卓 WebView 仍会让它拦截全屏点击，
@@ -2745,29 +2745,37 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
      或被透明浮层吃掉事件，结果是"点了没反应"。
      方案：每个交互同时监听 touchend 与 click，并用全局时间锁保证只执行一次。
      touchend 里 preventDefault，避免与随后的 click 双触发。 */
-  var TAP_LOCK = 0;
-  function tapOnce(fn) {
-    return function (e) {
-      var now = Date.now();
-      if (now - TAP_LOCK < 320) return;      // 防重复触发
-      TAP_LOCK = now;
-      if (e && e.stopPropagation) e.stopPropagation();
-      fn(e);
-    };
-  }
-  /** 同时绑定 touch 与 click；返回处理函数便于调试 */
+  var TAP_SEQ = 0;
+  var TAP_AT = {};
+  /**
+   * 同时绑定 touchend 与 click。
+   * 两个关键取舍（都是真机踩出来的）：
+   *  1) 绝不 preventDefault —— 否则一旦处理函数抛异常，
+   *     随后的 click 兜底也被吞掉，表现就是"彻底点不动"。
+   *  2) 第三参数用 false 而非 {passive:false} —— 老 WebView 不认对象形式，
+   *     会当成 true（捕获阶段）导致行为异常。
+   * 去重靠每个元素独立的时间锁，而不是全局锁（全局锁会误吞正常的快速连点）。
+   */
   function bindTap(el, fn) {
     if (!el) return null;
-    var h = tapOnce(fn);
-    el.addEventListener('touchend', function (e) {
-      try { e.preventDefault(); } catch (x) { }
-      h(e);
-    }, { passive: false });
-    el.addEventListener('click', function (e) {
-      try { e.preventDefault(); } catch (x) { }
-      h(e);
-    });
-    return h;
+    if (el.__tapId === undefined) el.__tapId = 'k' + (++TAP_SEQ);
+    function run(e) {
+      var id = el.__tapId;
+      var now = new Date().getTime();
+      if (TAP_AT[id] && (now - TAP_AT[id]) < 300) return;   // 去重
+      TAP_AT[id] = now;
+      try {
+        fn(e);
+      } catch (err) {
+        // 异常必须让用户看见，不能静默 —— 否则就是"点了没反应"
+        var msg = (err && err.message) ? err.message : String(err);
+        try { toast('操作失败：' + msg); } catch (x) { }
+        if (window.console && console.error) console.error('[tap]', err);
+      }
+    }
+    el.addEventListener('touchend', run, false);
+    el.addEventListener('click', run, false);
+    return run;
   }
 
   function toast(msg) {
@@ -3308,14 +3316,32 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   /* ================= 详情 ================= */
   function openDetail(x) {
-    S.current = x;
-    $('#detailTitle').textContent = x.raw.home.name + ' vs ' + x.raw.away.name;
-    $('#detailBody').innerHTML = detailHTML(x);
-    syncDetailFav();
-    $('#detailPanel').classList.add('open');
-    $('#detailPanel').setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    $('#detailBody').scrollTop = 0;
+    var title = '';
+    try { title = x.raw.home.name + ' vs ' + x.raw.away.name; } catch (e) { title = '赛事详情'; }
+    try {
+      S.current = x;
+      $('#detailTitle').textContent = title;
+      $('#detailBody').innerHTML = detailHTML(x);
+      syncDetailFav();
+    } catch (err) {
+      /* 渲染异常也必须打开面板并说明原因 —— 宁可看到报错，
+         也不能让界面毫无反应（用户会以为点不动） */
+      var msg = (err && err.message) ? err.message : String(err);
+      try {
+        $('#detailTitle').textContent = title;
+        $('#detailBody').innerHTML =
+          '<div class="panel" style="font-size:12px;line-height:1.8">' +
+          '<b style="color:var(--danger)">详情渲染异常</b><br>' +
+          '<span style="color:var(--muted2)">' + msg + '</span></div>';
+      } catch (e2) { }
+      if (window.console && console.error) console.error('[detail]', err);
+    }
+    try {
+      $('#detailPanel').classList.add('open');
+      $('#detailPanel').setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      $('#detailBody').scrollTop = 0;
+    } catch (e3) { }
   }
   function closeDetail() {
     $('#detailPanel').classList.remove('open');
@@ -3326,6 +3352,15 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   function detailHTML(x) {
     const a = x.an, r = x.raw;
     const dir = a.rating.dir;
+
+    /* 字段兜底：官方数据偶发缺字段时，不能让整页渲染抛异常，
+       否则 openDetail 中断 → 表现就是"点卡片没反应" */
+    const as = a.asian || {};
+    const asLine = (typeof as.line === 'number' && isFinite(as.line)) ? as.line : 0;
+    const asHome = (typeof as.home === 'number' && isFinite(as.home)) ? as.home : 0;
+    const asAway = (typeof as.away === 'number' && isFinite(as.away)) ? as.away : 0;
+    const asWin = (typeof as.win === 'number' && isFinite(as.win)) ? as.win : 0;
+    const asLose = (typeof as.lose === 'number' && isFinite(as.lose)) ? as.lose : 0;
 
     /* 概率对比表 */
     const cmp = '<table class="tbl"><tr><th>概率来源</th><th>主胜</th><th>平局</th><th>客胜</th></tr>' +
@@ -3474,12 +3509,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       /* ---- 亚洲盘口 ---- */
       '<div class="sec"><div class="sec-t">亚洲盘口</div><div class="panel">' +
         '<table class="tbl"><thead><tr><th>盘口</th><th>主队</th><th>客队</th></tr></thead><tbody>' +
-        '<tr><td><b>' + (a.asian.line > 0 ? '受' : '') + a.asian.line + '</b></td>' +
-        '<td>' + a.asian.home.toFixed(2) + '</td><td>' + a.asian.away.toFixed(2) + '</td></tr>' +
+        '<tr><td><b>' + (asLine > 0 ? '受' : '') + asLine + '</b></td>' +
+        '<td>' + asHome.toFixed(2) + '</td><td>' + asAway.toFixed(2) + '</td></tr>' +
         '</tbody></table>' +
         '<div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:7px">' +
-        '<span>上盘概率 ' + pct(a.asian.win) + '</span>' +
-        '<span>下盘概率 ' + pct(a.asian.lose) + '</span></div></div></div>' +
+        '<span>上盘概率 ' + pct(asWin) + '</span>' +
+        '<span>下盘概率 ' + pct(asLose) + '</span></div></div></div>' +
 
       /* ---- 三方概率对比：模型 / 竞彩 / 市场 ---- */
       '<div class="sec"><div class="sec-t">三方概率对照</div><div class="panel">' +
@@ -3697,14 +3732,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     document.addEventListener('touchend', function (e) {
       var t = e.target;
       while (t && t !== document) {
-        if (t.classList && t.classList.contains('tab')) {
-          try { e.preventDefault(); } catch (x) { }
-          goPage(t.dataset.page);
-          return;
-        }
+        if (t.classList && t.classList.contains('tab')) { goPage(t.dataset.page); return; }
         t = t.parentNode;
       }
-    }, { passive: false });
+    }, false);
 
     bindTap($('#detailClose'), function () { closeDetail(); });
     bindTap($('#detailFav'), function () { if (S.current) toggleFav(S.current.raw.id); });
@@ -3751,9 +3782,19 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           onBtn.classList.toggle('on', !!cfg.on);
           onBtn.setAttribute('aria-checked', cfg.on ? 'true' : 'false');
         }
-        setStatus(cfg.on && cfg.url
+        var base = cfg.on && cfg.url
           ? '已启用 · ' + cfg.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-          : '当前使用内置内容', cfg.on ? 'ok' : '');
+          : '当前使用内置内容';
+        if (cfg.ver) {
+          var d = new Date(cfg.at || Date.now());
+          var hh = d.getHours(), mm = d.getMinutes();
+          base += ' ｜ 版本 ' + cfg.ver + ' · ' +
+            (d.getMonth() + 1) + '/' + d.getDate() + ' ' +
+            (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm + ' 同步';
+        } else if (cfg.on) {
+          base += ' ｜ 尚未同步到内容（请重启 App）';
+        }
+        setStatus(base, cfg.on && cfg.ver ? 'ok' : (cfg.on ? 'wait' : ''));
         return cfg;
       }
 
