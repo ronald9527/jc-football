@@ -5572,8 +5572,16 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
          用经验值兜底。宁可顶栏略高，也不能被系统栏盖住（"剃头"）。 */
       var t = (j && j.top != null) ? parseInt(j.top, 10) : -1;
       var b = (j && j.bottom != null) ? parseInt(j.bottom, 10) : -1;
+      /* 双保险：若 Java 侧取到的是物理像素（未换算），按 DPR 折算。
+         CSS px 下状态栏极少超过 80，据此判断。 */
+      var dpr = window.devicePixelRatio || 1;
+      if (t > 80 && dpr > 1) t = Math.round(t / dpr);
+      if (b > 80 && dpr > 1) b = Math.round(b / dpr);
       if (!(t > 0)) t = 24;      // 常见状态栏高度
       if (!(b > 0)) b = 20;      // 常见手势条高度
+      /* 上限保护：再大也不能超过 80，否则顶栏会被撑得离谱 */
+      if (t > 80) t = 80;
+      if (b > 60) b = 60;
       r.style.setProperty('--sbh', t + 'px');
       r.style.setProperty('--nbh', b + 'px');
     } catch (e) { }
