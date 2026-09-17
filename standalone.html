@@ -66,8 +66,9 @@ body{
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
   font-size:14px; line-height:1.5; min-height:100vh;
-  padding-bottom:76px;                                   /* env 不支持时的兜底 */
+  padding-bottom:76px;
   padding-bottom:calc(66px + env(safe-area-inset-bottom));
+  padding-bottom:calc(66px + max(env(safe-area-inset-bottom), var(--nbh, 0px)));
   font-variant-numeric:tabular-nums;
 }
 button,input,select{font-family:inherit;font-size:inherit;color:inherit}
@@ -77,8 +78,13 @@ svg{width:1em;height:1em;display:block}
 .topbar{
   position:sticky; top:0; z-index:40;
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  padding:12px 14px 10px;                               /* env 不支持时的兜底 */
+  /* 三级兜底：① 纯静态 ② env() ③ Java 注入的系统栏高度 --sbh
+     Android WebView 的 env(safe-area-inset-top) 恒为 0，
+     而状态栏画在 WebView 之上 → 顶栏上半被盖住（"顶部剃头"）。
+     --sbh 由 MainActivity 用真实系统栏高度注入，能真正让出空间。 */
+  padding:12px 14px 10px;
   padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+  padding-top:calc(10px + max(env(safe-area-inset-top), var(--sbh, 0px)));
   /* 完全不透明：半透明 + 无 blur 时文字会透出来，且省去合成层 */
   background:var(--bg,#0b1020);
   background:#0b1020;
@@ -361,6 +367,7 @@ svg{width:1em;height:1em;display:block}
   border-top:1px solid var(--border);
   padding-bottom:8px;
   padding-bottom:env(safe-area-inset-bottom);
+  padding-bottom:max(env(safe-area-inset-bottom), var(--nbh, 0px));
   box-shadow:0 -8px 24px rgba(0,0,0,.45);
 }
 .tab{flex:1;background:none;border:none;padding:7px 0 6px;display:flex;flex-direction:column;
@@ -691,6 +698,17 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
         </p>
         <button class="btn-primary" id="btnDiag" style="width:100%">开始探测港澳数据源</button>
         <div id="diagOut" style="margin-top:10px"></div>
+      </div>
+
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">
+          界面自检</div>
+        <p class="lab-desc" style="margin-bottom:8px">
+          顶栏/底栏显示异常时点这里，会在<b>你的手机上实测</b>它们的真实位置、高度、背景与安全区，
+          复制结果发给我即可精确定位。
+        </p>
+        <button class="btn-primary" id="btnLayout" style="width:100%">测量顶栏与底栏</button>
+        <div id="layoutOut" style="margin-top:10px"></div>
       </div>
     </div>
 
@@ -4156,6 +4174,143 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+
+  /* ============================================================
+     界面自检（真机布局测量）
+     ------------------------------------------------------------
+     为什么需要它：
+       顶栏/底栏"被削平"这类问题，纯看代码猜不出原因 ——
+       可能是被系统栏遮挡、被父容器裁切、高度塌陷、背景透明、
+       甚至只是没拉到最新版本。开发环境无法真机渲染，
+       所以直接在用户设备上测量真实几何量并回显。
+     ============================================================ */
+
+  function layoutProbe() {
+    var out = [];
+    var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    var dpr = window.devicePixelRatio || 1;
+
+    out.push('视口: ' + vw + ' x ' + vh + ' px  (DPR ' + dpr + ')');
+    out.push('UA: ' + navigator.userAgent.slice(0, 90));
+    out.push('');
+
+    /* 安全区：造一个探针元素实测 env() 的实际计算值。
+       env 不支持时整条声明失效 → 读到的就是 0，据此可判断是否需要兜底。 */
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:10px;height:10px;' +
+      'padding-top:env(safe-area-inset-top);' +
+      'padding-bottom:env(safe-area-inset-bottom);';
+    document.body.appendChild(probe);
+    var pcs = window.getComputedStyle(probe);
+    var insTop = parseFloat(pcs.paddingTop) || 0;
+    var insBot = parseFloat(pcs.paddingBottom) || 0;
+    document.body.removeChild(probe);
+    out.push('安全区 inset: 上 ' + insTop + 'px · 下 ' + insBot + 'px');
+    if (insTop === 0 && insBot === 0) {
+      out.push('  → env(safe-area-inset-*) 均为 0：系统栏可能直接盖在页面上');
+    }
+    out.push('');
+
+    function measure(sel, label, expect) {
+      var el = document.querySelector(sel);
+      if (!el) {
+        out.push('[' + label + '] 元素不存在 ❌');
+        return;
+      }
+      var r = el.getBoundingClientRect();
+      var cs = window.getComputedStyle(el);
+      out.push('[' + label + ']');
+      out.push('  位置: top=' + Math.round(r.top) + ' bottom=' + Math.round(r.bottom) +
+        ' left=' + Math.round(r.left) + ' right=' + Math.round(r.right));
+      out.push('  尺寸: ' + Math.round(r.width) + ' x ' + Math.round(r.height));
+      out.push('  position=' + cs.position + ' display=' + cs.display +
+        ' z-index=' + cs.zIndex);
+      out.push('  背景: ' + (cs.backgroundColor || '(空)'));
+      out.push('  padding: ' + cs.padding);
+      out.push('  可见: ' + (r.height > 0 && r.width > 0 ? '是' : '否') +
+        ' | 在视口内: ' + (r.bottom > 0 && r.top < vh ? '是' : '否'));
+
+      /* 判定"被削平"的常见情形 */
+      var issues = [];
+      if (r.height < 28) issues.push('高度过小（<28px），内容可能被压扁');
+      if (Math.round(r.top) < 0) issues.push('顶部超出视口上边（被上边缘切掉）');
+      if (Math.round(r.bottom) > vh + 1) issues.push('底部超出视口下边（被下边缘切掉）');
+      if (cs.backgroundColor === 'rgba(0, 0, 0, 0)' || cs.backgroundColor === 'transparent') {
+        issues.push('背景透明，会与内容混成一片');
+      }
+      if (expect === 'top' && Math.round(r.top) !== 0) {
+        issues.push('未贴顶（top=' + Math.round(r.top) + '）');
+      }
+      if (expect === 'bottom' && Math.round(r.bottom) !== vh) {
+        issues.push('未贴底（bottom=' + Math.round(r.bottom) + ' vs 视口 ' + vh + '）');
+      }
+      out.push('  判定: ' + (issues.length ? '⚠ ' + issues.join('；') : '✅ 正常'));
+      out.push('');
+    }
+
+    measure('.topbar', '顶栏', 'top');
+    measure('.tabbar', '底栏', 'bottom');
+    measure('#statGrid', '统计卡片区', '');
+
+    /* 版本与来源：确认是否拉到了最新版 */
+    var B = window.JCBridge;
+    var ver = '', at = 0;
+    try {
+      if (B && B.getUpdateConfig) {
+        var c = JSON.parse(B.getUpdateConfig() || '{}');
+        ver = c.ver || '';
+        at = c.at || 0;
+      }
+    } catch (e) { }
+    out.push('[版本]');
+    out.push('  sha: ' + (ver || '(内置版)'));
+    if (at) out.push('  同步时间: ' + new Date(at).toLocaleString());
+    out.push('');
+
+    return out.join('\n');
+  }
+
+  var LAYOUT = { text: '' };
+
+  function runLayoutProbe() {
+    LAYOUT.text = layoutProbe();
+    renderLayout();
+  }
+
+  function renderLayout() {
+    var box = document.getElementById('layoutOut');
+    if (!box) return;
+    if (!LAYOUT.text) {
+      box.innerHTML = '<div style="font-size:11.5px;color:var(--muted2)">点击上方按钮开始测量</div>';
+      return;
+    }
+    var lines = LAYOUT.text.split('\n');
+    var html = '<pre style="font-size:10px;line-height:1.65;color:var(--muted2);' +
+      'white-space:pre-wrap;word-break:break-all;background:var(--card2);' +
+      'border:1px solid var(--border);border-radius:10px;padding:10px;margin:0">' +
+      escHtml(LAYOUT.text) + '</pre>';
+    html += '<button class="btn-ghost" id="layoutCopy" style="width:100%;margin-top:10px;' +
+      'padding:9px;font-size:11.5px">复制测量结果</button>';
+    box.innerHTML = html;
+    var cp = document.getElementById('layoutCopy');
+    if (cp) {
+      bindTap(cp, function () {
+        var done = function () { toast('已复制，请粘贴发给我'); };
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(LAYOUT.text).then(done, function () {
+              fallbackCopy(LAYOUT.text, done);
+            });
+          } else {
+            fallbackCopy(LAYOUT.text, done);
+          }
+        } catch (e) { fallbackCopy(LAYOUT.text, done); }
+      });
+    }
+    return lines;
+  }
+
   /* ================= 分类标签（8 个） =================
      每个标签都必须有真实判定逻辑，不能是空壳。
      其中 hist / hkmo / htft 不是简单筛选，会切换到专用视图。 */
@@ -5337,6 +5492,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     var diagBtn = document.getElementById('btnDiag');
     if (diagBtn) bindTap(diagBtn, function () { runDiagnostics(); });
+
+    var layoutBtn = document.getElementById('btnLayout');
+    if (layoutBtn) bindTap(layoutBtn, function () { runLayoutProbe(); });
 
     $('#setMode').value = store.get(LS.mode) || 'official';
     $('#apiBox').style.display = (store.get(LS.mode) || 'official') === 'api' ? 'block' : 'none';
