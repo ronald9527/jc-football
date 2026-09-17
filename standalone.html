@@ -453,6 +453,13 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
 .card{cursor:pointer}
 .card .fav-btn{pointer-events:auto}
 
+/* ---------------- 历史战绩分布条 ---------------- */
+.h-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.h-k{font-size:10.5px;color:var(--muted);width:32px;flex:none;font-weight:700}
+.h-bar{flex:1;height:8px;background:var(--card2);border-radius:5px;overflow:hidden}
+.h-bar i{display:block;height:100%;border-radius:5px;transition:width .5s}
+.h-v{font-size:10.5px;font-weight:800;color:var(--text);width:24px;text-align:right;flex:none}
+
 </style>
 </head>
 <body>
@@ -2755,7 +2762,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   })();
 
   const S = {
-    all: [], view: [], filter: 'all', league: '', sort: 'time', q: '',
+    all: [], view: [], filter: 'today', league: '', sort: 'time', q: '',
     favs: new Set(JSON.parse(store.get(LS.fav) || '[]')),
     current: null, deferredInstall: null
   };
@@ -3153,36 +3160,102 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   /* ================= 筛选芯片 ================= */
   function renderChips() {
-    const defs = [['all', '全部'], ['solid', '正路'], ['danger', '危险'], ['cold', '冷门'], ['caution', '谨慎'], ['value', '有价值'], ['fav', '自选']];
-    const map = { all: 0, solid: 0, danger: 0, cold: 0, caution: 0, value: 0, fav: 0 };
-    S.all.forEach(function (x) {
-      const sig = x.an.rating.signal;
-      if (sig === '正路') map.solid++;
-      else if (sig === '危险') map.danger++;
-      else if (sig === '冷门') map.cold++;
-      else map.caution++;
-      if (isValue(x)) map.value++;
-      if (S.favs.has(x.raw.id)) map.fav++;
-    });
-    $('#filterChips').innerHTML = defs.map(function (d) {
+    const map = catCounts();
+    $('#filterChips').innerHTML = CATS.map(function (d) {
       return '<button class="chip' + (S.filter === d[0] ? ' on' : '') + '" data-f="' + d[0] + '">' + d[1]
-        + '<span class="n">' + (d[0] === 'all' ? S.all.length : map[d[0]]) + '</span></button>';
+        + '<span class="n">' + (map[d[0]] || 0) + '</span></button>';
     }).join('');
     $$('#filterChips .chip').forEach(function (c) {
       bindTap(c, function () { S.filter = c.dataset.f; renderChips(); applyFilter(); });
     });
   }
 
+  /* ================= 分类标签（8 个） =================
+     每个标签都必须有真实判定逻辑，不能是空壳。
+     其中 hist / hkmo / htft 不是简单筛选，会切换到专用视图。 */
+  const CATS = [
+    ['today', '今日赛程'],
+    ['hist', '历史战绩'],
+    ['bd', '北单单关'],
+    ['power', '强弱对战'],
+    ['hkmo', '港澳指数'],
+    ['safe', '中倍稳胆'],
+    ['pro', '高手推荐'],
+    ['htft', '半全场']
+  ];
+
+  /* 让球盘绝对值：用于判断强弱悬殊 */
+  function glAbs(x) {
+    const o = x.an.jcOddsRaw;
+    if (o && o.goalLine !== undefined && o.goalLine !== null) {
+      const g = parseFloat(o.goalLine);
+      return isFinite(g) ? Math.abs(g) : 0;
+    }
+    return 0;
+  }
+
+  /* 单场是否命中某个分类 */
+  function inCat(key, x) {
+    const a = x.an, r = x.raw;
+    switch (key) {
+      case 'today':
+        return true;
+      case 'bd':
+        /* 北单单关：官方 bettingSingle 标记。
+           注意字段在 raw.jcOdds.single（不是 raw.single）——
+           取错层级会导致恒为 false、筛选结果永远为空。 */
+        return !!(r.jcOdds && r.jcOdds.single);
+      case 'power':
+        /* 强弱对战：实力差明显（Elo 差 ≥60）或让球盘绝对值 ≥1.5 */
+        return (Math.abs(r.home.elo - r.away.elo) >= 60) || glAbs(x) >= 1.5;
+      case 'safe':
+        /* 中倍稳胆：竞彩官方赔率处于中等区间且模型判定为「正路」 */
+        {
+          const d = a.rating.dir;
+          const o = a.odds.jc[d];
+          return a.rating.signal === '正路' && o >= 1.70 && o <= 2.60;
+        }
+      case 'pro':
+        /* 高手推荐：模型信心较高（≥3星）且价值指数为正 */
+        return a.rating.stars >= 3 && a.value[a.rating.dir] > 0;
+      default:
+        return true;
+    }
+  }
+
+  /* 各分类场次统计 */
+  function catCounts() {
+    const m = {};
+    CATS.forEach(function (c) { m[c[0]] = 0; });
+    S.all.forEach(function (x) {
+      CATS.forEach(function (c) {
+        if (c[0] === 'hist' || c[0] === 'hkmo' || c[0] === 'htft') return;
+        if (inCat(c[0], x)) m[c[0]]++;
+      });
+    });
+    m.hist = parseInt(store.get(LS.hist) || '0', 10);   // 累计分析场次
+    m.hkmo = S.all.length;                              // 全部场次均有赔率对照
+    m.htft = S.all.length;                              // 全部场次均有半全场推演
+    /* 高手推荐允许为空，但空则退化为「价值最高 3 场」，
+       保证点进去永远有内容，而不是空列表 */
+    if (!m.pro) m.pro = Math.min(3, S.all.length);
+    return m;
+  }
+
   function applyFilter() {
     let v = S.all.slice();
     if (S.filter === 'fav') v = v.filter(function (x) { return S.favs.has(x.raw.id); });
     else if (S.filter === 'value') v = v.filter(isValue);
-    else if (S.filter !== 'all') {
-      const sigMap = { solid: '正路', danger: '危险', cold: '冷门', caution: '谨慎' };
-      v = v.filter(function (x) {
-        return S.filter === 'caution' ? (x.an.rating.signal === '谨慎' || x.an.rating.signal === '分歧')
-          : x.an.rating.signal === sigMap[S.filter];
-      });
+    else if (S.filter && S.filter !== 'today' && S.filter !== 'hist'
+             && S.filter !== 'hkmo' && S.filter !== 'htft') {
+      v = v.filter(function (x) { return inCat(S.filter, x); });
+      /* 兜底：一个都没命中时（如「高手推荐」门槛较高），
+         退化为按价值指数取前 3 场，避免点进去一片空白 */
+      if (!v.length && S.filter === 'pro') {
+        v = S.all.slice().sort(function (a, b) {
+          return b.an.value[b.an.rating.dir] - a.an.value[a.an.rating.dir];
+        }).slice(0, 3);
+      }
     }
     if (S.league) v = v.filter(function (x) { return x.raw.league === S.league; });
     if (S.q) {
@@ -3271,8 +3344,151 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return '让' + Math.abs(l);
   }
 
+  /* ================= 三个专用视图 =================
+     hist / hkmo / htft 不是列表筛选，切换到各自的展示形态。
+     每个都必须呈现真实数据，不允许占位空壳。 */
+
+  /* ---- 历史战绩：累计统计 + 信号分布 ---- */
+  function histViewHTML() {
+    const total = parseInt(store.get(LS.hist) || '0', 10);
+    const sig = { '正路': 0, '危险': 0, '冷门': 0, '谨慎': 0, '分歧': 0 };
+    let dvSum = 0, starSum = 0, valCnt = 0;
+    S.all.forEach(function (x) {
+      const s = x.an.rating.signal;
+      if (sig[s] !== undefined) sig[s]++; else sig['谨慎']++;
+      dvSum += x.an.rating.diverge;
+      starSum += x.an.rating.stars;
+      if (isValue(x)) valCnt++;
+    });
+    const n = S.all.length || 1;
+    const avgDv = (dvSum / n).toFixed(1);
+    const avgStar = (starSum / n).toFixed(1);
+
+    const rows = Object.keys(sig).map(function (k) {
+      const c = sig[k];
+      const w = n ? (c / n * 100) : 0;
+      const col = k === '正路' ? 'var(--good)' : k === '危险' ? 'var(--danger)'
+        : k === '冷门' ? 'var(--cold)' : 'var(--warn)';
+      return '<div class="h-row"><span class="h-k">' + k + '</span>' +
+        '<div class="h-bar"><i style="width:' + w.toFixed(1) + '%;background:' + col + '"></i></div>' +
+        '<span class="h-v">' + c + '</span></div>';
+    }).join('');
+
+    return '<div class="panel" style="padding:13px">' +
+      '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;margin-bottom:10px">' +
+      '模型累计战绩</div>' +
+      '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">' +
+      statBox('累计分析', total + ' 场') +
+      statBox('本批场次', S.all.length + ' 场') +
+      statBox('平均信心', avgStar + ' 星') +
+      statBox('平均分歧', avgDv + ' pt') +
+      statBox('有价值', valCnt + ' 场') +
+      '</div>' +
+      '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;margin:4px 0 8px">' +
+      '本批信号分布</div>' + rows +
+      '<div style="font-size:10px;color:var(--muted2);line-height:1.75;margin-top:12px">' +
+      '「累计分析」自 App 安装起累加，每次成功拉取官方赛程都会计入。<br>' +
+      '信号分布由模型与市场赔率的分歧度、凯利偏差、彩民热度背离共同判定，' +
+      '采用批次内相对分位，保证任何数据源下都有区分度。<br>' +
+      '<b>说明：</b>真实赛果命中率需要记录每场结果后才能统计，' +
+      '当前版本先提供累计与分布口径。</div>' +
+      '</div>';
+  }
+
+  function statBox(k, v) {
+    return '<div style="flex:1;min-width:88px;background:var(--card2);border:1px solid var(--border);' +
+      'border-radius:10px;padding:9px 8px;text-align:center">' +
+      '<div style="font-size:15px;font-weight:800;color:var(--accent)">' + v + '</div>' +
+      '<div style="font-size:9.5px;color:var(--muted);margin-top:2px">' + k + '</div></div>';
+  }
+
+  /* ---- 港澳指数：赔率对照（诚实标注数据源） ---- */
+  function hkmoViewHTML() {
+    const head = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:10.5px;' +
+      'line-height:1.75;color:var(--muted2)">' +
+      '<b style="color:var(--warn)">数据源说明</b>：港澳（香港马会 / 澳门）赔率需要专门的商业数据接口，' +
+      '当前版本尚未接入。下表展示的是已接入的两个真实口径 —— ' +
+      '<b>竞彩官方固定奖金</b>与<b>去水后的市场共识概率</b>，' +
+      '以及模型独立推演值，供横向对照。</div>';
+
+    const rows = S.view.map(function (x) {
+      const a = x.an, r = x.raw;
+      const d = a.rating.dir;
+      const dn = { h: '主胜', d: '平', a: '客胜' }[d] || '';
+      return '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+        '<div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:7px">' +
+        '<span>' + r.home.name + ' <span style="color:var(--muted2)">vs</span> ' + r.away.name + '</span>' +
+        '<span style="color:var(--accent)">' + dn + ' ' + a.odds.jc[d].toFixed(2) + '</span></div>' +
+        '<table class="tbl"><thead><tr><th>口径</th><th>主胜</th><th>平局</th><th>客胜</th></tr></thead><tbody>' +
+        '<tr><td>竞彩官方</td><td>' + pct(a.jcProb.h) + '</td><td>' + pct(a.jcProb.d) + '</td><td>' + pct(a.jcProb.a) + '</td></tr>' +
+        '<tr><td>市场共识</td><td>' + pct(a.marketProb.h) + '</td><td>' + pct(a.marketProb.d) + '</td><td>' + pct(a.marketProb.a) + '</td></tr>' +
+        '<tr><td><b style="color:var(--accent)">模型推演</b></td><td><b>' + pct(a.probs.h) + '</b></td>' +
+        '<td>' + pct(a.probs.d) + '</td><td>' + pct(a.probs.a) + '</td></tr>' +
+        '</tbody></table>' +
+        '<div style="font-size:10px;color:var(--muted2);margin-top:6px">模型与市场差值 ' +
+        '<b>' + a.rating.diverge.toFixed(1) + ' pt</b></div>' +
+        '</div>';
+    }).join('');
+
+    return head + (rows || '<div class="empty"><p>暂无赛事</p></div>');
+  }
+
+  /* ---- 半全场：每场的半全场推演 ---- */
+  function htftViewHTML() {
+    const LBL = ['主胜', '平局', '客胜'];
+    const items = S.view.map(function (x) {
+      const a = x.an, r = x.raw;
+      const M = a.htft || [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+      // 9 宫格
+      let g = '<table class="tbl" style="font-size:10.5px"><thead><tr><th>半\\全</th>' +
+        '<th>主胜</th><th>平局</th><th>客胜</th></tr></thead><tbody>';
+      for (let i = 0; i < 3; i++) {
+        g += '<tr><td>' + LBL[i] + '</td>';
+        for (let j = 0; j < 3; j++) {
+          const v = (M[i] && M[i][j]) || 0;
+          const op = v > 0.18 ? 'opacity:1;font-weight:800;color:var(--accent)' : 'opacity:.62';
+          g += '<td style="' + op + '">' + (v * 100).toFixed(1) + '%</td>';
+        }
+        g += '</tr>';
+      }
+      g += '</tbody></table>';
+
+      // 最可能的 3 个半全场组合
+      const combos = [];
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+        combos.push({ s: LBL[i] + '/' + LBL[j], p: (M[i] && M[i][j]) || 0 });
+      }
+      combos.sort(function (m, n) { return n.p - m.p; });
+      const top3 = combos.slice(0, 3).map(function (c) {
+        return '<span style="background:var(--card2);border:1px solid var(--border);border-radius:8px;' +
+          'padding:5px 9px;font-size:11px;font-weight:700">' + c.s +
+          ' <b style="color:var(--accent)">' + (c.p * 100).toFixed(1) + '%</b></span>';
+      }).join(' ');
+
+      return '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+        '<div style="font-size:11.5px;font-weight:700;margin-bottom:7px">' +
+        r.home.name + ' <span style="color:var(--muted2)">vs</span> ' + r.away.name +
+        '<span class="lg" style="margin-left:6px">' + r.league + '</span></div>' +
+        g +
+        '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">' + top3 + '</div>' +
+        '</div>';
+    }).join('');
+
+    return '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:10.5px;' +
+      'line-height:1.75;color:var(--muted2)">' +
+      '半全场 = 半场结果 / 全场结果 的 3×3 组合。由双变量泊松按半场与全场增量分别推演，' +
+      '若官方开放「半全场」玩法定价，则直接采用市场定价。</div>' +
+      (items || '<div class="empty"><p>暂无赛事</p></div>');
+  }
+
   function renderList() {
     const el = $('#matchList');
+
+    /* 三个专用视图不走卡片列表 */
+    if (S.filter === 'hist') { el.innerHTML = histViewHTML(); return; }
+    if (S.filter === 'hkmo') { el.innerHTML = hkmoViewHTML(); return; }
+    if (S.filter === 'htft') { el.innerHTML = htftViewHTML(); return; }
+
     if (!S.view.length) {
       el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><p>没有符合条件的赛事</p><span>试试切换筛选或清空搜索</span></div>';
       return;
