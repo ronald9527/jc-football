@@ -5557,6 +5557,28 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   }
 
   /* ================= 启动 ================= */
+  /* ★ 主动拉取系统栏高度并写入 CSS 变量。
+     必须"页面主动拉取"而非等 Java 注入：Java 在 onCreate 注入时页面尚未加载，
+     变量会随 about:blank 一起丢弃。这里在 DOMContentLoaded 拉取，时机可靠。 */
+  function applySystemInsets() {
+    var B = (typeof window !== 'undefined') ? window.JCBridge : null;
+    if (!B || !B.getSystemInsets) return;
+    try {
+      if (B.isNativeApp && !B.isNativeApp()) return;   // 非 App 环境（浏览器）不处理
+      var j = JSON.parse(B.getSystemInsets() || '{}');
+      var r = document.documentElement;
+      if (!r) return;
+      /* App 内若读不到真实值（极少数机型 WindowInsets 与 dimen 都拿不到），
+         用经验值兜底。宁可顶栏略高，也不能被系统栏盖住（"剃头"）。 */
+      var t = (j && j.top != null) ? parseInt(j.top, 10) : -1;
+      var b = (j && j.bottom != null) ? parseInt(j.bottom, 10) : -1;
+      if (!(t > 0)) t = 24;      // 常见状态栏高度
+      if (!(b > 0)) b = 20;      // 常见手势条高度
+      r.style.setProperty('--sbh', t + 'px');
+      r.style.setProperty('--nbh', b + 'px');
+    } catch (e) { }
+  }
+
   function init() {
     build(todayStr());
     renderChips();
@@ -5570,7 +5592,15 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     console.log('竞彩智析 v2.0 已启动 ·', S.all.length, '场赛事');
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', function () {
+    applySystemInsets();
+    init();
+  });
+  /* 兜底：若 DOMContentLoaded 已错过（远程页加载时序），立即再拉一次 */
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    applySystemInsets();
+  }
+  window.addEventListener('load', applySystemInsets);
 })();
 
 </script>
