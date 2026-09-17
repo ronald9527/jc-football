@@ -654,7 +654,8 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
       </div>
     </div>
 
-    <div class="lab-card">
+
+<div class="lab-card">
       <h3><span class="lab-n">🔌</span>数据源</h3>
       <p class="lab-desc"><b>竞彩官方直连</b>：App 直接从中国体彩官网读取当日开售赛事——官方固定奖金、让球、比分/总进球/半全场定价。免配置、免 Key、免额度。</p>
       <div class="set-row">
@@ -688,29 +689,27 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
       </div>
       <div class="src-status" id="srcStatus">状态：演示数据 · 模型引擎已就绪</div>
 
-      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
-        <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">
-          港澳数据源诊断</div>
-        <p class="lab-desc" style="margin-bottom:8px">
-          开发环境无法访问外部赔率站点，因此我无法自行验证港澳源。
-          点下方按钮，App 会在<b>你的手机网络</b>下直接探测各候选源并回显原始响应，
-          复制结果发给我即可据此接入。
+    </div>
+
+    <div class="lab-card">
+        <h3><span class="lab-n">🔍</span>数据源诊断</h3>
+        <p class="lab-desc">
+          探测各数据源在<b>你的手机网络</b>下的真实可用性，并回显原始响应。
+          开发环境无法访问外部站点，因此我无法自行验证 —— 靠这个拿真实结果。
         </p>
-        <button class="btn-primary" id="btnDiag" style="width:100%">开始探测港澳数据源</button>
+        <button class="btn-primary" id="btnDiag" style="width:100%;margin-top:8px">开始探测数据源</button>
+        <div id="diagCount" style="font-size:10px;color:var(--muted2);margin-top:6px;text-align:center"></div>
         <div id="diagOut" style="margin-top:10px"></div>
       </div>
 
-      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
-        <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">
-          界面自检</div>
-        <p class="lab-desc" style="margin-bottom:8px">
-          顶栏/底栏显示异常时点这里，会在<b>你的手机上实测</b>它们的真实位置、高度、背景与安全区，
-          复制结果发给我即可精确定位。
+      <div class="lab-card">
+        <h3><span class="lab-n">📐</span>界面自检</h3>
+        <p class="lab-desc">
+          顶栏/底栏显示异常时，实测它们在<b>你的手机上</b>的真实位置、高度、背景与安全区。
         </p>
-        <button class="btn-primary" id="btnLayout" style="width:100%">测量顶栏与底栏</button>
+        <button class="btn-primary" id="btnLayout" style="width:100%;margin-top:8px">测量顶栏与底栏</button>
         <div id="layoutOut" style="margin-top:10px"></div>
       </div>
-    </div>
 
     <div class="lab-card" id="updateCard">
       <h3><span class="lab-n">🔄</span>内容更新</h3>
@@ -6420,7 +6419,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     }
 
     var diagBtn = document.getElementById('btnDiag');
-    if (diagBtn) bindTap(diagBtn, function () { runDiagnostics(); });
+    if (diagBtn) {
+      bindTap(diagBtn, function () { runDiagnostics(); });
+      /* 明确告诉用户会探测多少个源，避免"点了没反应"的错觉 */
+      var dc = document.getElementById('diagCount');
+      if (dc && typeof PROBES !== 'undefined') {
+        dc.textContent = '将探测 ' + PROBES.length + ' 个源（港澳 / 92玩球 / 赛果 / 对照）';
+      }
+    }
 
     var layoutBtn = document.getElementById('btnLayout');
     if (layoutBtn) bindTap(layoutBtn, function () { runLayoutProbe(); });
