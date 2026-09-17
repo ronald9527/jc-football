@@ -671,6 +671,18 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
         默认全部展示；打开此开关只保留今天开赛的场次。
       </div>
       <div class="src-status" id="srcStatus">状态：演示数据 · 模型引擎已就绪</div>
+
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">
+        <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">
+          港澳数据源诊断</div>
+        <p class="lab-desc" style="margin-bottom:8px">
+          开发环境无法访问外部赔率站点，因此我无法自行验证港澳源。
+          点下方按钮，App 会在<b>你的手机网络</b>下直接探测各候选源并回显原始响应，
+          复制结果发给我即可据此接入。
+        </p>
+        <button class="btn-primary" id="btnDiag" style="width:100%">开始探测港澳数据源</button>
+        <div id="diagOut" style="margin-top:10px"></div>
+      </div>
     </div>
 
     <div class="lab-card" id="updateCard">
@@ -3147,8 +3159,34 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       };
     }
 
+    /* ★ 新增：持久化查询（persistedQuery）。
+       HKJC 返回 "Internal server error - WHITELIST_ERROR" 时，
+       很可能是网关只允许已注册的持久化查询，不接受任意 query 文本。
+       此时改为只发 operationName + 变量，不带 query 文本再试一次。
+       每种来源头都先试普通查询，再试持久化查询。 */
+    function mkBody(set, persisted) {
+      if (persisted) {
+        return JSON.stringify({
+          operationName: 'matchList',
+          variables: {
+            startDate: d, endDate: d,
+            fbOddsTypes: types, fbOddsTypesM: types,
+            showAllMatch: true, startIndex: startIndex, endIndex: endIndex
+          },
+          extensions: { persistedQuery: { version: 1 } }
+        });
+      }
+      return body;
+    }
+
+    var PLAN = [];                       // [头索引, 是否持久化]
+    for (var pi = 0; pi < HEADER_SETS.length; pi++) {
+      PLAN.push([pi, false]);
+      PLAN.push([pi, true]);
+    }
+
     function attempt(i, lastErr) {
-      if (i >= HEADER_SETS.length) {
+      if (i >= PLAN.length) {
         return Promise.resolve({
           ok: false, matches: [],
           error: lastErr || 'HKJC 拒绝请求（白名单）'
@@ -3157,7 +3195,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (typeof fetch !== 'function') {
         return Promise.resolve({ ok: false, matches: [], error: '环境不支持 fetch' });
       }
-      return fetch(ENDPOINT, { method: 'POST', headers: mkHeaders(HEADER_SETS[i]), body: body })
+      var plan = PLAN[i];
+      return fetch(ENDPOINT, {
+        method: 'POST',
+        headers: mkHeaders(HEADER_SETS[plan[0]]),
+        body: mkBody(HEADER_SETS[plan[0]], plan[1])
+      })
         .then(function (r) { return r.text().then(function (t) { return { status: r.status, text: t }; }); })
         .then(function (res) {
           var txt = res.text || '';
@@ -3755,6 +3798,269 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     $$('#filterChips .chip').forEach(function (c) {
       bindTap(c, function () { S.filter = c.dataset.f; renderChips(); applyFilter(); });
     });
+  }
+
+  /* ============================================================
+     港澳数据源诊断器
+     ------------------------------------------------------------
+     为什么需要它：
+       开发环境对几乎所有外部赔率站点都被网关拦截（实测全部 403），
+       因此我无法在本地验证任何新数据源。而 App 内 WebView 具备
+       universal access，可以在用户真实网络（国内 IP）下直接探测，
+       并把原始响应回显给用户 —— 用真实数据代替猜测。
+     ============================================================ */
+
+  var PROBES = [
+    /* ---- 香港马会 ---- */
+    {
+      id: 'hkjc_raw', name: 'HKJC GraphQL（bet.hkjc.com 来源）', group: '香港马会',
+      run: function () {
+        return hkjcProbe({ Origin: 'https://bet.hkjc.com', Referer: 'https://bet.hkjc.com/' }, false);
+      }
+    },
+    {
+      id: 'hkjc_foot', name: 'HKJC GraphQL（football.hkjc.com 来源）', group: '香港马会',
+      run: function () {
+        return hkjcProbe({ Origin: 'https://football.hkjc.com', Referer: 'https://football.hkjc.com/' }, false);
+      }
+    },
+    {
+      id: 'hkjc_pq', name: 'HKJC 持久化查询（persistedQuery）', group: '香港马会',
+      run: function () {
+        return hkjcProbe({ Origin: 'https://bet.hkjc.com', Referer: 'https://bet.hkjc.com/' }, true);
+      }
+    },
+    {
+      id: 'hkjc_site', name: 'HKJC 足球站首页', group: '香港马会',
+      run: function () { return httpProbe('https://football.hkjc.com/', 'GET', null, null); }
+    },
+
+    /* ---- 澳门 ---- */
+    {
+      id: 'macau', name: '澳门彩票官网', group: '澳门',
+      run: function () { return httpProbe('https://www.macauslot.com/', 'GET', null, null); }
+    },
+
+    /* ---- 国内可访问的综合盘口站 ---- */
+    {
+      id: 'c500', name: '500.com 欧赔页（含澳门/马会公司盘）', group: '国内综合',
+      run: function () { return httpProbe('https://odds.500.com/fenxi/ouzhi.shtml', 'GET', null, null); }
+    },
+    {
+      id: 'c500_json', name: '500.com 欧赔 JSON 接口', group: '国内综合',
+      run: function () {
+        return httpProbe('https://odds.500.com/fenxi/json/ouzhi.php?fid=0', 'GET', null, null);
+      }
+    },
+    {
+      id: 'c500_api', name: '500.com 主接口', group: '国内综合',
+      run: function () { return httpProbe('https://odds.500.com/', 'GET', null, null); }
+    },
+    {
+      id: 'okooo', name: '澳客网', group: '国内综合',
+      run: function () { return httpProbe('https://www.okooo.com/', 'GET', null, null); }
+    },
+    {
+      id: 'm7', name: '7M 体育', group: '国内综合',
+      run: function () { return httpProbe('https://www.7m.com.cn/', 'GET', null, null); }
+    },
+
+    /* ---- 对照：确认网络正常 ---- */
+    {
+      id: 'jc_ctrl', name: '竞彩官方（对照组，应成功）', group: '对照',
+      run: function () {
+        return httpProbe('https://webapi.sporttery.cn/gateway/jc/football/getMatchCalculatorV1.qry?param=90,0&poolCode=had&channel=c', 'GET', null, null);
+      }
+    }
+  ];
+
+  function httpProbe(url, method, headers, body) {
+    var t0 = Date.now();
+    var opt = { method: method || 'GET', headers: headers || {}, cache: 'no-store' };
+    if (body) opt.body = body;
+    return fetch(url, opt).then(function (r) {
+      return r.text().then(function (t) {
+        return { ok: r.ok, status: r.status, ms: Date.now() - t0, head: t.slice(0, 260) };
+      });
+    }).catch(function (e) {
+      return { ok: false, status: 0, ms: Date.now() - t0, head: 'EXCEPTION: ' + String((e && e.message) || e) };
+    });
+  }
+
+  function hkjcProbe(originSet, persisted) {
+    var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+      '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    var QUERY = 'query matchList($startDate: String, $endDate: String, ' +
+      '$fbOddsTypes: [FBOddsType]!, $fbOddsTypesM: [FBOddsType]!, $showAllMatch: Boolean) {' +
+      ' matches(startDate: $startDate, endDate: $endDate, fbOddsTypes: $fbOddsTypesM, ' +
+      'showAllMatch: $showAllMatch) { id matchDate homeTeam { name_ch } awayTeam { name_ch } } }';
+
+    var d = todayStr();
+    var payload;
+    if (persisted) {
+      /* 持久化查询：只发 operationName + 变量，不发 query 文本 */
+      payload = {
+        operationName: 'matchList',
+        variables: {
+          startDate: d, endDate: d,
+          fbOddsTypes: ['HAD'], fbOddsTypesM: ['HAD'],
+          showAllMatch: true
+        },
+        extensions: { persistedQuery: { version: 1 } }
+      };
+    } else {
+      payload = {
+        operationName: 'matchList',
+        query: QUERY,
+        variables: {
+          startDate: d, endDate: d,
+          fbOddsTypes: ['HAD'], fbOddsTypesM: ['HAD'],
+          showAllMatch: true
+        }
+      };
+    }
+
+    var h = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json, text/plain, */*',
+      'Accept-Language': 'zh-CN,zh;q=0.9',
+      'Origin': originSet.Origin,
+      'Referer': originSet.Referer,
+      'User-Agent': UA,
+      'sec-fetch-site': 'same-site',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-dest': 'empty'
+    };
+    return httpProbe('https://info.cld.hkjc.com/graphql/base/', 'POST', h, JSON.stringify(payload));
+  }
+
+  var DIAG = { running: false, results: [], log: [] };
+
+  function runDiagnostics() {
+    if (DIAG.running) return;
+    DIAG.running = true;
+    DIAG.results = [];
+    DIAG.log = [];
+    renderDiag();
+
+    var i = 0;
+    function next() {
+      if (i >= PROBES.length) {
+        DIAG.running = false;
+        renderDiag();
+        return;
+      }
+      var p = PROBES[i];
+      var t0 = Date.now();
+      var timer = setTimeout(function () {
+        DIAG.results.push({
+          name: p.name, group: p.group, ok: false, status: 0,
+          ms: Date.now() - t0, head: 'TIMEOUT（>12s）'
+        });
+        i++;
+        renderDiag();
+        next();
+      }, 12000);
+
+      p.run().then(function (r) {
+        clearTimeout(timer);
+        DIAG.results.push({
+          name: p.name, group: p.group,
+          ok: r.ok, status: r.status, ms: r.ms, head: r.head
+        });
+        i++;
+        renderDiag();
+        next();
+      });
+    }
+    next();
+  }
+
+  function diagText() {
+    var L = [];
+    L.push('竞彩智析 · 港澳数据源诊断');
+    L.push('时间: ' + new Date().toLocaleString());
+    L.push('网络: ' + (navigator.userAgent.indexOf('Android') >= 0 ? 'Android WebView' : 'Browser'));
+    L.push('');
+    DIAG.results.forEach(function (r, idx) {
+      L.push((idx + 1) + '. [' + r.group + '] ' + r.name);
+      L.push('   结果: ' + (r.ok ? '成功' : '失败') + ' | HTTP ' + r.status + ' | ' + r.ms + 'ms');
+      L.push('   响应: ' + String(r.head || '').replace(/\s+/g, ' ').slice(0, 220));
+      L.push('');
+    });
+    return L.join('\n');
+  }
+
+  function renderDiag() {
+    var box = document.getElementById('diagOut');
+    if (!box) return;
+
+    if (!DIAG.results.length && DIAG.running) {
+      box.innerHTML = '<div style="font-size:11.5px;color:var(--warn)">正在探测… 0/' + PROBES.length + '</div>';
+      return;
+    }
+
+    var html = '<div style="font-size:11px;color:var(--muted2);margin-bottom:8px">' +
+      '已完成 ' + DIAG.results.length + '/' + PROBES.length +
+      (DIAG.running ? ' · 探测中…' : ' · 完成') + '</div>';
+
+    var lastGroup = '';
+    DIAG.results.forEach(function (r) {
+      if (r.group !== lastGroup) {
+        html += '<div style="font-size:10px;font-weight:800;color:var(--muted);' +
+          'letter-spacing:1px;margin:10px 0 5px">' + r.group + '</div>';
+        lastGroup = r.group;
+      }
+      var col = r.ok ? 'var(--good)' : (r.status === 0 ? 'var(--muted2)' : 'var(--danger)');
+      html += '<div style="border-left:2px solid ' + col + ';padding:5px 0 5px 9px;margin-bottom:6px">' +
+        '<div style="font-size:11px;font-weight:700">' + r.name + '</div>' +
+        '<div style="font-size:10px;color:' + col + ';margin-top:2px">' +
+        (r.ok ? '成功' : '失败') + ' · HTTP ' + r.status + ' · ' + r.ms + 'ms</div>' +
+        '<div style="font-size:9.5px;color:var(--muted2);margin-top:3px;word-break:break-all;' +
+        'line-height:1.5">' + escHtml(String(r.head || '').replace(/\s+/g, ' ').slice(0, 200)) + '</div>' +
+        '</div>';
+    });
+
+    if (!DIAG.running && DIAG.results.length) {
+      html += '<button class="btn-ghost" id="diagCopy" style="width:100%;margin-top:10px;' +
+        'padding:9px;font-size:11.5px">复制完整诊断结果</button>' +
+        '<div style="font-size:10px;color:var(--muted2);margin-top:6px;line-height:1.6">' +
+        '复制后发给我，我据此接入实际可用的源。</div>';
+    }
+    box.innerHTML = html;
+
+    var cp = document.getElementById('diagCopy');
+    if (cp) {
+      bindTap(cp, function () {
+        var txt = diagText();
+        var done = function () { toast('已复制，请粘贴发给我'); };
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(txt).then(done, function () { fallbackCopy(txt, done); });
+          } else {
+            fallbackCopy(txt, done);
+          }
+        } catch (e) { fallbackCopy(txt, done); }
+      });
+    }
+  }
+
+  function fallbackCopy(txt, done) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    } catch (e) { toast('复制失败，请手动截图'); }
+  }
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   /* ================= 分类标签（8 个） =================
@@ -4935,6 +5241,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         build(todayStr()); renderChips();
       });
     }
+
+    var diagBtn = document.getElementById('btnDiag');
+    if (diagBtn) bindTap(diagBtn, function () { runDiagnostics(); });
 
     $('#setMode').value = store.get(LS.mode) || 'official';
     $('#apiBox').style.display = (store.get(LS.mode) || 'official') === 'api' ? 'block' : 'none';
