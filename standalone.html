@@ -3321,8 +3321,20 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return out;
   }
 
+  /* ★ 竞彩与 92玩球的「今天」必须按北京时间（UTC+8）算，
+     不能用设备本地时区：用户出国或设备时区非东八区时，
+     本地时区算出的日期会与竞彩官方口径不一致，
+     导致「今日赛程」少一天或多一天。 */
+  var BJ_OFFSET_MS = 8 * 3600000;
+  function nowBJ(d) {
+    var base = d || new Date();
+    /* 先把本地时间换算成 UTC 毫秒，再加 8 小时得到北京时间 */
+    var utcMs = base.getTime() + (base.getTimezoneOffset() * 60000);
+    return new Date(utcMs + BJ_OFFSET_MS);
+  }
+
   function todayStr() {
-    var d = new Date();
+    var d = nowBJ();
     var mm = String(d.getMonth() + 1), dd = String(d.getDate());
     return d.getFullYear() + '-' + (mm.length < 2 ? '0' + mm : mm) + '-' + (dd.length < 2 ? '0' + dd : dd);
   }
@@ -3371,6 +3383,579 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
 </script>
 <script>
+/**
+ * ============================================================
+ * 竞彩智析 · 专家推荐模块（数据源：92玩球 92wq.com）
+ * ------------------------------------------------------------
+ * 职责：
+ *   1) 抓取 92玩球 的专家推荐帖
+ *   2) 以"当天发帖"为严格标准筛选（跨天/昨日帖不纳入今日推荐）
+ *   3) 记录游标：首次抓取时记下首条与末条，之后只增量取更新的帖
+ *   4) 解析出：场次、联赛、队名、专家名、推荐方向
+ *   5) 同场多专家时，聚合到该场卡片并标注每位专家及其命中率
+ *   6) 历史回溯：赛果回填后统计命中/未中
+ *   7) 专家命中率排行榜
+ *
+ * 设计原则：
+ *   - 解析层与展示层分离，HTML 结构变化只需改 parseList
+ *   - 队名匹配复用 HKJC 的 teamMatch（含港陆别名表）
+ *   - 拿不到数据不编造，返回空由调用方降级
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var LS_POSTS = 'jc.expert.posts';       // 帖子库
+  var LS_CURSOR = 'jc.expert.cursor';     // 游标（最新/最旧锚点）
+  var LS_STATS = 'jc.expert.stats';       // 专家统计缓存
+
+  var BASE = 'https://92wq.com';
+
+  /* ---------------- 存储 ---------------- */
+  function store() {
+    try { return global.localStorage || null; } catch (e) { return null; }
+  }
+  function load(key, def) {
+    var st = store();
+    if (!st) return def;
+    try {
+      var v = st.getItem(key);
+      return v ? JSON.parse(v) : def;
+    } catch (e) { return def; }
+  }
+  function save(key, obj) {
+    var st = store();
+    if (!st) return;
+    try { st.setItem(key, JSON.stringify(obj)); } catch (e) { }
+  }
+
+  /* ---------------- 日期 ---------------- */
+  /* ★ 竞彩与 92玩球的「今天」必须按北京时间（UTC+8）算，
+     不能用设备本地时区：用户出国或设备时区非东八区时，
+     本地时区算出的日期会与竞彩官方口径不一致，
+     导致「今日赛程」少一天或多一天。 */
+  var BJ_OFFSET_MS = 8 * 3600000;
+  function nowBJ(d) {
+    var base = d || new Date();
+    /* 先把本地时间换算成 UTC 毫秒，再加 8 小时得到北京时间 */
+    var utcMs = base.getTime() + (base.getTimezoneOffset() * 60000);
+    return new Date(utcMs + BJ_OFFSET_MS);
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function todayStr(d) {
+    var b = nowBJ(d);
+    return b.getFullYear() + '-' + pad(b.getMonth() + 1) + '-' + pad(b.getDate());
+  }
+  /* '09-18' → '2026-09-18'（跨年时按最近的一年处理） */
+  function md2full(md) {
+    if (!md) return '';
+    var now = nowBJ();
+    var y = now.getFullYear();
+    var parts = String(md).split('-');
+    if (parts.length !== 2) return '';
+    var m = parseInt(parts[0], 10), d = parseInt(parts[1], 10);
+    if (!isFinite(m) || !isFinite(d)) return '';
+    /* 若拼接结果比今天晚 6 个月以上，认为是去年的日期 */
+    var cand = new Date(y, m - 1, d);
+    var diff = cand.getTime() - now.getTime();
+    if (diff > 180 * 86400000) cand = new Date(y - 1, m - 1, d);
+    return cand.getFullYear() + '-' + pad(cand.getMonth() + 1) + '-' + pad(cand.getDate());
+  }
+
+  /* ---------------- 解析 ----------------
+     目标标题形如：
+       "周四011 解放者杯 | 09-18 08:30 弗拉门戈 VS 德尔瓦耶独立最新情报买量分析假球诊断预测推荐"
+     也可能带专家名、推荐方向。解析尽量容错。 */
+
+  var TAIL_NOISE = /最新情报|买量分析|假球诊断|预测推荐|情报|解读|分析|推荐|前瞻|预测|赛前|深度剖析|复盘|剖析|足球|论坛|专区|专区|专区/g;
+
+  /* 已知联赛名（用于剥离前缀/后缀，按长度倒序匹配，避免"英超"被"英"截断） */
+  var LEAGUES = [
+    '欧罗巴联赛', '欧洲联赛', '亚运男足', '亚运女足', '解放者杯', '南美俱杯',
+    '英格兰超级联赛', '西班牙甲级联赛', '西甲', '英超', '德甲', '意甲', '法甲',
+    '德乙', '法乙', '英甲', '英乙', '荷甲', '葡超', '比甲', '土超', '俄超',
+    '挪超', '瑞典超', '芬超', '丹超', '苏超', '巴甲', '阿甲', '日职', '韩K',
+    '欧冠', '欧联', '欧协联', '亚冠', '世俱杯', '中甲', '中超', '美职联',
+    '丹麦杯', '德国杯', '足总杯', '联赛杯', '国王杯', '意大利杯', '法国杯'
+  ].sort(function (a, b) { return b.length - a.length; });
+
+  function stripLeague(t) {
+    for (var i = 0; i < LEAGUES.length; i++) {
+      var re = new RegExp('^' + LEAGUES[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*');
+      if (re.test(t)) return t.replace(re, '');
+    }
+    /* 兜底：开头的 2~6 个汉字 + 空格，若后面还有内容，视为联赛名 */
+    var m = t.match(/^[\u4e00-\u9fa5]{2,6}\s+(?=[\u4e00-\u9fa5A-Za-z])/);
+    if (m) return t.replace(m[0], '');
+    return t;
+  }
+
+  /* 从一条文本里提取：编号 / 联赛 / 月-日 / 时间 / 主队 / 客队 */
+  function parseTitle(text) {
+    if (!text) return null;
+    var t = String(text).replace(/\s+/g, ' ').trim();
+    if (t.length < 6) return null;
+
+    /* 元数据：编号、日期、时间、联赛名（在分割前先取，避免被切走） */
+    var no = '', league = '', md = '', tm = '';
+    var m = t.match(/周[一二三四五六日]\s*\d{2,3}/);
+    if (m) no = m[0].replace(/\s+/g, '');
+    m = t.match(/(?:^|\s)(\d{2})[-/](\d{2})(?:\s|$)/);
+    if (m) md = m[1] + '-' + m[2];
+    if (!md) {
+      m = t.match(/\|\s*(\d{2})[-/](\d{2})/);
+      if (m) md = m[1] + '-' + m[2];
+    }
+    if (!md) {
+      m = t.match(/(20\d{2})(\d{2})(\d{2})/);      // 20260918
+      if (m) md = m[2] + '-' + m[3];
+    }
+    m = t.match(/(\d{1,2}):(\d{2})/);
+    if (m) tm = pad(parseInt(m[1], 10)) + ':' + m[2];
+    /* 联赛：优先取 "编号 联赛 |" 结构 */
+    m = t.match(/周[一二三四五六日]\s*\d{2,3}\s+([^\|\s]{2,8})\s*\|/);
+    if (m) league = m[1];
+    if (!league) {
+      m = t.match(/【([^】]{2,8})】/);
+      if (m) league = m[1];
+    }
+
+    /* 以 VS 为分隔符（不用 - ：日期里的横杠会误判） */
+    var sp = t.split(/\s*(?:VS|vs|Vs|vS|對)\s*/);
+    if (sp.length < 2) return null;
+    var left = sp[0], right = sp.slice(1).join(' VS ');
+
+    /* --- 左：主队 --- */
+    var home = left;
+    home = home.replace(/【[^】]*】/g, '');                 // 【西甲】【北单猎手】
+    home = home.replace(/^[^：:]{2,8}\s*[:：]\s*/, '');   // 深度剖析：/ 赛前分析：
+    home = home.replace(/^周[一二三四五六日]\s*\d{2,3}\s*/, '');
+    home = home.replace(/^[^\|\s]{2,8}\s*\|\s*/, '');  // 解放者杯 |
+    home = home.replace(/\d{2}[-/]\d{2}/g, '');
+    home = home.replace(/\d{1,2}:\d{2}/g, '');
+    home = home.replace(/(20\d{2})(\d{2})(\d{2})/g, '');
+    home = stripLeague(home);
+    home = home.replace(/^[\s\|\-—_:：,，.。]+/, '').replace(/[\s\|\-—_:：,，.。]+$/, '');
+    home = home.replace(TAIL_NOISE, '').trim();
+
+    /* --- 右：客队 --- */
+    var away = right;
+    away = away.replace(/【[^】]*】[\s\S]*$/, '');         // 尾部【专家名】及之后
+    away = away.split(/[_—–]/)[0];                        // 下划线/破折号后缀
+    away = away.replace(/\d{2}[-/]\d{2}/g, '');
+    away = away.replace(/\d{1,2}:\d{2}/g, '');
+    away = away.replace(/(20\d{2})(\d{2})(\d{2})/g, '');
+    away = away.replace(TAIL_NOISE, '');
+    away = away.replace(/^[\s\|\-—_:：,，.。]+/, '').replace(/[\s\|\-—_:：,，.。]+$/, '');
+    away = away.trim();
+
+    if (!home || !away) return null;
+    if (home.length > 20) home = home.slice(0, 20);
+    if (away.length > 20) away = away.slice(0, 20);
+    /* 明显不是队名的丢弃（残留纯数字/符号） */
+    if (!/[\u4e00-\u9fa5A-Za-z]/.test(home) || !/[\u4e00-\u9fa5A-Za-z]/.test(away)) return null;
+    return { no: no, league: league, md: md, time: tm, home: home, away: away };
+  }
+
+  /* 从文本里猜推荐方向 */
+  function parsePick(text) {
+    var t = String(text || '');
+    var picks = [];
+    if (/主胜|主队胜|让胜|胜/.test(t) && !/客胜|不胜/.test(t)) picks.push('主胜');
+    if (/客胜|客队胜/.test(t)) picks.push('客胜');
+    if (/平局|走水|平/.test(t)) picks.push('平局');
+    if (/大球|大于|over/i.test(t)) picks.push('大球');
+    if (/小球|小于|under/i.test(t)) picks.push('小球');
+    if (!picks.length) {
+      if (/让球/.test(t)) picks.push('让球');
+    }
+    return picks;
+  }
+
+  /* ---------------- 页面解析 ----------------
+     Discuz!/论坛类页面常见结构：
+       <a href="thread-12345-1-1.html" ...>标题</a> ... 作者 ... 2026-09-17 23:02:48
+     不硬依赖结构，用多重模式提取，任一命中即可。 */
+  function parseList(html, srcUrl) {
+    if (!html) return [];
+    var out = [];
+    var seen = {};
+
+    /* 模式 A：链接 + 标题（thread/forum.php?mod=viewthread） */
+    var reA = /<a[^>]+href=["']([^"']*(?:thread|viewthread|read|topic|article)[^"']*)["'][^>]*>([\s\S]{0,300}?)<\/a>/gi;
+    var m;
+    while ((m = reA.exec(html)) !== null) {
+      var href = m[1];
+      var title = m[2].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ').trim();
+      if (!title || title.length < 6) continue;
+      var p = parseTitle(title);
+      if (!p) continue;
+
+      /* 时间必须在本条目内查找：
+         直接向后取固定长度会跨到下一条，导致所有帖都拿到同一个时间
+         （实测：昨日的巴萨帖被误判成今日）。 */
+      var tail = html.slice(m.index, m.index + 1200);
+      var cut = tail.search(/<li[\s>]/i);
+      if (cut > 0) tail = tail.slice(0, cut);
+      var cut2 = tail.search(/<\/li>/i);
+      if (cut2 > 0) tail = tail.slice(0, cut2);
+      var cut3 = tail.indexOf('</a>');
+      if (cut3 > 0) tail = tail.slice(0, cut3 + 4);
+      /* 若本条目内没时间，再向后扩展一点（但不超过下一个 <li>） */
+      if (!/20\d{2}[-\/]\d{1,2}[-\/]\d{1,2}/.test(tail)) {
+        var ext = html.slice(m.index, m.index + 1200);
+        var e1 = ext.search(/<li[\s>]/i);
+        if (e1 > 0) ext = ext.slice(0, e1);
+        var e2 = ext.search(/<\/li>/i);
+        if (e2 > 0) ext = ext.slice(0, e2);
+        tail = ext;
+      }
+      var tm = tail.match(/(20\d{2})[-/](\d{1,2})[-/](\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?/);
+      var postDate = '', postTime = '';
+      if (tm) {
+        postDate = tm[1] + '-' + pad(parseInt(tm[2], 10)) + '-' + pad(parseInt(tm[3], 10));
+        postTime = tm[4] ? pad(parseInt(tm[4], 10)) + ':' + tm[5] : '';
+      } else {
+        /* 退而求其次：用标题里的 MM-DD */
+        postDate = md2full(p.md);
+        postTime = p.time;
+      }
+
+      var key = p.home + '|' + p.away + '|' + postDate;
+      if (seen[key]) continue;
+      seen[key] = 1;
+
+      out.push({
+        id: 'wq_' + hashStr(href + title),
+        url: absUrl(href, srcUrl),
+        title: title,
+        no: p.no,
+        league: p.league,
+        home: p.home,
+        away: p.away,
+        matchDate: p.md ? md2full(p.md) : '',
+        matchTime: p.time,
+        postDate: postDate,
+        postTime: postTime,
+        expert: guessExpert(tail) || guessExpert(title),
+        picks: parsePick(title),
+        result: null        // 'hit' | 'miss' | null
+      });
+    }
+
+    /* 模式 B：纯文本行（无链接时兜底） */
+    if (!out.length) {
+      var lines = html.replace(/<[^>]+>/g, '\n').split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i].replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+        if (ln.length < 10 || ln.length > 160) continue;
+        var pb = parseTitle(ln);
+        if (!pb) continue;
+        var key2 = pb.home + '|' + pb.away;
+        if (seen[key2]) continue;
+        seen[key2] = 1;
+        out.push({
+          id: 'wq_' + hashStr(ln),
+          url: srcUrl || BASE,
+          title: ln,
+          no: pb.no, league: pb.league,
+          home: pb.home, away: pb.away,
+          matchDate: pb.md ? md2full(pb.md) : '',
+          matchTime: pb.time,
+          postDate: md2full(pb.md) || todayStr(),
+          postTime: pb.time,
+          expert: guessExpert(ln),
+          picks: parsePick(ln),
+          result: null
+        });
+      }
+    }
+    return out;
+  }
+
+  /* 猜专家名：常见写法【xxx】、作者：xxx、— xxx */
+  function guessExpert(text) {
+    var t = String(text || '');
+    var m = t.match(/【([^】]{2,12})】/);
+    if (m) {
+      var n = m[1].replace(/解读|分析|推荐|看球|聊球|足球|情报|今日|赛前/g, '').trim();
+      if (n) return n;
+    }
+    /* 论坛常见的作者字段：<span class="by">作者名</span> */
+    m = t.match(/class=["'][^"']*(?:by|author|expert|username)[^"']*["'][^>]*>([^<]{2,16})</i);
+    if (m) {
+      var n2 = m[1].replace(/\s+/g, '').trim();
+      if (n2 && !/[\d]{4}-/.test(n2)) return n2;
+    }
+    m = t.match(/(?:作者|专家|推荐人|发布者)\s*[:：]\s*([^\s，,。<]{2,12})/);
+    if (m) return m[1].trim();
+    /* 形如 "— 晓哥看球"、"_【晓哥看球】" 尾部署名 */
+    m = t.match(/[_—–-]\s*【?([^】_\s]{2,10})】?\s*(?:分析|解读|推荐)?\s*$/);
+    if (m) return m[1].trim();
+    return '';
+  }
+
+  function hashStr(s) {
+    var h = 0;
+    s = String(s || '');
+    for (var i = 0; i < s.length; i++) {
+      h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+    }
+    return (h >>> 0).toString(36);
+  }
+
+  function absUrl(href, base) {
+    if (!href) return base || BASE;
+    if (/^https?:\/\//i.test(href)) return href;
+    if (href.charAt(0) === '/') return BASE + href;
+    return BASE + '/' + href;
+  }
+
+  /* ---------------- 抓取 + 游标 ---------------- */
+  /**
+   * 抓取并处理帖子。
+   * 游标逻辑（按你的要求）：
+   *   首次抓取 → 记录 首条 / 末条 作为定位锚点
+   *   后续抓取 → 只取比"上次最新"更新的帖子，其余从本地库补
+   */
+  function fetchPosts(opts) {
+    opts = opts || {};
+    var urls = opts.urls || [BASE + '/', BASE + '/expert', BASE + '/expert.html'];
+    var transport = (global.HKJC && global.HKJC.transport) ? global.HKJC.transport : null;
+
+    function get(url) {
+      if (!transport) return Promise.resolve(null);
+      return transport(url, 'GET', {
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'zh-CN,zh;q=0.9'
+      }, '').then(function (r) {
+        return (r && r.ok) ? { url: url, html: r.text } : null;
+      });
+    }
+
+    return Promise.all(urls.map(get)).then(function (res) {
+      var pages = res.filter(Boolean);
+      if (!pages.length) {
+        return { ok: false, error: '所有候选页均无法访问', posts: [], fresh: 0 };
+      }
+
+      var all = [];
+      var seenId = {};
+      pages.forEach(function (pg) {
+        parseList(pg.html, pg.url).forEach(function (p) {
+          if (seenId[p.id]) return;
+          seenId[p.id] = 1;
+          all.push(p);
+        });
+      });
+
+      /* 合并进本地库 */
+      var posts = load(LS_POSTS, []);
+      var byId = {};
+      posts.forEach(function (p) { byId[p.id] = p; });
+
+      var fresh = 0;
+      all.forEach(function (p) {
+        if (!byId[p.id]) {
+          fresh++;
+          byId[p.id] = p;
+        } else {
+          /* 保留已回填的赛果 */
+          if (byId[p.id].result) p.result = byId[p.id].result;
+          byId[p.id] = p;
+        }
+      });
+      posts = Object.keys(byId).map(function (k) { return byId[k]; });
+
+      /* 排序：发帖时间倒序 */
+      posts.sort(function (a, b) {
+        var ka = (a.postDate || '') + ' ' + (a.postTime || '');
+        var kb = (b.postDate || '') + ' ' + (b.postTime || '');
+        return kb < ka ? -1 : (kb > ka ? 1 : 0);
+      });
+
+      save(LS_POSTS, posts);
+
+      /* 游标：首条=最新，末条=最旧 */
+      var cur = load(LS_CURSOR, null);
+      var newest = posts.length ? posts[0] : null;
+      var oldest = posts.length ? posts[posts.length - 1] : null;
+      var firstTime = !cur;
+      save(LS_CURSOR, {
+        firstId: firstTime && newest ? newest.id : (cur && cur.firstId) || (newest && newest.id) || '',
+        firstKey: firstTime && newest ? keyOf(newest) : (cur && cur.firstKey) || (newest ? keyOf(newest) : ''),
+        lastId: oldest ? oldest.id : (cur && cur.lastId) || '',
+        lastKey: oldest ? keyOf(oldest) : (cur && cur.lastKey) || '',
+        count: posts.length,
+        at: Date.now()
+      });
+
+      return {
+        ok: true,
+        posts: posts,
+        fresh: fresh,
+        firstTime: firstTime,
+        newest: newest,
+        oldest: oldest
+      };
+    }).catch(function (e) {
+      return { ok: false, error: String((e && e.message) || e), posts: load(LS_POSTS, []), fresh: 0 };
+    });
+  }
+
+  function keyOf(p) {
+    return (p.postDate || '') + ' ' + (p.postTime || '') + ' ' + (p.home || '') + (p.away || '');
+  }
+
+  /* ---------------- 今日筛选（严格按当天日期发帖）---------------- */
+  function todayPosts(all, dateStr) {
+    var d = dateStr || todayStr();
+    return (all || []).filter(function (p) {
+      return p.postDate === d;
+    });
+  }
+
+  /* ---------------- 聚合：同一场多位专家 ---------------- */
+  function groupByMatch(posts) {
+    var map = {};
+    (posts || []).forEach(function (p) {
+      var k = normKey(p.home) + '|' + normKey(p.away);
+      if (!map[k]) {
+        map[k] = {
+          key: k, home: p.home, away: p.away,
+          league: p.league, matchDate: p.matchDate, matchTime: p.matchTime,
+          no: p.no, experts: [], posts: []
+        };
+      }
+      map[k].posts.push(p);
+      var ex = p.expert || '未知专家';
+      var dup = map[k].experts.filter(function (e) { return e.name === ex; })[0];
+      if (dup) dup.picks = dup.picks.concat(p.picks || []);
+      else map[k].experts.push({ name: ex, picks: p.picks || [], url: p.url, postId: p.id });
+    });
+    return Object.keys(map).map(function (k) { return map[k]; });
+  }
+
+  function normKey(s) {
+    return String(s || '').replace(/\s+/g, '').toLowerCase();
+  }
+
+  /* ---------------- 专家统计 & 排行榜 ---------------- */
+  /* 进入排行榜所需的最小已结算场次 */
+  var MIN_SAMPLE = 3;
+
+  function expertStats(posts) {
+    var m = {};
+    (posts || []).forEach(function (p) {
+      var n = p.expert || '未知专家';
+      if (!m[n]) m[n] = { name: n, total: 0, hit: 0, miss: 0, pending: 0, recent: [] };
+      var s = m[n];
+      s.total++;
+      if (p.result === 'hit') s.hit++;
+      else if (p.result === 'miss') s.miss++;
+      else s.pending++;
+      if (p.result) s.recent.push(p.result);
+    });
+    var arr = Object.keys(m).map(function (k) {
+      var s = m[k];
+      var settled = s.hit + s.miss;
+      s.settled = settled;
+      s.rate = settled > 0 ? (s.hit / settled * 100) : null;
+      /* 近期命中率（最后 10 场） */
+      var r = s.recent.slice(-10);
+      s.recentRate = r.length ? (r.filter(function (x) { return x === 'hit'; }).length / r.length * 100) : null;
+      s.qualified = settled >= MIN_SAMPLE;          // 是否够格进榜
+      return s;
+    });
+    /* 排序：样本够的优先参与排名，样本不足的单独归类。
+       否则会出现「1 中 1 = 100%」霸榜，对真实参考毫无意义。 */
+    arr.sort(function (a, b) {
+      var qa = a.settled >= MIN_SAMPLE ? 1 : 0;
+      var qb = b.settled >= MIN_SAMPLE ? 1 : 0;
+      if (qa !== qb) return qb - qa;                 // 达标组在前
+      var ra = a.rate === null ? -1 : a.rate;
+      var rb = b.rate === null ? -1 : b.rate;
+      if (rb !== ra) return rb - ra;                 // 命中率高在前
+      return b.settled - a.settled;                  // 同率时样本多在前
+    });
+    return arr;
+  }
+
+  /* ---------------- 历史回溯 ----------------
+     把已有赛果回填到帖子。matches: [{home, away, result:{homeScore, awayScore}}] */
+  function backfill(posts, results) {
+    if (!results || !results.length) return { filled: 0, total: posts.length };
+    var n = 0;
+    (posts || []).forEach(function (p) {
+      if (p.result) return;
+      for (var i = 0; i < results.length; i++) {
+        var r = results[i];
+        if (teamMatch(r.home, p.home) && teamMatch(r.away, p.away)) {
+          var pick = (p.picks || [])[0];
+          var res = judge(pick, r);
+          if (res) { p.result = res; n++; }
+          return;
+        }
+      }
+    });
+    if (n) save(LS_POSTS, posts);
+    return { filled: n, total: posts.length };
+  }
+
+  function judge(pick, r) {
+    if (!pick || !r || r.homeScore == null || r.awayScore == null) return null;
+    var hs = parseInt(r.homeScore, 10), as = parseInt(r.awayScore, 10);
+    if (!isFinite(hs) || !isFinite(as)) return null;
+    var actual = hs > as ? '主胜' : (hs < as ? '客胜' : '平局');
+    if (pick === actual) return 'hit';
+    if (pick === '大球' || pick === '小球') return null;   // 大小球需要盘口才能判定
+    return 'miss';
+  }
+
+  /* 复用 HKJC 的队名匹配（含港陆别名表） */
+  function teamMatch(a, b) {
+    if (global.HKJC && global.HKJC.teamMatch) {
+      try { return global.HKJC.teamMatch(a, b); } catch (e) { }
+    }
+    var na = String(a || '').replace(/\s+/g, '');
+    var nb = String(b || '').replace(/\s+/g, '');
+    return na && na === nb;
+  }
+
+  /* ---------------- 清理 ---------------- */
+  function clearAll() {
+    var st = store();
+    if (!st) return;
+    try {
+      st.removeItem(LS_POSTS);
+      st.removeItem(LS_CURSOR);
+      st.removeItem(LS_STATS);
+    } catch (e) { }
+  }
+
+  global.Expert = {
+    LS_POSTS: LS_POSTS,
+    fetchPosts: fetchPosts,
+    todayPosts: todayPosts,
+    groupByMatch: groupByMatch,
+    expertStats: expertStats,
+    backfill: backfill,
+    MIN_SAMPLE: MIN_SAMPLE,
+    parseList: parseList,
+    parseTitle: parseTitle,
+    todayStr: todayStr,
+    md2full: md2full,
+    local: function () { return load(LS_POSTS, []); },
+    cursor: function () { return load(LS_CURSOR, null); },
+    clearAll: clearAll
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
 /* ============================================================
  * 竞彩智析 · 应用逻辑 (app.js)
  * ============================================================ */
@@ -3410,7 +3995,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   })();
 
   const S = {
-    all: [], view: [], filter: 'today', league: '', sort: 'time', q: '',
+    all: [], view: [], filter: 'today', league: '', sort: 'time', q: '', expert: null,
     favs: new Set(JSON.parse(store.get(LS.fav) || '[]')),
     current: null, deferredInstall: null
   };
@@ -3783,7 +4368,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       ['港澳指数', hk, 0],
       ['中倍稳胆', steady, 0],
       ['高手推荐', pro, 0],
-      ['半全场', half, 0]
+      ['半全场', half, 0],
+      ['专家推荐', (S.expert && S.expert.today) ? S.expert.today.length : 0, 0]
     ];
     /* ★ 关键修复：上方这排统计卡片与分类标签同名，用户会去点它们。
        前一版只是纯展示 div，没有任何事件 → 「点了没反应」。
@@ -3878,6 +4464,28 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
      ============================================================ */
 
   var PROBES = [
+  /* ---- 92玩球（专家推荐数据源）---- */
+  {
+    id: 'wq_home', name: '92玩球 首页', group: '92玩球',
+    run: function () { return httpProbe('https://92wq.com/', 'GET', null, null, 3500); }
+  },
+  {
+    id: 'wq_exp', name: '92玩球 专家推荐频道', group: '92玩球',
+    run: function () { return httpProbe('https://92wq.com/expert', 'GET', null, null, 3500); }
+  },
+  {
+    id: 'wq_expert2', name: '92玩球 /expert.html', group: '92玩球',
+    run: function () { return httpProbe('https://92wq.com/expert.html', 'GET', null, null, 3500); }
+  },
+  {
+    id: 'wq_forum', name: '92玩球 forum.php', group: '92玩球',
+    run: function () { return httpProbe('https://92wq.com/forum.php', 'GET', null, null, 3500); }
+  },
+  {
+    id: 'wq_vip', name: '92玩球 VIP专区', group: '92玩球',
+    run: function () { return httpProbe('https://92wq.com/vip', 'GET', null, null, 3500); }
+  },
+
     /* ---- 香港马会 ---- */
     {
       id: 'hkjc_raw', name: 'HKJC GraphQL（bet.hkjc.com 来源）', group: '香港马会',
@@ -3932,7 +4540,23 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       run: function () { return httpProbe('https://www.7m.com.cn/', 'GET', null, null); }
     },
 
-    /* ---- 对照：确认网络正常 ---- */
+    /* ---- 赛果 / 开奖源（用于历史回溯）---- */
+  {
+    id: 'res_sporttery', name: '竞彩官方 赛果查询', group: '赛果源',
+    run: function () {
+      return httpProbe('https://webapi.sporttery.cn/gateway/jc/football/getMatchResultV1.qry?param=90,0&channel=c', 'GET', null, null, 1200);
+    }
+  },
+  {
+    id: 'res_lottery', name: '竞彩官方 开奖公告', group: '赛果源',
+    run: function () { return httpProbe('https://www.sporttery.cn/jc/jsq/index.html', 'GET', null, null, 1200); }
+  },
+  {
+    id: 'res_wq', name: '92玩球 赛果频道', group: '赛果源',
+    run: function () { return httpProbe('https://92wq.com/result', 'GET', null, null, 1200); }
+  },
+
+  /* ---- 对照：确认网络正常 ---- */
     {
       id: 'jc_ctrl', name: '竞彩官方（对照组，应成功）', group: '对照',
       run: function () {
@@ -3942,7 +4566,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   ];
 
   /* 诊断也要走原生通道，否则结果不能反映真实可用性 */
-  function httpProbe(url, method, headers, body) {
+  function httpProbe(url, method, headers, body, limit) {
     var t0 = Date.now();
     var B = (typeof window !== 'undefined') ? window.JCBridge : null;
     var canNative = !!(B && B.nativeFetch && B.isNativeApp && B.isNativeApp());
@@ -3956,7 +4580,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           if (j && typeof j.status === 'number') {
             resolve({
               ok: !!j.ok, status: j.status, ms: Date.now() - t0,
-              head: String(j.body || '').slice(0, 260), via: 'native'
+              head: String(j.body || '').slice(0, limit || 260), via: 'native'
             });
           } else {
             resolve({ ok: false, status: 0, ms: Date.now() - t0, head: '原生通道返回异常', via: 'native' });
@@ -3974,7 +4598,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (body) opt.body = body;
     return fetch(url, opt).then(function (r) {
       return r.text().then(function (t) {
-        return { ok: r.ok, status: r.status, ms: Date.now() - t0, head: t.slice(0, 260), via: 'fetch' };
+        return { ok: r.ok, status: r.status, ms: Date.now() - t0, head: t.slice(0, limit || 260), via: 'fetch' };
       });
     }).catch(function (e) {
       return {
@@ -4322,7 +4946,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     ['hkmo', '港澳指数'],
     ['safe', '中倍稳胆'],
     ['pro', '高手推荐'],
-    ['htft', '半全场']
+    ['htft', '半全场'],
+    ['expert', '专家推荐']
   ];
 
   /* 让球盘绝对值：用于判断强弱悬殊 */
@@ -4374,6 +4999,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         if (inCat(c[0], x)) m[c[0]]++;
       });
     });
+    m.expert = (S.expert && S.expert.today) ? S.expert.today.length : 0;
     m.hist = parseInt(store.get(LS.hist) || '0', 10);   // 累计分析场次
     m.hkmo = S.all.length;                              // 全部场次均有赔率对照
     m.htft = S.all.length;                              // 全部场次均有半全场推演
@@ -4786,6 +5412,296 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       (items || '<div class="empty"><p>暂无赛事</p></div>');
   }
 
+  /* ============================================================
+     专家推荐视图（数据源：92玩球 92wq.com）
+     ------------------------------------------------------------
+     按你的要求实现：
+       ① 严格以"当天日期发帖"为标准筛选
+       ② 首次抓取记录首条/末条作为定位锚点，之后只增量取新帖
+       ③ 同场多专家聚合到该场卡片，标注每位专家及其命中率
+       ④ 历史战绩回溯
+       ⑤ 专家命中率排行榜
+     ============================================================ */
+
+  var EX = { loading: false, err: '', at: 0, fresh: 0, firstTime: false };
+
+  function loadExpert(force) {
+    if (typeof Expert === 'undefined') {
+      EX.err = '模块未加载';
+      renderList();
+      return;
+    }
+    /* 已有数据且非强制 → 直接用本地库（含游标） */
+    if (!force && S.expert) return;
+    if (EX.loading) return;
+
+    EX.loading = true;
+    EX.err = '';
+    renderList();
+
+    Expert.fetchPosts({}).then(function (r) {
+      EX.loading = false;
+      EX.at = Date.now();
+      EX.fresh = r.fresh || 0;
+      EX.firstTime = !!r.firstTime;
+      if (!r.ok) {
+        EX.err = r.error || '抓取失败';
+        S.expert = { posts: r.posts || [], today: [], groups: [], stats: [] };
+      } else {
+        var all = r.posts || [];
+        /* ★ 严格按当天日期发帖筛选 */
+        var today = Expert.todayPosts(all);
+        S.expert = {
+          posts: all,
+          today: today,
+          groups: Expert.groupByMatch(today),
+          stats: Expert.expertStats(all)
+        };
+      }
+      renderChips();
+      renderStats();
+      renderList();
+    }).catch(function (e) {
+      EX.loading = false;
+      EX.err = String((e && e.message) || e);
+      renderList();
+    });
+  }
+
+  /* 命中率着色：越高越绿 */
+  function rateColor(r) {
+    if (r === null || r === undefined) return 'var(--muted2)';
+    if (r >= 60) return 'var(--good)';
+    if (r >= 45) return 'var(--warn)';
+    return 'var(--danger)';
+  }
+
+  function rateText(r) {
+    return (r === null || r === undefined) ? '待定' : r.toFixed(0) + '%';
+  }
+
+  function expertViewHTML() {
+    if (!S.expert && !EX.loading) setTimeout(function () { loadExpert(); }, 0);
+    var E = S.expert || { posts: [], today: [], groups: [], stats: [] };
+
+    /* ---------- 头部说明 ---------- */
+    var head = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:10.5px;' +
+      'line-height:1.75;color:var(--muted2)">' +
+      '<b style="color:var(--accent)">专家推荐</b>（数据源：92玩球 92wq.com）<br>' +
+      '筛选标准：<b>严格按当天日期发帖</b>，跨天帖不计入今日推荐。<br>' +
+      '首次抓取会记录<b>首条 / 末条</b>作为定位锚点，之后只增量取更新的帖，' +
+      '因此每次打开都能识别出「哪条是最新」。</div>';
+
+    /* ---------- 状态条 ---------- */
+    var bar;
+    if (EX.loading) {
+      bar = '<div class="panel" style="padding:12px;text-align:center;font-size:11.5px;color:var(--warn)">' +
+        '正在抓取 92玩球…</div>';
+    } else if (EX.err) {
+      bar = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:11px;border-color:var(--warn)">' +
+        '<b style="color:var(--warn)">未能获取专家推荐</b><br>' +
+        '<span style="color:var(--muted2)">' + escHtml(EX.err) + '</span></div>';
+    } else {
+      var cur = (typeof Expert !== 'undefined') ? Expert.cursor() : null;
+      var d = EX.at ? new Date(EX.at) : null;
+      var hh = d ? String(d.getHours()) : '', mm = d ? String(d.getMinutes()) : '';
+      bar = '<div class="panel" style="padding:9px 11px;margin-bottom:10px;font-size:11px;' +
+        'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">' +
+        '<span style="color:var(--good);font-weight:700">● 今日 ' + E.today.length + ' 帖' +
+        ' · 累计 ' + E.posts.length + ' 帖</span>' +
+        '<span style="color:var(--muted2)">' +
+        (cur && cur.count ? '锚点已建立 · 首条 ' + escHtml(String(cur.firstId || '').slice(0, 10)) +
+          ' / 末条 ' + escHtml(String(cur.lastId || '').slice(0, 10)) + ' · ' : '') +
+        (d ? (hh.length < 2 ? '0' + hh : hh) + ':' + (mm.length < 2 ? '0' + mm : mm) : '') + '</span>' +
+        '</div>';
+    }
+
+    /* ---------- 操作按钮 ---------- */
+    var ops = '<div style="display:flex;gap:8px;margin-bottom:10px">' +
+      '<button class="btn-ghost" id="exFetch" style="flex:1;padding:9px;font-size:11.5px">' +
+      '刷新抓取</button>' +
+      '<button class="btn-ghost" id="exClear" style="flex:1;padding:9px;font-size:11.5px">' +
+      '清空重建锚点</button></div>';
+
+    /* ---------- ① 今日推荐（按场次聚合，同场多专家）---------- */
+    var sec1 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
+      'margin:4px 0 8px">今日推荐 · 按场次聚合</div>';
+
+    var list1;
+    if (!E.groups.length) {
+      list1 = '<div class="empty" style="padding:20px"><p>今日暂无推荐帖</p>' +
+        '<span>点上方「刷新抓取」重新获取</span></div>';
+    } else {
+      list1 = E.groups.map(function (g) {
+        /* 与竞彩赛事配对（用于展示官方赔率） */
+        var linked = null;
+        for (var i = 0; i < S.all.length; i++) {
+          var r = S.all[i].raw;
+          var mm2 = (typeof HKJC !== 'undefined')
+            ? HKJC.teamMatch(r.home.name, g.home) && HKJC.teamMatch(r.away.name, g.away)
+            : (r.home.name === g.home);
+          if (mm2) { linked = S.all[i]; break; }
+        }
+
+        var headTxt = '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
+          'gap:8px;font-size:11.5px;font-weight:700;margin-bottom:7px">' +
+          '<span>' + escHtml(g.home) + ' <span style="color:var(--muted2)">vs</span> ' + escHtml(g.away) + '</span>' +
+          '<span style="font-size:9.5px;color:var(--muted2)">' +
+          (g.no ? escHtml(g.no) + ' · ' : '') + escHtml(g.league || '') +
+          (g.matchTime ? ' · ' + escHtml(g.matchTime) : '') + '</span></div>';
+
+        /* 每位专家一行：名字 + 命中率 + 推荐方向 */
+        var rows = g.experts.map(function (ex) {
+          var st = null;
+          for (var i = 0; i < E.stats.length; i++) {
+            if (E.stats[i].name === ex.name) { st = E.stats[i]; break; }
+          }
+          var rate = st ? st.rate : null;
+          var settled = st ? st.settled : 0;
+          var picks = (ex.picks || []).filter(function (v, i2, a) {
+            return v && a.indexOf(v) === i2;
+          });
+          return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;' +
+            'padding:6px 0;border-top:1px dashed var(--border)">' +
+            '<span style="font-size:11px;font-weight:700">' + escHtml(ex.name) + '</span>' +
+            '<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+            (picks.length ? '<span style="font-size:9.5px;color:var(--muted2)">' +
+              escHtml(picks.join(' / ')) + '</span>' : '') +
+            '<b style="font-size:11px;color:' + rateColor(rate) + '">' + rateText(rate) + '</b>' +
+            '<span style="font-size:9px;color:var(--muted2)">' + settled + '场</span>' +
+            '</span></div>';
+        }).join('');
+
+        /* 多专家提示 */
+        var multi = g.experts.length > 1
+          ? '<div style="font-size:9.5px;color:var(--accent);margin-bottom:4px">' +
+            '▲ ' + g.experts.length + ' 位专家同时推荐本场</div>'
+          : '';
+
+        /* 竞彩官方赔率（若配对上） */
+        var oddsTxt = '';
+        if (linked) {
+          var a = linked.an;
+          oddsTxt = '<div style="font-size:9.5px;color:var(--muted2);margin-top:6px">' +
+            '竞彩官方 ' + a.odds.jc.h.toFixed(2) + ' / ' + a.odds.jc.d.toFixed(2) + ' / ' +
+            a.odds.jc.a.toFixed(2) + ' · 模型 ' + pct(a.probs.h) + ' / ' + pct(a.probs.d) + ' / ' +
+            pct(a.probs.a) + '</div>';
+        }
+
+        return '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+          headTxt + multi + rows + oddsTxt + '</div>';
+      }).join('');
+    }
+
+    /* ---------- ② 专家命中率排行榜 ---------- */
+    var sec2 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
+      'margin:14px 0 8px">专家命中率排行榜</div>';
+
+    var list2;
+    var MIN = (typeof Expert !== 'undefined' && Expert.MIN_SAMPLE) ? Expert.MIN_SAMPLE : 3;
+    var ranked = E.stats.filter(function (s) { return s.qualified; });
+    var growing = E.stats.filter(function (s) { return !s.qualified && s.settled > 0; });
+    if (!ranked.length && !growing.length) {
+      list2 = '<div class="panel" style="padding:12px;font-size:10.5px;color:var(--muted2);' +
+        'line-height:1.7">暂无已结算的推荐记录。<br>' +
+        '命中率需要赛果回填后才能统计 —— 帖子先入库，' +
+        '比赛结束后通过「历史回溯」自动判定命中 / 未中。</div>';
+    } else {
+      var rankRows = ranked.length ? ranked.slice(0, 20).map(function (s, i) {
+          var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+          return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;' +
+            (i ? 'border-top:1px dashed var(--border)' : '') + '">' +
+            '<span style="width:22px;text-align:center;font-size:11px;font-weight:800;' +
+            'color:var(--muted2)">' + medal + '</span>' +
+            '<span style="flex:1;font-size:11px;font-weight:700">' + escHtml(s.name) + '</span>' +
+            '<span style="font-size:9.5px;color:var(--muted2)">' +
+            s.hit + '/' + s.settled + '</span>' +
+            '<div style="width:60px;height:6px;background:var(--card2);border-radius:4px;' +
+            'overflow:hidden"><i style="display:block;height:100%;width:' +
+            (s.rate || 0).toFixed(0) + '%;background:' + rateColor(s.rate) + '"></i></div>' +
+            '<b style="width:34px;text-align:right;font-size:11px;color:' +
+            rateColor(s.rate) + '">' + rateText(s.rate) + '</b></div>';
+        }).join('') : '';
+
+      list2 = (ranked.length
+        ? '<div class="panel" style="padding:10px;margin-bottom:8px">' + rankRows + '</div>'
+        : '<div class="panel" style="padding:11px;margin-bottom:8px;font-size:10.5px;' +
+          'color:var(--muted2);line-height:1.7">暂无专家达到上榜门槛（需已结算 ≥ ' + MIN +
+          ' 场）。样本太少时的「100%」没有参考意义，因此不参与排名。</div>');
+
+      if (growing.length) {
+        list2 += '<div style="font-size:10px;font-weight:800;color:var(--muted);' +
+          'letter-spacing:1px;margin:10px 0 6px">样本积累中（&lt; ' + MIN + ' 场）</div>' +
+          '<div class="panel" style="padding:10px">' +
+          growing.slice(0, 12).map(function (s) {
+            return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0">' +
+              '<span style="flex:1;font-size:11px;font-weight:700">' + escHtml(s.name) + '</span>' +
+              '<span style="font-size:9.5px;color:var(--muted2)">' + s.hit + '/' + s.settled + '</span>' +
+              '<b style="font-size:11px;color:' + rateColor(s.rate) + '">' + rateText(s.rate) + '</b>' +
+              '<span style="font-size:9px;color:var(--muted2)">差 ' + (MIN - s.settled) + ' 场</span>' +
+              '</div>';
+          }).join('') + '</div>';
+      }
+    }
+
+    /* ---------- ③ 历史战绩回溯 ---------- */
+    var sec3 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
+      'margin:14px 0 8px">历史战绩回溯</div>';
+
+    var settled = E.posts.filter(function (p) { return p.result; });
+    var hitN = settled.filter(function (p) { return p.result === 'hit'; }).length;
+    var pendingN = E.posts.length - settled.length;
+    var overallRate = settled.length ? (hitN / settled.length * 100) : null;
+
+    /* 按日期分组回溯 */
+    var byDate = {};
+    settled.forEach(function (p) {
+      var dk = p.matchDate || p.postDate || '未知';
+      if (!byDate[dk]) byDate[dk] = { hit: 0, miss: 0, items: [] };
+      byDate[dk][p.result === 'hit' ? 'hit' : 'miss']++;
+      byDate[dk].items.push(p);
+    });
+    var dates = Object.keys(byDate).sort().reverse();
+
+    var list3 = '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
+      statBox('累计推荐', E.posts.length + ' 帖') +
+      statBox('已结算', settled.length + ' 场') +
+      statBox('命中', hitN + ' 场') +
+      statBox('总命中率', rateText(overallRate)) +
+      statBox('待开奖', pendingN + ' 场') +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--muted2);line-height:1.7">' +
+      '回溯口径：帖子的推荐方向与真实赛果比对，一致记命中，不一致记未中。' +
+      '大小球类推荐需盘口才能判定，暂不纳入结算。<br>' +
+      '<b style="color:var(--warn)">当前状态</b>：判定逻辑已就绪，' +
+      '赛果数据源正在接入中。接入后比赛结束会自动回填并累计命中率。' +
+      '在此之前，历史区会在跑诊断确认到可用赛果接口后开始统计。</div></div>';
+
+    if (dates.length) {
+      list3 += dates.slice(0, 14).map(function (dk) {
+        var g = byDate[dk];
+        var tot = g.hit + g.miss;
+        var rt = tot ? (g.hit / tot * 100) : null;
+        var items = g.items.slice(0, 6).map(function (p) {
+          var col = p.result === 'hit' ? 'var(--good)' : 'var(--danger)';
+          return '<div style="font-size:10px;display:flex;justify-content:space-between;gap:6px;' +
+            'padding:3px 0"><span style="color:var(--muted2);flex:1">' +
+            escHtml(p.home + ' vs ' + p.away) + '</span>' +
+            '<span style="color:' + col + ';font-weight:700">' +
+            (p.result === 'hit' ? '命中' : '未中') + '</span></div>';
+        }).join('');
+        return '<div class="panel" style="padding:9px;margin-bottom:7px">' +
+          '<div style="display:flex;justify-content:space-between;font-size:11px;' +
+          'font-weight:700;margin-bottom:5px"><span>' + escHtml(dk) + '</span>' +
+          '<span style="color:' + rateColor(rt) + '">' + g.hit + '/' + tot +
+          ' · ' + rateText(rt) + '</span></div>' + items + '</div>';
+      }).join('');
+    }
+
+    return head + bar + ops + sec1 + list1 + sec2 + list2 + sec3 + list3;
+  }
+
   function renderList() {
     const el = $('#matchList');
 
@@ -4800,6 +5716,19 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       return;
     }
     if (S.filter === 'htft') { el.innerHTML = htftViewHTML(); return; }
+    if (S.filter === 'expert') {
+      el.innerHTML = expertViewHTML();
+      var eb1 = document.getElementById('exFetch');
+      if (eb1) bindTap(eb1, function () { loadExpert(true); });
+      var eb2 = document.getElementById('exClear');
+      if (eb2) bindTap(eb2, function () {
+        if (typeof Expert !== 'undefined') Expert.clearAll();
+        S.expert = null;
+        toast('已清空专家数据');
+        renderList();
+      });
+      return;
+    }
 
     if (!S.view.length) {
       el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><p>没有符合条件的赛事</p><span>试试切换筛选或清空搜索</span></div>';
