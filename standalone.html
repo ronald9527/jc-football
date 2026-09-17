@@ -411,6 +411,30 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
   animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
+/* ---------------- 开关 ---------------- */
+.toggle{
+  position:relative;width:46px;height:26px;border-radius:20px;border:1px solid var(--border2);
+  background:var(--card2);cursor:pointer;padding:0;flex:none;transition:.2s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.toggle .knob{
+  position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+  background:var(--muted2);transition:.22s cubic-bezier(.22,1,.36,1);
+}
+.toggle.on{background:rgba(var(--accent-rgb),.25);border-color:var(--accent)}
+.toggle.on .knob{left:22px;background:var(--accent)}
+
+/* ---------------- 按钮 ---------------- */
+.btn-primary,.btn-ghost{
+  padding:10px 14px;border-radius:11px;font-size:12.5px;font-weight:700;cursor:pointer;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:.15s;
+  font-family:inherit;
+}
+.btn-primary{background:var(--accent);border:none;color:#04121c}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-primary:active,.btn-ghost:active{transform:scale(.97);opacity:.85}
+.btn-primary[disabled],.btn-ghost[disabled]{opacity:.5;pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -599,6 +623,30 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
         <button class="btn-primary" id="btnSaveApi">保存并拉取</button>
       </div>
       <div class="src-status" id="srcStatus">状态：演示数据 · 模型引擎已就绪</div>
+    </div>
+
+    <div class="lab-card" id="updateCard">
+      <h3><span class="lab-n">🔄</span>内容更新</h3>
+      <p class="lab-desc">填入固定链接后，每次打开 App 会自动拉取最新内容，<b>无需重新安装</b>。不填则一直用内置版本。</p>
+      <div class="set-row col">
+        <span>固定链接地址</span>
+        <input type="text" id="setUpdateUrl" placeholder="https://用户名.github.io/仓库名/">
+      </div>
+      <div class="set-row">
+        <span>启用自动更新</span>
+        <button class="toggle" id="setUpdateOn" role="switch" aria-checked="false">
+          <span class="knob"></span>
+        </button>
+      </div>
+      <div class="src-status" id="updateStatus" style="margin-top:6px">当前使用内置内容</div>
+      <div style="display:flex;gap:8px;margin-top:9px">
+        <button class="btn-primary" id="btnSaveUpdate" style="flex:1">保存</button>
+        <button class="btn-ghost" id="btnCheckUpdate" style="flex:1">立即检查</button>
+      </div>
+      <button class="btn-ghost" id="btnResetBuiltin" style="width:100%;margin-top:8px">恢复内置版本</button>
+      <div style="font-size:10px;color:var(--muted2);line-height:1.7;margin-top:8px">
+        地址结尾需带 <b>/</b>。更新后重启 App 生效。GitHub Pages 发布约需 1 分钟。
+      </div>
     </div>
 
     <div class="lab-card">
@@ -3455,6 +3503,125 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       toast('正在重算模型…');
       setTimeout(function () { build(todayStr()); renderChips(); toast('已更新 ' + S.all.length + ' 场'); }, 240);
     };
+
+    /* ================= 内容更新（热更新） =================
+       原生 App：配置存到 SharedPreferences，由 Updater 拉取远端 standalone.html
+       浏览器环境：无原生桥接，隐藏该卡片（网页版本身即在线） */
+    (function initUpdater() {
+      const card = $('#updateCard');
+      const urlInput = $('#setUpdateUrl');
+      const onBtn = $('#setUpdateOn');
+      const statusEl = $('#updateStatus');
+      const saveBtn = $('#btnSaveUpdate');
+      const checkBtn = $('#btnCheckUpdate');
+      const resetBtn = $('#btnResetBuiltin');
+      if (!card) return;
+
+      const hasBridge = isNativeApp();
+      if (!hasBridge) {
+        card.style.display = 'none';
+        return;
+      }
+
+      function setStatus(txt, kind) {
+        if (!statusEl) return;
+        const c = kind === 'ok' ? 'var(--good)' : kind === 'err' ? 'var(--danger)'
+          : kind === 'wait' ? 'var(--warn)' : 'var(--muted)';
+        statusEl.innerHTML = '<span style="color:' + c + '">●</span> ' + txt;
+      }
+
+      function render() {
+        let cfg = { url: '', on: false };
+        try {
+          if (window.JCBridge && window.JCBridge.getUpdateConfig) {
+            cfg = JSON.parse(window.JCBridge.getUpdateConfig() || '{}');
+          }
+        } catch (e) { cfg = { url: '', on: false }; }
+        if (urlInput) urlInput.value = cfg.url || '';
+        if (onBtn) {
+          onBtn.classList.toggle('on', !!cfg.on);
+          onBtn.setAttribute('aria-checked', cfg.on ? 'true' : 'false');
+        }
+        setStatus(cfg.on && cfg.url
+          ? '已启用 · ' + cfg.url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+          : '当前使用内置内容', cfg.on ? 'ok' : '');
+        return cfg;
+      }
+
+      let cur = render();
+
+      if (onBtn) {
+        onBtn.onclick = function () {
+          cur.on = !cur.on;
+          onBtn.classList.toggle('on', cur.on);
+          onBtn.setAttribute('aria-checked', cur.on ? 'true' : 'false');
+        };
+      }
+
+      if (saveBtn) {
+        saveBtn.onclick = function () {
+          const u = (urlInput && urlInput.value || '').trim();
+          if (cur.on && !/^https?:\/\/.+/i.test(u)) {
+            toast('请填写以 http 开头的完整地址');
+            return;
+          }
+          // 结尾补 /
+          const fixed = u && !u.endsWith('/') ? u + '/' : u;
+          try {
+            if (window.JCBridge && window.JCBridge.setUpdateConfig) {
+              window.JCBridge.setUpdateConfig(fixed, cur.on);
+            }
+          } catch (e) { }
+          cur.url = fixed;
+          render();
+          toast(cur.on ? '已保存，重启 App 生效' : '已保存（未启用）');
+        };
+      }
+
+      if (checkBtn) {
+        checkBtn.onclick = function () {
+          const u = (urlInput && urlInput.value || '').trim();
+          if (!/^https?:\/\/.+/i.test(u)) { toast('请先填写地址'); return; }
+          const fixed = u && !u.endsWith('/') ? u + '/' : u;
+          const target = fixed + 'standalone.html';
+          setStatus('正在检查…', 'wait');
+          checkBtn.disabled = true;
+          fetch(target, { method: 'GET', cache: 'no-store' })
+            .then(function (r) {
+              if (!r.ok) throw new Error('HTTP ' + r.status);
+              return r.text();
+            })
+            .then(function (t) {
+              checkBtn.disabled = false;
+              if (t && t.length > 50000 && t.indexOf('竞彩智析') >= 0) {
+                setStatus('✅ 可访问 · ' + Math.round(t.length / 1024) + ' KB（重启后生效）', 'ok');
+                toast('链接可用，重启 App 即更新');
+              } else {
+                setStatus('⚠ 内容异常，请确认地址', 'err');
+              }
+            })
+            .catch(function (e) {
+              checkBtn.disabled = false;
+              setStatus('❌ 无法访问：' + (e && e.message || e), 'err');
+              toast('检查失败：' + (e && e.message || e));
+            });
+        };
+      }
+
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          try {
+            if (window.JCBridge && window.JCBridge.resetToBuiltin) {
+              window.JCBridge.resetToBuiltin();
+            }
+          } catch (e) { }
+          if (urlInput) urlInput.value = '';
+          cur = { url: '', on: false };
+          render();
+          toast('已恢复内置版本，重启生效');
+        };
+      }
+    })();
 
     // 主题
     const th = store.get(LS.theme) || 'dark';
