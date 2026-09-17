@@ -640,6 +640,16 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
         </div>
         <button class="btn-primary" id="btnSaveApi">保存并拉取</button>
       </div>
+      <div class="set-row">
+        <span>只看今天开赛</span>
+        <button class="toggle" id="setTodayOnly" role="switch" aria-checked="false">
+          <span class="knob"></span>
+        </button>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);line-height:1.7;padding:2px 0 6px">
+        竞彩今日开售的赛事，部分在次日或更晚开赛（凌晨场常见）。
+        默认全部展示；打开此开关只保留今天开赛的场次。
+      </div>
       <div class="src-status" id="srcStatus">状态：演示数据 · 模型引擎已就绪</div>
     </div>
 
@@ -1567,7 +1577,13 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
       return;
     }
     var JC = global.JCSource || window.JCSource;
-    var todayOnly = opts.todayOnly !== false;   // 默认只看当天
+    /* 关键认知修正：
+       竞彩官方接口返回的本来就是「当前销售日可购买」的赛事，
+       而 matchDate 是「比赛开赛日」，两者经常不同 ——
+       今天开售的比赛完全可能明天/后天开赛（凌晨场尤其常见）。
+       因此默认按销售日展示（即接口返回的全部），
+       「只看今天开赛」降级为可选项，避免把大量可买赛事误过滤掉。 */
+    var todayOnly = opts.todayOnly === true;   // 默认关闭
 
     JC.fetchAll({ depth: opts.depth == null ? 0 : opts.depth })
       .then(function (out) {
@@ -1581,16 +1597,20 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
         var list = all;
         var today = localDateStr();
         var offDays = 0;
+        var spread = {};
+        all.forEach(function (m) {
+          var d = String(m.date || '').slice(0, 10) || '未知';
+          spread[d] = (spread[d] || 0) + 1;
+        });
         if (todayOnly) {
           var t = all.filter(function (m) {
-            var d = m.date || '';
-            return String(d).slice(0, 10) === today;
+            return String(m.date || '').slice(0, 10) === today;
           });
+          /* 今天开赛的一场都没有时，保留全部并提示，避免白屏 */
           if (t.length) {
             list = t;
-            offDays = all.length - t.length;   // 被折叠掉的非当天场次
+            offDays = all.length - t.length;
           }
-          // 当天无赛 → 保留全部，避免白屏
         }
 
         done(null, list, {
@@ -1604,6 +1624,8 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
           todayOnly: todayOnly,
           today: today,
           offDays: offDays,
+          spread: spread,
+          onSaleDays: Object.keys(spread).length,
           supportCount: out.supportCount || 0,
           enrichedCount: out.enrichedCount || 0
         });
@@ -2705,7 +2727,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   const LS = {
     fav: 'jc_favs', theme: 'jc_theme', payout: 'jc_payout',
-    eu: 'jc_eu', count: 'jc_count', mode: 'jc_mode', gw: 'jc_gw', hist: 'jc_hist'
+    eu: 'jc_eu', count: 'jc_count', mode: 'jc_mode', gw: 'jc_gw', hist: 'jc_hist',
+    todayOnly: 'jc_today_only'
   };
 
   /* localStorage 安全封装：
@@ -2788,6 +2811,18 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     const d = x.an.rating.dir;
     return x.an.rating.diverge > 6 && x.an.probs[d] > x.an.marketProb[d];
   }
+  /* 开赛日期标签：今天只显示时间，其他日期显示 MM-DD，让用户一眼分清 */
+  function dateLabel(d) {
+    var s0 = String(d || '').slice(0, 10);
+    if (!s0) return '';
+    var now = new Date();
+    var m = String(now.getMonth() + 1), dd = String(now.getDate());
+    var today = now.getFullYear() + '-' + (m.length < 2 ? '0' + m : m) + '-' + (dd.length < 2 ? '0' + dd : dd);
+    if (s0 === today) return '';
+    var p = s0.split('-');
+    return p.length >= 3 ? (p[1] + '-' + p[2]) : s0;
+  }
+
   function todayStr() {
     const d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -2878,12 +2913,20 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     /* 当天赛程：明确显示"当天 X 场"并说明折叠掉的非当天场次，
        避免用户误以为赛程不全 */
     if (meta && meta.todayOnly) {
-      dataSrc = '竞彩当天';
+      dataSrc = '竞彩当天开赛';
       if (meta.offDays > 0) {
-        dataExtra = '已折叠 ' + meta.offDays + ' 场非当日赛事' + (extra ? ' · ' + extra : '');
+        dataExtra = '已折叠 ' + meta.offDays + ' 场其他日期' + (extra ? ' · ' + extra : '');
       } else if (extra) {
         dataExtra = extra;
       }
+    } else if (meta && meta.spread) {
+      /* 按销售日：说明这批赛事横跨几个比赛日，避免用户以为日期错乱 */
+      dataSrc = '竞彩今日开售';
+      var days = Object.keys(meta.spread).sort();
+      var seg = days.length === 1
+        ? days[0].slice(5) + ' 开赛'
+        : days[0].slice(5) + '~' + days[days.length - 1].slice(5) + ' 开赛';
+      dataExtra = seg + (extra ? ' · ' + extra : '');
     } else {
       dataExtra = extra || '';
     }
@@ -2899,7 +2942,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     /* ---- 竞彩官方直连：无需任何配置 ---- */
     if (mode === 'official') {
       setSrcStatus('正在读取竞彩官方赛程…', 'wait');
-      JCAdapter.fetchOfficial({ depth: 0 }, function (err, list, meta) {
+      JCAdapter.fetchOfficial({ depth: 0, todayOnly: store.get(LS.todayOnly) === '1' },
+        function (err, list, meta) {
         if (err) {
           const msg = /WAF|403|拒绝|拦截/i.test(err.message)
             ? '被官方接口拒绝（当前网络是境外或服务器 IP）'
@@ -3174,7 +3218,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return '' +
       '<article class="card" data-id="' + r.id + '" style="--sig:' + sigVar + '">' +
       '<div class="c-top">' +
-        '<div class="c-meta"><span class="c-time">' + r.time + '</span><span class="lg">' + r.league + '</span></div>' +
+        '<div class="c-meta"><span class="c-time">' + dateLabel(r.date) + ' ' + r.time + '</span><span class="lg">' + r.league + '</span></div>' +
         '<div class="c-right"><span class="stars">' + starStr(a.rating.stars) + '</span>' +
         '<span class="sig ' + a.rating.sigClass + '">' + a.rating.signal + '</span></div>' +
       '</div>' +
@@ -3898,6 +3942,22 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         store.set(key, el.value);
       };
       el.onchange = function () { if (rebuild) { build(todayStr()); renderChips(); toast('参数已生效'); } };
+    }
+
+    var tOnly = $('#setTodayOnly');
+    if (tOnly) {
+      var on0 = store.get(LS.todayOnly) === '1';
+      tOnly.classList.toggle('on', on0);
+      tOnly.setAttribute('aria-checked', on0 ? 'true' : 'false');
+      bindTap(tOnly, function () {
+        var v = store.get(LS.todayOnly) === '1' ? '0' : '1';
+        store.set(LS.todayOnly, v);
+        var on1 = v === '1';
+        tOnly.classList.toggle('on', on1);
+        tOnly.setAttribute('aria-checked', on1 ? 'true' : 'false');
+        toast(on1 ? '只看今天开赛' : '显示全部开售赛事');
+        build(todayStr()); renderChips();
+      });
     }
 
     $('#setMode').value = store.get(LS.mode) || 'official';
