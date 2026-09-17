@@ -2723,6 +2723,494 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
 </script>
 <script>
+/**
+ * ============================================================
+ * 竞彩智析 · 香港马会（HKJC）赔率模块
+ * ------------------------------------------------------------
+ * 数据源：HKJC 官方 GraphQL（与官网同源，公开无需付费）
+ *   端点 https://info.cld.hkjc.com/graphql/base/
+ *   玩法 HAD 主客和 / HDC 让球 / HHA 让球主客 / HIL 大小球 / FHA 半场主客和
+ *
+ * 为什么用它做「港澳指数」：
+ *   香港马会是亚洲盘口的重要定价参考，其 HAD（主客和）即香港盘胜平负，
+ *   HDC/HHA 即让球盘（亚盘），HIL 即大小球。这些正是「港澳指数」的实质内容。
+ *
+ * 注意：
+ *   1) HKJC 对数据中心/境外 IP 会返回 403（WAF）。
+ *      App 内由手机（国内 IP）直接请求，通常可达。
+ *   2) 单次请求的 fbOddsTypes 不要超过 ~5 个，
+ *      否则下游返回 DOWNSTREAM_SERVICE_ERROR。
+ *   3) 拿不到时不做任何编造，由调用方决定降级展示。
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var ENDPOINT = 'https://info.cld.hkjc.com/graphql/base/';
+
+  var QUERY = 'query matchList($startIndex: Int, $endIndex: Int, $startDate: String, ' +
+    '$endDate: String, $fbOddsTypes: [FBOddsType]!, $fbOddsTypesM: [FBOddsType]!, ' +
+    '$showAllMatch: Boolean) {' +
+    ' matches(startIndex: $startIndex, endIndex: $endIndex, startDate: $startDate, ' +
+    'endDate: $endDate, fbOddsTypes: $fbOddsTypesM, showAllMatch: $showAllMatch) {' +
+    '  id frontEndId matchDate kickOffTime status updateAt' +
+    '  homeTeam { id name_en name_ch }' +
+    '  awayTeam { id name_en name_ch }' +
+    '  tournament { code name_en name_ch }' +
+    '  foPools(fbOddsTypes: $fbOddsTypes) {' +
+    '    oddsType status updateAt' +
+    '    lines { lineId status condition main' +
+    '      combinations { combId str status currentOdds' +
+    '        selections { selId str name_ch name_en } } }' +
+    '  }' +
+    ' }' +
+    '}';
+
+  /* ---------------- 繁简归一化 ----------------
+     HKJC 多为繁体，竞彩为简体。不做转换会导致队名匹配全部失败。 */
+  var T2S = {
+    '聯': '联', '車': '车', '馬': '马', '貝': '贝', '薩': '萨', '爾': '尔',
+    '華': '华', '頓': '顿', '納': '纳', '亞': '亚', '蘭': '兰', '茲': '兹',
+    '茲': '兹', '諾': '诺', '維': '维', '羅': '罗', '門': '门', '漢': '汉',
+    '熱': '热', '刺': '刺', '競': '竞', '體': '体', '會': '会', '隊': '队',
+    '國': '国', '際': '际', '歐': '欧', '洲': '洲', '盃': '杯', '賽': '赛',
+    '龍': '龙', '獅': '狮', '虎': '虎', '堡': '堡', '萊': '莱', '錫': '锡',
+    '達': '达', '倫': '伦', '敦': '敦', '曼': '曼', '徹': '彻', '斯': '斯',
+    '特': '特', '城': '城', '菲': '菲', '爾': '尔', '德': '德', '里': '里',
+    '烏': '乌', '蘭': '兰', '克': '克', '蘭': '兰', '諾': '诺', '瓦': '瓦',
+    '爾': '尔', '達': '达', '競': '竞', '技': '技', '運': '运', '動': '动',
+    '畢': '毕', '爾': '尔', '巴': '巴', '鄂': '鄂', '塞': '塞', '維': '维',
+    '利': '利', '亞': '亚', '皇': '皇', '家': '家', '社': '社', '會': '会',
+    '馬': '马', '德': '德', '里': '里', '競': '竞', '技': '技', '格': '格',
+    '拉': '拉', '納': '纳', '達': '达', '魯': '鲁', '爾': '尔', '圖': '图',
+    '門': '门', '興': '兴', '堡': '堡', '弗': '弗', '賴': '赖', '堡': '堡',
+    '柏': '柏', '林': '林', '聯': '联', '禾': '禾', '夫': '夫', '斯': '斯',
+    '堡': '堡', '雲': '云', '達': '达', '不': '不', '萊': '莱', '梅': '梅',
+    '慕': '慕', '尼': '尼', '黑': '黑', '多': '多', '蒙': '蒙', '特': '特',
+    '祖': '祖', '雲': '云', '杜': '杜', '斯': '斯', '阿': '阿', '特': '特',
+    '蘭': '兰', '大': '大', '米': '米', '蘭': '兰', '羅': '罗', '馬': '马',
+    '拉': '拉', '齊': '齐', '奧': '奥', '蘭': '兰', '度': '度', '拿': '拿',
+    '玻': '玻', '爾': '尔', '圖': '图', '里': '里', '斯': '斯', '本': '本',
+    '菲': '菲', '卡': '卡', '波': '波', '圖': '图', '士': '士', '砵': '钵',
+    '甸': '甸', '奴': '奴', '山': '山', '度': '度', '明': '明', '尼': '尼',
+    '路': '路', '哥': '哥', '倫': '伦', '比': '比', '亞': '亚', '智': '智',
+    '利': '利', '巴': '巴', '拉': '拉', '納': '纳', '競': '竞', '會': '会',
+    '彭': '彭', '拿': '拿', '美': '美', '斯': '斯', '保': '保', '地': '地',
+    '桑': '桑', '托': '托', '斯': '斯', '富': '富', '明': '明', '尼': '尼',
+    '哥': '哥', '連': '连', '斯': '斯', '拿': '拿', '費': '费', '斯': '斯',
+    '比': '比', '爾': '尔', '雷': '雷', '斯': '斯', '辛': '辛', '尼': '尼',
+    '斯': '斯', '奈': '奈', '斯': '斯', '蘭': '兰', '斯': '斯', '蒙': '蒙',
+    '彼': '彼', '得': '得', '堡': '堡', '澤': '泽', '尼': '尼', '特': '特',
+    '莫': '莫', '斯': '斯', '科': '科', '火': '火', '車': '车', '頭': '头',
+    '迪': '迪', '納': '纳', '摩': '摩', '中': '中', '央': '央', '陸': '陆',
+    '軍': '军', '克': '克', '拉': '拉', '斯': '斯', '諾': '诺', '達': '达',
+    '爾': '尔', '羅': '罗', '斯': '斯', '托': '托', '夫': '夫', '烏': '乌',
+    '拉': '拉', '爾': '尔', '蘇': '苏', '維': '维', '埃': '埃', '爾': '尔',
+    '頓': '顿', '斯': '斯', '特': '特', '羅': '罗', '斯': '斯', '托': '托',
+    '夫': '夫', '格': '格', '勒': '勒', '尼': '尼', '茲': '兹', '薩': '萨',
+    '克': '克', '斯': '斯', '堡': '堡', '奧': '奥', '格': '格', '斯': '斯',
+    '堡': '堡', '沃': '沃', '夫': '夫', '斯': '斯', '堡': '堡', '霍': '霍',
+    '芬': '芬', '海': '海', '姆': '姆', '弗': '弗', '賴': '赖', '堡': '堡',
+    '美': '美', '因': '因', '茲': '兹', '門': '门', '興': '兴', '格': '格',
+    '拉': '拉', '德': '德', '巴': '巴', '赫': '赫', '奧': '奥', '格': '格',
+    '斯': '斯', '堡': '堡', '柏': '柏', '林': '林', '聯': '联', '聖': '圣',
+    '保': '保', '利': '利', '基': '基', '爾': '尔', '海': '海', '登': '登',
+    '咸': '咸', '波': '波', '鴻': '鸿', '基': '基', '爾': '尔', '達': '达',
+    '姆': '姆', '斯': '斯', '塔': '塔', '特': '特', '漢': '汉', '堡': '堡',
+    '紐': '纽', '卡': '卡', '斯': '斯', '爾': '尔', '聯': '联', '諾': '诺',
+    '定': '定', '咸': '咸', '森': '森', '林': '林', '修': '修', '咸': '咸',
+    '頓': '顿', '般': '般', '尼': '尼', '利': '利', '茲': '兹', '聯': '联',
+    '白': '白', '禮': '礼', '頓': '顿', '般': '般', '尼': '尼', '茅': '茅',
+    '斯': '斯', '富': '富', '咸': '咸', '盧': '卢', '頓': '顿', '愛': '爱',
+    '華': '华', '頓': '顿', '諾': '诺', '域': '域', '治': '治', '屈': '屈',
+    '福特': '福特', '狼': '狼', '隊': '队', '新': '新', '特': '特', '蘭': '兰'
+  };
+
+  function toSimplified(s) {
+    if (!s) return '';
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      out += (T2S[c] !== undefined) ? T2S[c] : c;
+    }
+    return out;
+  }
+
+  /* ---------------- 港陆队名对照 ----------------
+     核心难点：竞彩用简体简称（巴萨/国米/尤文），HKJC 用繁体港译全称
+     （巴塞隆拿/國際米蘭/祖雲杜斯）。仅靠繁简转换无法对齐 ——
+     「尤文图斯」与「祖雲杜斯」是用词差异，不是字形差异。
+     因此建立标准名 → 各种叫法的对照表，先把两边归一到标准名再比对。 */
+  var ALIAS = [
+    /* 西甲 */
+    ['巴塞罗那', ['巴塞隆拿', '巴萨', '巴塞', '巴塞羅那', '巴塞隆納']],
+    ['皇家马德里', ['皇家馬德里', '皇马', '皇馬']],
+    ['马德里竞技', ['馬德里體育會', '马竞', '馬體會', '馬德里競技']],
+    ['毕尔巴鄂', ['畢爾包', '畢爾巴鄂']],
+    ['皇家社会', ['皇家蘇斯達', '皇家社會']],
+    ['贝蒂斯', ['貝迪斯', '皇家貝迪斯']],
+    ['比利亚雷亚尔', ['維拉利爾', '比利亞雷亞爾']],
+    ['赫罗纳', ['基羅納', '赫羅納']],
+    ['塞尔塔', ['切爾達', '塞爾塔']],
+    ['瓦伦西亚', ['華倫西亞', '維倫西亞']],
+    ['塞维利亚', ['西維爾', '塞維利亞']],
+    ['巴列卡诺', ['華歷簡奴', '巴列卡諾']],
+    ['马洛卡', ['馬略卡', '馬洛卡']],
+    ['奥萨苏纳', ['奧沙辛拿', '奧薩蘇納']],
+    ['赫塔费', ['基達菲', '赫塔費']],
+    ['西班牙人', ['愛斯賓奴', '西班牙人']],
+    ['阿拉维斯', ['艾拉維斯', '阿拉維斯']],
+    ['莱加内斯', ['雷加利斯', '萊加內斯']],
+    ['拉斯帕尔马斯', ['拉斯彭馬斯', '拉斯帕爾馬斯']],
+    ['巴拉多利德', ['華拉度列', '巴拉多利德']],
+    /* 英超 */
+    ['曼城', ['曼城', '曼徹斯特城']],
+    ['曼联', ['曼聯', '曼徹斯特聯']],
+    ['利物浦', ['利物浦']],
+    ['阿森纳', ['阿仙奴', '阿森納']],
+    ['切尔西', ['車路士', '切爾西']],
+    ['热刺', ['熱刺', '托特納姆熱刺']],
+    ['纽卡斯尔', ['紐卡素', '紐卡斯爾']],
+    ['阿斯顿维拉', ['阿士東維拉', '阿斯頓維拉']],
+    ['布莱顿', ['白禮頓', '布萊頓']],
+    ['西汉姆', ['韋斯咸', '西漢姆']],
+    ['水晶宫', ['水晶宮']],
+    ['伯恩茅斯', ['般尼茅夫', '伯恩茅斯']],
+    ['利兹联', ['列斯聯', '利茲聯']],
+    ['富勒姆', ['富咸', '富勒姆']],
+    ['布伦特福德', ['賓福特', '布倫特福德']],
+    ['埃弗顿', ['愛華頓', '埃弗頓']],
+    ['桑德兰', ['新特蘭', '桑德蘭']],
+    ['诺丁汉森林', ['諾定咸森林', '諾丁漢森林']],
+    ['狼队', ['狼隊', '沃爾弗漢普頓']],
+    ['伯恩利', ['般尼', '伯恩利']],
+    /* 德甲 */
+    ['拜仁慕尼黑', ['拜仁慕尼黑', '拜仁']],
+    ['勒沃库森', ['利華古遜', '勒沃庫森']],
+    ['多特蒙德', ['多蒙特', '多特蒙德']],
+    ['莱比锡红牛', ['萊比錫紅牛', 'RB萊比錫']],
+    ['法兰克福', ['法蘭克福']],
+    ['斯图加特', ['史特加', '斯圖加特']],
+    ['弗赖堡', ['費雷堡', '弗賴堡']],
+    ['沃尔夫斯堡', ['禾夫斯堡', '沃爾夫斯堡']],
+    ['门兴', ['慕遜加柏', '門興格拉德巴赫', '门兴']],
+    ['美因茨', ['緬恩斯', '美因茨']],
+    ['霍芬海姆', ['賀芬咸', '霍芬海姆']],
+    ['柏林联合', ['柏林聯', '柏林聯合']],
+    ['奥格斯堡', ['奧格斯堡']],
+    ['云达不莱梅', ['雲達不萊梅', '雲達不萊梅']],
+    ['圣保利', ['聖保利']],
+    ['海登海姆', ['海登咸', '海登海姆']],
+    ['基尔', ['基爾']],
+    ['波鸿', ['波琴', '波鴻']],
+    /* 意甲 */
+    ['国际米兰', ['國際米蘭', '国米', '國米']],
+    ['AC米兰', ['AC米蘭', '米兰', '米蘭']],
+    ['那不勒斯', ['拿玻里', '那不勒斯']],
+    ['尤文图斯', ['祖雲杜斯', '尤文', '祖記']],
+    ['亚特兰大', ['阿特蘭大', '亞特蘭大']],
+    ['罗马', ['羅馬']],
+    ['拉齐奥', ['拉素', '拉齊奧']],
+    ['佛罗伦萨', ['費倫天拿', '佛羅倫薩']],
+    ['博洛尼亚', ['博洛尼亞']],
+    ['都灵', ['拖連奴', '都靈']],
+    ['乌迪内斯', ['烏甸尼斯', '烏迪內斯']],
+    ['热那亚', ['熱拿亞', '熱那亞']],
+    ['萨索洛', ['薩斯索羅', '薩索洛']],
+    ['卡利亚里', ['卡利亞里']],
+    ['蒙扎', ['蒙沙', '蒙扎']],
+    ['帕尔马', ['帕爾馬']],
+    ['维罗纳', ['維羅納']],
+    ['莱切', ['萊切']],
+    ['恩波利', ['恩玻里', '恩波利']],
+    /* 法甲 */
+    ['巴黎圣日耳曼', ['巴黎聖日耳門', '巴黎', '巴黎聖日耳曼']],
+    ['马赛', ['馬賽']],
+    ['摩纳哥', ['摩納哥']],
+    ['里尔', ['里爾']],
+    ['里昂', ['里昂']],
+    ['尼斯', ['尼斯']],
+    ['雷恩', ['雷恩']],
+    ['朗斯', ['朗斯']],
+    ['斯特拉斯堡', ['斯特拉斯堡']],
+    ['布雷斯特', ['比斯特', '布雷斯特']],
+    /* 荷甲/葡超 */
+    ['埃因霍温', ['燕豪芬', '埃因霍温']],
+    ['阿贾克斯', ['阿積士', '阿賈克斯']],
+    ['费耶诺德', ['飛燕諾', '費耶諾德']],
+    ['本菲卡', ['賓菲加', '本菲卡']],
+    ['波尔图', ['波圖', '波爾圖']],
+    ['葡萄牙体育', ['士砵亭', '葡萄牙體育']],
+    /* 其他 */
+    ['加拉塔萨雷', ['加拉塔沙雷', '加拉塔薩雷']],
+    ['费内巴切', ['費倫巴治', '費內巴切']],
+    ['贝西克塔斯', ['比錫達斯', '貝西克塔斯']],
+    ['泽尼特', ['辛尼特', '澤尼特']],
+    ['莫斯科斯巴达', ['莫斯科斯巴達']],
+    ['基辅迪纳摩', ['基輔戴拿模', '基輔迪納摩']],
+    ['奥林匹亚科斯', ['奧林比亞高斯', '奧林匹亞科斯']],
+    ['凯尔特人', ['些路迪', '凱爾特人']],
+    ['流浪者', ['格拉斯哥流浪']]
+  ];
+
+  /* 队名 → 标准名（查不到则返回归一化原名） */
+  var ALIAS_INDEX = {};
+  (function buildIndex() {
+    for (var i = 0; i < ALIAS.length; i++) {
+      var std = ALIAS[i][0];
+      var arr = ALIAS[i][1];
+      ALIAS_INDEX[std] = std;
+      for (var j = 0; j < arr.length; j++) {
+        ALIAS_INDEX[arr[j]] = std;
+      }
+    }
+  })();
+
+  function toStd(s) {
+    var t = toSimplified(String(s || ''));
+    if (ALIAS_INDEX[t] !== undefined) return ALIAS_INDEX[t];
+    /* 别名表用繁体存，再查一次原始串 */
+    var raw = String(s || '');
+    if (ALIAS_INDEX[raw] !== undefined) return ALIAS_INDEX[raw];
+    return t;
+  }
+
+  /* 队名归一化：繁转简 + 去掉非中英文字 + 去掉常见后缀噪音 */
+  function normTeam(s) {
+    var t = toSimplified(String(s || ''));
+    // 去掉杂音词（联赛名/队名常见后缀）
+    t = t.replace(/足球會|足球俱乐部|俱乐部|足球队|隊|會|联|聯/g, '');
+    t = t.replace(/[^一-龥A-Za-z0-9]/g, '');
+    return t.toLowerCase();
+  }
+
+  /* 匹配：标准名相等 → 归一化相等 → 双向包含 */
+  function teamMatch(a, b) {
+    var sa = toStd(a), sb = toStd(b);
+    if (sa && sa === sb) return true;              // 别名表命中
+    var na = normTeam(a), nb = normTeam(b);
+    if (!na || !nb) return false;
+    if (na === nb) return true;                    // 归一化后相等
+    if (na.length >= 2 && nb.length >= 2) {
+      if (na.indexOf(nb) >= 0 || nb.indexOf(na) >= 0) return true;
+    }
+    return false;
+  }
+
+  /* ---------------- 数值工具 ---------------- */
+  function f(v) {
+    var n = parseFloat(v);
+    return isFinite(n) ? n : null;
+  }
+
+  /* ---------------- 解析 foPools ---------------- */
+  /* HAD：combinations 的 str 应为 H/D/A */
+  function parseHAD(pool) {
+    var res = { h: null, d: null, a: null };
+    if (!pool || !pool.lines) return res;
+    for (var i = 0; i < pool.lines.length; i++) {
+      var line = pool.lines[i];
+      if (!line || !line.combinations) continue;
+      for (var j = 0; j < line.combinations.length; j++) {
+        var c = line.combinations[j];
+        var k = String(c.str || '').toUpperCase();
+        var o = f(c.currentOdds);
+        if (o === null || o <= 1.001) continue;
+        if (k === 'H' || k === 'HOME') res.h = o;
+        else if (k === 'D' || k === 'DRAW') res.d = o;
+        else if (k === 'A' || k === 'AWAY') res.a = o;
+      }
+    }
+    return res;
+  }
+
+  /* HDC / HHA：让球盘，condition 含盘口（形如 "-1" / "+0.5" / "-0.75"） */
+  function parseHandicap(pool) {
+    if (!pool || !pool.lines) return null;
+    var best = null;
+    for (var i = 0; i < pool.lines.length; i++) {
+      var line = pool.lines[i];
+      if (!line || !line.combinations) continue;
+      var cond = f(String((line.condition || '')).replace(/[^0-9.\-+]/g, ''));
+      var oh = null, oa = null;
+      for (var j = 0; j < line.combinations.length; j++) {
+        var c = line.combinations[j];
+        var k = String(c.str || '').toUpperCase();
+        var o = f(c.currentOdds);
+        if (o === null || o <= 1.001) continue;
+        if (k === 'H' || k === 'HOME') oh = o;
+        else if (k === 'A' || k === 'AWAY') oa = o;
+      }
+      if (oh === null && oa === null) continue;
+      /* 主盘口优先（main 标记） */
+      if (!best || line.main) {
+        best = { line: cond === null ? 0 : cond, home: oh, away: oa, main: !!line.main };
+        if (line.main) break;
+      }
+    }
+    return best;
+  }
+
+  /* HIL：大小球，condition 为进球数线 */
+  function parseTotals(pool) {
+    if (!pool || !pool.lines) return null;
+    var best = null;
+    for (var i = 0; i < pool.lines.length; i++) {
+      var line = pool.lines[i];
+      if (!line || !line.combinations) continue;
+      var cond = f(String((line.condition || '')).replace(/[^0-9.]/g, ''));
+      var ov = null, un = null;
+      for (var j = 0; j < line.combinations.length; j++) {
+        var c = line.combinations[j];
+        var k = String(c.str || '').toUpperCase();
+        var o = f(c.currentOdds);
+        if (o === null || o <= 1.001) continue;
+        if (k.indexOf('O') === 0 || k === 'OVER' || k === 'H') ov = o;   // 大球
+        else if (k.indexOf('U') === 0 || k === 'UNDER' || k === 'L') un = o;
+      }
+      if (ov === null && un === null) continue;
+      if (!best || line.main) {
+        best = { line: cond === null ? 0 : cond, over: ov, under: un, main: !!line.main };
+        if (line.main) break;
+      }
+    }
+    return best;
+  }
+
+  /* ---------------- 主抓取 ---------------- */
+  /**
+   * @param {object} opts
+   *   types  : 玩法数组，默认 ['HAD','HDC','HIL']（≤5 个）
+   *   date   : 'YYYY-MM-DD'，默认今天
+   *   limit  : 最多取多少场，默认 60
+   * @returns {Promise<{ok:boolean, matches:Array, error:string}>}
+   */
+  function fetchOdds(opts) {
+    opts = opts || {};
+    var types = opts.types || ['HAD', 'HDC', 'HIL'];
+    var d = opts.date || todayStr();
+    var startIndex = 0;
+    var endIndex = opts.limit || 60;
+
+    var body = JSON.stringify({
+      operationName: 'matchList',
+      query: QUERY,
+      variables: {
+        startDate: d,
+        endDate: d,
+        fbOddsTypes: types,
+        fbOddsTypesM: types,
+        showAllMatch: true,
+        startIndex: startIndex,
+        endIndex: endIndex
+      }
+    });
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json, text/plain, */*',
+      'Origin': 'https://football.hkjc.com',
+      'Referer': 'https://football.hkjc.com/',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+        '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    };
+
+    var req = (typeof fetch === 'function')
+      ? fetch(ENDPOINT, { method: 'POST', headers: headers, body: body })
+      : Promise.reject(new Error('no fetch'));
+
+    return req.then(function (r) {
+      if (!r || !r.ok) {
+        var e = new Error('HTTP ' + (r && r.status));
+        e.status = r && r.status;
+        throw e;
+      }
+      return r.text();
+    }).then(function (txt) {
+      var j;
+      try { j = JSON.parse(txt); } catch (e) { throw new Error('响应非 JSON: ' + txt.slice(0, 80)); }
+      if (j.errors) {
+        var msg = (j.errors[0] && (j.errors[0].message || j.errors[0])) || 'GraphQL 错误';
+        throw new Error(String(msg).slice(0, 120));
+      }
+      var ms = (j.data && j.data.matches) || [];
+      return { ok: true, matches: ms.map(parseOne).filter(Boolean), raw: ms.length };
+    }).catch(function (e) {
+      return { ok: false, matches: [], error: String((e && e.message) || e) };
+    });
+  }
+
+  function parseOne(m) {
+    if (!m || !m.homeTeam || !m.awayTeam) return null;
+    var out = {
+      id: String(m.id || m.frontEndId || ''),
+      date: String(m.matchDate || '').slice(0, 10),
+      time: String(m.kickOffTime || '').slice(0, 5),
+      home: String(m.homeTeam.name_ch || m.homeTeam.name_en || ''),
+      away: String(m.awayTeam.name_ch || m.awayTeam.name_en || ''),
+      homeEn: String(m.homeTeam.name_en || ''),
+      awayEn: String(m.awayTeam.name_en || ''),
+      league: String((m.tournament && (m.tournament.name_ch || m.tournament.name_en)) || ''),
+      had: null, hdc: null, hha: null, hil: null, fha: null
+    };
+
+    var pools = m.foPools || [];
+    for (var i = 0; i < pools.length; i++) {
+      var p = pools[i];
+      var t = String(p.oddsType || '').toUpperCase();
+      if (t === 'HAD') out.had = parseHAD(p);
+      else if (t === 'HDC') out.hdc = parseHandicap(p);
+      else if (t === 'HHA') out.hha = parseHandicap(p);
+      else if (t === 'HIL') out.hil = parseTotals(p);
+      else if (t === 'FHA') out.fha = parseHAD(p);
+    }
+    return out;
+  }
+
+  function todayStr() {
+    var d = new Date();
+    var mm = String(d.getMonth() + 1), dd = String(d.getDate());
+    return d.getFullYear() + '-' + (mm.length < 2 ? '0' + mm : mm) + '-' + (dd.length < 2 ? '0' + dd : dd);
+  }
+
+  /* ---------------- 与竞彩赛事配对 ---------------- */
+  /**
+   * 把 HKJC 赛事按队名匹配到竞彩赛事上。
+   * 匹配失败不猜、不凑，返回 null，由调用方处理。
+   */
+  function attach(list, hkList) {
+    if (!hkList || !hkList.length) return { matched: 0, total: list.length };
+    var used = {}, n = 0;
+    list.forEach(function (x) {
+      var r = x.raw;
+      for (var i = 0; i < hkList.length; i++) {
+        if (used[i]) continue;
+        var h = hkList[i];
+        if (teamMatch(r.home.name, h.home) && teamMatch(r.away.name, h.away)) {
+          x.hk = h;
+          used[i] = 1;
+          n++;
+          return;
+        }
+      }
+    });
+    return { matched: n, total: list.length };
+  }
+
+  global.HKJC = {
+    fetchOdds: fetchOdds,
+    attach: attach,
+    teamMatch: teamMatch,
+    normTeam: normTeam,
+    toSimplified: toSimplified,
+    parseOne: parseOne,
+    ENDPOINT: ENDPOINT
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
 /* ============================================================
  * 竞彩智析 · 应用逻辑 (app.js)
  * ============================================================ */
@@ -3402,35 +3890,169 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       '<div style="font-size:9.5px;color:var(--muted);margin-top:2px">' + k + '</div></div>';
   }
 
-  /* ---- 港澳指数：赔率对照（诚实标注数据源） ---- */
-  function hkmoViewHTML() {
-    const head = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:10.5px;' +
-      'line-height:1.75;color:var(--muted2)">' +
-      '<b style="color:var(--warn)">数据源说明</b>：港澳（香港马会 / 澳门）赔率需要专门的商业数据接口，' +
-      '当前版本尚未接入。下表展示的是已接入的两个真实口径 —— ' +
-      '<b>竞彩官方固定奖金</b>与<b>去水后的市场共识概率</b>，' +
-      '以及模型独立推演值，供横向对照。</div>';
+  /* ---- 港澳指数：香港马会真实赔率对照 ---- */
+  var HK = { list: null, err: '', loading: false, at: 0, matched: 0, total: 0 };
 
-    const rows = S.view.map(function (x) {
-      const a = x.an, r = x.raw;
-      const d = a.rating.dir;
-      const dn = { h: '主胜', d: '平', a: '客胜' }[d] || '';
+  /* 亚洲盘口格式化：0.25 的倍数 → 习惯写法 */
+  function fmtHdp(v) {
+    if (v === null || v === undefined || !isFinite(v)) return '—';
+    var a = Math.abs(v);
+    var base = Math.floor(a);
+    var frac = Math.round((a - base) * 100) / 100;
+    var txt;
+    if (frac === 0) txt = String(base);
+    else if (Math.abs(frac - 0.25) < 0.01) txt = base + '/' + (base + 0.5);
+    else if (Math.abs(frac - 0.5) < 0.01) txt = String(base + 0.5);
+    else if (Math.abs(frac - 0.75) < 0.01) txt = (base + 0.5) + '/' + (base + 1);
+    else txt = a.toFixed(2);
+    if (v === 0) return '平手';
+    return (v > 0 ? '受' : '让') + txt;
+  }
+
+  function loadHKJC(force) {
+    var need = force || !HK.list;
+    if (!need || HK.loading) return;
+    if (typeof HKJC === 'undefined') {
+      HK.err = '模块未加载';
+      renderList();
+      return;
+    }
+    HK.loading = true;
+    renderList();
+    HKJC.fetchOdds({ types: ['HAD', 'HDC', 'HIL'], limit: 60 })
+      .then(function (r) {
+        HK.loading = false;
+        if (!r.ok) {
+          HK.err = r.error || '连接失败';
+          HK.list = null;
+        } else {
+          HK.list = r.matches;
+          HK.err = '';
+          HK.at = Date.now();
+          var m = HKJC.attach(S.all, HK.list);
+          HK.matched = m.matched;
+          HK.total = m.total;
+        }
+        renderList();
+      })
+      .catch(function (e) {
+        HK.loading = false;
+        HK.err = String((e && e.message) || e);
+        renderList();
+      });
+  }
+
+  function hkmoViewHTML() {
+    /* 首次进入自动拉取 */
+    if (!HK.list && !HK.loading && !HK.err) setTimeout(function () { loadHKJC(); }, 0);
+
+    var head = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:10.5px;' +
+      'line-height:1.75;color:var(--muted2)">' +
+      '<b style="color:var(--accent)">香港马会（HKJC）实时赔率</b><br>' +
+      '来源：HKJC 官方 GraphQL 接口（与官网同源，公开免费）。' +
+      '玩法 <b>HAD</b> 主客和、<b>HDC</b> 让球盘、<b>HIL</b> 大小球。<br>' +
+      'HKJC 对境外/机房 IP 会返回 403，App 由手机直接请求通常可达。' +
+      '队名匹配已内置港陆对照（如 巴萨↔巴塞隆拿、尤文↔祖雲杜斯）。</div>';
+
+    /* 状态条 */
+    var bar;
+    if (HK.loading) {
+      bar = '<div class="panel" style="padding:12px;text-align:center;font-size:11.5px;color:var(--warn)">' +
+        '<span class="spin"></span>正在连接香港马会…</div>';
+    } else if (HK.err) {
+      bar = '<div class="panel" style="padding:11px;margin-bottom:10px;font-size:11px;' +
+        'border-color:var(--danger)">' +
+        '<b style="color:var(--danger)">未能获取 HKJC 赔率</b><br>' +
+        '<span style="color:var(--muted2)">' + HK.err + '</span>' +
+        '<div style="margin-top:8px"><button class="btn-ghost" id="hkRetry" style="padding:6px 12px;font-size:11px">' +
+        '重试</button></div></div>';
+    } else if (HK.list) {
+      var d = new Date(HK.at);
+      var hh = String(d.getHours()), mm = String(d.getMinutes());
+      bar = '<div class="panel" style="padding:9px 11px;margin-bottom:10px;font-size:11px;' +
+        'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">' +
+        '<span style="color:var(--good);font-weight:700">● HKJC 已连接</span>' +
+        '<span style="color:var(--muted2)">马会 ' + HK.list.length + ' 场 · 成功配对 ' +
+        '<b style="color:var(--accent)">' + HK.matched + '/' + HK.total + '</b> 场 · ' +
+        (hh.length < 2 ? '0' + hh : hh) + ':' + (mm.length < 2 ? '0' + mm : mm) + '</span>' +
+        '<button class="btn-ghost" id="hkRefresh" style="padding:5px 11px;font-size:10.5px">刷新</button></div>';
+    } else {
+      bar = '';
+    }
+
+    /* 逐场对照 */
+    var rows = S.view.map(function (x) {
+      var a = x.an, r = x.raw, hk = x.hk;
+
+      if (!hk) {
+        return '<div class="panel" style="padding:10px;margin-bottom:8px;opacity:.72">' +
+          '<div style="font-size:11.5px;font-weight:700;margin-bottom:4px">' +
+          r.home.name + ' <span style="color:var(--muted2)">vs</span> ' + r.away.name + '</div>' +
+          '<div style="font-size:10px;color:var(--muted2)">马会未开出本场（或队名未匹配）</div></div>';
+      }
+
+      /* 去水概率：1/odds 归一化 */
+      function dev3(o) {
+        if (!o) return null;
+        var ih = 1 / o.h, id = 1 / o.d, ia = 1 / o.a;
+        var s = ih + id + ia;
+        return { h: ih / s, d: id / s, a: ia / s };
+      }
+      var hkP = hk.had ? dev3(hk.had) : null;
+
+      var tbl = '<table class="tbl"><thead><tr><th>口径</th><th>主胜</th><th>平局</th><th>客胜</th></tr></thead><tbody>';
+      tbl += '<tr><td>竞彩官方</td><td>' + pct(a.jcProb.h) + '</td><td>' + pct(a.jcProb.d) +
+        '</td><td>' + pct(a.jcProb.a) + '</td></tr>';
+      if (hk.had) {
+        tbl += '<tr><td><b style="color:var(--accent)">香港马会</b></td>' +
+          '<td>' + hk.had.h.toFixed(2) + '</td><td>' + hk.had.d.toFixed(2) + '</td>' +
+          '<td>' + hk.had.a.toFixed(2) + '</td></tr>';
+        if (hkP) {
+          tbl += '<tr style="opacity:.8"><td style="font-size:10px">港赔去水</td>' +
+            '<td>' + pct(hkP.h) + '</td><td>' + pct(hkP.d) + '</td><td>' + pct(hkP.a) + '</td></tr>';
+        }
+      }
+      tbl += '<tr><td>模型推演</td><td><b>' + pct(a.probs.h) + '</b></td><td>' + pct(a.probs.d) +
+        '</td><td>' + pct(a.probs.a) + '</td></tr>';
+      tbl += '</tbody></table>';
+
+      /* 亚盘 + 大小球 */
+      var extra = '';
+      var hdc = hk.hdc || hk.hha;
+      if (hdc) {
+        extra += '<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:10.5px;margin-top:7px">' +
+          '<span style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:4px 9px">' +
+          '港盘 <b>' + fmtHdp(hdc.line) + '</b> ' +
+          (hdc.home ? hdc.home.toFixed(2) : '—') + '/' + (hdc.away ? hdc.away.toFixed(2) : '—') + '</span>';
+      }
+      if (hk.hil) {
+        extra += '<span style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:4px 9px">' +
+          '大小 ' + hk.hil.line.toFixed(1) + ' 球 ' +
+          (hk.hil.over ? hk.hil.over.toFixed(2) : '—') + '/' + (hk.hil.under ? hk.hil.under.toFixed(2) : '—') + '</span>';
+      }
+      extra += '</div>';
+
+      /* 港赔 vs 竞彩 的差异（这是港澳指数的价值所在） */
+      var diff = '';
+      if (hkP) {
+        var gap = Math.max(
+          Math.abs(hkP.h - a.jcProb.h),
+          Math.abs(hkP.d - a.jcProb.d),
+          Math.abs(hkP.a - a.jcProb.a)) * 100;
+        var col = gap > 5 ? 'var(--warn)' : 'var(--muted2)';
+        diff = '<div style="font-size:10px;margin-top:6px;color:' + col + '">' +
+          '港赔与竞彩概率最大差 <b>' + gap.toFixed(1) + ' pt</b>' +
+          (gap > 5 ? ' —— 两地定价分歧明显' : ' —— 两地定价接近') + '</div>';
+      }
+
       return '<div class="panel" style="padding:10px;margin-bottom:8px">' +
-        '<div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:7px">' +
+        '<div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:7px;gap:8px">' +
         '<span>' + r.home.name + ' <span style="color:var(--muted2)">vs</span> ' + r.away.name + '</span>' +
-        '<span style="color:var(--accent)">' + dn + ' ' + a.odds.jc[d].toFixed(2) + '</span></div>' +
-        '<table class="tbl"><thead><tr><th>口径</th><th>主胜</th><th>平局</th><th>客胜</th></tr></thead><tbody>' +
-        '<tr><td>竞彩官方</td><td>' + pct(a.jcProb.h) + '</td><td>' + pct(a.jcProb.d) + '</td><td>' + pct(a.jcProb.a) + '</td></tr>' +
-        '<tr><td>市场共识</td><td>' + pct(a.marketProb.h) + '</td><td>' + pct(a.marketProb.d) + '</td><td>' + pct(a.marketProb.a) + '</td></tr>' +
-        '<tr><td><b style="color:var(--accent)">模型推演</b></td><td><b>' + pct(a.probs.h) + '</b></td>' +
-        '<td>' + pct(a.probs.d) + '</td><td>' + pct(a.probs.a) + '</td></tr>' +
-        '</tbody></table>' +
-        '<div style="font-size:10px;color:var(--muted2);margin-top:6px">模型与市场差值 ' +
-        '<b>' + a.rating.diverge.toFixed(1) + ' pt</b></div>' +
-        '</div>';
+        '<span class="lg">' + r.league + '</span></div>' +
+        tbl + extra + diff + '</div>';
     }).join('');
 
-    return head + (rows || '<div class="empty"><p>暂无赛事</p></div>');
+    return head + bar + (rows || '<div class="empty"><p>暂无赛事</p></div>');
   }
 
   /* ---- 半全场：每场的半全场推演 ---- */
@@ -3486,7 +4108,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     /* 三个专用视图不走卡片列表 */
     if (S.filter === 'hist') { el.innerHTML = histViewHTML(); return; }
-    if (S.filter === 'hkmo') { el.innerHTML = hkmoViewHTML(); return; }
+    if (S.filter === 'hkmo') {
+      el.innerHTML = hkmoViewHTML();
+      var b1 = document.getElementById('hkRetry');
+      if (b1) bindTap(b1, function () { HK.err = ''; HK.list = null; loadHKJC(); });
+      var b2 = document.getElementById('hkRefresh');
+      if (b2) bindTap(b2, function () { loadHKJC(true); });
+      return;
+    }
     if (S.filter === 'htft') { el.innerHTML = htftViewHTML(); return; }
 
     if (!S.view.length) {
