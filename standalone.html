@@ -345,14 +345,24 @@ svg{width:1em;height:1em;display:block}
 
 /* ---------------- 底部导航 ---------------- */
 .tabbar{
-  position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
-  background:rgba(var(--bg-rgb),.9); background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  position:fixed;left:0;right:0;bottom:0;
+  /* 层级别太高反而危险，但必须盖住内容；不用 backdrop-filter：
+     部分安卓 WebView 上它会创建合成层并吃掉整个 tabbar 的点击命中 */
+  z-index:9999;display:flex;
+  /* 实色兜底 → 变量可用时用半透明；不依赖 blur */
+  background:#0b1020;
+  background:rgba(11,16,32,.98);
+  background:var(--bg,#0b1020);
   border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);
+  -webkit-transform:translateZ(0);transform:translateZ(0);
 }
 .tab{flex:1;background:none;border:none;padding:7px 0 6px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:17px;color:var(--muted2);cursor:pointer;transition:.18s;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:2;
-  min-height:44px;justify-content:center}
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;
+  min-height:48px;justify-content:center;
+  -webkit-user-select:none;user-select:none;-webkit-appearance:none;appearance:none}
+/* 子元素不拦截点击，事件统一冒泡到 .tab */
+.tab *{pointer-events:none}
 .tab:active{transform:scale(.9);opacity:.6}
 .tab span{font-size:9.5px;font-weight:700}
 .tab.active{color:var(--accent)}
@@ -434,6 +444,14 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
 .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
 .btn-primary:active,.btn-ghost:active{transform:scale(.97);opacity:.85}
 .btn-primary[disabled],.btn-ghost[disabled]{opacity:.5;pointer-events:none}
+
+/* ---------------- 点击可靠性兜底 ---------------- */
+/* 半透明/隐藏的浮层一律不吃点击，避免"看不见的玻璃"拦截整屏 */
+.toast,.loading,.mask,.overlay,[aria-hidden="true"]{pointer-events:none}
+.toast.show{pointer-events:none}
+/* 卡片整体可点，内部小控件（收藏等）单独放开 */
+.card{cursor:pointer}
+.card .fav-btn{pointer-events:auto}
 
 </style>
 </head>
@@ -1529,6 +1547,19 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
    * 无需网关、无需 Key、无需部署。
    * 前提：WebView 已开启 setAllowUniversalAccessFromFileURLs（本 APK 已开）
    * ============================================================ */
+  /* 本地日期 YYYY-MM-DD（按用户所在时区，而非 UTC） */
+  function localDateStr(d) {
+    d = d || new Date();
+    var m = String(d.getMonth() + 1);
+    var day = String(d.getDate());
+    return d.getFullYear() + '-' + (m.length < 2 ? '0' + m : m) + '-' + (day.length < 2 ? '0' + day : day);
+  }
+
+  /**
+   * 竞彩官方直连
+   * 默认只保留「当天」开赛的赛事 —— 官方接口一次会返回未来多日赛程，
+   * 全量展示会淹没当日焦点。若当天确实无赛（罕见），则回退展示全部并标记。
+   */
   function fetchOfficial(opts, done) {
     opts = opts || {};
     if (typeof global.JCSource === 'undefined' && typeof window.JCSource === 'undefined') {
@@ -1536,6 +1567,7 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
       return;
     }
     var JC = global.JCSource || window.JCSource;
+    var todayOnly = opts.todayOnly !== false;   // 默认只看当天
 
     JC.fetchAll({ depth: opts.depth == null ? 0 : opts.depth })
       .then(function (out) {
@@ -1543,16 +1575,35 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
           done(new Error(out.error), null, null);
           return;
         }
-        var list = (out.matches || []).map(normalize).filter(valid);
-        if (!list.length) { done(new Error('未解析出赛事'), null, null); return; }
+        var all = (out.matches || []).map(normalize).filter(valid);
+        if (!all.length) { done(new Error('未解析出赛事'), null, null); return; }
+
+        var list = all;
+        var today = localDateStr();
+        var offDays = 0;
+        if (todayOnly) {
+          var t = all.filter(function (m) {
+            var d = m.date || '';
+            return String(d).slice(0, 10) === today;
+          });
+          if (t.length) {
+            list = t;
+            offDays = all.length - t.length;   // 被折叠掉的非当天场次
+          }
+          // 当天无赛 → 保留全部，避免白屏
+        }
+
         done(null, list, {
           updatedAt: out.updatedAt,
           source: ['竞彩官方(直连)'],
           count: list.length,
-          total: out.rawCount || list.length,
+          total: out.rawCount || all.length,
           leagues: out.leagues || {},
           jc: true,
           direct: true,
+          todayOnly: todayOnly,
+          today: today,
+          offDays: offDays,
           supportCount: out.supportCount || 0,
           enrichedCount: out.enrichedCount || 0
         });
@@ -2689,6 +2740,36 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   const SORT_LABEL = { h: '主胜', d: '平局', a: '客胜' };
 
   /* ================= 工具 ================= */
+  /* ================= 点击绑定（真机可靠性核心） =================
+     问题：真机 WebView 上 click 常常不触发 —— 合成层、300ms 延迟、
+     或被透明浮层吃掉事件，结果是"点了没反应"。
+     方案：每个交互同时监听 touchend 与 click，并用全局时间锁保证只执行一次。
+     touchend 里 preventDefault，避免与随后的 click 双触发。 */
+  var TAP_LOCK = 0;
+  function tapOnce(fn) {
+    return function (e) {
+      var now = Date.now();
+      if (now - TAP_LOCK < 320) return;      // 防重复触发
+      TAP_LOCK = now;
+      if (e && e.stopPropagation) e.stopPropagation();
+      fn(e);
+    };
+  }
+  /** 同时绑定 touch 与 click；返回处理函数便于调试 */
+  function bindTap(el, fn) {
+    if (!el) return null;
+    var h = tapOnce(fn);
+    el.addEventListener('touchend', function (e) {
+      try { e.preventDefault(); } catch (x) { }
+      h(e);
+    }, { passive: false });
+    el.addEventListener('click', function (e) {
+      try { e.preventDefault(); } catch (x) { }
+      h(e);
+    });
+    return h;
+  }
+
   function toast(msg) {
     const t = $('#toast'); t.textContent = msg; t.classList.add('show');
     clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('show'); }, 2100);
@@ -2714,6 +2795,28 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     try {
       return !!(window.JCBridge && window.JCBridge.isNativeApp && window.JCBridge.isNativeApp());
     } catch (e) { return false; }
+  }
+
+  /* ================= 页面切换 ================= */
+  function goPage(pageId) {
+    if (!pageId) return;
+    var tabs = $$('.tab');
+    var hit = false;
+    tabs.forEach(function (x) {
+      var on = (x.dataset.page === pageId);
+      if (on) hit = true;
+      x.classList.toggle('active', on);
+    });
+    if (!hit) return;
+    $$('.page').forEach(function (p) {
+      p.classList.toggle('active', p.id === pageId);
+    });
+    try { window.scrollTo(0, 0); } catch (e) { }
+    try {
+      var m = document.querySelector('.pages');
+      if (m && m.scrollTop !== undefined) m.scrollTop = 0;
+    } catch (e) { }
+    if (pageId === 'page-fav') { try { renderFav(); } catch (e) { } }
   }
 
   /* ================= 构建数据 ================= */
@@ -2760,11 +2863,22 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       '<span class="src-meta">' + meta.join(' · ') + '</span>';
   }
 
-  function setDataBadge(kind, src, count, extra) {
+  function setDataBadge(kind, src, count, extra, meta) {
     dataKind = kind;
     if (src) dataSrc = src;
     if (count != null) dataCount = count;
-    dataExtra = extra || '';
+    /* 当天赛程：明确显示"当天 X 场"并说明折叠掉的非当天场次，
+       避免用户误以为赛程不全 */
+    if (meta && meta.todayOnly) {
+      dataSrc = '竞彩当天';
+      if (meta.offDays > 0) {
+        dataExtra = '已折叠 ' + meta.offDays + ' 场非当日赛事' + (extra ? ' · ' + extra : '');
+      } else if (extra) {
+        dataExtra = extra;
+      }
+    } else {
+      dataExtra = extra || '';
+    }
     if (kind === 'live') dataAt = Date.now();
     renderBadge();
     if (freshTimer) clearInterval(freshTimer);
@@ -2884,7 +2998,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     const warn = (meta && (meta.oddsError || meta.footballError)) ? ' · 部分源异常' : '';
     const q = (meta && meta.quota && meta.quota.remaining != null)
       ? ' · 额度 ' + meta.quota.remaining : '';
-    setDataBadge('live', src, S.all.length, (warn + q).replace(/^ · /, ''));
+    setDataBadge('live', src, S.all.length, (warn + q).replace(/^ · /, ''), meta);
     renderQuota(meta);
   }
 
@@ -3003,7 +3117,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         + '<span class="n">' + (d[0] === 'all' ? S.all.length : map[d[0]]) + '</span></button>';
     }).join('');
     $$('#filterChips .chip').forEach(function (c) {
-      c.onclick = function () { S.filter = c.dataset.f; renderChips(); applyFilter(); };
+      bindTap(c, function () { S.filter = c.dataset.f; renderChips(); applyFilter(); });
     });
   }
 
@@ -3113,11 +3227,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     }
     el.innerHTML = S.view.map(cardHTML).join('');
     $$('#matchList .card').forEach(function (c) {
-      c.onclick = function (e) {
-        if (e.target.dataset.fav) { toggleFav(e.target.dataset.fav); return; }
+      bindTap(c, function (e) {
+        var tg = e && e.target;
+        if (tg && tg.dataset && tg.dataset.fav) { toggleFav(tg.dataset.fav); return; }
         const m = S.all.filter(function (x) { return x.raw.id === c.dataset.id; })[0];
         if (m) openDetail(m);
-      };
+      });
     });
   }
 
@@ -3131,11 +3246,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     }
     el.innerHTML = v.map(cardHTML).join('');
     $$('#favList .card').forEach(function (c) {
-      c.onclick = function (e) {
-        if (e.target.dataset.fav) { toggleFav(e.target.dataset.fav); return; }
+      bindTap(c, function (e) {
+        var tg = e && e.target;
+        if (tg && tg.dataset && tg.dataset.fav) { toggleFav(tg.dataset.fav); return; }
         const m = S.all.filter(function (x) { return x.raw.id === c.dataset.id; })[0];
         if (m) openDetail(m);
-      };
+      });
     });
   }
 
@@ -3355,6 +3471,33 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         '<span>大2.5球 ' + pct(a.over.o25) + '</span><span>大3.5球 ' + pct(a.over.o35) + '</span>' +
         '<span>双方进球 ' + pct(a.btts) + '</span></div></div></div>' +
 
+      /* ---- 亚洲盘口 ---- */
+      '<div class="sec"><div class="sec-t">亚洲盘口</div><div class="panel">' +
+        '<table class="tbl"><thead><tr><th>盘口</th><th>主队</th><th>客队</th></tr></thead><tbody>' +
+        '<tr><td><b>' + (a.asian.line > 0 ? '受' : '') + a.asian.line + '</b></td>' +
+        '<td>' + a.asian.home.toFixed(2) + '</td><td>' + a.asian.away.toFixed(2) + '</td></tr>' +
+        '</tbody></table>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:7px">' +
+        '<span>上盘概率 ' + pct(a.asian.win) + '</span>' +
+        '<span>下盘概率 ' + pct(a.asian.lose) + '</span></div></div></div>' +
+
+      /* ---- 三方概率对比：模型 / 竞彩 / 市场 ---- */
+      '<div class="sec"><div class="sec-t">三方概率对照</div><div class="panel">' +
+        '<table class="tbl"><thead><tr><th>来源</th><th>主胜</th><th>平局</th><th>客胜</th></tr></thead><tbody>' +
+        '<tr><td>模型推演</td><td><b style="color:var(--accent)">' + pct(a.probs.h) + '</b></td>' +
+        '<td>' + pct(a.probs.d) + '</td><td>' + pct(a.probs.a) + '</td></tr>' +
+        '<tr><td>竞彩官方</td><td>' + pct(a.jcProb.h) + '</td><td>' + pct(a.jcProb.d) + '</td>' +
+        '<td>' + pct(a.jcProb.a) + '</td></tr>' +
+        '<tr><td>市场共识</td><td>' + pct(a.marketProb.h) + '</td><td>' + pct(a.marketProb.d) + '</td>' +
+        '<td>' + pct(a.marketProb.a) + '</td></tr>' +
+        (a.crowd && a.crowd.h ? '<tr><td>彩民支持</td><td>' + pct(a.crowd.h / 100) + '</td>' +
+          '<td>' + pct(a.crowd.d / 100) + '</td><td>' + pct(a.crowd.a / 100) + '</td></tr>' : '') +
+        '</tbody></table>' +
+        '<div style="font-size:10px;color:var(--muted2);margin-top:6px;line-height:1.7">' +
+        '模型与市场差值 <b>' + a.rating.diverge.toFixed(1) + 'pt</b>' +
+        (a.rating.diverge > 5 ? ' —— 分歧明显，' + (a.rating.dir === 'h' ? '主胜' : a.rating.dir === 'd' ? '平局' : '客胜') + '方向值得关注' : ' —— 基本一致') +
+        '</div></div></div>' +
+
       '<div class="sec"><div class="sec-t">半全场概率（%）</div><div class="panel">' + hf + '</div></div>' +
 
       '<div class="sec"><div class="sec-t">让球胜平负</div><div class="panel">' + hp + '</div></div>' +
@@ -3539,24 +3682,36 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     $('#sortSelect').onchange = function () { S.sort = this.value; applyFilter(); };
     $('#searchInput').oninput = function () { S.q = this.value.trim(); applyFilter(); };
 
-    // 导航
+    // 导航：touch + click 双绑定
     $$('.tab').forEach(function (t) {
-      t.onclick = function () {
-        $$('.tab').forEach(function (x) { x.classList.remove('active'); });
-        t.classList.add('active');
-        $$('.page').forEach(function (p) { p.classList.remove('active'); });
-        $('#' + t.dataset.page).classList.add('active');
-        window.scrollTo(0, 0);
-        if (t.dataset.page === 'page-fav') renderFav();
-      };
+      bindTap(t, function () { goPage(t.dataset.page); });
     });
+    // document 级兜底：万一元素级绑定失效（动态重建/合成层异常）仍能响应
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.classList && t.classList.contains('tab')) { goPage(t.dataset.page); return; }
+        t = t.parentNode;
+      }
+    });
+    document.addEventListener('touchend', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.classList && t.classList.contains('tab')) {
+          try { e.preventDefault(); } catch (x) { }
+          goPage(t.dataset.page);
+          return;
+        }
+        t = t.parentNode;
+      }
+    }, { passive: false });
 
-    $('#detailClose').onclick = closeDetail;
-    $('#detailFav').onclick = function () { if (S.current) toggleFav(S.current.raw.id); };
-    $('#btnRefresh').onclick = function () {
+    bindTap($('#detailClose'), function () { closeDetail(); });
+    bindTap($('#detailFav'), function () { if (S.current) toggleFav(S.current.raw.id); });
+    bindTap($('#btnRefresh'), function () {
       toast('正在重算模型…');
       setTimeout(function () { build(todayStr()); renderChips(); toast('已更新 ' + S.all.length + ' 场'); }, 240);
-    };
+    });
 
     /* ================= 内容更新（热更新） =================
        原生 App：配置存到 SharedPreferences，由 Updater 拉取远端 standalone.html
