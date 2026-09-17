@@ -3102,6 +3102,44 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return best;
   }
 
+    /* ★ 通用传输层：优先走 App 原生通道（绕过 CORS），网页版降级到 fetch。
+       诊断实测：HKJC GraphQL 在 WebView 内 fetch 返回 "Failed to fetch" + HTTP 0，
+       这是浏览器跨域拦截，不是服务器拒绝 —— 请求根本没发出去。
+       Java 的 HttpURLConnection 不受 CORS 限制，可带任意请求头。 */
+  function transport(url, method, headers, body) {
+    var B = (typeof window !== 'undefined') ? window.JCBridge : null;
+    var canNative = !!(B && B.nativeFetch && B.isNativeApp && B.isNativeApp());
+    if (canNative) {
+      return new Promise(function (resolve) {
+        try {
+          var raw = B.nativeFetch(url, method, JSON.stringify(headers || {}), body || '');
+            var j = null;
+            try { j = JSON.parse(raw); } catch (e) { j = null; }
+            if (j && typeof j.status === 'number') {
+              resolve({ ok: !!j.ok, status: j.status, text: String(j.body || '') });
+            } else {
+              resolve({ ok: false, status: 0, text: '原生通道返回异常' });
+            }
+          } catch (e) {
+            resolve({ ok: false, status: 0, text: 'EXCEPTION: ' + String((e && e.message) || e) });
+          }
+        });
+      }
+      /* 网页版 / 无桥接：降级到 fetch（可能受 CORS 限制） */
+      if (typeof fetch !== 'function') {
+        return Promise.resolve({ ok: false, status: 0, text: '环境不支持 fetch' });
+      }
+      var opt = { method: method || 'GET', headers: headers || {}, cache: 'no-store' };
+      if (body) opt.body = body;
+      return fetch(url, opt).then(function (r) {
+        return r.text().then(function (t) {
+          return { ok: r.ok, status: r.status, text: t };
+        });
+      }).catch(function (e) {
+        return { ok: false, status: 0, text: 'EXCEPTION: ' + String((e && e.message) || e) };
+      });
+    }
+
   /* ---------------- 主抓取 ---------------- */
   /**
    * @param {object} opts
@@ -3196,12 +3234,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         return Promise.resolve({ ok: false, matches: [], error: '环境不支持 fetch' });
       }
       var plan = PLAN[i];
-      return fetch(ENDPOINT, {
-        method: 'POST',
-        headers: mkHeaders(HEADER_SETS[plan[0]]),
-        body: mkBody(HEADER_SETS[plan[0]], plan[1])
-      })
-        .then(function (r) { return r.text().then(function (t) { return { status: r.status, text: t }; }); })
+      return transport(ENDPOINT, 'POST', mkHeaders(HEADER_SETS[plan[0]]),
+        mkBody(HEADER_SETS[plan[0]], plan[1]))
         .then(function (res) {
           var txt = res.text || '';
           var j = null;
@@ -3291,6 +3325,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   }
 
   global.HKJC = {
+    transport: transport,
+    /* 供界面显示当前走的是哪条通道 */
+    channel: function () {
+      var B = (typeof window !== 'undefined') ? window.JCBridge : null;
+      return (B && B.nativeFetch && B.isNativeApp && B.isNativeApp()) ? 'native' : 'fetch';
+    },
     fetchOdds: fetchOdds,
     attach: attach,
     teamMatch: teamMatch,
@@ -3874,19 +3914,50 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     }
   ];
 
+  /* 诊断也要走原生通道，否则结果不能反映真实可用性 */
   function httpProbe(url, method, headers, body) {
     var t0 = Date.now();
+    var B = (typeof window !== 'undefined') ? window.JCBridge : null;
+    var canNative = !!(B && B.nativeFetch && B.isNativeApp && B.isNativeApp());
+
+    if (canNative) {
+      return new Promise(function (resolve) {
+        try {
+          var raw = B.nativeFetch(url, method || 'GET', JSON.stringify(headers || {}), body || '');
+          var j = null;
+          try { j = JSON.parse(raw); } catch (e) { j = null; }
+          if (j && typeof j.status === 'number') {
+            resolve({
+              ok: !!j.ok, status: j.status, ms: Date.now() - t0,
+              head: String(j.body || '').slice(0, 260), via: 'native'
+            });
+          } else {
+            resolve({ ok: false, status: 0, ms: Date.now() - t0, head: '原生通道返回异常', via: 'native' });
+          }
+        } catch (e) {
+          resolve({
+            ok: false, status: 0, ms: Date.now() - t0,
+            head: 'EXCEPTION: ' + String((e && e.message) || e), via: 'native'
+          });
+        }
+      });
+    }
+
     var opt = { method: method || 'GET', headers: headers || {}, cache: 'no-store' };
     if (body) opt.body = body;
     return fetch(url, opt).then(function (r) {
       return r.text().then(function (t) {
-        return { ok: r.ok, status: r.status, ms: Date.now() - t0, head: t.slice(0, 260) };
+        return { ok: r.ok, status: r.status, ms: Date.now() - t0, head: t.slice(0, 260), via: 'fetch' };
       });
     }).catch(function (e) {
-      return { ok: false, status: 0, ms: Date.now() - t0, head: 'EXCEPTION: ' + String((e && e.message) || e) };
+      return {
+        ok: false, status: 0, ms: Date.now() - t0,
+        head: 'EXCEPTION: ' + String((e && e.message) || e), via: 'fetch'
+      };
     });
   }
 
+  /* 持久化查询也要走原生通道 */
   function hkjcProbe(originSet, persisted) {
     var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
       '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -3932,6 +4003,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       'sec-fetch-dest': 'empty'
     };
     return httpProbe('https://info.cld.hkjc.com/graphql/base/', 'POST', h, JSON.stringify(payload));
+  }
+
+  /* 当前传输通道：native = 走 App 原生（无 CORS 限制）；fetch = 浏览器（受 CORS 限制） */
+  function currentChannel() {
+    var B = (typeof window !== 'undefined') ? window.JCBridge : null;
+    return (B && B.nativeFetch && B.isNativeApp && B.isNativeApp()) ? 'native' : 'fetch';
   }
 
   var DIAG = { running: false, results: [], log: [] };
@@ -4000,7 +4077,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       return;
     }
 
-    var html = '<div style="font-size:11px;color:var(--muted2);margin-bottom:8px">' +
+    var via = currentChannel();
+    var html = '<div style="font-size:10.5px;margin-bottom:8px;padding:6px 9px;border-radius:8px;' +
+      'background:var(--card2);border:1px solid var(--border);color:' +
+      (via === 'native' ? 'var(--good)' : 'var(--warn)') + '">' +
+      '传输通道：' + (via === 'native'
+        ? '<b>App 原生</b>（HttpURLConnection，不受 CORS 限制）'
+        : '<b>浏览器 fetch</b>（受 CORS 限制，跨域可能失败）') + '</div>';
+    html += '<div style="font-size:11px;color:var(--muted2);margin-bottom:8px">' +
       '已完成 ' + DIAG.results.length + '/' + PROBES.length +
       (DIAG.running ? ' · 探测中…' : ' · 完成') + '</div>';
 
