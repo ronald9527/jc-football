@@ -1590,7 +1590,7 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
        今天开售的比赛完全可能明天/后天开赛（凌晨场尤其常见）。
        因此默认按销售日展示（即接口返回的全部），
        「只看今天开赛」降级为可选项，避免把大量可买赛事误过滤掉。 */
-    var todayOnly = opts.todayOnly === true;   // 默认关闭
+    var todayOnly = opts.todayOnly === true;   // 由调用方决定，默认按销售日
 
     JC.fetchAll({ depth: opts.depth == null ? 0 : opts.depth })
       .then(function (out) {
@@ -3106,38 +3106,75 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }
     });
 
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json, text/plain, */*',
-      'Origin': 'https://football.hkjc.com',
-      'Referer': 'https://football.hkjc.com/',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-        '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-    };
+    /* ★ 白名单关键：Referer/Origin 必须是 bet.hkjc.com。
+       上一版用 football.hkjc.com，服务端直接返回
+       "Internal server error - WHITELIST_ERROR"。
+       HKJC 同时校验 sec-fetch-* 系列（CORS 指纹），缺失也会被拒。 */
+    var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+      '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
-    var req = (typeof fetch === 'function')
-      ? fetch(ENDPOINT, { method: 'POST', headers: headers, body: body })
-      : Promise.reject(new Error('no fetch'));
+    var HEADER_SETS = [
+      { Origin: 'https://bet.hkjc.com', Referer: 'https://bet.hkjc.com/' },
+      { Origin: 'https://bet.hkjc.com', Referer: 'https://bet.hkjc.com/football' },
+      { Origin: 'https://football.hkjc.com', Referer: 'https://football.hkjc.com/' },
+      { Origin: 'https://www.hkjc.com', Referer: 'https://www.hkjc.com/' }
+    ];
 
-    return req.then(function (r) {
-      if (!r || !r.ok) {
-        var e = new Error('HTTP ' + (r && r.status));
-        e.status = r && r.status;
-        throw e;
+    function mkHeaders(set) {
+      return {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+        'Origin': set.Origin,
+        'Referer': set.Referer,
+        'User-Agent': UA,
+        'sec-fetch-site': 'same-site',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'empty'
+      };
+    }
+
+    function attempt(i, lastErr) {
+      if (i >= HEADER_SETS.length) {
+        return Promise.resolve({
+          ok: false, matches: [],
+          error: lastErr || 'HKJC 拒绝请求（白名单）'
+        });
       }
-      return r.text();
-    }).then(function (txt) {
-      var j;
-      try { j = JSON.parse(txt); } catch (e) { throw new Error('响应非 JSON: ' + txt.slice(0, 80)); }
-      if (j.errors) {
-        var msg = (j.errors[0] && (j.errors[0].message || j.errors[0])) || 'GraphQL 错误';
-        throw new Error(String(msg).slice(0, 120));
+      if (typeof fetch !== 'function') {
+        return Promise.resolve({ ok: false, matches: [], error: '环境不支持 fetch' });
       }
-      var ms = (j.data && j.data.matches) || [];
-      return { ok: true, matches: ms.map(parseOne).filter(Boolean), raw: ms.length };
-    }).catch(function (e) {
-      return { ok: false, matches: [], error: String((e && e.message) || e) };
-    });
+      return fetch(ENDPOINT, { method: 'POST', headers: mkHeaders(HEADER_SETS[i]), body: body })
+        .then(function (r) { return r.text().then(function (t) { return { status: r.status, text: t }; }); })
+        .then(function (res) {
+          var txt = res.text || '';
+          var j = null;
+          try { j = JSON.parse(txt); } catch (e) { j = null; }
+
+          if (j && j.errors) {
+            var msg = (j.errors[0] && (j.errors[0].message || j.errors[0])) || 'GraphQL 错误';
+            msg = String(msg).slice(0, 140);
+            /* 白名单/来源问题 → 换下一组头重试；其它错误直接返回 */
+            if (/WHITELIST|FORBIDDEN|403|NOT_ALLOW/i.test(msg) && i + 1 < HEADER_SETS.length) {
+              return attempt(i + 1, msg);
+            }
+            return { ok: false, matches: [], error: msg };
+          }
+          if (j && j.data && j.data.matches) {
+            var ms = j.data.matches;
+            return { ok: true, matches: ms.map(parseOne).filter(Boolean), raw: ms.length };
+          }
+          if (res.status === 403 || /WAF|EdgeOne|访问受限/i.test(txt.slice(0, 400))) {
+            return attempt(i + 1, 'HTTP 403（WAF 拦截）');
+          }
+          return attempt(i + 1, 'HTTP ' + res.status);
+        })
+        .catch(function (e) {
+          return attempt(i + 1, String((e && e.message) || e));
+        });
+    }
+
+    return attempt(0, '');
   }
 
   function parseOne(m) {
@@ -3291,7 +3328,38 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         if (window.console && console.error) console.error('[tap]', err);
       }
     }
-    el.addEventListener('touchend', run, false);
+    /* ★ 关键修复：区分「点击」与「滑动」。
+       上一版直接在 touchend 触发，导致在列表上滑动时手指抬起也会打开详情 ——
+       表现为「滑一下就自动进详情页」。这里记录 touchstart 坐标，
+       位移或时长超过阈值就判定为滑动，不触发。 */
+    var sx = 0, sy = 0, st = 0, moved = false;
+    el.addEventListener('touchstart', function (e) {
+      var t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      sx = t ? t.clientX : 0;
+      sy = t ? t.clientY : 0;
+      st = new Date().getTime();
+      moved = false;
+    }, false);
+
+    el.addEventListener('touchmove', function (e) {
+      var t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+      if (!t) return;
+      var dx = Math.abs(t.clientX - sx);
+      var dy = Math.abs(t.clientY - sy);
+      if (dx > 15 || dy > 15) moved = true;      // 超过 15px 即视为滑动
+    }, false);
+
+    el.addEventListener('touchend', function (e) {
+      var dt = new Date().getTime() - st;
+      if (moved) return;                          // 滑动 → 不触发
+      if (dt > 700) return;                       // 长按 → 不触发
+      var t = (e.changedTouches && e.changedTouches[0]);
+      if (t) {
+        if (Math.abs(t.clientX - sx) > 15 || Math.abs(t.clientY - sy) > 15) return;
+      }
+      run(e);
+    }, false);
+
     el.addEventListener('click', run, false);
     return run;
   }
@@ -3437,7 +3505,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     /* ---- 竞彩官方直连：无需任何配置 ---- */
     if (mode === 'official') {
       setSrcStatus('正在读取竞彩官方赛程…', 'wait');
-      JCAdapter.fetchOfficial({ depth: 0, todayOnly: store.get(LS.todayOnly) === '1' },
+      JCAdapter.fetchOfficial({ depth: 0, todayOnly: store.get(LS.todayOnly) !== '0' },
         function (err, list, meta) {
         if (err) {
           const msg = /WAF|403|拒绝|拦截/i.test(err.message)
@@ -4791,7 +4859,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     var tOnly = $('#setTodayOnly');
     if (tOnly) {
-      var on0 = store.get(LS.todayOnly) === '1';
+      /* 默认开启：用户明确要求「只看今天比赛」默认打开。
+         只有用户手动关过（存了 '0'）才保持关闭。 */
+      var on0 = store.get(LS.todayOnly) !== '0';
       tOnly.classList.toggle('on', on0);
       tOnly.setAttribute('aria-checked', on0 ? 'true' : 'false');
       bindTap(tOnly, function () {
