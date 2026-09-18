@@ -3955,6 +3955,358 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
 </script>
 <script>
+/**
+ * ============================================================
+ * 竞彩智析 · 高手推荐历史回溯
+ * ------------------------------------------------------------
+ * 解决的问题：
+ *   「高手推荐」是模型实时筛选出来的（≥3星 且 价值指数为正），
+ *   属于"当下"的判断 —— 看过了就没了，无法事后检验准不准。
+ *   本模块把每次打开「高手推荐」时的推荐快照入库，
+ *   赛果出来后回填，从而可以回看：当时推荐了什么、命中了没、命中率多少。
+ *
+ * 与「专家推荐」的区别：
+ *   专家推荐 = 92玩球外部专家的观点
+ *   高手推荐 = 本 App 模型自己的判断
+ *   两者各自独立统计命中率，便于横向比较"信专家还是信模型"。
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var LS_PICKS = 'jc.picks.history';
+  var LS_LAST = 'jc.picks.last';
+
+  /* ★ localStorage 在无痕模式 / 部分 WebView 下会抛异常或不可用。
+     必须有内存兜底，否则历史记录等于完全失效（读写都拿不到）。 */
+  var MEM = {};
+  function store() {
+    try {
+      var ls = global.localStorage;
+      if (ls) {
+        /* 探活：某些环境访问即抛 */
+        ls.getItem('__t');
+        return ls;
+      }
+    } catch (e) { }
+    return null;
+  }
+  function load(k, def) {
+    var st = store();
+    if (st) {
+      try {
+        var v = st.getItem(k);
+        return v ? JSON.parse(v) : (MEM[k] !== undefined ? MEM[k] : def);
+      } catch (e) { }
+    }
+    return MEM[k] !== undefined ? MEM[k] : def;
+  }
+  function save(k, o) {
+    MEM[k] = o;
+    var st = store();
+    if (!st) return;
+    try { st.setItem(k, JSON.stringify(o)); } catch (e) { }
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function nowBJ(d) {
+    var b = d || new Date();
+    var utcMs = b.getTime() + (b.getTimezoneOffset() * 60000);
+    return new Date(utcMs + 8 * 3600000);
+  }
+  function todayStr(d) {
+    var b = nowBJ(d);
+    return b.getFullYear() + '-' + pad(b.getMonth() + 1) + '-' + pad(b.getDate());
+  }
+  function nowTime(d) {
+    var b = nowBJ(d);
+    return pad(b.getHours()) + ':' + pad(b.getMinutes());
+  }
+
+  /* ---------------- 快照入库 ---------------- */
+  /**
+   * 把当前「高手推荐」的条目存入历史。
+   * @param items  S.view 中已筛选出的条目数组（每项含 .raw / .an）
+   * @return {added, total}
+   */
+  function snapshot(items) {
+    if (!items || !items.length) return { added: 0, total: load(LS_PICKS, []).length };
+    var all = load(LS_PICKS, []);
+    var idx = {};
+    all.forEach(function (p) { idx[p.key] = p; });
+
+    var d = todayStr();
+    var added = 0;
+
+    items.forEach(function (x) {
+      var r = x.raw, a = x.an;
+      if (!r || !a) return;
+      /* 去重键：比赛日 + 主客队 */
+      var key = (r.matchDate || d) + '|' + norm(r.home.name) + '|' + norm(r.away.name);
+      var dir = a.rating.dir;                 // 'h' | 'd' | 'a'
+      var prev = idx[key];
+      if (prev) {
+        /* 已存在：赛果未出时刷新最新的模型判断（不重复计数） */
+        if (!prev.result) {
+          prev.dir = dir;
+          prev.stars = a.rating.stars;
+          prev.odds = a.odds.jc[dir];
+          prev.prob = a.probs[dir];
+          prev.value = a.value ? a.value[dir] : null;
+          prev.conf = a.rating.conf != null ? a.rating.conf : null;
+          prev.snapAt = Date.now();
+        }
+        return;      // ★ 已存在不重复计入 added
+      }
+      var p = {
+        key: key,
+        date: r.matchDate || d,
+        snapDate: d,
+        snapTime: nowTime(),
+        snapAt: Date.now(),
+        no: r.matchNumStr || '',
+        league: r.league || '',
+        home: r.home.name,
+        away: r.away.name,
+        matchId: r.matchId || '',
+        dir: dir,
+        dirLabel: dir === 'h' ? '主胜' : (dir === 'd' ? '平局' : '客胜'),
+        stars: a.rating.stars,
+        odds: a.odds.jc[dir],
+        prob: a.probs[dir],
+        marketProb: a.marketProb ? a.marketProb[dir] : null,
+        value: a.value ? a.value[dir] : null,
+        conf: a.rating.conf != null ? a.rating.conf : null,
+        result: null,          // 'hit' | 'miss' | null
+        score: null            // 如 '2:1'
+      };
+      all.push(p);
+      idx[key] = p;
+      added++;
+    });
+
+    /* 按快照时间倒序 */
+    all.sort(function (a, b) { return (b.snapAt || 0) - (a.snapAt || 0); });
+    save(LS_PICKS, all);
+    save(LS_LAST, todayStr());
+    return { added: added, total: all.length };
+  }
+
+  function norm(s) {
+    return String(s || '').replace(/\s+/g, '').toLowerCase();
+  }
+
+  /* ---------------- 赛果回填 ---------------- */
+  /**
+   * @param results [{home, away, date, homeScore, awayScore}]
+   */
+  function backfill(results) {
+    if (!results || !results.length) return { filled: 0 };
+    var all = load(LS_PICKS, []);
+    var n = 0;
+    all.forEach(function (p) {
+      if (p.result) return;
+      for (var i = 0; i < results.length; i++) {
+        var r = results[i];
+        if (!matchTeam(r.home, p.home) || !matchTeam(r.away, p.away)) continue;
+        var hs = parseInt(r.homeScore, 10), as = parseInt(r.awayScore, 10);
+        if (!isFinite(hs) || !isFinite(as)) continue;
+        var actual = hs > as ? 'h' : (hs < as ? 'a' : 'd');
+        p.result = (p.dir === actual) ? 'hit' : 'miss';
+        p.score = hs + ':' + as;
+        n++;
+        break;
+      }
+    });
+    if (n) save(LS_PICKS, all);
+    return { filled: n };
+  }
+
+  function matchTeam(a, b) {
+    if (global.HKJC && global.HKJC.teamMatch) {
+      try { return global.HKJC.teamMatch(a, b); } catch (e) { }
+    }
+    return norm(a) === norm(b);
+  }
+
+  /* ---------------- 统计 ---------------- */
+  function stats() {
+    var all = load(LS_PICKS, []);
+    var settled = all.filter(function (p) { return p.result; });
+    var hit = settled.filter(function (p) { return p.result === 'hit'; });
+    var s = {
+      total: all.length,
+      settled: settled.length,
+      hit: hit.length,
+      miss: settled.length - hit.length,
+      pending: all.length - settled.length,
+      rate: settled.length ? (hit.length / settled.length * 100) : null
+    };
+    /* 按星级分组 */
+    s.byStars = {};
+    [3, 4, 5].forEach(function (n) {
+      var g = settled.filter(function (p) { return p.stars >= n; });
+      var h = g.filter(function (p) { return p.result === 'hit'; }).length;
+      s.byStars[n] = {
+        total: g.length,
+        hit: h,
+        rate: g.length ? (h / g.length * 100) : null
+      };
+    });
+    /* 按方向分组 */
+    s.byDir = {};
+    ['h', 'd', 'a'].forEach(function (d) {
+      var g = settled.filter(function (p) { return p.dir === d; });
+      var h = g.filter(function (p) { return p.result === 'hit'; }).length;
+      s.byDir[d] = {
+        label: d === 'h' ? '主胜' : (d === 'd' ? '平局' : '客胜'),
+        total: g.length, hit: h,
+        rate: g.length ? (h / g.length * 100) : null
+      };
+    });
+    /* 按价值指数分组：正值 vs 非正值 */
+    var pos = settled.filter(function (p) { return p.value != null && p.value > 0; });
+    var posHit = pos.filter(function (p) { return p.result === 'hit'; }).length;
+    s.byValue = {
+      total: pos.length, hit: posHit,
+      rate: pos.length ? (posHit / pos.length * 100) : null
+    };
+    return s;
+  }
+
+  /* 按快照日期分组 */
+  function byDate(limit) {
+    var all = load(LS_PICKS, []).slice().sort(function (a, b) {
+      if (a.snapDate === b.snapDate) return (b.snapAt || 0) - (a.snapAt || 0);
+      return a.snapDate < b.snapDate ? 1 : -1;
+    });
+    var g = {};
+    all.forEach(function (p) {
+      var k = p.snapDate || p.date || '未知';
+      if (!g[k]) g[k] = { date: k, items: [], hit: 0, miss: 0, pending: 0 };
+      g[k].items.push(p);
+      if (p.result === 'hit') g[k].hit++;
+      else if (p.result === 'miss') g[k].miss++;
+      else g[k].pending++;
+    });
+    var arr = Object.keys(g).sort().reverse().map(function (k) { return g[k]; });
+    return limit ? arr.slice(0, limit) : arr;
+  }
+
+  function all() { return load(LS_PICKS, []); }
+
+  function clear() {
+    delete MEM[LS_PICKS];
+    delete MEM[LS_LAST];
+    var st = store();
+    if (!st) return;
+    try { st.removeItem(LS_PICKS); st.removeItem(LS_LAST); } catch (e) { }
+  }
+
+  /* ---------------- 拉取赛果（竞彩官方）----------------
+     官方赛果接口未在探测中确认，这里尝试多个候选，
+     任一成功即可回填；全部失败则保持"待开奖"，不编造数据。 */
+  var RESULT_URLS = [
+    'https://webapi.sporttery.cn/gateway/jc/football/getMatchResultV1.qry?param=90,0&channel=c',
+    'https://webapi.sporttery.cn/gateway/jc/football/getMatchResultV1.qry?param=90,0&poolCode=had&channel=c',
+    'https://i.sporttery.cn/api/fb_match_result/get_pool_rs?page=1&limit=100'
+  ];
+
+  function fetchResults() {
+    var transport = (global.HKJC && global.HKJC.transport) ? global.HKJC.transport : null;
+    if (!transport) return Promise.resolve({ ok: false, error: '无传输通道', results: [] });
+
+    function tryOne(i, lastErr) {
+      if (i >= RESULT_URLS.length) {
+        return Promise.resolve({ ok: false, error: lastErr || '无可用赛果源', results: [] });
+      }
+      return transport(RESULT_URLS[i], 'GET', {
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://www.sporttery.cn/'
+      }, '').then(function (r) {
+        if (!r || !r.ok) return tryOne(i + 1, 'HTTP ' + (r && r.status));
+        var list = parseResult(r.text);
+        if (!list.length) return tryOne(i + 1, '响应中无赛果');
+        return { ok: true, url: RESULT_URLS[i], results: list };
+      }).catch(function (e) {
+        return tryOne(i + 1, String((e && e.message) || e));
+      });
+    }
+    return tryOne(0, '');
+  }
+
+  /* 解析赛果：兼容多种结构 */
+  function parseResult(txt) {
+    if (!txt) return [];
+    var j = null;
+    try { j = JSON.parse(txt); } catch (e) {
+      /* 可能是 JSONP：callback({...}) */
+      var m = txt.match(/^\s*\w+\s*\(([\s\S]*)\)\s*;?\s*$/);
+      if (m) { try { j = JSON.parse(m[1]); } catch (e2) { return []; } }
+      if (!j) return [];
+    }
+    var out = [];
+    /* 递归找含比分的对象 */
+    function walk(o) {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) {
+        o.forEach(walk);
+        return;
+      }
+      var h = pick(o, ['homeTeamAbbName', 'homeTeamAllName', 'home', 'homeTeam', 'homeName']);
+      var a = pick(o, ['awayTeamAbbName', 'awayTeamAllName', 'away', 'awayTeam', 'awayName']);
+      var hs = pick(o, ['homeScore', 'homeGoal', 'hScore', 'scoreH']);
+      var as = pick(o, ['awayScore', 'awayGoal', 'aScore', 'scoreA']);
+      if (h && a && hs !== null && as !== null && hs !== '' && as !== '') {
+        out.push({
+          home: String(h), away: String(a),
+          homeScore: parseInt(hs, 10), awayScore: parseInt(as, 10),
+          date: pick(o, ['matchDate', 'businessDate', 'date']) || ''
+        });
+        return;
+      }
+      Object.keys(o).forEach(function (k) {
+        if (typeof o[k] === 'object') walk(o[k]);
+      });
+    }
+    walk(j);
+    /* 去重 */
+    var seen = {}, uniq = [];
+    out.forEach(function (r) {
+      var k = norm(r.home) + '|' + norm(r.away);
+      if (seen[k]) return;
+      seen[k] = 1;
+      uniq.push(r);
+    });
+    return uniq;
+  }
+
+  function pick(o, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (o[keys[i]] !== undefined && o[keys[i]] !== null && o[keys[i]] !== '') {
+        return o[keys[i]];
+      }
+    }
+    return null;
+  }
+
+  global.PicksHistory = {
+    LS_PICKS: LS_PICKS,
+    snapshot: snapshot,
+    backfill: backfill,
+    stats: stats,
+    byDate: byDate,
+    all: all,
+    clear: clear,
+    fetchResults: fetchResults,
+    parseResult: parseResult,
+    todayStr: todayStr
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
 /* ============================================================
  * 竞彩智析 · 应用逻辑 (app.js)
  * ============================================================ */
@@ -5701,6 +6053,186 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return head + bar + ops + sec1 + list1 + sec2 + list2 + sec3 + list3;
   }
 
+  /* ============================================================
+     高手推荐 · 历史回溯视图
+     ------------------------------------------------------------
+     高手推荐是模型实时筛选的（≥3星 且 价值指数为正），
+     看过了就没了。这里把每次的推荐快照入库，赛果出来后回填，
+     从而可以回看「当时推荐了什么、命中了没、命中率多少」。
+     ============================================================ */
+
+  var PH = { loading: false, err: '', at: 0, snap: 0 };
+
+  function rateColor2(r) {
+    if (r === null || r === undefined) return 'var(--muted2)';
+    if (r >= 55) return 'var(--good)';
+    if (r >= 40) return 'var(--warn)';
+    return 'var(--danger)';
+  }
+  function rt2(r) {
+    return (r === null || r === undefined) ? '—' : r.toFixed(0) + '%';
+  }
+
+  /* 尝试拉赛果并回填 */
+  function loadPicksResults() {
+    if (typeof PicksHistory === 'undefined') return;
+    if (PH.loading) return;
+    PH.loading = true;
+    PicksHistory.fetchResults().then(function (r) {
+      PH.loading = false;
+      PH.at = Date.now();
+      if (r.ok) {
+        PicksHistory.backfill(r.results);
+        PH.err = '';
+      } else {
+        PH.err = r.error || '暂未获取到赛果';
+      }
+      renderList();
+    }).catch(function (e) {
+      PH.loading = false;
+      PH.err = String((e && e.message) || e);
+      renderList();
+    });
+  }
+
+  function proHistoryHTML() {
+    if (typeof PicksHistory === 'undefined') {
+      return '<div class="panel" style="padding:12px;font-size:11px;color:var(--muted2)">' +
+        '历史模块未加载</div>';
+    }
+
+    /* ① 先把当前推荐快照入库 */
+    var snapRes = PicksHistory.snapshot(S.view || []);
+    PH.snap = snapRes.added;
+
+    var st = PicksHistory.stats();
+    var groups = PicksHistory.byDate(20);
+
+    /* ---------- 总览 ---------- */
+    var head = '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">' +
+      phBox('累计推荐', st.total + ' 场') +
+      phBox('已开奖', st.settled + ' 场') +
+      phBox('命中', st.hit + ' 场') +
+      phBox('未中', st.miss + ' 场') +
+      phBox('待开奖', st.pending + ' 场') +
+      phBox('总命中率', rt2(st.rate)) +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--muted2);line-height:1.7">' +
+      '每次打开「高手推荐」都会把当次推荐<b>快照入库</b>（含当时的赔率、概率、星级、价值指数），' +
+      '赛果出来后自动回填判定，因此可以随时回看当时的判断准不准。' +
+      (PH.err ? '<br><span style="color:var(--warn)">赛果获取：' + escHtml(PH.err) +
+        '（判定逻辑已就绪，待赛果源确认后自动累计）</span>' : '') +
+      '</div></div>';
+
+    /* ---------- ② 分组统计 ---------- */
+    var grp = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:12px 0 7px">分组命中率</div>' +
+      '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      phRow('5 星推荐', st.byStars[5]) +
+      phRow('4 星以上', st.byStars[4]) +
+      phRow('3 星以上', st.byStars[3]) +
+      '<div style="height:1px;background:var(--border);margin:7px 0"></div>' +
+      phRow('价值指数为正', st.byValue) +
+      '<div style="height:1px;background:var(--border);margin:7px 0"></div>' +
+      phRow(st.byDir.h.label, st.byDir.h) +
+      phRow(st.byDir.d.label, st.byDir.d) +
+      phRow(st.byDir.a.label, st.byDir.a) +
+      '</div>';
+
+    /* ---------- ③ 按日期回溯 ---------- */
+    var sec = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:12px 0 7px">历史战绩回溯 · 按推荐日</div>';
+
+    var list;
+    if (!groups.length) {
+      list = '<div class="panel" style="padding:14px;font-size:10.5px;color:var(--muted2);' +
+        'line-height:1.7">暂无历史记录。<br>' +
+        '本次已入库 ' + snapRes.added + ' 条推荐，下次打开即可看到回溯。</div>';
+    } else {
+      list = groups.map(function (g) {
+        var tot = g.hit + g.miss;
+        var rt = tot ? (g.hit / tot * 100) : null;
+        var items = g.items.map(function (p) {
+          var col = p.result === 'hit' ? 'var(--good)'
+            : (p.result === 'miss' ? 'var(--danger)' : 'var(--muted2)');
+          var tag = p.result === 'hit' ? '命中'
+            : (p.result === 'miss' ? '未中' : '待开奖');
+          return '<div style="padding:7px 0;border-top:1px dashed var(--border)">' +
+            '<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">' +
+            '<span style="font-size:11px;font-weight:700;flex:1">' +
+            escHtml(p.home) + ' <span style="color:var(--muted2)">vs</span> ' + escHtml(p.away) + '</span>' +
+            '<span style="font-size:10px;font-weight:800;color:' + col + '">' + tag + '</span>' +
+            '</div>' +
+            '<div style="font-size:9.5px;color:var(--muted2);margin-top:3px;' +
+            'display:flex;gap:8px;flex-wrap:wrap">' +
+            '<span>' + escHtml(p.no || '') + ' ' + escHtml(p.league || '') + '</span>' +
+            '<span>推荐 <b style="color:var(--accent)">' + escHtml(p.dirLabel) + '</b></span>' +
+            '<span>' + (p.stars || 0) + '星</span>' +
+            '<span>赔率 ' + (p.odds != null ? p.odds.toFixed(2) : '—') + '</span>' +
+            '<span>概率 ' + (p.prob != null ? (p.prob * 100).toFixed(1) + '%' : '—') + '</span>' +
+            (p.value != null ? '<span>价值 ' + (p.value >= 0 ? '+' : '') +
+              (p.value * 100).toFixed(1) + '%</span>' : '') +
+            (p.score ? '<span style="color:var(--text)">赛果 ' + escHtml(p.score) + '</span>' : '') +
+            '</div></div>';
+        }).join('');
+
+        return '<div class="panel" style="padding:9px;margin-bottom:7px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;' +
+          'margin-bottom:2px">' +
+          '<span style="font-size:11px;font-weight:800">' + escHtml(g.date) + '</span>' +
+          '<span style="font-size:10.5px;color:' + rateColor2(rt) + ';font-weight:700">' +
+          g.hit + '/' + tot + ' · ' + rt2(rt) +
+          (g.pending ? ' <span style="color:var(--muted2);font-weight:400">(' +
+            g.pending + ' 待开奖)</span>' : '') + '</span>' +
+          '</div>' + items + '</div>';
+      }).join('');
+    }
+
+    /* ---------- ④ 操作 ---------- */
+    var ops = '<div style="display:flex;gap:8px;margin:10px 0">' +
+      '<button class="btn-ghost" id="phRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
+      (PH.loading ? '正在拉取赛果…' : '拉取赛果并回填') + '</button>' +
+      '<button class="btn-ghost" id="phClear" style="flex:1;padding:9px;font-size:11.5px">' +
+      '清空历史</button></div>';
+
+    return head + grp + sec + list + ops;
+  }
+
+  function bindProHistoryBtns() {
+    var b1 = document.getElementById('phRefresh');
+    if (b1) bindTap(b1, function () { loadPicksResults(); });
+    var b2 = document.getElementById('phClear');
+    if (b2) bindTap(b2, function () {
+      if (typeof PicksHistory !== 'undefined') PicksHistory.clear();
+      toast('已清空高手推荐历史');
+      renderList();
+    });
+  }
+
+  function phBox(label, val) {
+    return '<div style="flex:1;min-width:70px;background:var(--card2);' +
+      'border:1px solid var(--border);border-radius:9px;padding:6px 4px;text-align:center">' +
+      '<div style="font-size:12px;font-weight:800">' + val + '</div>' +
+      '<div style="font-size:9px;color:var(--muted2);margin-top:1px">' + label + '</div></div>';
+  }
+
+  function phRow(label, s) {
+    if (!s || !s.total) {
+      return '<div style="display:flex;justify-content:space-between;font-size:10.5px;' +
+        'padding:4px 0"><span style="color:var(--muted2)">' + label + '</span>' +
+        '<span style="color:var(--muted2)">—</span></div>';
+    }
+    return '<div style="display:flex;align-items:center;gap:8px;padding:4px 0">' +
+      '<span style="flex:1;font-size:10.5px">' + escHtml(label) + '</span>' +
+      '<span style="font-size:9.5px;color:var(--muted2)">' + s.hit + '/' + s.total + '</span>' +
+      '<div style="width:56px;height:6px;background:var(--card2);border-radius:4px;overflow:hidden">' +
+      '<i style="display:block;height:100%;width:' + (s.rate || 0).toFixed(0) + '%;' +
+      'background:' + rateColor2(s.rate) + '"></i></div>' +
+      '<b style="width:32px;text-align:right;font-size:10.5px;color:' +
+      rateColor2(s.rate) + '">' + rt2(s.rate) + '</b></div>';
+  }
+
   function renderList() {
     const el = $('#matchList');
 
@@ -5715,6 +6247,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       return;
     }
     if (S.filter === 'htft') { el.innerHTML = htftViewHTML(); return; }
+    if (S.filter === 'pro') {
+      /* 高手推荐 = 实战卡片列表 + 历史回溯（两部分都有） */
+      el.innerHTML = S.view.map(cardHTML).join('') + proHistoryHTML();
+      bindProHistoryBtns();
+      /* 静默尝试拉赛果回填（失败也不影响展示） */
+      if (typeof PicksHistory !== 'undefined') setTimeout(loadPicksResults, 300);
+      return;
+    }
     if (S.filter === 'expert') {
       el.innerHTML = expertViewHTML();
       var eb1 = document.getElementById('exFetch');
