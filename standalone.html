@@ -4307,6 +4307,360 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
 </script>
 <script>
+/**
+ * ============================================================
+ * 竞彩智析 · 通用推荐历史回溯
+ * ------------------------------------------------------------
+ * 目标（按你的要求）：
+ *   ① 所有 tab 分类（今日赛程 / 北单单关 / 强弱对战 / 港澳指数 /
+ *      中倍稳胆 / 高手推荐 / 半全场 / 专家推荐…）都要有历史回溯
+ *   ② 历史里的样子必须和「当时推荐时」一模一样
+ *      —— 因此直接保存当时渲染出的卡片 HTML，回溯时原样还原
+ *   ③ 记录命中情况：赛果出来后判定 命中 / 未中 / 待开奖
+ *   ④ 昨天及更早的推荐也要能补录进历史
+ *
+ * 与「命中率」的关系：
+ *   只有带推荐方向的条目才参与命中判定（今日赛程这类纯列表不判定），
+ *   但所有条目都会留档，便于回看当时的盘面。
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var LS = 'jc.history.v2';
+  var MAX_PER_CAT = 120;        // 每类最多保留条数（防止无限膨胀）
+  var MAX_HTML = 6000;          // 单条卡片 HTML 上限
+
+  /* localStorage 在无痕/部分 WebView 下不可用 → 内存兜底 */
+  var MEM = {};
+  function store() {
+    try {
+      var ls = global.localStorage;
+      if (ls) { ls.getItem('__t'); return ls; }
+    } catch (e) { }
+    return null;
+  }
+  function load(k, def) {
+    var st = store();
+    if (st) {
+      try {
+        var v = st.getItem(k);
+        return v ? JSON.parse(v) : (MEM[k] !== undefined ? MEM[k] : def);
+      } catch (e) { }
+    }
+    return MEM[k] !== undefined ? MEM[k] : def;
+  }
+  function save(k, o) {
+    MEM[k] = o;
+    var st = store();
+    if (!st) return;
+    try { st.setItem(k, JSON.stringify(o)); } catch (e) { }
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function nowBJ(d) {
+    var b = d || new Date();
+    var utcMs = b.getTime() + (b.getTimezoneOffset() * 60000);
+    return new Date(utcMs + 8 * 3600000);
+  }
+  function todayStr(d) {
+    var b = nowBJ(d);
+    return b.getFullYear() + '-' + pad(b.getMonth() + 1) + '-' + pad(b.getDate());
+  }
+  function nowTime(d) {
+    var b = nowBJ(d);
+    return pad(b.getHours()) + ':' + pad(b.getMinutes());
+  }
+  function norm(s) { return String(s || '').replace(/\s+/g, '').toLowerCase(); }
+
+  function all() { return load(LS, []); }
+
+  /* ---------------- 快照 ---------------- */
+  /**
+   * @param cat    分类 key，如 'pro' / 'safe' / 'strong'
+   * @param catLabel 分类中文名
+   * @param items  S.view 条目数组（每项含 .raw / .an）
+   * @param htmlFn 渲染单张卡片的函数，如 cardHTML
+   */
+  function snapshot(cat, catLabel, items, htmlFn) {
+    if (!items || !items.length) return { added: 0, total: all().length };
+    var list = all();
+    var idx = {};
+    list.forEach(function (p) { idx[p.key] = p; });
+
+    var d = todayStr();
+    var added = 0;
+
+    items.forEach(function (x) {
+      var r = x.raw, a = x.an;
+      if (!r) return;
+      var home = (r.home && r.home.name) || '';
+      var away = (r.away && r.away.name) || '';
+      if (!home || !away) return;
+
+      var mDate = r.matchDate || d;
+      var key = cat + '|' + mDate + '|' + norm(home) + '|' + norm(away);
+
+      /* 卡片 HTML：用于回溯时原样还原"当时的样子" */
+      var html = '';
+      if (typeof htmlFn === 'function') {
+        try {
+          html = htmlFn(x) || '';
+          if (html.length > MAX_HTML) html = html.slice(0, MAX_HTML);
+        } catch (e) { html = ''; }
+      }
+
+      var dir = '';
+      var meta = null;
+      if (a) {
+        dir = (a.rating && a.rating.dir) ? a.rating.dir : '';
+        meta = {
+          stars: (a.rating && a.rating.stars) || 0,
+          conf: (a.rating && a.rating.conf != null) ? a.rating.conf : null,
+          odds: dir && a.odds && a.odds.jc ? a.odds.jc[dir] : null,
+          prob: dir && a.probs ? a.probs[dir] : null,
+          marketProb: dir && a.marketProb ? a.marketProb[dir] : null,
+          value: (dir && a.value) ? a.value[dir] : null,
+          league: r.league || '',
+          no: r.matchNumStr || ''
+        };
+      }
+
+      var prev = idx[key];
+      if (prev) {
+        /* 已存在：赛果未出时刷新当时的判断与卡片（保证"当时的样子"是最后一次看到的） */
+        if (!prev.result) {
+          prev.dir = dir;
+          prev.meta = meta;
+          prev.html = html || prev.html;
+          prev.snapAt = Date.now();
+          prev.snapDate = d;
+          prev.snapTime = nowTime();
+        }
+        return;
+      }
+
+      var p = {
+        key: key,
+        cat: cat,
+        catLabel: catLabel || cat,
+        matchDate: mDate,
+        snapDate: d,
+        snapTime: nowTime(),
+        snapAt: Date.now(),
+        home: home,
+        away: away,
+        dir: dir,
+        dirLabel: dir === 'h' ? '主胜' : (dir === 'd' ? '平局' : (dir === 'a' ? '客胜' : '')),
+        meta: meta,
+        html: html,
+        result: null,     // 'hit' | 'miss' | null
+        score: null
+      };
+      list.push(p);
+      idx[key] = p;
+      added++;
+    });
+
+    /* 每类限量：保留最新的 */
+    var byCat = {};
+    list.forEach(function (p) {
+      (byCat[p.cat] = byCat[p.cat] || []).push(p);
+    });
+    var kept = [];
+    Object.keys(byCat).forEach(function (c) {
+      var arr = byCat[c].sort(function (a, b) { return (b.snapAt || 0) - (a.snapAt || 0); });
+      kept = kept.concat(arr.slice(0, MAX_PER_CAT));
+    });
+    save(LS, kept);
+    return { added: added, total: kept.length };
+  }
+
+  /* ---------------- 赛果回填 ---------------- */
+  function backfill(results) {
+    if (!results || !results.length) return { filled: 0 };
+    var list = all();
+    var n = 0;
+    list.forEach(function (p) {
+      if (p.result) return;
+      for (var i = 0; i < results.length; i++) {
+        var r = results[i];
+        if (!matchTeam(r.home, p.home) || !matchTeam(r.away, p.away)) continue;
+        var hs = parseInt(r.homeScore, 10), as = parseInt(r.awayScore, 10);
+        if (!isFinite(hs) || !isFinite(as)) continue;
+        p.score = hs + ':' + as;
+        if (p.dir) {
+          var actual = hs > as ? 'h' : (hs < as ? 'a' : 'd');
+          p.result = (p.dir === actual) ? 'hit' : 'miss';
+        } else {
+          /* 无推荐方向的（如纯列表类）只记赛果，不判命中 */
+          p.result = 'nr';
+        }
+        n++;
+        break;
+      }
+    });
+    if (n) save(LS, list);
+    return { filled: n };
+  }
+
+  function matchTeam(a, b) {
+    if (global.HKJC && global.HKJC.teamMatch) {
+      try { return global.HKJC.teamMatch(a, b); } catch (e) { }
+    }
+    return norm(a) === norm(b);
+  }
+
+  /* ---------------- 查询 / 统计 ---------------- */
+  function byCat(cat) {
+    return all().filter(function (p) { return !cat || p.cat === cat; });
+  }
+
+  function stats(cat) {
+    var list = byCat(cat);
+    var judged = list.filter(function (p) { return p.result === 'hit' || p.result === 'miss'; });
+    var hit = judged.filter(function (p) { return p.result === 'hit'; });
+    return {
+      total: list.length,
+      settled: judged.length,
+      hit: hit.length,
+      miss: judged.length - hit.length,
+      pending: list.filter(function (p) { return !p.result; }).length,
+      rate: judged.length ? (hit.length / judged.length * 100) : null
+    };
+  }
+
+  /* 按比赛日分组（倒序） */
+  function byDate(cat, limit) {
+    var list = byCat(cat).slice().sort(function (a, b) {
+      if (a.matchDate === b.matchDate) return (b.snapAt || 0) - (a.snapAt || 0);
+      return a.matchDate < b.matchDate ? 1 : -1;
+    });
+    var g = {};
+    list.forEach(function (p) {
+      var k = p.matchDate || '未知';
+      if (!g[k]) g[k] = { date: k, items: [], hit: 0, miss: 0, pending: 0, nr: 0 };
+      g[k].items.push(p);
+      if (p.result === 'hit') g[k].hit++;
+      else if (p.result === 'miss') g[k].miss++;
+      else if (p.result === 'nr') g[k].nr++;
+      else g[k].pending++;
+    });
+    var arr = Object.keys(g).sort().reverse().map(function (k) { return g[k]; });
+    return limit ? arr.slice(0, limit) : arr;
+  }
+
+  /* 所有出现过的分类（含条数） */
+  function cats() {
+    var m = {};
+    all().forEach(function (p) {
+      if (!m[p.cat]) m[p.cat] = { cat: p.cat, label: p.catLabel, n: 0 };
+      m[p.cat].n++;
+    });
+    return Object.keys(m).map(function (k) { return m[k]; });
+  }
+
+  function clear(cat) {
+    if (!cat) { save(LS, []); return; }
+    save(LS, all().filter(function (p) { return p.cat !== cat; }));
+  }
+
+  /* ---------------- 赛果拉取 ----------------
+     竞彩官方赛果接口未确认，尝试多个候选；失败不编造。 */
+  var RESULT_URLS = [
+    'https://webapi.sporttery.cn/gateway/jc/football/getMatchResultV1.qry?param=90,0&channel=c',
+    'https://webapi.sporttery.cn/gateway/jc/football/getMatchResultV1.qry?param=90,0&poolCode=had&channel=c',
+    'https://i.sporttery.cn/api/fb_match_result/get_pool_rs?page=1&limit=100'
+  ];
+
+  function fetchResults() {
+    var transport = (global.HKJC && global.HKJC.transport) ? global.HKJC.transport : null;
+    if (!transport) return Promise.resolve({ ok: false, error: '无传输通道', results: [] });
+
+    function tryOne(i, lastErr) {
+      if (i >= RESULT_URLS.length) {
+        return Promise.resolve({ ok: false, error: lastErr || '无可用赛果源', results: [] });
+      }
+      return transport(RESULT_URLS[i], 'GET', {
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://www.sporttery.cn/'
+      }, '').then(function (r) {
+        if (!r || !r.ok) return tryOne(i + 1, 'HTTP ' + (r && r.status));
+        var list = parseResult(r.text);
+        if (!list.length) return tryOne(i + 1, '响应中无赛果');
+        return { ok: true, url: RESULT_URLS[i], results: list };
+      }).catch(function (e) {
+        return tryOne(i + 1, String((e && e.message) || e));
+      });
+    }
+    return tryOne(0, '');
+  }
+
+  function parseResult(txt) {
+    if (!txt) return [];
+    var j = null;
+    try { j = JSON.parse(txt); } catch (e) {
+      var m = txt.match(/^\s*\w+\s*\(([\s\S]*)\)\s*;?\s*$/);
+      if (m) { try { j = JSON.parse(m[1]); } catch (e2) { return []; } }
+      if (!j) return [];
+    }
+    var out = [];
+    function walk(o) {
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) { o.forEach(walk); return; }
+      var h = pick(o, ['homeTeamAbbName', 'homeTeamAllName', 'home', 'homeTeam', 'homeName']);
+      var a = pick(o, ['awayTeamAbbName', 'awayTeamAllName', 'away', 'awayTeam', 'awayName']);
+      var hs = pick(o, ['homeScore', 'homeGoal', 'hScore', 'scoreH']);
+      var as = pick(o, ['awayScore', 'awayGoal', 'aScore', 'scoreA']);
+      if (h && a && hs !== null && as !== null && hs !== '' && as !== '') {
+        out.push({
+          home: String(h), away: String(a),
+          homeScore: parseInt(hs, 10), awayScore: parseInt(as, 10),
+          date: pick(o, ['matchDate', 'businessDate', 'date']) || ''
+        });
+        return;
+      }
+      Object.keys(o).forEach(function (k) {
+        if (typeof o[k] === 'object') walk(o[k]);
+      });
+    }
+    walk(j);
+    var seen = {}, uniq = [];
+    out.forEach(function (r) {
+      var k = norm(r.home) + '|' + norm(r.away);
+      if (seen[k]) return;
+      seen[k] = 1;
+      uniq.push(r);
+    });
+    return uniq;
+  }
+
+  function pick(o, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (o[keys[i]] !== undefined && o[keys[i]] !== null && o[keys[i]] !== '') return o[keys[i]];
+    }
+    return null;
+  }
+
+  global.History2 = {
+    LS: LS,
+    snapshot: snapshot,
+    backfill: backfill,
+    stats: stats,
+    byDate: byDate,
+    byCat: byCat,
+    cats: cats,
+    all: all,
+    clear: clear,
+    fetchResults: fetchResults,
+    parseResult: parseResult,
+    todayStr: todayStr
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
 /* ============================================================
  * 竞彩智析 · 应用逻辑 (app.js)
  * ============================================================ */
@@ -6233,26 +6587,443 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       rateColor2(s.rate) + '">' + rt2(s.rate) + '</b></div>';
   }
 
+  /* ============================================================
+     通用历史回溯区块
+     ------------------------------------------------------------
+     所有分类共用：把该分类的历史按比赛日分组渲染。
+     关键：每条历史都用「当时保存的卡片 HTML」原样还原，
+     因此和当时推荐时看到的样子完全一致，再叠加命中标记。
+     ============================================================ */
+
+  var HS = { loading: false, err: '', snap: 0 };
+
+  function hRateColor(r) {
+    if (r === null || r === undefined) return 'var(--muted2)';
+    if (r >= 55) return 'var(--good)';
+    if (r >= 40) return 'var(--warn)';
+    return 'var(--danger)';
+  }
+  function hRt(r) {
+    return (r === null || r === undefined) ? '—' : r.toFixed(0) + '%';
+  }
+
+  /* 命中标记徽章 */
+  function resultBadge(p) {
+    if (p.result === 'hit') {
+      return '<span style="font-size:10px;font-weight:800;color:var(--good);' +
+        'background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.4);' +
+        'border-radius:7px;padding:2px 7px">✓ 命中</span>';
+    }
+    if (p.result === 'miss') {
+      return '<span style="font-size:10px;font-weight:800;color:var(--danger);' +
+        'background:rgba(248,113,113,.14);border:1px solid rgba(248,113,113,.4);' +
+        'border-radius:7px;padding:2px 7px">✗ 未中</span>';
+    }
+    if (p.result === 'nr') {
+      return '<span style="font-size:10px;font-weight:700;color:var(--muted2);' +
+        'background:var(--card2);border:1px solid var(--border);' +
+        'border-radius:7px;padding:2px 7px">赛果 ' + escHtml(p.score || '') + '</span>';
+    }
+    return '<span style="font-size:10px;font-weight:700;color:var(--muted2);' +
+      'background:var(--card2);border:1px solid var(--border);' +
+      'border-radius:7px;padding:2px 7px">待开奖</span>';
+  }
+
+  /* 单条历史的渲染：原样卡片 HTML + 命中条 */
+  function histItemHTML(p) {
+    var meta = '';
+    if (p.dirLabel) {
+      meta += '<span>推荐 <b style="color:var(--accent)">' + escHtml(p.dirLabel) + '</b></span>';
+    }
+    if (p.meta) {
+      if (p.meta.stars) meta += '<span>' + p.meta.stars + '星</span>';
+      if (p.meta.odds != null) meta += '<span>赔率 ' + p.meta.odds.toFixed(2) + '</span>';
+      if (p.meta.prob != null) meta += '<span>概率 ' + (p.meta.prob * 100).toFixed(1) + '%</span>';
+    }
+    if (p.score) meta += '<span style="color:var(--text)">赛果 ' + escHtml(p.score) + '</span>';
+
+    var bar = '<div style="display:flex;justify-content:space-between;align-items:center;' +
+      'gap:8px;padding:6px 9px;background:var(--card2);' +
+      'border:1px solid var(--border);border-radius:10px;margin-bottom:6px">' +
+      '<span style="display:flex;gap:8px;flex-wrap:wrap;font-size:9.5px;color:var(--muted2);' +
+      'flex:1">' + (meta || '<span>' + escHtml(p.catLabel || '') + '</span>') + '</span>' +
+      resultBadge(p) + '</div>';
+
+    /* ★ 原样还原当时的卡片 */
+    var card = p.html
+      ? '<div class="hist-card-wrap" style="opacity:.96">' + p.html + '</div>'
+      : '<div style="font-size:11px;color:var(--muted2);padding:6px 2px">' +
+        escHtml(p.home) + ' <span style="color:var(--muted2)">vs</span> ' + escHtml(p.away) +
+        '（无存档卡片）</div>';
+
+    return '<div style="margin-bottom:12px">' + bar + card + '</div>';
+  }
+
+  /**
+   * 生成某分类的历史回溯区块。
+   * @param cat 分类 key
+   * @param label 分类名（用于兜底）
+   */
+  function historySectionHTML(cat, label) {
+    if (typeof History2 === 'undefined') {
+      return '<div class="panel" style="padding:11px;font-size:10.5px;color:var(--muted2)">' +
+        '历史模块未加载</div>';
+    }
+    var st = History2.stats(cat);
+    var groups = History2.byDate(cat, 30);
+
+    var head = '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">' +
+      hBox('历史留档', st.total + ' 场') +
+      hBox('已开奖', st.settled + ' 场') +
+      hBox('命中', st.hit + ' 场') +
+      hBox('未中', st.miss + ' 场') +
+      hBox('待开奖', st.pending + ' 场') +
+      hBox('命中率', hRt(st.rate)) +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--muted2);line-height:1.7">' +
+      '每次打开本分类都会<b>自动留档</b>，保存当时的卡片原样。' +
+      '赛果出来后判定命中 / 未中。' +
+      (HS.err ? '<br><span style="color:var(--warn)">赛果：' + escHtml(HS.err) + '</span>' : '') +
+      '</div></div>';
+
+    var sec = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:12px 0 7px">' +
+      escHtml(label || '本分类') + ' · 历史战绩回溯</div>';
+
+    var list;
+    if (!groups.length) {
+      list = '<div class="panel" style="padding:14px;font-size:10.5px;color:var(--muted2);' +
+        'line-height:1.7">暂无历史留档。<br>' +
+        '本次已留档 ' + HS.snap + ' 条，下次打开即可回溯。</div>';
+    } else {
+      list = groups.map(function (g) {
+        var tot = g.hit + g.miss;
+        var rt = tot ? (g.hit / tot * 100) : null;
+        var headRow = '<div style="display:flex;justify-content:space-between;align-items:center;' +
+          'padding:7px 9px;margin-bottom:8px;background:var(--card2);' +
+          'border:1px solid var(--border);border-radius:10px">' +
+          '<span style="font-size:11px;font-weight:800">' + escHtml(g.date) + '</span>' +
+          '<span style="font-size:10.5px;font-weight:700;color:' + hRateColor(rt) + '">' +
+          (g.hit + g.miss ? g.hit + '/' + tot + ' · ' + hRt(rt) + ' · ' : '') +
+          (g.pending ? '<span style="color:var(--muted2);font-weight:400">' +
+            g.pending + ' 待开奖</span>' : '') + '</span></div>';
+        return '<div style="margin-bottom:14px">' + headRow +
+          g.items.map(histItemHTML).join('') + '</div>';
+      }).join('');
+    }
+
+    var ops = '<div style="display:flex;gap:8px;margin:10px 0 4px">' +
+      '<button class="btn-ghost" id="hsRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
+      (HS.loading ? '正在拉取赛果…' : '拉取赛果并回填') + '</button>' +
+      '<button class="btn-ghost" id="hsClear" style="flex:1;padding:9px;font-size:11.5px">' +
+      '清空本类历史</button></div>';
+
+    return head + sec + list + ops;
+  }
+
+  function hBox(label, val) {
+    return '<div style="flex:1;min-width:68px;background:var(--card2);' +
+      'border:1px solid var(--border);border-radius:9px;padding:6px 4px;text-align:center">' +
+      '<div style="font-size:12px;font-weight:800">' + val + '</div>' +
+      '<div style="font-size:9px;color:var(--muted2);margin-top:1px">' + label + '</div></div>';
+  }
+
+  function bindHistoryBtns(cat) {
+    var b1 = document.getElementById('hsRefresh');
+    if (b1) bindTap(b1, function () { loadHistoryResults(); });
+    var b3 = document.getElementById('hsBack');
+    if (b3) bindTap(b3, function () { backfillHistory(); });
+    var b2 = document.getElementById('hsClear');
+    if (b2) bindTap(b2, function () {
+      if (typeof History2 !== 'undefined') History2.clear(cat);
+      toast('已清空「' + catLabelOf(cat) + '」历史');
+      renderList();
+    });
+    /* 历史里的卡片可点开详情（复用现有绑定逻辑） */
+    $$('#matchList .hist-card-wrap .card').forEach(function (c) {
+      bindTap(c, function (e) {
+        var tg = e && e.target;
+        if (tg && tg.dataset && tg.dataset.fav) { toggleFav(tg.dataset.fav); return; }
+        const m = S.all.filter(function (x) { return x.raw.id === c.dataset.id; })[0];
+        if (m) openDetail(m);
+      });
+    });
+  }
+
+  function catLabelOf(cat) {
+    for (var i = 0; i < CATS.length; i++) {
+      if (CATS[i][0] === cat) return CATS[i][1];
+    }
+    return cat;
+  }
+
+  /* ---------------- 补录历史 ----------------
+     为什么需要：留档从"你打开过 App"才开始。若昨天没打开，
+     昨天那批推荐就不会在本地。此功能尝试回补最近几天的赛程，
+     配合赛果生成回顾式留档，让历史连续。 */
+  var HIST_DAYS = 3;
+
+  function backfillHistory() {
+    if (typeof History2 === 'undefined') return;
+    if (HS.loading) return;
+    HS.loading = true;
+    toast('正在补录最近 ' + HIST_DAYS + ' 天历史…');
+
+    var pools = 'had,hhad,crs,ttg,hafu';
+    var BASE = 'https://webapi.sporttery.cn/gateway/jc/football/getMatchCalculatorV1.qry';
+    /* param 第二位尝试负值/偏移，代表往前几天；不同版本含义不同，逐个试 */
+    var cands = [];
+    for (var k = 1; k <= HIST_DAYS; k++) {
+      cands.push(BASE + '?param=90,' + (-k) + '&poolCode=' + pools + '&channel=c');
+    }
+    cands.push(BASE + '?param=90,0&poolCode=' + pools + '&channel=c');
+
+    var transport = (global.HKJC && global.HKJC.transport) ? global.HKJC.transport : null;
+    if (!transport) { HS.loading = false; toast('无传输通道'); return; }
+
+    var got = 0, tried = 0;
+    function next(i) {
+      if (i >= cands.length) {
+        /* 补录完再拉赛果回填 */
+        return History2.fetchResults().then(function (r) {
+          HS.loading = false;
+          if (r.ok) History2.backfill(r.results);
+          HS.err = r.ok ? '' : (r.error || '');
+          toast(got ? ('已补录 ' + got + ' 场历史') : '未补录到历史赛程');
+          renderList();
+        });
+      }
+      tried++;
+      return transport(cands[i], 'GET', {
+        'Accept': 'application/json, text/plain, */*',
+        'Referer': 'https://www.sporttery.cn/'
+      }, '').then(function (res) {
+        if (res && res.ok) {
+          var n = archiveFromSchedule(res.text, cands[i]);
+          got += n;
+        }
+        return next(i + 1);
+      }).catch(function () { return next(i + 1); });
+    }
+    next(0);
+  }
+
+  /* 把一份赛程 JSON 转成本地留档（无推荐方向 → 只记赛果，不判命中） */
+  function archiveFromSchedule(txt, srcUrl) {
+    var j = null;
+    try { j = JSON.parse(txt); } catch (e) { return 0; }
+    var list = (j && j.value && j.value.matchInfoList) || [];
+    if (!list.length) return 0;
+    var n = 0;
+    list.forEach(function (day) {
+      var bdate = day.businessDate || '';
+      (day.subMatchList || []).forEach(function (m) {
+        var home = m.homeTeamAbbName || m.homeTeamAllName || '';
+        var away = m.awayTeamAbbName || m.awayTeamAllName || '';
+        if (!home || !away) return;
+        var md = m.matchDate || bdate || '';
+        /* 只补录今天之前的 */
+        if (!md || md >= History2.todayStr()) return;
+        n += History2.snapshot('arch', '历史补录', [{
+          raw: {
+            matchId: m.matchId,
+            matchNumStr: m.matchNumStr || '',
+            league: m.leagueAbbName || m.leagueAllName || '',
+            home: { name: home }, away: { name: away },
+            matchDate: md
+          },
+          an: null
+        }], null).added;
+      });
+    });
+    return n;
+  }
+
+  /* 拉取赛果并回填（所有分类共享） */
+  function loadHistoryResults() {
+    if (typeof History2 === 'undefined') return;
+    if (HS.loading) return;
+    HS.loading = true;
+    History2.fetchResults().then(function (r) {
+      HS.loading = false;
+      if (r.ok) {
+        History2.backfill(r.results);
+        HS.err = '';
+        toast('已回填 ' + r.results.length + ' 场赛果');
+      } else {
+        HS.err = r.error || '暂未获取到赛果';
+        toast('赛果获取失败：' + HS.err);
+      }
+      renderList();
+    }).catch(function (e) {
+      HS.loading = false;
+      HS.err = String((e && e.message) || e);
+      renderList();
+    });
+  }
+
+  /* 统一快照入口：所有分类在渲染时都会留档 */
+  function snapshotCurrent() {
+    if (typeof History2 === 'undefined') return 0;
+    var cat = S.filter || 'today';
+    /* 历史/专用视图类不做留档（它们本身就是历史或工具） */
+    if (cat === 'hist') return 0;
+    var items = S.view || [];
+    if (!items.length) return 0;
+    var r = History2.snapshot(cat, catLabelOf(cat), items, cardHTML);
+    HS.snap = r.added;
+    return r.added;
+  }
+
+  /* 历史战绩总览：跨分类汇总，可按分类切换 */
+  var HA = { cat: '' };
+
+  function histAllHTML() {
+    if (typeof History2 === 'undefined') {
+      return '<div class="panel" style="padding:12px;font-size:11px;color:var(--muted2)">' +
+        '历史模块未加载</div>';
+    }
+    var cs = History2.cats();
+    var stAll = History2.stats(null);
+
+    /* 分类切换 chips */
+    var chips = '<div class="chips" style="margin-bottom:10px">' +
+      ['<button type="button" class="chip' + (HA.cat === '' ? ' on' : '') +
+        '" data-hcat="">全部</button>'].concat(
+        cs.map(function (c) {
+          return '<button type="button" class="chip' + (HA.cat === c.cat ? ' on' : '') +
+            '" data-hcat="' + c.cat + '">' + escHtml(c.label || c.cat) +
+            ' <span style="opacity:.65">' + c.n + '</span></button>';
+        })).join('') + '</div>';
+
+    $$('#matchList .chip[data-hcat]').forEach(function (b) {
+      bindTap(b, function () {
+        HA.cat = b.dataset.hcat || '';
+        renderList();
+      });
+    });
+
+    var head = '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">' +
+      hBox('总留档', stAll.total + ' 场') +
+      hBox('已开奖', stAll.settled + ' 场') +
+      hBox('命中', stAll.hit + ' 场') +
+      hBox('未中', stAll.miss + ' 场') +
+      hBox('待开奖', stAll.pending + ' 场') +
+      hBox('总命中率', hRt(stAll.rate)) +
+      '</div>' +
+      '<div style="font-size:10px;color:var(--muted2);line-height:1.7">' +
+      '所有分类的推荐都会留档，保存<b>当时的卡片原样</b>，' +
+      '赛果出来后判定命中 / 未中。上方切换可只看某一个分类。' +
+      (HS.err ? '<br><span style="color:var(--warn)">赛果：' + escHtml(HS.err) + '</span>' : '') +
+      '</div></div>';
+
+    /* 各分类命中率一览 */
+    var rank = cs.map(function (c) {
+      var s = History2.stats(c.cat);
+      return { label: c.label || c.cat, cat: c.cat, s: s };
+    }).filter(function (x) { return x.s.settled > 0; })
+      .sort(function (a, b) {
+        var ra = a.s.rate === null ? -1 : a.s.rate;
+        var rb = b.s.rate === null ? -1 : b.s.rate;
+        return rb - ra;
+      });
+
+    var rankHTML = '';
+    if (rank.length) {
+      rankHTML = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+        'letter-spacing:1px;margin:12px 0 7px">各分类命中率</div>' +
+        '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+        rank.map(function (x) {
+          return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0">' +
+            '<span style="flex:1;font-size:10.5px">' + escHtml(x.label) + '</span>' +
+            '<span style="font-size:9.5px;color:var(--muted2)">' +
+            x.s.hit + '/' + x.s.settled + '</span>' +
+            '<div style="width:56px;height:6px;background:var(--card2);border-radius:4px;' +
+            'overflow:hidden"><i style="display:block;height:100%;width:' +
+            (x.s.rate || 0).toFixed(0) + '%;background:' + hRateColor(x.s.rate) + '"></i></div>' +
+            '<b style="width:32px;text-align:right;font-size:10.5px;color:' +
+            hRateColor(x.s.rate) + '">' + hRt(x.s.rate) + '</b></div>';
+        }).join('') + '</div>';
+    }
+
+    /* 明细 */
+    var sec = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:12px 0 7px">' +
+      (HA.cat ? escHtml(catLabelOf(HA.cat)) + ' · ' : '') + '历史战绩回溯 · 按比赛日</div>';
+
+    var groups = History2.byDate(HA.cat || null, 30);
+    var list;
+    if (!groups.length) {
+      list = '<div class="panel" style="padding:14px;font-size:10.5px;color:var(--muted2);' +
+        'line-height:1.7">暂无历史留档。<br>' +
+        '打开任意分类（今日赛程 / 高手推荐 / 半全场…）浏览赛事后，' +
+        '系统会自动留档当时的推荐与盘面，赛果出来后即可回溯命中情况。</div>';
+    } else {
+      list = groups.map(function (g) {
+        var tot = g.hit + g.miss;
+        var rt = tot ? (g.hit / tot * 100) : null;
+        var headRow = '<div style="display:flex;justify-content:space-between;align-items:center;' +
+          'padding:7px 9px;margin-bottom:8px;background:var(--card2);' +
+          'border:1px solid var(--border);border-radius:10px">' +
+          '<span style="font-size:11px;font-weight:800">' + escHtml(g.date) + '</span>' +
+          '<span style="font-size:10.5px;font-weight:700;color:' + hRateColor(rt) + '">' +
+          (tot ? g.hit + '/' + tot + ' · ' + hRt(rt) + ' · ' : '') +
+          (g.pending ? '<span style="color:var(--muted2);font-weight:400">' +
+            g.pending + ' 待开奖</span>' : '') + '</span></div>';
+        return '<div style="margin-bottom:14px">' + headRow +
+          g.items.map(histItemHTML).join('') + '</div>';
+      }).join('');
+    }
+
+    var ops = '<div style="display:flex;flex-direction:column;gap:8px;margin:10px 0 4px">' +
+      '<div style="display:flex;gap:8px">' +
+      '<button class="btn-ghost" id="hsRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
+      (HS.loading ? '正在处理…' : '拉取赛果并回填') + '</button>' +
+      '<button class="btn-ghost" id="hsClear" style="flex:1;padding:9px;font-size:11.5px">' +
+      '清空全部历史</button></div>' +
+      '<button class="btn-ghost" id="hsBack" style="padding:9px;font-size:11.5px">' +
+      '补录最近 ' + HIST_DAYS + ' 天历史</button>' +
+      '<div style="font-size:9.5px;color:var(--muted2);line-height:1.6">' +
+      '留档从你首次打开 App 开始。若某天没打开过，可用「补录」尝试回补该日赛程；' +
+      '补录条目只记赛果、不判命中（当时没有推荐方向）。</div></div>';
+
+    return chips + head + rankHTML + sec + list + ops;
+  }
+
   function renderList() {
     const el = $('#matchList');
 
+    /* ★ 所有分类统一留档：保存当时的卡片原样，供历史回溯还原 */
+    try { snapshotCurrent(); } catch (e) { }
+
     /* 三个专用视图不走卡片列表 */
-    if (S.filter === 'hist') { el.innerHTML = histViewHTML(); return; }
+    if (S.filter === 'hist') {
+      el.innerHTML = histAllHTML();
+      bindHistoryBtns(null);
+      return;
+    }
     if (S.filter === 'hkmo') {
       el.innerHTML = hkmoViewHTML();
       var b1 = document.getElementById('hkRetry');
       if (b1) bindTap(b1, function () { HK.err = ''; HK.list = null; loadHKJC(); });
       var b2 = document.getElementById('hkRefresh');
       if (b2) bindTap(b2, function () { loadHKJC(true); });
+      el.innerHTML += historySectionHTML('hkmo', '港澳指数');
+      bindHistoryBtns('hkmo');
       return;
     }
-    if (S.filter === 'htft') { el.innerHTML = htftViewHTML(); return; }
+    if (S.filter === 'htft') {
+      el.innerHTML = htftViewHTML() + historySectionHTML('htft', '半全场');
+      bindHistoryBtns('htft');
+      return;
+    }
     if (S.filter === 'pro') {
       /* 高手推荐 = 实战卡片列表 + 历史回溯（两部分都有） */
-      el.innerHTML = S.view.map(cardHTML).join('') + proHistoryHTML();
-      bindProHistoryBtns();
-      /* 静默尝试拉赛果回填（失败也不影响展示） */
-      if (typeof PicksHistory !== 'undefined') setTimeout(loadPicksResults, 300);
+      el.innerHTML = S.view.map(cardHTML).join('') + historySectionHTML('pro', '高手推荐');
+      bindHistoryBtns('pro');
+      if (typeof History2 !== 'undefined') setTimeout(loadHistoryResults, 300);
       return;
     }
     if (S.filter === 'expert') {
@@ -6266,6 +7037,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         toast('已清空专家数据');
         renderList();
       });
+      el.innerHTML += historySectionHTML('expert', '专家推荐');
+      bindHistoryBtns('expert');
       return;
     }
 
@@ -6273,8 +7046,11 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><p>没有符合条件的赛事</p><span>试试切换筛选或清空搜索</span></div>';
       return;
     }
-    el.innerHTML = S.view.map(cardHTML).join('');
-    $$('#matchList .card').forEach(function (c) {
+    el.innerHTML = S.view.map(cardHTML).join('') +
+      historySectionHTML(S.filter || 'today', catLabelOf(S.filter || 'today'));
+    bindHistoryBtns(S.filter || 'today');
+    /* 只绑当前列表的直接子卡片，历史里的卡片由 bindHistoryBtns 单独绑，避免重复触发 */
+    $$('#matchList > .card').forEach(function (c) {
       bindTap(c, function (e) {
         var tg = e && e.target;
         if (tg && tg.dataset && tg.dataset.fav) { toggleFav(tg.dataset.fav); return; }
