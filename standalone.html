@@ -3714,8 +3714,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         matchTime: p.time,
         postDate: postDate,
         postTime: postTime,
-        expert: guessExpert(tail) || guessExpert(title),
-        picks: parsePick(title),
+        expert: guessExpert(tail) || guessExpert(title) ||
+          fallbackName(absUrl(href, srcUrl), title),
         result: null        // 'hit' | 'miss' | null
       });
     }
@@ -3741,7 +3741,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           matchTime: pb.time,
           postDate: md2full(pb.md) || todayStr(),
           postTime: pb.time,
-          expert: guessExpert(ln),
+          expert: guessExpert(ln) || fallbackName(srcUrl, ln),
           picks: parsePick(ln),
           result: null
         });
@@ -3856,24 +3856,88 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   }
 
   /* 猜专家名：常见写法【xxx】、作者：xxx、— xxx */
+  /* ---------------- 专家名识别 ----------------
+     ★ 要求：每个专家都必须有名字，否则无法统计排行榜。
+       宁可给一个"可追踪的稳定代号"，也不能给"未知专家"
+       —— 后者会把所有识别不出的帖子合并成一个人，彻底毁掉统计。 */
+  var BAD_NAME = /^(?:未知|匿名|佚名|admin|管理员|用户|会员|游客|楼主|沙发|板凳)$/i;
+
+  function cleanName(n) {
+    n = String(n || '').replace(/\s+/g, '').trim();
+    /* 去掉头尾标点与常见后缀 */
+    n = n.replace(/^[\s\-—–_|｜:：,，.。]+/, '').replace(/[\s\-—–_|｜:：,，.。]+$/, '');
+    n = n.replace(/(?:解读|分析|推荐|看球|聊球|足球|情报|今日|赛前|体育|足彩|竞彩|前瞻|预测|解说|评球|复盘)+$/g, '');
+    if (BAD_NAME.test(n)) return '';
+    /* ★ 名字里不能出现日期/时间/比分的任何形式。
+       否则 "09-18" 这类会被当成专家名（实测出现过），
+       导致排行榜第三名显示成日期，且无法正确归人。 */
+    if (/\d/.test(n)) {
+      /* 只要含数字，就必须不是以下形态：
+         2026-09-18 / 09-18 / 09\/18 / 18:30 / 2:1 / 2026年9月 */
+      if (/\d{2,4}\s*[-\/年]\s*\d{1,2}(?:\s*[-\/月]\s*\d{1,2})?/.test(n)) return '';
+      if (/\d{1,2}\s*[:：]\s*\d{1,2}/.test(n)) return '';
+      if (/^\d+$/.test(n)) return '';      /* 纯数字 */
+    }
+    if (n.length < 2 || n.length > 14) return '';
+    return n;
+  }
+
   function guessExpert(text) {
     var t = String(text || '');
-    var m = t.match(/【([^】]{2,12})】/);
-    if (m) {
-      var n = m[1].replace(/解读|分析|推荐|看球|聊球|足球|情报|今日|赛前/g, '').trim();
+    var cands = [];
+
+    /* ① 【xxx】方括号署名（论坛最常见） */
+    var re1 = /【([^】]{2,16})】/g, m;
+    while ((m = re1.exec(t)) !== null) cands.push(m[1]);
+
+    /* ② 作者字段 class：by / author / expert / username / uname */
+    var re2 = /class=["'][^"']*(?:by|author|expert|username|uname|nick)[^"']*["'][^>]*>([^<]{1,20})</gi;
+    while ((m = re2.exec(t)) !== null) cands.push(m[1]);
+
+    /* ③ 显式标注：作者：xxx / 专家：xxx / 推荐人 xxx */
+    var re3 = /(?:作者|专家|推荐人|发布者|分析师|来源)\s*[:：]?\s*([^\s，,。；;<>|]{2,14})/g;
+    while ((m = re3.exec(t)) !== null) cands.push(m[1]);
+
+    /* ④ 尾部署名：— 晓哥看球 / _晓哥 */
+    var m4 = t.match(/[_—–\-|]\s*【?([^】_\s|]{2,12})】?\s*(?:分析|解读|推荐)?\s*$/);
+    if (m4) cands.push(m4[1]);
+
+    /* ⑤ 常见"XX老师/XX哥/XX指导"称谓（必须以中文或字母开头） */
+    var m5 = t.match(/([\u4e00-\u9fa5A-Za-z][\u4e00-\u9fa5A-Za-z0-9]{0,7}(?:老师|指导|哥|姐|先生|大师|球王|达人))/);
+    if (m5) cands.push(m5[1]);
+
+    for (var i = 0; i < cands.length; i++) {
+      var n = cleanName(cands[i]);
       if (n) return n;
     }
-    /* 论坛常见的作者字段：<span class="by">作者名</span> */
-    m = t.match(/class=["'][^"']*(?:by|author|expert|username)[^"']*["'][^>]*>([^<]{2,16})</i);
-    if (m) {
-      var n2 = m[1].replace(/\s+/g, '').trim();
-      if (n2 && !/[\d]{4}-/.test(n2)) return n2;
+    return '';
+  }
+
+  /* ★ 兜底：识别不出真名时，生成一个稳定可追踪的代号。
+     用链接里的帖子 ID + 短哈希，保证：
+       - 同一作者不同帖子 → 同一代号（可累计统计）
+       - 不同作者 → 不同代号（不会混成一个人）
+     界面会标注这是"待确认"，用户可在详情页看到原始链接。 */
+  function fallbackName(url, title) {
+    var id = '';
+    var m = String(url || '').match(/(?:thread|tid|id|read)[-_=]?(\d{3,})/i);
+    if (m) id = m[1];
+    if (!id) {
+      m = String(url || '').match(/\/(\d{3,})\./);
+      if (m) id = m[1];
     }
-    m = t.match(/(?:作者|专家|推荐人|发布者)\s*[:：]\s*([^\s，,。<]{2,12})/);
-    if (m) return m[1].trim();
-    /* 形如 "— 晓哥看球"、"_【晓哥看球】" 尾部署名 */
-    m = t.match(/[_—–-]\s*【?([^】_\s]{2,10})】?\s*(?:分析|解读|推荐)?\s*$/);
-    if (m) return m[1].trim();
+    if (!id) id = hashStr(String(url || '') + String(title || '')).slice(0, 6);
+    return '作者#' + String(id).slice(-6);
+  }
+
+  /* 从详情页正文再试一次（列表页常没有作者信息） */
+  function expertFromBody(body) {
+    if (!body) return '';
+    var t = String(body).slice(0, 1500);
+    var m = t.match(/(?:作者|专家|推荐人|分析师|本文由)\s*[:：]?\s*([^\s，,。；;<>|]{2,14})/);
+    if (m) { var n = cleanName(m[1]); if (n) return n; }
+    m = t.match(/【([^】]{2,16})】/);
+    if (m) { var n2 = cleanName(m[1]); if (n2) return n2; }
     return '';
   }
 
@@ -3918,7 +3982,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }
       var body = extractBody(r.text);
       DETAIL_TRIED.push({ url: url, ok: true, chars: String(r.text).length, bodyLen: body.length });
-      return { body: body };
+      return { body: body, html: String(r.text).slice(0, 20000) };
     }).catch(function (e) {
       DETAIL_TRIED.push({ url: url, ok: false, why: 'EXCEPTION ' + String((e && e.message) || e).slice(0, 40) });
       return null;
@@ -3968,6 +4032,13 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         p.body = d.body;
         p.bodyPicks = parsePicksFromBody(d.body);
         p.keySents = keySentences(d.body, 3);
+        /* ★ 作者信息常在正文里才有：用真名覆盖列表页的兜底代号 */
+        var realName = expertFromBody(d.body) || expertFromBody(d.html || '');
+        if (realName && (!p.expert || /^作者#/.test(p.expert))) {
+          p.expert = realName;
+          p.expertConfirmed = true;
+        }
+        p.expertFallback = /^作者#/.test(p.expert || '');
         /* 合并推荐：标题里的 + 正文里的 */
         var all = (p.picks || []).concat(p.bodyPicks || []);
         var uniq = [];
@@ -4195,6 +4266,38 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return String(s || '').replace(/\s+/g, '').toLowerCase();
   }
 
+  /* ---------------- 活跃度榜（不依赖赛果，立刻可见）----------------
+     命中率榜要等赛果回填才有人上榜，初期永远是空的。
+     用户需要"现在就能看到排行榜"，因此另开一榜：
+     按 今日推荐场数 / 累计推荐场数 排名，随时可看。 */
+  function activityStats(posts, todayStr2) {
+    var m = {};
+    (posts || []).forEach(function (p) {
+      var n = p.expert || '';
+      if (!n) return;
+      if (!m[n]) {
+        m[n] = {
+          name: n, total: 0, today: 0,
+          firstAt: p.postDate || '', lastAt: p.postDate || '',
+          fallback: !!p.expertFallback,
+          urls: []
+        };
+      }
+      m[n].total++;
+      if (todayStr2 && p.postDate === todayStr2) m[n].today++;
+      if (p.postDate && (!m[n].firstAt || p.postDate < m[n].firstAt)) m[n].firstAt = p.postDate;
+      if (p.postDate && (!m[n].lastAt || p.postDate > m[n].lastAt)) m[n].lastAt = p.postDate;
+      if (p.url && m[n].urls.length < 3) m[n].urls.push(p.url);
+    });
+    var arr = Object.keys(m).map(function (k) { return m[k]; });
+    /* 今日优先，其次总场次 */
+    arr.sort(function (a, b) {
+      if (b.today !== a.today) return b.today - a.today;
+      return b.total - a.total;
+    });
+    return arr;
+  }
+
   /* ---------------- 专家统计 & 排行榜 ---------------- */
   /* 进入排行榜所需的最小已结算场次 */
   var MIN_SAMPLE = 3;
@@ -4332,6 +4435,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   function lastTried() { return RESULT_TRIED || []; }
 
   global.Expert = {
+    activityStats: activityStats,
+    guessExpert: guessExpert,
+    fallbackName: fallbackName,
+    expertFromBody: expertFromBody,
     lastTried: lastTried,
     lastDetailTried: lastDetailTried,
     enrichBodies: enrichBodies,
@@ -7120,6 +7227,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     toast('正在逐个读取帖子正文…');
     Expert.fetchPosts({ forceDetail: true }).then(function (r) {
       EX.deepLoading = false;
+      EX.autoDeepDone = false;
       if (!r.ok && !r.posts) {
         toast('读取失败：' + (r.error || '未知'));
       } else {
@@ -7310,6 +7418,15 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   function expertViewHTML() {
     if (!S.expert && !EX.loading) setTimeout(function () { loadExpert(); }, 0);
+    /* ★ 有帖子但还没读正文 → 自动补读，不用等用户点按钮。
+       只补没有正文的，且限制条数，不会每次都重抓。 */
+    if (S.expert && (S.expert.posts || []).length && !EX.deepLoading && !EX.autoDeepDone) {
+      var noBody = S.expert.posts.filter(function (p) { return !p.body; }).length;
+      if (noBody > 0) {
+        EX.autoDeepDone = true;
+        setTimeout(function () { loadExpertDeep(); }, 400);
+      }
+    }
     var E = S.expert || { posts: [], today: [], groups: [], stats: [] };
 
     /* ---------- 头部说明 ---------- */
@@ -7439,13 +7556,24 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
               }).join('<br>') + '</div>'
             : '';
 
+          /* ★ 原文直达：卡片上直接跳到帖子原文，方便核对 */
+          var srcBtn = (ex.url || (mine[0] && mine[0].url))
+            ? '<button class="btn-ghost ex-src" data-src="' +
+              escHtml(String(ex.url || mine[0].url)) +
+              '" style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:7px;' +
+              'flex:none">原文 ↗</button>'
+            : '';
+
           return '<div style="padding:7px 0;border-top:1px dashed var(--border)">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">' +
-            '<span style="font-size:11px;font-weight:700">' + escHtml(ex.name) + '</span>' +
+            '<span style="font-size:11px;font-weight:700;min-width:0">' + escHtml(ex.name) +
+            (mine[0] && mine[0].expertFallback
+              ? '<span style="font-size:8.5px;color:var(--warn);margin-left:4px">待确认</span>' : '') +
+            '</span>' +
             '<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
             '<b style="font-size:11px;color:' + rateColor(rate) + '">' + rateText(rate) + '</b>' +
             '<span style="font-size:9px;color:var(--muted2)">' + settled + '场</span>' +
-            '</span></div>' +
+            srcBtn + '</span></div>' +
             pickTags + bodyTxt + '</div>';
         }).join('');
 
@@ -7470,7 +7598,44 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }).join('');
     }
 
-    /* ---------- ② 专家命中率排行榜 ---------- */
+    /* ---------- ② 专家活跃榜（不依赖赛果，立刻可见）---------- */
+    var secAct = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
+      'margin:14px 0 8px">专家活跃榜 · 今日推荐</div>';
+
+    var actList = '';
+    try {
+      var acts = (typeof Expert !== 'undefined' && Expert.activityStats)
+        ? Expert.activityStats(E.posts || [], Expert.todayStr()) : [];
+      if (!acts.length) {
+        actList = '<div class="panel" style="padding:12px;font-size:10.5px;color:var(--muted2);' +
+          'line-height:1.7">暂无帖子，无法统计。</div>';
+      } else {
+        var maxToday = Math.max.apply(null, acts.map(function (a) { return a.today; }).concat([1]));
+        actList = '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+          acts.slice(0, 20).map(function (a, i) {
+            var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+            var w = Math.round(a.today / maxToday * 100);
+            return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;' +
+              (i ? 'border-top:1px dashed var(--border)' : '') + '">' +
+              '<span style="width:22px;text-align:center;font-size:11px;font-weight:800;' +
+              'color:var(--muted2)">' + medal + '</span>' +
+              '<span style="flex:1;font-size:11px;font-weight:700;min-width:0">' +
+              escHtml(a.name) +
+              (a.fallback ? '<span style="font-size:8.5px;color:var(--warn);' +
+                'margin-left:4px">待确认</span>' : '') + '</span>' +
+              '<span style="font-size:9px;color:var(--muted2)">今日' + a.today +
+              ' · 共' + a.total + '</span>' +
+              '<div style="width:52px;height:6px;background:var(--card2);border-radius:4px;' +
+              'overflow:hidden"><i style="display:block;height:100%;width:' + w +
+              '%;background:var(--accent)"></i></div></div>';
+          }).join('') + '</div>' +
+          '<div style="font-size:9.5px;color:var(--muted2);line-height:1.6;margin-bottom:8px">' +
+          '「待确认」= 帖子页没写出作者名，已按帖子编号生成稳定代号，' +
+          '同一作者会被正确归到同一人，不影响统计。</div>';
+      }
+    } catch (e) { actList = ''; }
+
+    /* ---------- ③ 专家命中率排行榜 ---------- */
     var sec2 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
       'margin:14px 0 8px">专家命中率排行榜</div>';
 
@@ -7521,7 +7686,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }
     }
 
-    /* ---------- ③ 历史战绩回溯 ---------- */
+    /* ---------- 历史战绩回溯（由 renderList 统一追加）---------- */
     var sec3 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
       'margin:14px 0 8px">历史战绩回溯</div>';
 
@@ -7576,7 +7741,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }).join('');
     }
 
-    return head + bar + ops + sec1 + list1 + sec2 + list2 + sec3 + list3;
+    return head + bar + ops + secAct + actList + sec2 + list2 + sec1 + list1 + sec2 + list2 + sec3 + list3;
   }
 
   /* ============================================================
@@ -8369,6 +8534,18 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
       var eb3 = document.getElementById('exDeep');
       if (eb3) bindTap(eb3, function () { loadExpertDeep(); });
+      /* 原文直达 */
+      $$('#matchList .ex-src').forEach(function (b) {
+        bindTap(b, function () {
+          var u = b.getAttribute('data-src');
+          if (!u) { toast('该帖没有原文链接'); return; }
+          try {
+            var B = window.JCBridge;
+            if (B && B.openExternal) { B.openExternal(u); return; }
+          } catch (e) { }
+          try { window.open(u, '_blank'); } catch (e2) { toast('无法打开：' + u); }
+        });
+      });
       var eb2 = document.getElementById('exClear');
       if (eb2) bindTap(eb2, function () {
         if (typeof Expert !== 'undefined') Expert.clearAll();
