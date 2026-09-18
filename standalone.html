@@ -489,6 +489,40 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
 }
 .stat.on b{color:var(--accent)}
 
+/* ---------- 详情返回键 ----------
+   原来是 × 图标，用户不知道那是关闭，于是用系统返回/侧滑 → 直接退出 App。
+   改成带「返回」文字的箭头按钮，一眼能认出。 */
+.btn-back{
+  display:inline-flex;align-items:center;gap:4px;
+  height:34px;padding:0 10px 0 6px;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);
+  font-size:12px;font-weight:700;line-height:1;
+  cursor:pointer;flex:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.btn-back:active{transform:scale(.94);background:var(--accent);color:#06202a}
+.btn-back .back-arrow{width:17px;height:17px;flex:none}
+.btn-back .back-text{letter-spacing:.5px}
+
+/* 滑屏返回提示：详情打开时短暂显示一次 */
+.swipe-hint{
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  padding:8px 10px 8px 6px;
+  background:rgba(34,211,238,.16);
+  border:1px solid rgba(34,211,238,.4);
+  border-right:none;border-radius:0 12px 12px 0;
+  color:var(--accent);font-size:10px;font-weight:800;
+  letter-spacing:1px;
+  pointer-events:none;opacity:0;
+  transition:opacity .25s;z-index:60;
+}
+.swipe-hint.show{opacity:1}
+
+/* 右滑时面板跟随手指，给"能滑回去"的即时反馈 */
+.detail.dragging{transition:none}
+
 </style>
 </head>
 <body>
@@ -779,8 +813,9 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
 <!-- ============ 详情面板 ============ -->
 <div class="detail" id="detailPanel" aria-hidden="true">
   <div class="detail-head">
-    <button class="icon-btn" id="detailClose" aria-label="关闭">
-      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    <button class="btn-back" id="detailClose" aria-label="返回">
+      <svg viewBox="0 0 24 24" class="back-arrow"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="back-text">返回</span>
     </button>
     <div class="dh-title" id="detailTitle">赛事详情</div>
     <button class="icon-btn" id="detailFav" aria-label="收藏">
@@ -788,6 +823,7 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
     </button>
   </div>
   <div class="detail-body" id="detailBody"></div>
+  <div class="swipe-hint" id="swipeHint" aria-hidden="true">››› 右滑返回</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -7907,12 +7943,137 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       $('#detailPanel').setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       $('#detailBody').scrollTop = 0;
+      DETAIL_OPEN = true;
+      pushDetailHistory();
+      bindSwipeBack();
+      showSwipeHintOnce();
     } catch (e3) { }
   }
-  function closeDetail() {
-    $('#detailPanel').classList.remove('open');
-    $('#detailPanel').setAttribute('aria-hidden', 'true');
+  /* ---------- 返回机制 ----------
+     问题：用户点卡片进详情后，用系统返回键/侧滑手势会直接退出 App。
+     原因：详情只是个浮层，没有进入浏览器历史栈，系统返回无处可退。
+
+     三层措施：
+       ① 打开详情时压入一条历史记录 → 系统返回键/侧滑手势会先关闭详情
+       ② 面板左上「← 返回」按钮，带文字，一眼可认
+       ③ 面板内右滑（从屏幕左缘起手）→ 直接关闭，带跟手反馈 */
+
+  var DETAIL_OPEN = false;
+
+  function isDetailOpen() { return DETAIL_OPEN; }
+
+  function closeDetail(fromPop) {
+    var pnl = $('#detailPanel');
+    if (!pnl) return;
+    pnl.classList.remove('dragging');
+    pnl.style.transform = '';
+    pnl.classList.remove('open');
+    pnl.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (!DETAIL_OPEN) return;
+    DETAIL_OPEN = false;
+    /* 若不是由 popstate 触发（点按钮/右滑），则主动退回历史栈，
+       保持栈与界面一致，否则下一次系统返回会"什么都不发生" */
+    if (!fromPop) {
+      try {
+        if (history.state && history.state.jcDetail) history.back();
+      } catch (e) { }
+    }
+  }
+
+  /* ① 历史栈：让系统返回键/侧滑手势先关详情 */
+  function pushDetailHistory() {
+    try {
+      history.pushState({ jcDetail: 1 }, '', location.href);
+    } catch (e) { }
+  }
+
+  window.addEventListener('popstate', function (e) {
+    if (DETAIL_OPEN) {
+      /* 系统返回时关闭详情，并阻止继续退出 */
+      closeDetail(true);
+      return;
+    }
+    /* 详情已关闭时的返回 —— 交给系统默认行为（退出 App） */
+  });
+
+  /* ③ 右滑返回：从左缘起手，位移 > 70px 或速度够快即关闭 */
+  function bindSwipeBack() {
+    var pnl = $('#detailPanel');
+    if (!pnl || pnl.__swipeBound) return;
+    pnl.__swipeBound = true;
+
+    var x0 = null, y0 = null, t0 = 0, dragging = false, moved = 0;
+
+    function start(e) {
+      if (!DETAIL_OPEN) return;
+      var t = (e.touches && e.touches[0]) ||
+        (e.changedTouches && e.changedTouches[0]) || e;
+      x0 = t.clientX; y0 = t.clientY; t0 = Date.now();
+      moved = 0; dragging = false;
+    }
+    function move(e) {
+      if (!DETAIL_OPEN || x0 === null) return;
+      var t = (e.touches && e.touches[0]) ||
+        (e.changedTouches && e.changedTouches[0]) || e;
+      var dx = t.clientX - x0;
+      var dy = t.clientY - y0;
+      /* 只认水平方向且从左缘 40px 内起手（避免与内容滚动冲突） */
+      if (!dragging) {
+        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 12) { x0 = null; return; }
+        if (dx < 8) return;
+        if (x0 > 40) { x0 = null; return; }
+        dragging = true;
+        pnl.classList.add('dragging');
+      }
+      moved = Math.max(0, dx);
+      pnl.style.transform = 'translateX(' + moved + 'px)';
+      /* 拖拽中阻止页面滚动 */
+      if (e.cancelable) e.preventDefault();
+    }
+    function end(e) {
+      if (!DETAIL_OPEN || !dragging) { x0 = null; return; }
+      dragging = false;
+      pnl.classList.remove('dragging');
+      var dur = Date.now() - t0;
+      var fast = dur < 300 && moved > 40;
+      if (moved > 70 || fast) {
+        pnl.style.transform = '';
+        closeDetail(false);
+      } else {
+        /* 回弹 */
+        pnl.style.transform = '';
+      }
+      x0 = null; moved = 0;
+    }
+
+    pnl.addEventListener('touchstart', start, { passive: true });
+    pnl.addEventListener('touchmove', move, { passive: false });
+    pnl.addEventListener('touchend', end, { passive: true });
+    pnl.addEventListener('touchcancel', end, { passive: true });
+  }
+
+  /* ★ 暴露给原生层：安卓返回键先关详情，而不是直接退出 App。
+     比 web.goBack() 精确 —— goBack 还依赖历史栈状态，
+     而这个直接问"详情是不是开着"。 */
+  window.jcCloseDetailIfOpen = function () {
+    if (typeof DETAIL_OPEN !== 'undefined' && DETAIL_OPEN) {
+      closeDetail(false);
+      return true;
+    }
+    return false;
+  };
+
+  /* 首次打开详情时提示一次"右滑可返回" */
+  function showSwipeHintOnce() {
+    try {
+      if (store.get('jc.swipeHinted')) return;
+      store.set('jc.swipeHinted', '1');
+      var hint = document.getElementById('swipeHint');
+      if (!hint) return;
+      hint.classList.add('show');
+      setTimeout(function () { hint.classList.remove('show'); }, 1600);
+    } catch (e) { }
   }
 
   function detailHTML(x) {
