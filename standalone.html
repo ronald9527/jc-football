@@ -3911,6 +3911,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (n.length < 2 || n.length > 14) return '';
     /* ★ 联赛名不能当专家名 */
     if (isLeagueName(n)) return '';
+    /* 明显不是人名的词 */
+    if (/VS|vs|對|情报|买量|假球|诊断|预测|分析|剖析|赛前|深度|最新|解读|推荐|前瞻|直播|聊天|论坛|专区|首页|网站|官方/.test(n)) return '';
+    /* 含"杯/联赛/联/组"后缀的赛事词 */
+    if (/(?:杯|联赛|联|组|赛|队)$/.test(n) && n.length <= 5) return '';
     /* 纯赛事词（如"竞彩""足球"） */
     if (/^(?:竞彩|足球|足彩|北单|赛事|比赛|分析|推荐|预测|前瞻|情报|解读|今日|赛前)$/.test(n)) return '';
     return n;
@@ -3936,6 +3940,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     /* ④ 尾部署名：— 晓哥看球 / _晓哥 */
     var m4 = t.match(/[_—–\-|]\s*【?([^】_\s|]{2,12})】?\s*(?:分析|解读|推荐)?\s*$/);
     if (m4) cands.push(m4[1]);
+
+    /* ④b 发帖人/楼主/作者链接：<a class="...">作者名</a> */
+    var re4b = /<a[^>]+class=["'][^"']*(?:author|uname|nick|user)[^"']*["'][^>]*>([^<]{1,16})</gi;
+    while ((m = re4b.exec(t)) !== null) { cands.push(m[1]); candsByClass.push(m[1]); }
+
+    /* ④c 显式写法：发帖人 xxx / 楼主：xxx / 来自：xxx */
+    var re4c = /(?:发帖人|楼主|来\s*自|发布)\s*[:：]?\s*([^\s，,。；;<>|]{2,12})/g;
+    while ((m = re4c.exec(t)) !== null) cands.push(m[1]);
 
     /* ⑤ 常见"XX老师/XX哥/XX指导"称谓（必须以中文或字母开头） */
     var m5 = t.match(/([\u4e00-\u9fa5A-Za-z][\u4e00-\u9fa5A-Za-z0-9]{0,7}(?:老师|指导|哥|姐|先生|大师|球王|达人))/);
@@ -4006,7 +4018,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
      - 并发 CONC 个
      - 已有正文的不重复抓（除非 force）
      */
-  var MAX_DETAIL = 12;
+  var MAX_DETAIL = 24;
   var CONC = 3;
   var DETAIL_TRIED = [];
 
@@ -4056,12 +4068,24 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (!posts || !posts.length || !transport) {
       return Promise.resolve({ done: 0, tried: [] });
     }
-    /* 只抓还没有正文的（force 除外），且限制总数 */
+    /* 只抓还没有正文的（force 除外），且限制总数。
+       ★ 必须先按发帖日倒序排：本地库里可能积压大量旧帖，
+         若按原顺序取前 N 条，今日的帖子会被旧帖挤掉，
+         结果就是"比赛下面永远看不到推荐"。 */
+    var today = todayStr();
     var need = [];
     posts.forEach(function (p) {
       if (p.body && !force) return;
       if (!p.url) return;
       need.push(p);
+    });
+    need.sort(function (a, b) {
+      var ta = (a.postDate === today) ? 1 : 0;
+      var tb = (b.postDate === today) ? 1 : 0;
+      if (tb !== ta) return tb - ta;               /* 今日优先 */
+      var ka = (a.postDate || '') + ' ' + (a.postTime || '');
+      var kb = (b.postDate || '') + ' ' + (b.postTime || '');
+      return kb < ka ? -1 : (kb > ka ? 1 : 0);     /* 其次按时间倒序 */
     });
     need = need.slice(0, MAX_DETAIL);
     if (!need.length) return Promise.resolve({ done: 0, tried: [] });
@@ -7356,6 +7380,21 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
      解析规则是依据猜测写的。若真实页面结构与预期不同，
      就会"页面拿到了但 0 条"。这个面板把真实结构特征显示出来，
      并提供导出原始 HTML，便于修正解析。 */
+  /* 正文读取进度：让用户知道"读到几篇、还剩几篇" */
+  function expertBodyProgress(E) {
+    var ps = (E && E.posts) || [];
+    if (!ps.length) return '暂无帖子。';
+    var done = ps.filter(function (p) { return !!p.body; }).length;
+    var todayList = ps.filter(function (p) {
+      return (typeof Expert !== 'undefined') && p.postDate === Expert.todayStr();
+    });
+    var todayDone = todayList.filter(function (p) { return !!p.body; }).length;
+    var col = (todayList.length && todayDone === 0) ? 'var(--warn)' : 'var(--good)';
+    return '<b style="color:' + col + '">正文已读 ' + done + ' / ' + ps.length +
+      ' 篇</b>（今日 ' + todayDone + ' / ' + todayList.length + '）' +
+      (EX.detailDone ? ' · 本次读取 ' + EX.detailDone + ' 篇' : '');
+  }
+
   function expertDiagHTML() {
     if (typeof Expert === 'undefined' || !Expert.exportSample) return '';
     /* 条数取 S.expert，错误取 EX（两者分工不同，别读错） */
@@ -7511,8 +7550,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       'margin-bottom:10px">' + (EX.deepLoading ? '正在读取正文中…' : '点进帖子读取专家正文') + '</button>' +
       '<div style="font-size:9.5px;color:var(--muted2);line-height:1.6;margin-bottom:10px">' +
       '列表页只有标题，看不到专家具体推荐了什么。点上方按钮会' +
-      '<b>逐个点进帖子读取正文</b>，提取每位专家的推荐方向与原话。' +
-      (EX.detailDone ? '本次已读取 ' + EX.detailDone + ' 篇正文。' : '') + '</div>';
+      '<b>逐个点进帖子读取正文</b>，提取每位专家的推荐方向与原话。<br>' +
+      expertBodyProgress(E) + '</div>';
 
     /* ---------- ① 今日推荐（按场次聚合，同场多专家）---------- */
     var sec1 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
@@ -7876,6 +7915,15 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           'border-top:1px dashed var(--border)">本场暂无专家推荐</div>';
       }
 
+      /* 匹配到了但正文没读出 → 明确说清楚，并给重读入口 */
+      var noBodyN = mine.filter(function (p) { return !p.body; }).length;
+      if (mine.length && noBodyN > 0) {
+        exBlock += '<div style="font-size:9px;color:var(--warn);margin-top:5px">' +
+          noBodyN + ' 篇正文尚未读出' +
+          '<button class="btn-ghost ex-deep2" style="font-size:9px;font-weight:700;' +
+          'padding:2px 7px;border-radius:6px;margin-left:6px">重新读取</button></div>';
+      }
+
       return '<div class="panel" style="padding:10px;margin-bottom:8px">' +
         headTxt + oddsTxt + exBlock + '</div>';
     }).join('');
@@ -7907,14 +7955,60 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       '未匹配的帖子列在下方，不会丢失。</div>';
   }
 
-  /* 队名匹配：支持包含与常见别名 */
+  /* ---------------- 队名匹配 ----------------
+     ★ 根因：竞彩官方用简称（"沙特亚"），92玩球用全称（"沙特阿拉伯亚足"），
+       单纯的子串包含匹配不上，导致专家推荐挂不到比赛上
+       —— 表现就是"找到了作者，但每场比赛都没有推荐"。 */
+  var TEAM_ALIAS = {
+    '皇马': '皇家马德里', '巴萨': '巴塞罗那', '曼联': '曼彻斯特联',
+    '曼城': '曼彻斯特城', '国米': '国际米兰', '尤文': '尤文图斯',
+    '多特': '多特蒙德', '拜仁': '拜仁慕尼黑', '马竞': '马德里竞技',
+    '大巴黎': '巴黎圣日耳曼', '巴黎': '巴黎圣日耳曼', '热刺': '托特纳姆热刺',
+    '阿森纳': '阿仙奴', '切尔西': '車路士', '利物浦': '利物浦',
+    '山东': '山东泰山', '上港': '上海海港', '申花': '上海申花',
+    '国安': '北京国安', '恒大': '广州队', '鲁能': '山东泰山'
+  };
+
+  function normTeam(s) {
+    var t = String(s || '').replace(/\s+/g, '');
+    /* 去掉常见后缀与修饰，让"沙特阿拉伯亚足"→"沙特阿拉伯" */
+    t = t.replace(/(足球队|足球会|足球俱乐部|俱乐部|体育会|体育|亚足|女足|男足|青年队|预备队|队|FC|AFC|U\d{2})$/gi, '');
+    t = t.replace(/[·・.。\-—_]/g, '');
+    return t;
+  }
+
+  /* 字符重合度：用于"沙特亚"vs"沙特阿拉伯"这类简称 */
+  function overlapRatio(a, b) {
+    var A = {}, B = {}, i;
+    for (i = 0; i < a.length; i++) A[a[i]] = 1;
+    for (i = 0; i < b.length; i++) B[b[i]] = 1;
+    var inter = 0;
+    for (var k in A) if (B[k]) inter++;
+    var mn = Math.min(a.length, b.length);
+    return mn ? (inter / mn) : 0;
+  }
+
   function teamHit(a, b) {
     var x = String(a || '').replace(/\s+/g, '');
     var y = String(b || '').replace(/\s+/g, '');
     if (!x || !y) return false;
     if (x === y) return true;
-    /* 一方包含另一方（处理"皇家马德里" vs "皇马"这类） */
+    /* 一方包含另一方 */
     if (x.length >= 2 && y.length >= 2 && (x.indexOf(y) >= 0 || y.indexOf(x) >= 0)) return true;
+
+    /* 别名归一后比较 */
+    var ax = TEAM_ALIAS[x] || x, ay = TEAM_ALIAS[y] || y;
+    if (ax === ay) return true;
+    if (ax.length >= 2 && ay.length >= 2 && (ax.indexOf(ay) >= 0 || ay.indexOf(ax) >= 0)) return true;
+
+    /* 归一化后比较 */
+    var nx = normTeam(x), ny = normTeam(y);
+    if (nx && ny) {
+      if (nx === ny) return true;
+      if (nx.length >= 2 && ny.length >= 2 && (nx.indexOf(ny) >= 0 || ny.indexOf(nx) >= 0)) return true;
+      /* 简称重合度：沙特亚 / 沙特阿拉伯 → 沙、特 重合 = 2/3 = 0.67 */
+      if (overlapRatio(nx, ny) >= 0.6) return true;
+    }
     /* 港陆差异交给已有的对照表 */
     try {
       if (typeof HKJC !== 'undefined' && HKJC.teamMatch) return HKJC.teamMatch(x, y);
@@ -8712,6 +8806,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
       var eb3 = document.getElementById('exDeep');
       if (eb3) bindTap(eb3, function () { loadExpertDeep(); });
+      /* 重新读取正文（比赛卡片内的小按钮） */
+      $$('#matchList .ex-deep2').forEach(function (b) {
+        bindTap(b, function () { loadExpertDeep(); });
+      });
       /* 原文直达 */
       $$('#matchList .ex-src').forEach(function (b) {
         bindTap(b, function () {
