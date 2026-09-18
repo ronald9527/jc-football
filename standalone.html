@@ -3693,7 +3693,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         postTime = p.time;
       }
 
-      var key = p.home + '|' + p.away + '|' + postDate;
+      /* ★ 去重键必须带上专家名/链接：
+         原先只用 主队|客队|日期，导致同一场比赛的多位专家
+         只剩第一条 —— 用户明确要求"多名专家推荐要分别写出各自推荐"。
+         同一专家对同一场同一天才算重复。 */
+      var key = p.home + '|' + p.away + '|' + postDate + '|' +
+        (guessExpert(tail) || guessExpert(title) || '') + '|' + href;
       if (seen[key]) continue;
       seen[key] = 1;
 
@@ -3723,7 +3728,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         if (ln.length < 10 || ln.length > 160) continue;
         var pb = parseTitle(ln);
         if (!pb) continue;
-        var key2 = pb.home + '|' + pb.away;
+        var key2 = pb.home + '|' + pb.away + '|' + (guessExpert(ln) || '');
         if (seen[key2]) continue;
         seen[key2] = 1;
         out.push({
@@ -3743,6 +3748,111 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }
     }
     return out;
+  }
+
+  /* ---------------- 详情页正文 ----------------
+     列表页只有标题，看不到专家"具体推荐了什么"。
+     必须点进帖子读正文，才能拿到真正的推荐内容。 */
+
+  /* 清洗 HTML → 纯文本正文 */
+  function extractBody(html) {
+    if (!html) return '';
+    var t = String(html);
+
+    /* 去掉脚本/样式/注释，否则正文会被 JS 代码污染 */
+    t = t.replace(/<script[\s\S]*?<\/script>/gi, ' ');
+    t = t.replace(/<style[\s\S]*?<\/style>/gi, ' ');
+    t = t.replace(/<!--[\s\S]*?-->/g, ' ');
+
+    /* 优先取常见正文容器 */
+    var body = '';
+    var res = [
+      /<div[^>]+class=["'][^"']*(?:content|article|post|detail|msg|message|text)[^"']*["'][\s\S]*?<\/div>/gi,
+      /<article[\s\S]*?<\/article>/gi,
+      /<td[^>]+class=["'][^"']*(?:t_f|post|content)[^"']*["'][\s\S]*?<\/td>/gi
+    ];
+    var best = '';
+    res.forEach(function (re) {
+      var m, acc = '';
+      while ((m = re.exec(t)) !== null) {
+        var seg = m[0];
+        /* 只要文本长度够且含中文的 */
+        var plain = seg.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ')
+          .replace(/\s+/g, ' ').trim();
+        if (plain.length > acc.length) acc = plain;
+      }
+      if (acc.length > best.length) best = acc;
+    });
+    body = best;
+
+    /* 没匹配到容器 → 退化为整页纯文本 */
+    if (body.length < 60) {
+      body = t.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
+        .replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+    }
+    /* 去掉过长无意义片段（导航/版权） */
+    body = body.replace(/(版权|免责声明|Copyright|rights reserved)[\s\S]{0,120}$/i, '');
+    return body.slice(0, 3000);
+  }
+
+  /* 从正文里识别推荐内容 */
+  function parsePicksFromBody(text) {
+    var t = String(text || '');
+    var out = [];
+    function add(x) { if (x && out.indexOf(x) < 0) out.push(x); }
+
+    /* 胜平负：主胜/客胜/平局/让胜… */
+    var re1 = /(主胜|客胜|主不败|客不败|平局|走平|让胜|让平|让负|胜|平|负)/g;
+    /* 只取带推荐语境的，避免正文里"胜利"这类词被误抓 */
+    var ctx = /(推荐|看好|建议|选择|投注|首选|次选|方向|推荐：|看好：)/;
+    var segs = t.split(/[。；;！!\n]/);
+    segs.forEach(function (seg) {
+      if (!ctx.test(seg)) return;
+      var m = seg.match(re1);
+      if (m) add(m[1]);
+    });
+    /* 若整段没有"推荐/看好"等语境，退化为直接找方向词 */
+    if (!out.length) {
+      var m2 = t.match(re1);
+      if (m2) add(m2[1]);
+    }
+
+    /* 比分：2:1 / 2-1 */
+    var sc = t.match(/(\d{1,2}\s*[:：\-]\s*\d{1,2})/g);
+    if (sc) {
+      var valid = sc.filter(function (x) {
+        var p2 = x.split(/[:：\-]/);
+        var a = parseInt(p2[0], 10), b = parseInt(p2[1], 10);
+        return isFinite(a) && isFinite(b) && a <= 9 && b <= 9 && !(a === 0 && b === 0);
+      });
+      valid.slice(0, 3).forEach(function (x) { add('比分' + x.replace(/\s/g, '')); });
+    }
+
+    /* 总进球 */
+    var tg = t.match(/总进球[^\d]{0,6}(\d)[^\d]{0,4}球|(\d)\s*球/g);
+    if (tg) tg.slice(0, 2).forEach(function (x) { add('总进球' + (x.match(/\d/) || [''])[0]); });
+
+    /* 大小球 */
+    if (/大\s*\d[.\d]*|小球|大球/.test(t)) {
+      var bs = t.match(/(大|小)\s*([0-9](?:\.[0-9])?)/);
+      if (bs) add(bs[1] + bs[2] + '球');
+    }
+    return out.slice(0, 6);
+  }
+
+  /* 抽取正文核心句（用于卡片展示"专家原话"） */
+  function keySentences(text, max) {
+    var t = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!t) return [];
+    var segs = t.split(/[。；;！!？?\n]/).map(function (x) {
+      return x.trim();
+    }).filter(function (x) { return x.length >= 8 && x.length <= 120; });
+    /* 优先含推荐关键词的句子 */
+    var kw = /(推荐|看好|建议|选择|投注|方向|比分|进球|让球|亚盘|大小球|胜|平|负)/;
+    var hit = segs.filter(function (x) { return kw.test(x); });
+    var rest = segs.filter(function (x) { return !kw.test(x); });
+    var arr = hit.concat(rest).slice(0, max || 3);
+    return arr;
   }
 
   /* 猜专家名：常见写法【xxx】、作者：xxx、— xxx */
@@ -3782,6 +3892,96 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (href.charAt(0) === '/') return BASE + href;
     return BASE + '/' + href;
   }
+
+  /* ---------------- 抓详情页正文 ----------------
+     列表页只给标题，看不到"专家到底推荐了什么"。
+     这里逐个点进帖子读正文，提取推荐内容与原话。
+
+     限流很重要：帖子可能几十条，全抓会很慢且可能被封。
+     - 最多抓 MAX_DETAIL 条
+     - 并发 CONC 个
+     - 已有正文的不重复抓（除非 force）
+     */
+  var MAX_DETAIL = 12;
+  var CONC = 3;
+  var DETAIL_TRIED = [];
+
+  function fetchDetail(url, transport) {
+    if (!transport || !url) return Promise.resolve(null);
+    return transport(url, 'GET', {
+      'Accept': 'text/html,application/xhtml+xml',
+      'Accept-Language': 'zh-CN,zh;q=0.9'
+    }, '').then(function (r) {
+      if (!r || !r.ok || !r.text) {
+        DETAIL_TRIED.push({ url: url, ok: false, why: r ? ('HTTP ' + r.status) : '无响应' });
+        return null;
+      }
+      var body = extractBody(r.text);
+      DETAIL_TRIED.push({ url: url, ok: true, chars: String(r.text).length, bodyLen: body.length });
+      return { body: body };
+    }).catch(function (e) {
+      DETAIL_TRIED.push({ url: url, ok: false, why: 'EXCEPTION ' + String((e && e.message) || e).slice(0, 40) });
+      return null;
+    });
+  }
+
+  /* 并发受限的 map */
+  function mapLimit(arr, limit, fn) {
+    var i = 0, out = [];
+    function next() {
+      if (i >= arr.length) return Promise.resolve(out);
+      var cur = i++;
+      return fn(arr[cur], cur).then(function (v) {
+        out[cur] = v;
+        return next();
+      });
+    }
+    var ps = [];
+    for (var k = 0; k < Math.min(limit, arr.length); k++) ps.push(next());
+    return Promise.all(ps).then(function () { return out; });
+  }
+
+  /**
+   * 给帖子补正文。
+   * @param posts 帖子数组（就地补 body / bodyPicks / keySents）
+   * @param transport 传输函数
+   * @param force 是否强制重抓
+   */
+  function enrichBodies(posts, transport, force) {
+    DETAIL_TRIED = [];
+    if (!posts || !posts.length || !transport) {
+      return Promise.resolve({ done: 0, tried: [] });
+    }
+    /* 只抓还没有正文的（force 除外），且限制总数 */
+    var need = [];
+    posts.forEach(function (p) {
+      if (p.body && !force) return;
+      if (!p.url) return;
+      need.push(p);
+    });
+    need = need.slice(0, MAX_DETAIL);
+    if (!need.length) return Promise.resolve({ done: 0, tried: [] });
+
+    return mapLimit(need, CONC, function (p) {
+      return fetchDetail(p.url, transport).then(function (d) {
+        if (!d) return null;
+        p.body = d.body;
+        p.bodyPicks = parsePicksFromBody(d.body);
+        p.keySents = keySentences(d.body, 3);
+        /* 合并推荐：标题里的 + 正文里的 */
+        var all = (p.picks || []).concat(p.bodyPicks || []);
+        var uniq = [];
+        all.forEach(function (x) { if (x && uniq.indexOf(x) < 0) uniq.push(x); });
+        p.allPicks = uniq.slice(0, 6);
+        return true;
+      });
+    }).then(function (res) {
+      var n = res.filter(Boolean).length;
+      return { done: n, tried: DETAIL_TRIED.slice(0, 20) };
+    });
+  }
+
+  function lastDetailTried() { return DETAIL_TRIED || []; }
 
   /* 最近一次抓取的逐 URL 尝试结果（供诊断展示） */
   var RESULT_TRIED = [];
@@ -3913,31 +4113,46 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         return kb < ka ? -1 : (kb > ka ? 1 : 0);
       });
 
-      save(LS_POSTS, posts);
-      RESULT_TRIED = tried;
+      /* ★ 点进帖子读正文：列表页只有标题，看不到专家具体推荐了什么。
+         只对还没有正文的帖子补抓，限制条数（避免过慢/被封）。 */
+      function finish(info) {
+        save(LS_POSTS, posts);
+        RESULT_TRIED = tried;
 
-      /* 游标：首条=最新，末条=最旧 */
-      var cur = load(LS_CURSOR, null);
-      var newest = posts.length ? posts[0] : null;
-      var oldest = posts.length ? posts[posts.length - 1] : null;
-      var firstTime = !cur;
-      save(LS_CURSOR, {
-        firstId: firstTime && newest ? newest.id : (cur && cur.firstId) || (newest && newest.id) || '',
-        firstKey: firstTime && newest ? keyOf(newest) : (cur && cur.firstKey) || (newest ? keyOf(newest) : ''),
-        lastId: oldest ? oldest.id : (cur && cur.lastId) || '',
-        lastKey: oldest ? keyOf(oldest) : (cur && cur.lastKey) || '',
-        count: posts.length,
-        at: Date.now()
-      });
+        /* 游标：首条=最新，末条=最旧 */
+        var cur = load(LS_CURSOR, null);
+        var newest = posts.length ? posts[0] : null;
+        var oldest = posts.length ? posts[posts.length - 1] : null;
+        var firstTime = !cur;
+        save(LS_CURSOR, {
+          firstId: firstTime && newest ? newest.id : (cur && cur.firstId) || (newest && newest.id) || '',
+          firstKey: firstTime && newest ? keyOf(newest) : (cur && cur.firstKey) || (newest ? keyOf(newest) : ''),
+          lastId: oldest ? oldest.id : (cur && cur.lastId) || '',
+          lastKey: oldest ? keyOf(oldest) : (cur && cur.lastKey) || '',
+          count: posts.length,
+          at: Date.now()
+        });
 
-      return {
-        ok: true,
-        posts: posts,
-        fresh: fresh,
-        firstTime: firstTime,
-        newest: newest,
-        oldest: oldest
-      };
+        return {
+          ok: true,
+          posts: posts,
+          fresh: fresh,
+          firstTime: firstTime,
+          newest: newest,
+          oldest: oldest,
+          detailDone: (info && info.done) || 0,
+          detailTried: (info && info.tried) || []
+        };
+      }
+
+      var en = null;
+      try {
+        en = enrichBodies(posts, transport, !!opts.forceDetail);
+      } catch (e) { en = null; }
+      if (en && typeof en.then === 'function') {
+        return en.then(finish).catch(function () { return finish({ done: 0 }); });
+      }
+      return Promise.resolve(finish({ done: 0 }));
     }).catch(function (e) {
       return { ok: false, error: String((e && e.message) || e), posts: load(LS_POSTS, []), fresh: 0 };
     });
@@ -4118,6 +4333,11 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   global.Expert = {
     lastTried: lastTried,
+    lastDetailTried: lastDetailTried,
+    enrichBodies: enrichBodies,
+    extractBody: extractBody,
+    parsePicksFromBody: parsePicksFromBody,
+    keySentences: keySentences,
     exportSample: exportSample,
     diagnose: diagnose,
     LS_POSTS: LS_POSTS,
@@ -6886,7 +7106,41 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
        ⑤ 专家命中率排行榜
      ============================================================ */
 
-  var EX = { loading: false, err: '', at: 0, fresh: 0, firstTime: false };
+  var EX = {
+    loading: false, err: '', at: 0, fresh: 0, firstTime: false,
+    deepLoading: false, detailDone: 0
+  };
+
+  /* 深度读取：逐个点进帖子读正文 */
+  function loadExpertDeep() {
+    if (typeof Expert === 'undefined') { toast('模块未加载'); return; }
+    if (EX.deepLoading) return;
+    EX.deepLoading = true;
+    renderList();
+    toast('正在逐个读取帖子正文…');
+    Expert.fetchPosts({ forceDetail: true }).then(function (r) {
+      EX.deepLoading = false;
+      if (!r.ok && !r.posts) {
+        toast('读取失败：' + (r.error || '未知'));
+      } else {
+        EX.detailDone = r.detailDone || 0;
+        EX.at = Date.now();
+        var all = r.posts || [];
+        var today = (typeof Expert !== 'undefined') ? Expert.todayPosts(all, Expert.todayStr()) : [];
+        S.expert = {
+          posts: all, today: today,
+          groups: Expert.groupByMatch(today),
+          stats: Expert.expertStats(all)
+        };
+        toast(EX.detailDone ? ('已读取 ' + EX.detailDone + ' 篇正文') : '没有可读取的新正文');
+      }
+      renderList();
+    }).catch(function (e) {
+      EX.deepLoading = false;
+      toast('读取异常：' + String((e && e.message) || e));
+      renderList();
+    });
+  }
 
   function loadExpert(force) {
     if (typeof Expert === 'undefined') {
@@ -6913,6 +7167,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       EX.at = Date.now();
       EX.fresh = r.fresh || 0;
       EX.firstTime = !!r.firstTime;
+      if (r.detailDone) EX.detailDone = (EX.detailDone || 0) + r.detailDone;
       if (!r.ok) {
         EX.err = r.error || '抓取失败';
         S.expert = { posts: r.posts || [], today: [], groups: [], stats: [] };
@@ -7090,11 +7345,17 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     }
 
     /* ---------- 操作按钮 ---------- */
-    var ops = '<div style="display:flex;gap:8px;margin-bottom:10px">' +
+    var ops = '<div style="display:flex;gap:8px;margin-bottom:8px">' +
       '<button class="btn-ghost" id="exFetch" style="flex:1;padding:9px;font-size:11.5px">' +
       '刷新抓取</button>' +
       '<button class="btn-ghost" id="exClear" style="flex:1;padding:9px;font-size:11.5px">' +
-      '清空重建锚点</button></div>';
+      '清空重建锚点</button></div>' +
+      '<button class="btn-primary" id="exDeep" style="width:100%;padding:9px;font-size:11.5px;' +
+      'margin-bottom:10px">' + (EX.deepLoading ? '正在读取正文中…' : '点进帖子读取专家正文') + '</button>' +
+      '<div style="font-size:9.5px;color:var(--muted2);line-height:1.6;margin-bottom:10px">' +
+      '列表页只有标题，看不到专家具体推荐了什么。点上方按钮会' +
+      '<b>逐个点进帖子读取正文</b>，提取每位专家的推荐方向与原话。' +
+      (EX.detailDone ? '本次已读取 ' + EX.detailDone + ' 篇正文。' : '') + '</div>';
 
     /* ---------- ① 今日推荐（按场次聚合，同场多专家）---------- */
     var sec1 = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
@@ -7123,7 +7384,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           (g.no ? escHtml(g.no) + ' · ' : '') + escHtml(g.league || '') +
           (g.matchTime ? ' · ' + escHtml(g.matchTime) : '') + '</span></div>';
 
-        /* 每位专家一行：名字 + 命中率 + 推荐方向 */
+        /* 每位专家一块：名字 + 命中率 + 推荐方向 + 正文推荐内容
+           ★ 要点进帖子读正文才知道专家具体推荐了什么，
+             只靠标题一行信息太少，且多位专家要分别展示各自观点 */
         var rows = g.experts.map(function (ex) {
           var st = null;
           for (var i = 0; i < E.stats.length; i++) {
@@ -7131,18 +7394,59 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           }
           var rate = st ? st.rate : null;
           var settled = st ? st.settled : 0;
-          var picks = (ex.picks || []).filter(function (v, i2, a) {
-            return v && a.indexOf(v) === i2;
+
+          /* 取这位专家对应的帖子（可能有多个） */
+          var mine = (g.posts || []).filter(function (p) {
+            return (p.expert || '') === ex.name;
           });
-          return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;' +
-            'padding:6px 0;border-top:1px dashed var(--border)">' +
+          if (!mine.length) mine = [];
+
+          /* 推荐方向：优先用正文解析出来的 */
+          var picks = [];
+          mine.forEach(function (p) {
+            (p.allPicks || p.bodyPicks || p.picks || []).forEach(function (v) {
+              if (v && picks.indexOf(v) < 0) picks.push(v);
+            });
+          });
+          if (!picks.length) {
+            (ex.picks || []).forEach(function (v) {
+              if (v && picks.indexOf(v) < 0) picks.push(v);
+            });
+          }
+
+          /* 专家原话（正文关键句） */
+          var sents = [];
+          mine.forEach(function (p) {
+            (p.keySents || []).forEach(function (x) {
+              if (x && sents.indexOf(x) < 0) sents.push(x);
+            });
+          });
+
+          var pickTags = picks.length
+            ? '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">' +
+              picks.slice(0, 5).map(function (v) {
+                return '<span style="font-size:9.5px;font-weight:700;color:var(--accent);' +
+                  'background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);' +
+                  'border-radius:6px;padding:2px 6px">' + escHtml(v) + '</span>';
+              }).join('') + '</div>'
+            : '';
+
+          var bodyTxt = sents.length
+            ? '<div style="font-size:10px;color:var(--text);line-height:1.7;margin-top:5px;' +
+              'padding-left:7px;border-left:2px solid var(--accent);opacity:.92">' +
+              sents.slice(0, 2).map(function (x) {
+                return '「' + escHtml(x) + '」';
+              }).join('<br>') + '</div>'
+            : '';
+
+          return '<div style="padding:7px 0;border-top:1px dashed var(--border)">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">' +
             '<span style="font-size:11px;font-weight:700">' + escHtml(ex.name) + '</span>' +
             '<span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
-            (picks.length ? '<span style="font-size:9.5px;color:var(--muted2)">' +
-              escHtml(picks.join(' / ')) + '</span>' : '') +
             '<b style="font-size:11px;color:' + rateColor(rate) + '">' + rateText(rate) + '</b>' +
             '<span style="font-size:9px;color:var(--muted2)">' + settled + '场</span>' +
-            '</span></div>';
+            '</span></div>' +
+            pickTags + bodyTxt + '</div>';
         }).join('');
 
         /* 多专家提示 */
@@ -8063,6 +8367,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       el.innerHTML = expertViewHTML() + expertDiagHTML();
       var eb1 = document.getElementById('exFetch');
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
+      var eb3 = document.getElementById('exDeep');
+      if (eb3) bindTap(eb3, function () { loadExpertDeep(); });
       var eb2 = document.getElementById('exClear');
       if (eb2) bindTap(eb2, function () {
         if (typeof Expert !== 'undefined') Expert.clearAll();
