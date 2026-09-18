@@ -6771,11 +6771,17 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     var ops = '<div style="display:flex;gap:8px;margin:10px 0 4px">' +
       '<button class="btn-ghost" id="hsRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
-      (HS.loading ? '正在拉取赛果…' : '拉取赛果并回填') + '</button>' +
+      (HS.loading ? '正在处理…' : '同步赛果（从当前赛程）') + '</button>' +
       '<button class="btn-ghost" id="hsClear" style="flex:1;padding:9px;font-size:11.5px">' +
       '清空本类历史</button></div>';
 
-    return head + sec + list + ops;
+    /* 手动录入放在总览页，这里给个入口直接跳过去 */
+    var goto = (st.pending > 0)
+      ? '<button class="btn-ghost" id="hsGoto" style="width:100%;padding:9px;font-size:11.5px;' +
+        'margin:0 0 4px">去「历史战绩」手动录入 ' + st.pending + ' 场赛果</button>'
+      : '';
+
+    return head + sec + list + ops + goto;
   }
 
   function hBox(label, val) {
@@ -6790,6 +6796,13 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (b1) bindTap(b1, function () { loadHistoryResults(); });
     var b3 = document.getElementById('hsBack');
     if (b3) bindTap(b3, function () { backfillHistory(); });
+    var bg = document.getElementById('hsGoto');
+    if (bg) bindTap(bg, function () {
+      S.filter = 'hist';
+      renderChips();
+      renderList();
+      toast('在下方「手动录入赛果」填比分即可');
+    });
     bindManualResult();
     var b2 = document.getElementById('hsClear');
     if (b2) bindTap(b2, function () {
@@ -6998,24 +7011,49 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   }
 
   /* 拉取赛果并回填（所有分类共享） */
-  function loadHistoryResults() {
+  /**
+   * 取赛果并回填。
+   *
+   * ★ 顺序很重要：
+   *   ① 先从「已加载的官方赛程」抽 —— 比赛结束后官方赛程接口本身就会带比分，
+   *      这条路最可靠（App 本来就在拉它，不需要额外请求）。
+   *   ② 抽不到再去试独立的赛果接口（实测不稳定，常返回 HTTP 0 / 567）。
+   *   ③ 都失败 → 静默，只把状态写进面板，不弹 toast 打扰用户。
+   *      真正的兜底是「手动录入赛果」，那个 100% 可用。
+   */
+  function loadHistoryResults(quiet) {
     if (typeof History2 === 'undefined') return;
     if (HS.loading) return;
+
+    /* ① 先看当前赛程里有没有已结束的比赛 */
+    var n = 0;
+    try { n = collectFromSchedule(); } catch (e) { }
+    if (n > 0) {
+      HS.err = '';
+      if (!quiet) toast('已从当前赛程同步 ' + n + ' 场赛果');
+      renderList();
+      return;
+    }
+
     HS.loading = true;
     History2.fetchResults().then(function (r) {
       HS.loading = false;
       if (r.ok) {
         History2.backfill(r.results);
         HS.err = '';
-        toast('已回填 ' + r.results.length + ' 场赛果');
+        if (!quiet) toast('已回填 ' + r.results.length + ' 场赛果');
       } else {
-        HS.err = r.error || '暂未获取到赛果';
-        toast('赛果获取失败：' + HS.err);
+        /* ★ 静默失败：只记录状态，不弹 toast。
+           弹"赛果获取失败"只会让用户困惑 —— 接口本来就不可靠，
+           而手动录入随时可用。 */
+        HS.err = r.error || '未获取到赛果';
+        if (!quiet) toast('赛程中暂无已结束的比赛，可手动录入赛果');
       }
       renderList();
     }).catch(function (e) {
       HS.loading = false;
       HS.err = String((e && e.message) || e);
+      if (!quiet) toast('赛程中暂无已结束的比赛，可手动录入赛果');
       renderList();
     });
   }
@@ -7144,7 +7182,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     var ops = '<div style="display:flex;flex-direction:column;gap:8px;margin:10px 0 4px">' +
       '<div style="display:flex;gap:8px">' +
       '<button class="btn-ghost" id="hsRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
-      (HS.loading ? '正在处理…' : '拉取赛果并回填') + '</button>' +
+      (HS.loading ? '正在处理…' : '同步赛果（从当前赛程）') + '</button>' +
       '<button class="btn-ghost" id="hsClear" style="flex:1;padding:9px;font-size:11.5px">' +
       '清空全部历史</button></div>' +
       '<button class="btn-ghost" id="hsBack" style="padding:9px;font-size:11.5px">' +
@@ -7191,7 +7229,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       /* 高手推荐 = 实战卡片列表 + 历史回溯（两部分都有） */
       el.innerHTML = S.view.map(cardHTML).join('') + historySectionHTML('pro', '高手推荐');
       bindHistoryBtns('pro');
-      if (typeof History2 !== 'undefined') setTimeout(loadHistoryResults, 300);
+      /* 静默尝试（quiet=true）：失败不打扰用户 */
+      if (typeof History2 !== 'undefined') setTimeout(function () { loadHistoryResults(true); }, 300);
       return;
     }
     if (S.filter === 'expert') {
