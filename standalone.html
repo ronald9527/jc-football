@@ -7441,31 +7441,61 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     var u = btn.getAttribute('data-src');
     if (!u) { toast('该帖没有原文链接'); return; }
 
-    /* ① 原生通道 */
+    var B = null;
+    try { B = window.JCBridge; } catch (e) { }
+
+    /* ① 系统浏览器（返回结果，失败才继续降级） */
     try {
-      var B = window.JCBridge;
       if (B && typeof B.openExternal === 'function') {
-        B.openExternal(u);
+        var r = B.openExternal(u);
+        if (r === '1' || r === 1 || r === true) return;   /* 成功 */
+      }
+    } catch (e) { }
+
+    /* ② 应用内打开（一定会生效，不依赖系统浏览器与 window 权限） */
+    try {
+      if (B && typeof B.openInApp === 'function') {
+        B.openInApp(u);
+        toast('已在应用内打开原帖');
         return;
       }
     } catch (e) { }
 
-    /* ② window.open */
+    /* ③ window.open */
     var w2 = null;
     try { w2 = window.open(u, '_blank'); } catch (e) { w2 = null; }
     if (w2) return;
 
-    /* ③ 最后兜底：当前页跳转（一定能生效） */
-    try {
-      if (window.confirm && window.confirm('当前安装包不支持新窗口，将在应用内打开原帖。继续？')) {
-        location.href = u;
-      } else if (!window.confirm) {
-        location.href = u;
-      }
-      return;
-    } catch (e2) { }
+    /* ④ 最后兜底 */
+    try { location.href = u; return; } catch (e2) { }
 
     toast('无法打开原链接，请重装最新版 App');
+  }
+
+  /* ---------- 专家名核对表 ----------
+     ★ 名字提取错了，只有看到"原始标题 → 提取结果"的对照才能定位。
+       这张表直接列出每条帖子的真实原始标题和当前认定的人名，
+       并支持一键复制全部 —— 用户粘给开发者即可精确修正规则。 */
+  function expertNameCheckHTML() {
+    var ps = (S.expert && S.expert.posts) || [];
+    if (!ps.length) return '';
+    var rows = ps.slice(0, 15).map(function (p) {
+      var name = p.expert || '(空)';
+      var bad = p.expertFallback || !p.expert;
+      return '<div style="padding:5px 0;border-top:1px dashed var(--border);' +
+        'font-size:9.5px;line-height:1.6">' +
+        '<div style="display:flex;justify-content:space-between;gap:6px">' +
+        '<b style="color:' + (bad ? 'var(--warn)' : 'var(--good)') + ';flex:none">' +
+        escHtml(name) + '</b>' +
+        '<span style="color:var(--muted2);font-size:9px;flex:none">' +
+        (bad ? '待确认' : '已确认') + '</span></div>' +
+        '<div style="color:var(--muted2);word-break:break-all;font-size:9px">' +
+        escHtml(String(p.title || '').slice(0, 90)) + '</div></div>';
+    }).join('');
+    return '<div style="font-size:10px;font-weight:800;color:var(--accent);' +
+      'margin:10px 0 4px">专家名核对（原始标题 → 认定人名）</div>' + rows +
+      '<button class="btn-ghost" id="exNameCopy" style="width:100%;padding:8px;' +
+      'font-size:11px;margin-top:8px">复制核对表（发给开发者修正）</button>';
   }
 
   function expertDiagHTML() {
@@ -7491,6 +7521,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       '查看真实结构</button>' +
       '<button class="btn-ghost" id="exExport" style="flex:1;padding:9px;font-size:11.5px">' +
       '复制原始页面</button></div>' +
+      expertNameCheckHTML() +
       '<div id="exDiagOut" style="margin-top:9px"></div></div>';
     return head;
   }
@@ -7555,6 +7586,22 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         out.innerHTML = '<div style="font-size:10px;color:var(--danger)">' +
           escHtml(String((e && e.message) || e)) + '</div>';
       }
+    });
+
+    var bN = document.getElementById('exNameCopy');
+    if (bN) bindTap(bN, function () {
+      try {
+        var ps = (S.expert && S.expert.posts) || [];
+        if (!ps.length) { toast('暂无帖子'); return; }
+        var txt = ps.map(function (p, i) {
+          return (i + 1) + '. 认定人名: ' + (p.expert || '(空)') +
+            (p.expertFallback ? '  [待确认]' : '') + '\n' +
+            '   原始标题: ' + String(p.title || '') + '\n' +
+            '   链接: ' + String(p.url || '');
+        }).join('\n');
+        copyText('===== 专家名核对表 =====\n' + txt);
+        toast('已复制 ' + ps.length + ' 条，请粘贴发给开发者');
+      } catch (e) { toast('复制失败'); }
     });
 
     var b2 = document.getElementById('exExport');
@@ -7917,6 +7964,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         ms.forEach(function (x) {
           var lg = (x.raw && x.raw.league) || '';
           if (lg) leagues.push(lg);
+          /* ★ 队名也要排除：官方用"沙特亚"这类简称，
+             若标题里没明确作者标记，很容易把队名当成人名。 */
+          if (x.raw && x.raw.home && x.raw.home.name) leagues.push(x.raw.home.name);
+          if (x.raw && x.raw.away && x.raw.away.name) leagues.push(x.raw.away.name);
         });
         Expert.applyLeagueBlock(E.posts || [], leagues);
       }
@@ -8893,14 +8944,6 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
       var eb3 = document.getElementById('exDeep');
       if (eb3) bindTap(eb3, function () { loadExpertDeep(); });
-      /* 重新读取正文（比赛卡片内的小按钮） */
-      $$('#matchList .ex-deep2').forEach(function (b) {
-        bindTap(b, function () { loadExpertDeep(); });
-      });
-      /* 原文直达 */
-      $$('#matchList .ex-src').forEach(function (b) {
-        bindTap(b, function () { openExpertSource(b); });
-      });
       var eb2 = document.getElementById('exClear');
       if (eb2) bindTap(eb2, function () {
         if (typeof Expert !== 'undefined') Expert.clearAll();
@@ -8909,8 +8952,19 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         renderList();
       });
       el.innerHTML += historySectionHTML('expert', '专家推荐');
+
+      /* ★ 绑定必须在所有 innerHTML 写入完成之后。
+         原代码先绑定 .ex-src，随后又执行 `el.innerHTML += ...`，
+         这会重新解析整段 HTML、销毁原有 DOM 节点 ——
+         之前绑定的监听器全部丢失，表现就是"点原文没反应"。 */
       bindHistoryBtns('expert');
       bindExpertDiag();
+      $$('#matchList .ex-deep2').forEach(function (b) {
+        bindTap(b, function () { loadExpertDeep(); });
+      });
+      $$('#matchList .ex-src').forEach(function (b) {
+        bindTap(b, function () { openExpertSource(b); });
+      });
       return;
     }
 
