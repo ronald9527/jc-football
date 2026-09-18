@@ -3862,6 +3862,36 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
        —— 后者会把所有识别不出的帖子合并成一个人，彻底毁掉统计。 */
   var BAD_NAME = /^(?:未知|匿名|佚名|admin|管理员|用户|会员|游客|楼主|沙发|板凳)$/i;
 
+  /* ★ 联赛/赛事名黑名单。
+     根因：parseTitle 把联赛名也从【xxx】里取，而 guessExpert 也从【xxx】取作者，
+     同一个括号两种用途 —— 结果"【西甲】"被当成了专家名。
+     凡是联赛名，一律不能当作者。 */
+  var LEAGUE_WORDS = ('西甲 英超 德甲 意甲 法甲 荷甲 葡超 俄超 土超 苏超 比甲 奥甲 瑞士超 希超 挪超 瑞典超 丹超 芬超 波超 捷甲 '
+    + '中超 中甲 中乙 港超 台超 日职 日联 J联赛 J1 J2 日乙 韩K K联赛 K1 K2 韩联 澳A A联赛 印超 泰超 越超 马超 乌兹 卡塔 '
+    + '巴甲 巴乙 阿甲 阿超 智甲 哥甲 秘甲 厄甲 乌甲 委甲 墨超 美职 MLS 美足 解放者杯 南俱杯 世俱杯 南美杯 '
+    + '欧冠 欧联 欧罗巴 欧协联 欧会杯 亚冠 亚协杯 亚足杯 亚运 亚运男足 亚运女足 奥运 世预 世预赛 欧洲杯 美洲杯 非洲杯 亚洲杯 '
+    + '欧国联 友谊赛 热身赛 国际赛 足球 竞彩 北单 足彩 胜平负 让球 比分 总进球 半全场 '
+    + '英冠 英甲 英乙 德乙 德丙 意乙 西乙 法乙 荷乙 葡甲 俄甲 土甲 比乙 苏冠 意丙 西丙 巴丙 阿乙 韩K2 日丙 '
+    + '挪甲 瑞典甲 丹甲 芬甲 波甲 捷乙 奥乙 希甲 瑞乙 乌超 白俄 哈超 爱超 威超 北爱 苏甲 ').split(/\s+/);
+  var LEAGUE_SET = {};
+  /* 原有 LEAGUES（stripLeague 用）也要纳入黑名单，两份清单合并 */
+  (typeof LEAGUES !== 'undefined' ? LEAGUES : []).forEach(function (x) {
+    if (x) LEAGUE_SET[x] = 1;
+  });
+  LEAGUE_WORDS.forEach(function (x) { if (x) LEAGUE_SET[x] = 1; });
+
+  function isLeagueName(n) {
+    if (!n) return false;
+    if (LEAGUE_SET[n]) return true;
+    /* 含"联赛/杯/超/甲/乙/冠"等赛事后缀的，多半不是人名 */
+    if (/(?:联赛|杯赛|杯|超级|甲级|乙级|冠军|锦标赛|邀请赛|预选赛|联赛杯)$/.test(n)) return true;
+    /* 2~3 字且是常见赛事简称 */
+    if (n.length <= 3 && /^[\u4e00-\u9fa5]{2,3}$/.test(n)) {
+      if (/(?:甲|乙|超|冠|联|杯|足|球)$/.test(n)) return true;
+    }
+    return false;
+  }
+
   function cleanName(n) {
     n = String(n || '').replace(/\s+/g, '').trim();
     /* 去掉头尾标点与常见后缀 */
@@ -3879,12 +3909,17 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (/^\d+$/.test(n)) return '';      /* 纯数字 */
     }
     if (n.length < 2 || n.length > 14) return '';
+    /* ★ 联赛名不能当专家名 */
+    if (isLeagueName(n)) return '';
+    /* 纯赛事词（如"竞彩""足球"） */
+    if (/^(?:竞彩|足球|足彩|北单|赛事|比赛|分析|推荐|预测|前瞻|情报|解读|今日|赛前)$/.test(n)) return '';
     return n;
   }
 
   function guessExpert(text) {
     var t = String(text || '');
     var cands = [];
+    var candsByClass = [];
 
     /* ① 【xxx】方括号署名（论坛最常见） */
     var re1 = /【([^】]{2,16})】/g, m;
@@ -3892,7 +3927,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     /* ② 作者字段 class：by / author / expert / username / uname */
     var re2 = /class=["'][^"']*(?:by|author|expert|username|uname|nick)[^"']*["'][^>]*>([^<]{1,20})</gi;
-    while ((m = re2.exec(t)) !== null) cands.push(m[1]);
+    while ((m = re2.exec(t)) !== null) { cands.push(m[1]); candsByClass.push(m[1]); }
 
     /* ③ 显式标注：作者：xxx / 专家：xxx / 推荐人 xxx */
     var re3 = /(?:作者|专家|推荐人|发布者|分析师|来源)\s*[:：]?\s*([^\s，,。；;<>|]{2,14})/g;
@@ -3906,8 +3941,13 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     var m5 = t.match(/([\u4e00-\u9fa5A-Za-z][\u4e00-\u9fa5A-Za-z0-9]{0,7}(?:老师|指导|哥|姐|先生|大师|球王|达人))/);
     if (m5) cands.push(m5[1]);
 
-    for (var i = 0; i < cands.length; i++) {
-      var n = cleanName(cands[i]);
+    /* ★ 按顺序尝试，但"作者 class"优先级最高 ——
+       方括号常常是联赛名，不可靠。 */
+    var ordered = [];
+    if (candsByClass.length) ordered = ordered.concat(candsByClass);
+    ordered = ordered.concat(cands);
+    for (var i = 0; i < ordered.length; i++) {
+      var n = cleanName(ordered[i]);
       if (n) return n;
     }
     return '';
@@ -7741,7 +7781,145 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }).join('');
     }
 
-    return head + bar + ops + secAct + actList + sec2 + list2 + sec1 + list1 + sec2 + list2 + sec3 + list3;
+    /* ★ 主视图改为「以今日竞彩赛事为主线」：
+       用户要求先把今天竞彩开出的比赛全部列出，
+       再在每场比赛下方显示专家推荐 —— 而不是先列帖子再猜是哪场。
+       这样即使专家帖匹配不上，赛事列表本身也是完整可用的。 */
+    return head + bar + ops + secAct + actList + sec2 + list2 +
+      matchesExpertHTML(E) + sec1 + list1 + sec3 + list3;
+  }
+
+  /* ---------- 今日竞彩赛事 + 各场专家推荐 ---------- */
+  function matchesExpertHTML(E) {
+    var sec = '<div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;' +
+      'margin:14px 0 8px">今日竞彩赛事 · 下方挂专家推荐</div>';
+
+    var ms = S.all || [];
+    if (!ms.length) {
+      return sec + '<div class="panel" style="padding:16px;font-size:10.5px;color:var(--muted2);' +
+        'text-align:center">当前没有赛事数据</div>';
+    }
+
+    var posts = E.posts || [];
+    /* 已挂到赛事上的帖子，避免重复显示 */
+    var used = {};
+    var matchedN = 0;
+
+    var cards = ms.map(function (x) {
+      var r = x.raw, a = x.an;
+      var hn = (r.home && r.home.name) || '';
+      var an = (r.away && r.away.name) || '';
+
+      /* 找与该场匹配的专家帖（队名双向匹配） */
+      var mine = posts.filter(function (p) {
+        return teamHit(p.home, hn) && teamHit(p.away, an);
+      });
+      mine.forEach(function (p) { used[p.id] = 1; });
+      if (mine.length) matchedN++;
+
+      /* 比赛卡片头：联赛 + 时间 + 队名 + 赔率 + 模型概率 */
+      var headTxt = '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
+        'gap:8px;font-size:11.5px;font-weight:700;margin-bottom:6px">' +
+        '<span style="min-width:0">' + escHtml(hn) +
+        ' <span style="color:var(--muted2);font-weight:400">vs</span> ' + escHtml(an) + '</span>' +
+        '<span style="font-size:9.5px;color:var(--muted2);flex:none">' +
+        escHtml(r.league || '') + (r.time ? ' · ' + escHtml(r.time) : '') + '</span></div>';
+
+      var oddsTxt = '';
+      try {
+        if (a && a.odds && a.odds.jc) {
+          oddsTxt = '<div style="font-size:9.5px;color:var(--muted2);margin-bottom:6px">' +
+            '竞彩 ' + a.odds.jc.h.toFixed(2) + ' / ' + a.odds.jc.d.toFixed(2) + ' / ' +
+            a.odds.jc.a.toFixed(2) + ' · 模型 ' + pct(a.probs.h) + ' / ' + pct(a.probs.d) +
+            ' / ' + pct(a.probs.a) + '</div>';
+        }
+      } catch (e) { }
+
+      /* 该场的专家推荐 */
+      var exBlock = '';
+      if (mine.length) {
+        exBlock = '<div style="font-size:9.5px;font-weight:800;color:var(--accent);' +
+          'margin:7px 0 3px">' + mine.length + ' 位专家推荐本场</div>' +
+          mine.map(function (p) {
+            var picks = p.allPicks || p.bodyPicks || p.picks || [];
+            var tags = picks.length
+              ? '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">' +
+                picks.slice(0, 5).map(function (v) {
+                  return '<span style="font-size:9.5px;font-weight:700;color:var(--accent);' +
+                    'background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);' +
+                    'border-radius:6px;padding:2px 6px">' + escHtml(v) + '</span>';
+                }).join('') + '</div>'
+              : '';
+            var body = (p.keySents && p.keySents.length)
+              ? '<div style="font-size:10px;color:var(--text);line-height:1.7;margin-top:5px;' +
+                'padding-left:7px;border-left:2px solid var(--accent);opacity:.92">' +
+                p.keySents.slice(0, 2).map(function (t2) {
+                  return '「' + escHtml(t2) + '」';
+                }).join('<br>') + '</div>'
+              : '';
+            var srcBtn = p.url
+              ? '<button class="btn-ghost ex-src" data-src="' + escHtml(String(p.url)) +
+                '" style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:7px;' +
+                'flex:none">原文 ↗</button>'
+              : '';
+            return '<div style="padding:7px 0;border-top:1px dashed var(--border)">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">' +
+              '<span style="font-size:11px;font-weight:700;min-width:0">' +
+              escHtml(p.expert || '') +
+              (p.expertFallback ? '<span style="font-size:8.5px;color:var(--warn);' +
+                'margin-left:4px">待确认</span>' : '') + '</span>' +
+              '<span style="flex:none">' + srcBtn + '</span></div>' +
+              tags + body + '</div>';
+          }).join('');
+      } else {
+        exBlock = '<div style="font-size:9.5px;color:var(--muted2);padding:6px 0;' +
+          'border-top:1px dashed var(--border)">本场暂无专家推荐</div>';
+      }
+
+      return '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+        headTxt + oddsTxt + exBlock + '</div>';
+    }).join('');
+
+    /* 未能匹配到任何赛事的帖子，单独列出来（不丢信息） */
+    var orphan = posts.filter(function (p) { return !used[p.id]; });
+    var orphanHTML = '';
+    if (orphan.length) {
+      orphanHTML = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+        'letter-spacing:1px;margin:14px 0 8px">未匹配到今日赛事的帖子（' +
+        orphan.length + ' 条）</div>' +
+        '<div class="panel" style="padding:10px;margin-bottom:8px">' +
+        orphan.slice(0, 12).map(function (p) {
+          return '<div style="display:flex;justify-content:space-between;gap:8px;' +
+            'padding:5px 0;font-size:10.5px;border-top:1px dashed var(--border)">' +
+            '<span style="min-width:0;flex:1">' +
+            escHtml((p.expert || '') + ' · ' + (p.home || '') + ' vs ' + (p.away || '')) +
+            '</span>' +
+            (p.url ? '<button class="btn-ghost ex-src" data-src="' + escHtml(String(p.url)) +
+              '" style="font-size:9px;padding:2px 7px;border-radius:6px;flex:none">原文 ↗</button>'
+              : '') + '</div>';
+        }).join('') + '</div>';
+    }
+
+    return sec + cards + orphanHTML +
+      '<div style="font-size:9.5px;color:var(--muted2);line-height:1.6;margin:8px 0">' +
+      '已为 ' + matchedN + ' / ' + ms.length + ' 场比赛匹配到专家推荐。' +
+      '匹配依据队名比对，若站方用简称或别名可能匹配不上，' +
+      '未匹配的帖子列在下方，不会丢失。</div>';
+  }
+
+  /* 队名匹配：支持包含与常见别名 */
+  function teamHit(a, b) {
+    var x = String(a || '').replace(/\s+/g, '');
+    var y = String(b || '').replace(/\s+/g, '');
+    if (!x || !y) return false;
+    if (x === y) return true;
+    /* 一方包含另一方（处理"皇家马德里" vs "皇马"这类） */
+    if (x.length >= 2 && y.length >= 2 && (x.indexOf(y) >= 0 || y.indexOf(x) >= 0)) return true;
+    /* 港陆差异交给已有的对照表 */
+    try {
+      if (typeof HKJC !== 'undefined' && HKJC.teamMatch) return HKJC.teamMatch(x, y);
+    } catch (e) { }
+    return false;
   }
 
   /* ============================================================
