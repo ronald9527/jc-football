@@ -1715,6 +1715,12 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
       avgG: avgG,
       date: m.date || todayStr(),
       time: /^\d{2}:\d{2}$/.test(m.time || '') ? m.time : '20:00',
+      /* ★ 赛果透传：比赛结束后官方赛程接口常直接带出比分。
+         透传下去后可直接用于命中判定，不必依赖单独且不稳定的赛果接口。 */
+      homeScore: (m.homeScore === undefined ? null : m.homeScore),
+      awayScore: (m.awayScore === undefined ? null : m.awayScore),
+      scoreText: m.scoreText || '',
+      status: m.status || '',
       home: { name: m.home && m.home.name ? m.home.name : '主队', elo: num(m.home && m.home.elo, 1650) },
       away: { name: m.away && m.away.name ? m.away.name : '客队', elo: num(m.away && m.away.elo, 1650) },
       homeForm: forms(m.homeForm, avgG),
@@ -2115,7 +2121,28 @@ function parseMatch(m) {
     hadFromCrs: (!had && crs) ? crsToHDA(crs) : null,
     single: !!(m.bettingSingle === 1 || m.single === 1 || m.isSingle === 1),
     status: String(first(m.matchStatus, m.status, 'Selling') || ''),
-    leagueId: String(first(m.leagueId, m.leagueCode, '') || '')
+    leagueId: String(first(m.leagueId, m.leagueCode, '') || ''),
+    /* ★ 赛果：比赛结束后，同一赛程接口常会带出比分与状态。
+       这里穷举官方可能使用的字段名，任一命中即可，
+       从而不必依赖单独且不稳定的赛果接口。 */
+    homeScore: (function () {
+      var v = first(m.homeScore, m.homeGoal, m.hScore, m.scoreH,
+        m.homeTeamScore, m.homeScore90, m.hGoal,
+        (m.score && (m.score.home !== undefined ? m.score.home : m.score.h)),
+        (m.matchScore && m.matchScore.home), null);
+      var n = parseFloat(v);
+      return isFinite(n) ? n : null;
+    })(),
+    awayScore: (function () {
+      var v = first(m.awayScore, m.awayGoal, m.aScore, m.scoreA,
+        m.awayTeamScore, m.awayScore90, m.aGoal,
+        (m.score && (m.score.away !== undefined ? m.score.away : m.score.a)),
+        (m.matchScore && m.matchScore.away), null);
+      var n = parseFloat(v);
+      return isFinite(n) ? n : null;
+    })(),
+    /* 官方偶有直接给结果的字符串，如 "2:1" */
+    scoreText: String(first(m.scoreText, m.result, m.matchResult, '') || '')
   };
 }
 
@@ -2516,6 +2543,12 @@ function assemble(m, sup, extra, idx) {
     home: { name: m.home, elo: Math.round(eloH) },
     away: { name: m.away, elo: Math.round(eloA) },
     eloSource: eloSrc,
+    /* ★ 赛果透传：比赛结束后官方赛程接口常直接带出比分/状态。
+       透传后可就地完成命中判定，不必依赖单独且不稳定的赛果接口。 */
+    homeScore: (m.homeScore === undefined ? null : m.homeScore),
+    awayScore: (m.awayScore === undefined ? null : m.awayScore),
+    scoreText: m.scoreText || '',
+    status: m.status || '',
     homeForm: (extra && extra.homeForm) || synthForm(eloH, avgG, idx),
     awayForm: (extra && extra.awayForm) || synthForm(eloA, avgG, idx + 7),
     h2h: (extra && extra.h2h) || synthH2H(eloH, eloA, avgG, idx),
@@ -4410,6 +4443,17 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         } catch (e) { html = ''; }
       }
 
+      /* ★ 就地判定：若这份赛程数据已带出赛果（比赛结束），
+         留档时立即判定命中，不必等后续 backfill。
+         这样即使赛果接口始终连不上，只要官方赛程带比分就能算出命中率。 */
+      var hs0 = (r.homeScore === undefined ? null : r.homeScore);
+      var as0 = (r.awayScore === undefined ? null : r.awayScore);
+      if ((hs0 === null || hs0 === undefined) && r.scoreText) {
+        var mx = String(r.scoreText).match(/(\d+)\s*[:：\-]\s*(\d+)/);
+        if (mx) { hs0 = parseInt(mx[1], 10); as0 = parseInt(mx[2], 10); }
+      }
+      var hasScore = isFinite(parseFloat(hs0)) && isFinite(parseFloat(as0));
+
       var dir = '';
       var meta = null;
       if (a) {
@@ -4436,6 +4480,12 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           prev.snapAt = Date.now();
           prev.snapDate = d;
           prev.snapTime = nowTime();
+          if (hasScore) {
+            prev.score = parseInt(hs0, 10) + ':' + parseInt(as0, 10);
+            var act2 = parseInt(hs0, 10) > parseInt(as0, 10) ? 'h'
+              : (parseInt(hs0, 10) < parseInt(as0, 10) ? 'a' : 'd');
+            prev.result = prev.dir ? ((prev.dir === act2) ? 'hit' : 'miss') : 'nr';
+          }
         }
         return;
       }
@@ -4454,9 +4504,15 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         dirLabel: dir === 'h' ? '主胜' : (dir === 'd' ? '平局' : (dir === 'a' ? '客胜' : '')),
         meta: meta,
         html: html,
-        result: null,     // 'hit' | 'miss' | null
+        result: null,     // 'hit' | 'miss' | 'nr' | null
         score: null
       };
+      if (hasScore) {
+        p.score = parseInt(hs0, 10) + ':' + parseInt(as0, 10);
+        var act = parseInt(hs0, 10) > parseInt(as0, 10) ? 'h'
+          : (parseInt(hs0, 10) < parseInt(as0, 10) ? 'a' : 'd');
+        p.result = p.dir ? ((p.dir === act) ? 'hit' : 'miss') : 'nr';
+      }
       list.push(p);
       idx[key] = p;
       added++;
@@ -6734,6 +6790,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     if (b1) bindTap(b1, function () { loadHistoryResults(); });
     var b3 = document.getElementById('hsBack');
     if (b3) bindTap(b3, function () { backfillHistory(); });
+    bindManualResult();
     var b2 = document.getElementById('hsClear');
     if (b2) bindTap(b2, function () {
       if (typeof History2 !== 'undefined') History2.clear(cat);
@@ -6756,6 +6813,106 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       if (CATS[i][0] === cat) return CATS[i][1];
     }
     return cat;
+  }
+
+  /* ---------------- 从当前赛程直接抽赛果 ----------------
+     最可靠的一条路：App 本来就在拉官方赛程，比赛结束后
+     同一个接口往往直接带出比分/status。不必依赖单独的赛果接口。 */
+  function collectFromSchedule() {
+    if (typeof History2 === 'undefined') return 0;
+    var out = [];
+    (S.all || []).forEach(function (x) {
+      var r = x.raw;
+      if (!r) return;
+      var hs = r.homeScore, as = r.awayScore;
+      /* 字符串型 "2:1" 兜底 */
+      if ((hs === null || hs === undefined) && r.scoreText) {
+        var m = String(r.scoreText).match(/(\d+)\s*[:：\-]\s*(\d+)/);
+        if (m) { hs = parseInt(m[1], 10); as = parseInt(m[2], 10); }
+      }
+      if (hs === null || hs === undefined || as === null || as === undefined) return;
+      if (!isFinite(hs) || !isFinite(as)) return;
+      out.push({
+        home: r.home.name, away: r.away.name,
+        homeScore: hs, awayScore: as, date: r.matchDate || ''
+      });
+    });
+    if (!out.length) return 0;
+    return History2.backfill(out).filled;
+  }
+
+  /* ---------------- 手动录入赛果 ----------------
+     赛果接口不稳定时的兜底：直接输入比分即可完成判定。
+     这是唯一 100% 可靠的方式，不依赖任何外部接口。 */
+  function manualResultHTML() {
+    var pend = [];
+    if (typeof History2 !== 'undefined') {
+      pend = History2.all().filter(function (p) { return !p.result; })
+        .sort(function (a, b) { return (b.snapAt || 0) - (a.snapAt || 0); })
+        .slice(0, 30);
+    }
+    if (!pend.length) {
+      return '<div class="panel" style="padding:11px;font-size:10.5px;color:var(--muted2)">' +
+        '没有待录入的赛事（历史留档已全部有结果，或还没有留档）。</div>';
+    }
+    var rows = pend.map(function (p) {
+      return '<div style="display:flex;align-items:center;gap:6px;padding:7px 0;' +
+        'border-top:1px dashed var(--border)" data-mr-key="' + escHtml(p.key) + '">' +
+        '<span style="flex:1;font-size:10.5px;font-weight:700;min-width:0">' +
+        escHtml(p.home) + '<span style="color:var(--muted2)"> vs </span>' + escHtml(p.away) +
+        (p.dirLabel ? '<span style="color:var(--accent);font-size:9.5px"> · 荐' +
+          escHtml(p.dirLabel) + '</span>' : '') +
+        '<div style="font-size:9px;color:var(--muted2);font-weight:400">' +
+        escHtml(p.matchDate || '') + ' · ' + escHtml(p.catLabel || '') + '</div></span>' +
+        '<input type="number" min="0" max="99" inputmode="numeric" data-mr="' + escHtml(p.key) +
+        '" data-mr-side="h" placeholder="主" style="width:44px;padding:5px 4px;font-size:12px;' +
+        'text-align:center;background:var(--card2);border:1px solid var(--border);' +
+        'border-radius:7px;color:var(--text)">' +
+        '<span style="font-size:11px;color:var(--muted2)">:</span>' +
+        '<input type="number" min="0" max="99" inputmode="numeric" data-mr="' + escHtml(p.key) +
+        '" data-mr-side="a" placeholder="客" style="width:44px;padding:5px 4px;font-size:12px;' +
+        'text-align:center;background:var(--card2);border:1px solid var(--border);' +
+        'border-radius:7px;color:var(--text)">' +
+        '</div>';
+    }).join('');
+
+    return '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      '<div style="font-size:10.5px;color:var(--muted2);line-height:1.7;margin-bottom:8px">' +
+      '赛果接口不稳定时，直接填比分即可完成命中判定 —— <b>这是最可靠的方式</b>。' +
+      '填完点下方保存，系统会立即算出命中 / 未中。</div>' +
+      rows +
+      '<button class="btn-primary" id="mrSave" style="width:100%;margin-top:9px;padding:9px;' +
+      'font-size:11.5px">保存录入的赛果</button></div>';
+  }
+
+  function bindManualResult() {
+    var b = document.getElementById('mrSave');
+    if (!b) return;
+    bindTap(b, function () {
+      if (typeof History2 === 'undefined') return;
+      var map = {};
+      $$('#matchList input[data-mr]').forEach(function (inp) {
+        var k = inp.getAttribute('data-mr');
+        var side = inp.getAttribute('data-mr-side');
+        var v = parseInt(inp.value, 10);
+        if (!isFinite(v) || v < 0) return;
+        if (!map[k]) map[k] = { key: k };
+        map[k][side === 'h' ? 'hs' : 'as'] = v;
+      });
+      var out = [];
+      var all = History2.all();
+      Object.keys(map).forEach(function (k) {
+        var e = map[k];
+        if (e.hs === undefined || e.as === undefined) return;
+        var p = all.filter(function (x) { return x.key === k; })[0];
+        if (!p) return;
+        out.push({ home: p.home, away: p.away, homeScore: e.hs, awayScore: e.as });
+      });
+      if (!out.length) { toast('请先填写比分（主客都要填）'); return; }
+      var n = History2.backfill(out).filled;
+      toast('已录入 ' + n + ' 场赛果');
+      renderList();
+    });
   }
 
   /* ---------------- 补录历史 ----------------
@@ -6977,6 +7134,13 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       }).join('');
     }
 
+    /* 静默尝试：从当前已加载的官方赛程里抽赛果（最可靠，无需额外接口） */
+    setTimeout(function () {
+      var n = 0;
+      try { n = collectFromSchedule(); } catch (e) { }
+      if (n > 0) { renderList(); }
+    }, 400);
+
     var ops = '<div style="display:flex;flex-direction:column;gap:8px;margin:10px 0 4px">' +
       '<div style="display:flex;gap:8px">' +
       '<button class="btn-ghost" id="hsRefresh" style="flex:1;padding:9px;font-size:11.5px">' +
@@ -6989,7 +7153,11 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       '留档从你首次打开 App 开始。若某天没打开过，可用「补录」尝试回补该日赛程；' +
       '补录条目只记赛果、不判命中（当时没有推荐方向）。</div></div>';
 
-    return chips + head + rankHTML + sec + list + ops;
+    var manual = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:14px 0 7px">手动录入赛果（兜底 · 最可靠）</div>' +
+      manualResultHTML();
+
+    return chips + head + rankHTML + sec + list + ops + manual;
   }
 
   function renderList() {
