@@ -3643,6 +3643,77 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return picks;
   }
 
+  /* ---------------- 直达链接提取 ----------------
+     ★ 问题：原来只认 href 里含 thread|viewthread|read|topic|article 的链接。
+       92玩球真实文章路径并非这些词（可能是 /zuqiu/123456.html 之类），
+       结果一条都匹配不上 → 退化到模式 B → url 变成列表页首页
+       → 用户点"原文"只跳到主页，看不到文章。
+
+     改法：先收集条目内所有链接，再按"像文章页"的程度打分排序，
+     任何形如 路径/数字.html 或带 id/tid 参数的都算候选。 */
+
+  function isHomepageUrl(u) {
+    var t = String(u || '').replace(/\s+/g, '');
+    if (!t) return true;
+    /* 去掉协议与尾部斜杠后只剩域名 → 就是主页 */
+    var x = t.replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+    if (x.indexOf('/') < 0) return true;          /* 无路径 = 主页 */
+    if (/^[^/]+\/(index\.(html?|php|aspx))?$/i.test(x)) return true;
+    return false;
+  }
+
+  /* 给链接打分：越像文章页分越高 */
+  function linkScore(href) {
+    var h = String(href || '');
+    if (!h) return -1;
+    if (/^(javascript|mailto|#|void)/i.test(h)) return -1;
+    if (isHomepageUrl(h)) return -1;
+    var sc = 0;
+    /* 文章特征关键词 */
+    if (/thread|viewthread|read|topic|article|show|view|detail|news|zuqiu|zu|post|tid|id=/i.test(h)) sc += 5;
+    /* 形如 /123456.html 或 -123-1-1.html */
+    if (/\/\d{3,}\.s?html?/i.test(h)) sc += 6;
+    if (/[-_]\d{3,}[-_]/.test(h)) sc += 4;
+    /* 带数字参数 */
+    if (/[?&](?:tid|id|aid|postid)=\d+/i.test(h)) sc += 6;
+    /* 日期型路径 /2026/0918/ */
+    if (/\/20\d{2}[\/-]?\d{0,4}/.test(h)) sc += 3;
+    /* 有 .html/.shtml 后缀 */
+    if (/\.s?html?$/i.test(h)) sc += 2;
+    /* ★ 栏目页（/zuqiu/、/news/）没有数字 ID，不该被当成文章。
+       但 forum.php?mod=viewthread&tid=5566 这类"参数里带 ID"是合法文章页，
+       必须先查查询串，不能只看路径末段。 */
+    var hasIdParam = /[?&](?:tid|id|aid|postid|thread_id)=\d+/i.test(h);
+    var seg = String(h).replace(/^https?:\/\/[^/]+/i, '').split('?')[0];
+    var last = seg.replace(/\/+$/, '').split('/').pop() || '';
+    if (!hasIdParam && !/\d/.test(last)) sc -= 10;   /* 无 ID 参数且末段无数字 → 栏目页 */
+    if (/^\/?(?:news|zuqiu|list|forum)?\/?$/i.test(seg)) sc -= 5;
+    return sc;
+  }
+
+  /* 从条目 HTML 片段里挑最佳文章链接 */
+  function pickArticleLink(frag, srcUrl) {
+    var out = [];
+    var re = /<a[^>]+href=["']([^"'\s]+)["']/gi;
+    var m;
+    while ((m = re.exec(String(frag || ''))) !== null) {
+      var sc = linkScore(m[1]);
+      if (sc < 0) continue;
+      out.push({ href: m[1], score: sc });
+    }
+    if (!out.length) return '';
+    out.sort(function (a, b) { return b.score - a.score; });
+    var best = out[0];
+    if (best.score < 3) return '';      /* 分数太低，可能是栏目页，宁可不跳 */
+    return absUrl(best.href, srcUrl);
+  }
+
+  /* 校验：这个 URL 能不能直达文章（主页不算） */
+  function isDirectArticleUrl(u) {
+    if (!u) return false;
+    return !isHomepageUrl(u);
+  }
+
   /* ---------------- 页面解析 ----------------
      Discuz!/论坛类页面常见结构：
        <a href="thread-12345-1-1.html" ...>标题</a> ... 作者 ... 2026-09-17 23:02:48
@@ -3653,10 +3724,13 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     var seen = {};
 
     /* 模式 A：链接 + 标题（thread/forum.php?mod=viewthread） */
-    var reA = /<a[^>]+href=["']([^"']*(?:thread|viewthread|read|topic|article)[^"']*)["'][^>]*>([\s\S]{0,300}?)<\/a>/gi;
+    /* 放宽：不再限定 href 必须含 thread 等词，先收全部 <a> 再筛 */
+    var reA = /<a[^>]+href=["']([^"'\s]+)["'][^>]*>([\s\S]{0,300}?)<\/a>/gi;
     var m;
     while ((m = reA.exec(html)) !== null) {
       var href = m[1];
+      /* 明显不是文章页的链接直接跳过（避免把栏目页/首页当原文） */
+      if (linkScore(href) < 3) continue;
       var title = m[2].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ')
         .replace(/\s+/g, ' ').trim();
       if (!title || title.length < 6) continue;
@@ -3698,13 +3772,19 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
          只剩第一条 —— 用户明确要求"多名专家推荐要分别写出各自推荐"。
          同一专家对同一场同一天才算重复。 */
       var key = p.home + '|' + p.away + '|' + postDate + '|' +
-        (guessExpert(tail) || guessExpert(title) || '') + '|' + href;
+        (guessExpert(tail) || guessExpert(title) || '') + '|' + (href || title);
       if (seen[key]) continue;
       seen[key] = 1;
 
       out.push({
         id: 'wq_' + hashStr(href + title),
-        url: absUrl(href, srcUrl),
+        /* ★ 优先用本条目自己的 href。
+           原先无条件从"附近片段"里挑最佳链接，两条相邻帖子会
+           挑到同一个 —— 实测四条按钮全指向同一篇文章。
+           只有本条 href 不够像文章页时，才去片段里找。 */
+        url: (linkScore(href) >= 3 ? absUrl(href, srcUrl) : '') ||
+          pickArticleLink(html.slice(Math.max(0, m.index - 200), m.index + 600), srcUrl) ||
+          absUrl(href, srcUrl),
         title: title,
         no: p.no,
         league: p.league,
@@ -3733,7 +3813,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
         seen[key2] = 1;
         out.push({
           id: 'wq_' + hashStr(ln),
-          url: srcUrl || BASE,
+          /* ★ 纯文本兜底时 srcUrl 就是列表页/首页，
+             把它当"原文链接"会让用户点开只看到主页。
+             这里留空，界面会显示"无直达链接"而不是误导。 */
+          url: '',
           title: ln,
           no: pb.no, league: pb.league,
           home: pb.home, away: pb.away,
@@ -4532,6 +4615,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   function lastTried() { return RESULT_TRIED || []; }
 
   global.Expert = {
+    isHomepageUrl: isHomepageUrl,
+    linkScore: linkScore,
+    isDirectArticleUrl: isDirectArticleUrl,
     setLeagueBlock: setLeagueBlock,
     applyLeagueBlock: applyLeagueBlock,
     activityStats: activityStats,
@@ -8034,11 +8120,16 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
                   return '「' + escHtml(t2) + '」';
                 }).join('<br>') + '</div>'
               : '';
-            var srcBtn = p.url
+            /* ★ 只有确认是文章页才给"原文"按钮。
+               若 url 是主页（列表页兜底的情况），点了只会跳到主页，
+               不如直接说明"无直达链接"，不误导。 */
+            var direct = (typeof Expert !== 'undefined' && Expert.isDirectArticleUrl)
+              ? Expert.isDirectArticleUrl(p.url) : !!p.url;
+            var srcBtn = (p.url && direct)
               ? '<button class="btn-ghost ex-src" data-src="' + escHtml(String(p.url)) +
                 '" style="font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:7px;' +
                 'flex:none">原文 ↗</button>'
-              : '';
+              : '<span style="font-size:9px;color:var(--muted2);flex:none">无直达链接</span>';
             return '<div style="padding:7px 0;border-top:1px dashed var(--border)">' +
               '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">' +
               '<span style="font-size:11px;font-weight:700;min-width:0">' +
@@ -8080,8 +8171,10 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
             '<span style="min-width:0;flex:1">' +
             escHtml((p.expert || '') + ' · ' + (p.home || '') + ' vs ' + (p.away || '')) +
             '</span>' +
-            (p.url ? '<button class="btn-ghost ex-src" data-src="' + escHtml(String(p.url)) +
-              '" style="font-size:9px;padding:2px 7px;border-radius:6px;flex:none">原文 ↗</button>'
+            ((p.url && ((typeof Expert !== 'undefined' && Expert.isDirectArticleUrl)
+                ? Expert.isDirectArticleUrl(p.url) : true))
+              ? '<button class="btn-ghost ex-src" data-src="' + escHtml(String(p.url)) +
+                '" style="font-size:9px;padding:2px 7px;border-radius:6px;flex:none">原文 ↗</button>'
               : '') + '</div>';
         }).join('') + '</div>';
     }
