@@ -3880,9 +3880,42 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   });
   LEAGUE_WORDS.forEach(function (x) { if (x) LEAGUE_SET[x] = 1; });
 
+  /* 动态黑名单：运行时从竞彩官方赛程拿到的真实联赛名。
+     静态枚举永远列不全（各地叫法不同），
+     用当前赛事里的 league 字段兜底才彻底。 */
+  var DYN_LEAGUES = {};
+
+  function setLeagueBlock(arr) {
+    (arr || []).forEach(function (x) {
+      var n = String(x || '').replace(/\s+/g, '').trim();
+      if (n && n.length <= 10) DYN_LEAGUES[n] = 1;
+    });
+  }
+
+  /**
+   * 二次修正：把被误当成专家名的联赛名换成可追踪代号。
+   * 在渲染前调用（此时已拿到真实赛事数据）。
+   */
+  function applyLeagueBlock(posts, leagues) {
+    if (!posts || !posts.length) return 0;
+    setLeagueBlock(leagues || []);
+    var n = 0;
+    posts.forEach(function (p) {
+      var e = String(p.expert || '').replace(/\s+/g, '');
+      if (!e) return;
+      if (LEAGUE_SET[e] || DYN_LEAGUES[e] || isLeagueName(e)) {
+        p.expert = fallbackName(p.url, p.title);
+        p.expertFallback = true;
+        n++;
+      }
+    });
+    return n;
+  }
+
   function isLeagueName(n) {
     if (!n) return false;
     if (LEAGUE_SET[n]) return true;
+    if (DYN_LEAGUES[n]) return true;
     /* 含"联赛/杯/超/甲/乙/冠"等赛事后缀的，多半不是人名 */
     if (/(?:联赛|杯赛|杯|超级|甲级|乙级|冠军|锦标赛|邀请赛|预选赛|联赛杯)$/.test(n)) return true;
     /* 2~3 字且是常见赛事简称 */
@@ -4499,6 +4532,8 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
   function lastTried() { return RESULT_TRIED || []; }
 
   global.Expert = {
+    setLeagueBlock: setLeagueBlock,
+    applyLeagueBlock: applyLeagueBlock,
     activityStats: activityStats,
     guessExpert: guessExpert,
     fallbackName: fallbackName,
@@ -7395,6 +7430,44 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       (EX.detailDone ? ' · 本次读取 ' + EX.detailDone + ' 篇' : '');
   }
 
+  /* ---------- 打开原帖 ----------
+     降级链（每一级都可能失效，必须逐级兜底）：
+       ① 原生 openExternal（最干净：系统浏览器打开，不占 WebView）
+       ② window.open（需 WebView 允许开窗口，新版已打开该设置）
+       ③ location.href（一定能跳，只是页面会在 App 内打开）
+     另外：若 ① 不可用，说明 APK 是旧版，明确告诉用户，
+     而不是"点了没反应"。 */
+  function openExpertSource(btn) {
+    var u = btn.getAttribute('data-src');
+    if (!u) { toast('该帖没有原文链接'); return; }
+
+    /* ① 原生通道 */
+    try {
+      var B = window.JCBridge;
+      if (B && typeof B.openExternal === 'function') {
+        B.openExternal(u);
+        return;
+      }
+    } catch (e) { }
+
+    /* ② window.open */
+    var w2 = null;
+    try { w2 = window.open(u, '_blank'); } catch (e) { w2 = null; }
+    if (w2) return;
+
+    /* ③ 最后兜底：当前页跳转（一定能生效） */
+    try {
+      if (window.confirm && window.confirm('当前安装包不支持新窗口，将在应用内打开原帖。继续？')) {
+        location.href = u;
+      } else if (!window.confirm) {
+        location.href = u;
+      }
+      return;
+    } catch (e2) { }
+
+    toast('无法打开原链接，请重装最新版 App');
+  }
+
   function expertDiagHTML() {
     if (typeof Expert === 'undefined' || !Expert.exportSample) return '';
     /* 条数取 S.expert，错误取 EX（两者分工不同，别读错） */
@@ -7834,6 +7907,20 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       'margin:14px 0 8px">今日竞彩赛事 · 下方挂专家推荐</div>';
 
     var ms = S.all || [];
+
+    /* ★ 用当前赛事的真实联赛名做二次修正：
+       静态黑名单列不全各地叫法，把官方 league 字段灌进去兜底。
+       例如官方 league="亚运男足"，凡是叫这个名字的一律不当专家。 */
+    try {
+      if (typeof Expert !== 'undefined' && Expert.applyLeagueBlock) {
+        var leagues = [];
+        ms.forEach(function (x) {
+          var lg = (x.raw && x.raw.league) || '';
+          if (lg) leagues.push(lg);
+        });
+        Expert.applyLeagueBlock(E.posts || [], leagues);
+      }
+    } catch (e) { }
     if (!ms.length) {
       return sec + '<div class="panel" style="padding:16px;font-size:10.5px;color:var(--muted2);' +
         'text-align:center">当前没有赛事数据</div>';
@@ -8812,15 +8899,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       });
       /* 原文直达 */
       $$('#matchList .ex-src').forEach(function (b) {
-        bindTap(b, function () {
-          var u = b.getAttribute('data-src');
-          if (!u) { toast('该帖没有原文链接'); return; }
-          try {
-            var B = window.JCBridge;
-            if (B && B.openExternal) { B.openExternal(u); return; }
-          } catch (e) { }
-          try { window.open(u, '_blank'); } catch (e2) { toast('无法打开：' + u); }
-        });
+        bindTap(b, function () { openExpertSource(b); });
       });
       var eb2 = document.getElementById('exClear');
       if (eb2) bindTap(eb2, function () {
