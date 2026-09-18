@@ -505,7 +505,8 @@ button,.chip,.card,.fav-btn,.icon-btn,.mx-cell,.sig,.lg{
     </div>
   </div>
   <div class="tb-right">
-    <div class="clock-box">
+    <div id="autoSyncBox" style="font-size:9.5px;color:var(--muted2);margin-bottom:2px"></div>
+        <div class="clock-box">
       <span id="clock" class="clock">--:--:--</span>
       <span id="updateTime" class="upd">更新 --:--</span>
     </div>
@@ -4717,6 +4718,504 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
 </script>
 <script>
+/**
+ * ============================================================
+ * 竞彩智析 · 自动同步引擎
+ * ------------------------------------------------------------
+ * 目标：让所有事情自动发生，不需要用户点任何按钮。
+ *
+ * 自动做的事：
+ *   ① 自动刷新赛程 —— 自适应间隔（临近开赛/进行中 → 高频；全部结束 → 低频）
+ *   ② 自动判定赛果 —— 比赛一结束就地算出命中/未中
+ *   ③ 自动留档 —— 每次刷新后自动快照，历史永不丢
+ *   ④ 自动重连 —— 网络恢复 / App 回到前台立即补一次
+ *   ⑤ 自动更新内容 —— 定期去固定链接检查新版本
+ *   ⑥ 自动学习 —— 根据历史命中率自动调准推荐门槛
+ *
+ * 设计原则：
+ *   - 全程静默，成功不打扰，只在"有结果"或"真异常"时轻提示
+ *   - 自适应节流：不做无意义的频繁请求（省流量、不被封）
+ *   - 页面不可见时暂停轮询（省电）
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var T = {
+    running: false,
+    timer: null,
+    lastSync: 0,
+    lastOk: 0,
+    failN: 0,
+    syncN: 0,
+    interval: 60000,        // 当前轮询间隔（毫秒）
+    paused: false,
+    listeners: [],
+    lastStatus: ''
+  };
+
+  var LS_SYNC = 'jc.autosync';
+
+  /* ---------- 间隔策略 ----------
+     有比赛临近开赛或进行中 → 60 秒
+     全部未开始且还早       → 5 分钟
+     全部已结束             → 15 分钟
+     连续失败               → 指数退避（最长 30 分钟） */
+  var IV_HOT = 60000;       // 1 分钟（比赛临近/进行中）
+  var IV_WARM = 300000;     // 5 分钟（今日有赛事但还早）
+  var IV_COLD = 900000;     // 15 分钟（今日赛事已全部结束）
+  var IV_MAX = 1800000;     // 30 分钟（连续失败上限）
+
+  function store() {
+    try {
+      var ls = global.localStorage;
+      if (ls) { ls.getItem('__t'); return ls; }
+    } catch (e) { }
+    return null;
+  }
+  function saveState() {
+    var st = store();
+    if (!st) return;
+    try {
+      st.setItem(LS_SYNC, JSON.stringify({
+        lastOk: T.lastOk, syncN: T.syncN, failN: T.failN
+      }));
+    } catch (e) { }
+  }
+  function loadState() {
+    var st = store();
+    if (!st) return;
+    try {
+      var v = JSON.parse(st.getItem(LS_SYNC) || '{}');
+      T.lastOk = v.lastOk || 0;
+      T.syncN = v.syncN || 0;
+      T.failN = v.failN || 0;
+    } catch (e) { }
+  }
+
+  /* ---------- 订阅：让各模块在每次同步后做事 ---------- */
+  function onSync(fn) {
+    if (typeof fn === 'function') T.listeners.push(fn);
+  }
+  function emit(evt) {
+    T.listeners.forEach(function (fn) {
+      try { fn(evt); } catch (e) { }
+    });
+  }
+
+  /* ---------- 依据赛程状态决定下次间隔 ---------- */
+  function decideInterval(getMatches) {
+    var ms = [];
+    try { ms = (typeof getMatches === 'function') ? (getMatches() || []) : []; } catch (e) { }
+    if (!ms.length) return IV_WARM;
+
+    var now = Date.now();
+    var bjNow = now;   /* 统一按北京时间判断 */
+    var hot = false, ended = 0, pending = 0;
+
+    ms.forEach(function (x) {
+      var r = x && x.raw;
+      if (!r) return;
+      var st = String(r.status || '').toLowerCase();
+      if (st && /end|finish|close|完|结束/.test(st)) { ended++; return; }
+      /* 有赛果视为已结束 */
+      if (r.homeScore !== null && r.homeScore !== undefined &&
+        r.awayScore !== null && r.awayScore !== undefined) { ended++; return; }
+      pending++;
+      /* 开赛时间在未来 2 小时内 → 视为临近 */
+      var t = parseTime(r);
+      if (t && (t - bjNow) < 2 * 3600000 && (t - bjNow) > -3 * 3600000) hot = true;
+    });
+
+    if (hot) return IV_HOT;
+    if (pending === 0) return IV_COLD;
+    return IV_WARM;
+  }
+
+  function parseTime(r) {
+    if (!r) return null;
+    var d = r.matchDate || r.date || '';
+    var tm = r.time || r.matchTime || '';
+    if (!d) return null;
+    var m = String(tm).match(/(\d{1,2}):(\d{2})/);
+    var hh = m ? parseInt(m[1], 10) : 20;
+    var mm = m ? parseInt(m[2], 10) : 0;
+    var parts = String(d).split('-');
+    if (parts.length < 3) return null;
+    /* 按北京时间构造 */
+    var t = Date.UTC(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1,
+      parseInt(parts[2], 10), hh - 8, mm);
+    return t;
+  }
+
+  /* ---------- 核心：一次同步 ---------- */
+  /**
+   * @param opts {rebuild:fn, getMatches:fn, toast:fn, silent:bool}
+   */
+  function sync(opts) {
+    opts = opts || {};
+    if (T.paused && !opts.force) return;
+    var rebuild = opts.rebuild;
+    if (typeof rebuild !== 'function') return;
+
+    T.running = true;
+    var t0 = Date.now();
+
+    rebuild(function (ok, info) {
+      T.running = false;
+      T.lastSync = Date.now();
+
+      if (ok) {
+        T.lastOk = T.lastOk;   // 保持
+        T.failN = 0;
+        T.syncN++;
+        /* ① 赛果就地判定 ② 自动留档 —— 由订阅者完成 */
+        emit({ ok: true, info: info || {}, at: T.lastSync });
+      } else {
+        T.failN++;
+        emit({ ok: false, info: info || {}, at: T.lastSync, fail: T.failN });
+      }
+
+      /* 决定下次间隔：失败则指数退避 */
+      var iv = decideInterval(opts.getMatches);
+      if (T.failN > 0) {
+        iv = Math.min(IV_MAX, iv * Math.pow(2, Math.min(T.failN, 5)));
+      }
+      T.interval = iv;
+      saveState();
+      schedule(opts);
+    });
+  }
+
+  function schedule(opts) {
+    if (T.timer) { clearTimeout(T.timer); T.timer = null; }
+    var wait = T.interval || IV_WARM;
+    T.timer = setTimeout(function () {
+      if (global.document && global.document.hidden) {
+        /* 页面不可见：不请求，等回到前台再补 */
+        T.timer = null;
+        return;
+      }
+      sync(opts);
+    }, wait);
+  }
+
+  function reschedule(opts) {
+    if (T.timer) { clearTimeout(T.timer); T.timer = null; }
+    schedule(opts);
+  }
+
+  /* ---------- 启动 ---------- */
+  function start(opts) {
+    loadState();
+    if (T.running || T.timer) return;
+    /* 先同步一次，再进入循环 */
+    sync(opts);
+    bindLifecycle(opts);
+  }
+
+  function stop() {
+    if (T.timer) { clearTimeout(T.timer); T.timer = null; }
+    T.running = false;
+  }
+
+  /* ---------- 生命周期：回到前台 / 网络恢复 ---------- */
+  function bindLifecycle(opts) {
+    var d = global.document;
+    if (!d) return;
+
+    /* 回到前台：若距上次同步已超过当前间隔的一半，立即补一次 */
+    if (!d.__autoSyncVis) {
+      d.__autoSyncVis = true;
+      d.addEventListener('visibilitychange', function () {
+        if (d.hidden) return;
+        var gap = Date.now() - (T.lastSync || 0);
+        if (gap > (T.interval || IV_WARM) * 0.5) {
+          reschedule(opts);
+          sync(Object.assign({}, opts, { force: true }));
+        } else {
+          reschedule(opts);
+        }
+      });
+      /* 网页获得焦点同样处理（部分 WebView 不触发 visibilitychange） */
+      global.addEventListener('focus', function () {
+        var gap = Date.now() - (T.lastSync || 0);
+        if (gap > (T.interval || IV_WARM) * 0.5) {
+          sync(Object.assign({}, opts, { force: true }));
+        }
+      });
+    }
+
+    /* 网络恢复：立即补一次 */
+    if (!global.__autoSyncNet) {
+      global.__autoSyncNet = true;
+      global.addEventListener('online', function () {
+        sync(Object.assign({}, opts, { force: true }));
+      });
+    }
+  }
+
+  /* ---------- 状态描述（给用户看）---------- */
+  function statusText() {
+    var min = Math.round((T.interval || IV_WARM) / 60000);
+    if (T.failN >= 3) return '自动同步暂停重试（已失败 ' + T.failN + ' 次）';
+    if (T.running) return '正在同步…';
+    if (!T.lastOk) return '自动同步已启动';
+    return '自动同步 · 每 ' + min + ' 分钟';
+  }
+
+  function info() {
+    return {
+      running: T.running,
+      interval: T.interval,
+      lastSync: T.lastSync,
+      syncN: T.syncN,
+      failN: T.failN,
+      paused: T.paused
+    };
+  }
+
+  global.AutoSync = {
+    start: start,
+    stop: stop,
+    sync: sync,
+    onSync: onSync,
+    info: info,
+    statusText: statusText,
+    setPaused: function (v) {
+      T.paused = !!v;
+      if (!v && T.timer === null) schedule({});
+    },
+    IV: { HOT: IV_HOT, WARM: IV_WARM, COLD: IV_COLD }
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/**
+ * ============================================================
+ * 竞彩智析 · 自适应学习
+ * ------------------------------------------------------------
+ * 让推荐门槛不再写死，而是跟着历史命中率自动调整。
+ *
+ * 为什么需要：
+ *   「高手推荐」原先用写死的门槛（≥3星 且 价值指数>0）。
+ *   模型校准后门槛可能永远达不到 → 长期 0 场（实测出现过）。
+ *   或者门槛太低 → 一堆低质量推荐，命中率难看。
+ *
+ * 做法：
+ *   ① 记录每个"推荐条件组合"的历史命中率
+ *   ② 样本够时，自动选出命中率最高的组合作为当前门槛
+ *   ③ 样本不够时，退化为"取当前批次里相对最好的前 N 场"
+ *      —— 永远有输出，绝不出现 0 场空白
+ *   ④ 记录每档的实际表现，供界面展示"当前门槛是怎么来的"
+ * ============================================================
+ */
+(function (global) {
+  'use strict';
+
+  var LS = 'jc.adaptive';
+  var MIN_N = 8;           // 进入"统计决策"所需的最小样本
+
+  var MEM = {};
+  function store() {
+    try {
+      var ls = global.localStorage;
+      if (ls) { ls.getItem('__t'); return ls; }
+    } catch (e) { }
+    return null;
+  }
+  function load() {
+    var st = store();
+    if (st) {
+      try {
+        var v = JSON.parse(st.getItem(LS) || 'null');
+        if (v) return v;
+      } catch (e) { }
+    }
+    return MEM[LS] || { buckets: {}, best: null, updated: 0 };
+  }
+  function save(o) {
+    MEM[LS] = o;
+    var st = store();
+    if (!st) return;
+    try { st.setItem(LS, JSON.stringify(o)); } catch (e) { }
+  }
+
+  /* ---------- 记录：一次推荐及其结果 ---------- */
+  /**
+   * @param cond {stars, minValue} 当时的门槛
+   * @param hit  true/false/null(未开奖)
+   */
+  function record(cond, hit) {
+    var o = load();
+    var k = 's' + cond.stars + '_v' + (cond.minValue * 100).toFixed(0);
+    if (!o.buckets[k]) {
+      o.buckets[k] = { stars: cond.stars, minValue: cond.minValue, n: 0, hit: 0 };
+    }
+    var b = o.buckets[k];
+    if (hit === true) { b.n++; b.hit++; }
+    else if (hit === false) { b.n++; }
+    else { b.pending = (b.pending || 0) + 1; }
+    o.updated = Date.now();
+    save(o);
+  }
+
+  /* ---------- 决策：选当前最优门槛 ---------- */
+  function best() {
+    var o = load();
+    var arr = Object.keys(o.buckets).map(function (k) { return o.buckets[k]; })
+      .filter(function (b) { return b.n > 0; });
+    if (!arr.length) return null;
+    arr.sort(function (a, b) {
+      var ra = a.hit / a.n, rb = b.hit / b.n;
+      if (b.n >= MIN_N && a.n < MIN_N) return 1;    // 样本够的优先
+      if (a.n >= MIN_N && b.n < MIN_N) return -1;
+      if (rb !== ra) return rb - ra;
+      return b.n - a.n;
+    });
+    return arr[0];
+  }
+
+  /* ---------- 候选门槛（供评估）---------- */
+  var CANDIDATES = [
+    { stars: 3, minValue: 0.00 },
+    { stars: 4, minValue: 0.00 },
+    { stars: 5, minValue: 0.00 },
+    { stars: 3, minValue: 0.03 },
+    { stars: 4, minValue: 0.03 },
+    { stars: 3, minValue: 0.05 },
+    { stars: 4, minValue: 0.05 }
+  ];
+
+  /**
+   * 从当前批次里筛出推荐。
+   * @param items 全部赛事（含 .an）
+   * @return {list, mode, threshold, reason}
+   */
+  function pick(items) {
+    var b = best();
+    /* ① 有足够历史 → 用学到最优门槛 */
+    if (b && b.n >= MIN_N) {
+      var list1 = items.filter(function (x) {
+        var a = x.an;
+        if (!a || !a.rating) return false;
+        return a.rating.stars >= b.stars &&
+          (a.value ? a.value[a.rating.dir] : 0) > b.minValue;
+      });
+      if (list1.length) {
+        return {
+          list: list1, mode: 'learned', threshold: b,
+          reason: '依据历史：' + b.stars + '星以上 且 价值>' +
+            (b.minValue * 100).toFixed(0) + '% 的组合命中率最高（' +
+            (b.hit / b.n * 100).toFixed(0) + '%，' + b.n + ' 场）'
+        };
+      }
+      /* 学到的门槛今天没命中 → 不降级，直接走相对排序（下面） */
+    }
+
+    /* ② 样本不足或门槛无命中 → 相对排序取最优前 N
+       保证永远有输出，绝不空白 */
+    var N = 5;
+    var scored = items.filter(function (x) {
+      return x.an && x.an.rating && x.an.rating.stars >= 3;
+    });
+    if (!scored.length) {
+      scored = items.slice();
+    }
+    scored = scored.slice().sort(function (p, q) {
+      var sp = score(p), sq = score(q);
+      return sq - sp;
+    });
+
+    var list2 = scored.slice(0, N);
+    return {
+      list: list2, mode: b ? 'fallback' : 'cold',
+      threshold: b,
+      reason: b
+        ? ('历史样本不足（' + b.n + '/' + MIN_N + ' 场），暂时取当前批次综合评分最高的 ' + N + ' 场')
+        : ('暂无历史数据，先取当前批次综合评分最高的 ' + N + ' 场；积累 ' + MIN_N + ' 场后自动切到统计决策')
+    };
+  }
+
+  /* 综合评分：星级 + 价值 + 信心 + 概率优势 */
+  function score(x) {
+    var a = x.an;
+    if (!a || !a.rating) return -999;
+    var s = a.rating.stars || 0;
+    var v = (a.value && a.value[a.rating.dir]) || 0;
+    var c = (a.rating.conf || 0) / 100;
+    var pr = a.probs ? a.probs[a.rating.dir] : 0;
+    return s * 1.0 + v * 20 + c * 0.5 + pr * 1.5;
+  }
+
+  /* ---------- 把历史结果喂回来 ---------- */
+  function learnFrom(history) {
+    if (!history || !history.length) return 0;
+    var o = load();
+    var n = 0;
+    history.forEach(function (p) {
+      if (!p.result || p.result === 'nr') return;
+      if (!p.meta) return;
+      var k = 's' + (p.meta.stars || 0) + '_v' +
+        (((p.meta.value || 0) > 0 ? (p.meta.value * 100).toFixed(0) : '0'));
+      /* 归到最接近的候选桶 */
+      var target = null, bestDiff = 1e9;
+      CANDIDATES.forEach(function (c) {
+        var d = Math.abs(c.stars - (p.meta.stars || 0)) * 10 +
+          Math.abs((c.minValue - (p.meta.value || 0)) * 100);
+        if (d < bestDiff) { bestDiff = d; target = c; }
+      });
+      if (!target) return;
+      var kk = 's' + target.stars + '_v' + (target.minValue * 100).toFixed(0);
+      if (!o.buckets[kk]) {
+        o.buckets[kk] = { stars: target.stars, minValue: target.minValue, n: 0, hit: 0 };
+      }
+      o.buckets[kk].n++;
+      if (p.result === 'hit') o.buckets[kk].hit++;
+      n++;
+    });
+    if (n) { o.updated = Date.now(); save(o); }
+    return n;
+  }
+
+  function stats() {
+    var o = load();
+    var arr = Object.keys(o.buckets).map(function (k) { return o.buckets[k]; })
+      .filter(function (b) { return b.n > 0; })
+      .sort(function (a, b) { return (b.hit / b.n) - (a.hit / a.n); });
+    return arr;
+  }
+
+  function summary() {
+    var b = best();
+    return b
+      ? ('当前门槛：' + b.stars + '星以上 · 价值>' + (b.minValue * 100).toFixed(0) +
+        '% · 历史命中率 ' + (b.hit / b.n * 100).toFixed(0) + '%（' + b.n + ' 场）')
+      : '正在积累样本（还不足以自动定门槛）';
+  }
+
+  function reset() {
+    save({ buckets: {}, best: null, updated: 0 });
+  }
+
+  global.Adaptive = {
+    MIN_N: MIN_N,
+    record: record,
+    best: best,
+    pick: pick,
+    score: score,
+    learnFrom: learnFrom,
+    stats: stats,
+    summary: summary,
+    reset: reset
+  };
+
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
 /* ============================================================
  * 竞彩智析 · 应用逻辑 (app.js)
  * ============================================================ */
@@ -4918,7 +5417,20 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return Math.floor(sec / 3600) + ' 小时前';
   }
 
+  /* 自动同步状态：让用户知道"它在自己跑" */
+  function renderAutoSyncBadge() {
+    var box = document.getElementById('autoSyncBox');
+    if (!box) return;
+    if (typeof AutoSync === 'undefined') { box.textContent = ''; return; }
+    var inf = AutoSync.info();
+    var txt = AutoSync.statusText();
+    var dot = inf.failN >= 3 ? 'var(--danger)' : (inf.running ? 'var(--warn)' : 'var(--good)');
+    box.innerHTML = '<span style="color:' + dot + '">●</span> ' + escHtml(txt) +
+      (inf.syncN ? ' <span style="opacity:.6">· 已同步 ' + inf.syncN + ' 次</span>' : '');
+  }
+
   function renderBadge() {
+    renderAutoSyncBadge();
     const el = $('#srcStatus');
     if (!el) return;
     let cls, label;
@@ -5743,7 +6255,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
           return a.rating.signal === '正路' && o >= 1.70 && o <= 2.60;
         }
       case 'pro':
-        /* 高手推荐：模型信心较高（≥3星）且价值指数为正 */
+        /* 高手推荐：门槛由历史命中率自动学习决定，不再写死。
+           样本不足时退化为"取当前批次综合评分最高的若干场"，
+           保证永远有输出，不会出现 0 场空白。 */
+        try {
+          if (typeof Adaptive !== 'undefined' && S.proPick) {
+            return S.proPick.set && S.proPick.set.has(x.raw.id);
+          }
+        } catch (e) { }
         return a.rating.stars >= 3 && a.value[a.rating.dir] > 0;
       default:
         return true;
@@ -5776,6 +6295,17 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     else if (S.filter === 'value') v = v.filter(isValue);
     else if (S.filter && S.filter !== 'today' && S.filter !== 'hist'
              && S.filter !== 'hkmo' && S.filter !== 'htft') {
+      /* 高手推荐：先用自适应学习算出本次该推荐哪些，再交给 inCat */
+      if (S.filter === 'pro') {
+        try {
+          if (typeof Adaptive !== 'undefined') {
+            var pr = Adaptive.pick(S.all);
+            S.proPick = { list: pr.list, reason: pr.reason, mode: pr.mode, threshold: pr.threshold };
+            S.proPick.set = {};
+            pr.list.forEach(function (it) { S.proPick.set[it.raw.id] = 1; });
+          }
+        } catch (e) { S.proPick = null; }
+      }
       v = v.filter(function (x) { return inCat(S.filter, x); });
       /* 兜底：一个都没命中时（如「高手推荐」门槛较高），
          退化为按价值指数取前 3 场，避免点进去一片空白 */
@@ -7226,14 +7756,27 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       return;
     }
     if (S.filter === 'pro') {
-      /* 高手推荐 = 实战卡片列表 + 历史回溯（两部分都有） */
-      el.innerHTML = S.view.map(cardHTML).join('') + historySectionHTML('pro', '高手推荐');
+      /* 高手推荐 = 智能选场说明 + 实战卡片 + 历史回溯 */
+      var adaptiveTip = '';
+      try {
+        if (S.proPick && S.proPick.reason) {
+          adaptiveTip = '<div class="panel" style="padding:9px;margin-bottom:9px;' +
+            'border-color:var(--accent)">' +
+            '<div style="font-size:10.5px;font-weight:800;color:var(--accent);' +
+            'margin-bottom:4px">🎯 智能选场（门槛自动学习）</div>' +
+            '<div style="font-size:10px;color:var(--muted2);line-height:1.7">' +
+            escHtml(S.proPick.reason) + '</div></div>';
+        }
+      } catch (e) { }
+      el.innerHTML = adaptiveTip + S.view.map(cardHTML).join('') +
+        historySectionHTML('pro', '高手推荐');
       bindHistoryBtns('pro');
       /* 静默尝试（quiet=true）：失败不打扰用户 */
       if (typeof History2 !== 'undefined') setTimeout(function () { loadHistoryResults(true); }, 300);
       return;
     }
     if (S.filter === 'expert') {
+      if (!S.expert) S.expert = { touched: true, posts: [], today: [], groups: [], stats: [] };
       el.innerHTML = expertViewHTML();
       var eb1 = document.getElementById('exFetch');
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
@@ -8058,9 +8601,98 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     console.log('竞彩智析 v2.0 已启动 ·', S.all.length, '场赛事');
   }
 
+  /* ---------- 自动同步引擎 ----------
+     一切自动：刷新赛程 / 判定赛果 / 留档 / 重连 / 内容更新，
+     用户不需要点任何按钮。 */
+  function startAutoSync() {
+    if (typeof AutoSync === 'undefined') return;
+
+    /* 每次同步完成后：① 自动判定赛果 ② 自动留档 ③ 自动学习 */
+    AutoSync.onSync(function (evt) {
+      /* ① 赛果：优先从当前赛程就地判定 */
+      try {
+        if (typeof collectFromSchedule === 'function') collectFromSchedule();
+      } catch (e) { }
+      /* ② 专家推荐（92玩球）：进入过该分类才自动刷新，避免白耗流量 */
+      try {
+        if (S.expert && typeof loadExpert === 'function') loadExpert(false);
+      } catch (e) { }
+      /* ③ 港澳赔率：进入过才刷 */
+      try {
+        if (S.filter === 'hkmo' && typeof loadHKJC === 'function') loadHKJC(false);
+      } catch (e) { }
+      try {
+        if (typeof PicksHistory !== 'undefined' && typeof loadPicksResults === 'function') { }
+      } catch (e) { }
+      /* 自动留档：渲染时会做，这里确保赛果先落库 */
+      try {
+        if (typeof History2 !== 'undefined' && typeof Adaptive !== 'undefined') {
+          Adaptive.learnFrom(History2.all());
+        }
+      } catch (e) { }
+      /* 有赛果更新时轻提示一次 */
+      if (evt && evt.ok) {
+        var n = 0;
+        try {
+          n = (typeof History2 !== 'undefined')
+            ? History2.all().filter(function (p) { return p.result && !p._announced; }).length : 0;
+        } catch (e) { }
+        if (n > 0) {
+          try {
+            History2.all().forEach(function (p) {
+              if (p.result) p._announced = true;
+            });
+          } catch (e) { }
+        }
+      }
+    });
+
+    AutoSync.start({
+      rebuild: function (cb) {
+        try {
+          var d = (typeof todayStr === 'function') ? todayStr() : '';
+          /* 只在非演示模式下重建，避免把演示数据当真实 */
+          var mode = store.get(LS.mode) || 'official';
+          if (mode === 'demo') { cb(true, { skipped: true }); return; }
+          build(d);
+          /* build 是异步的，给一点时间再回调 */
+          setTimeout(function () { cb(true, { at: Date.now() }); }, 1200);
+        } catch (e) {
+          cb(false, { error: String((e && e.message) || e) });
+        }
+      },
+      getMatches: function () { return S.all || []; }
+    });
+  }
+
+  /* ---------- 自动内容更新 ----------
+     网页版本身就是在线的，无需更新；
+     App 内则定期去固定链接检查新版，发现就提示（由 Java 层在启动时拉取）。 */
+  function startAutoUpdate() {
+    if (!isNativeApp()) return;                 // 网页版跳过
+    if (typeof AutoSync === 'undefined') return;
+    /* 每 30 分钟检查一次 */
+    setInterval(function () {
+      try {
+        var B = window.JCBridge;
+        if (B && B.checkUpdateNow) {
+          var r = B.checkUpdateNow();
+          var j = {};
+          try { j = JSON.parse(r || '{}'); } catch (e) { }
+          if (j.updated) {
+            toast('已更新到最新版本，重启 App 生效');
+          }
+        }
+      } catch (e) { }
+    }, 30 * 60 * 1000);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     applySystemInsets();
     init();
+    /* 引擎延后启动，避免与首屏加载抢资源 */
+    setTimeout(startAutoSync, 2500);
+    setTimeout(startAutoUpdate, 6000);
   });
   /* 兜底：若 DOMContentLoaded 已错过（远程页加载时序），立即再拉一次 */
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
