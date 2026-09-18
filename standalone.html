@@ -3474,6 +3474,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 (function (global) {
   'use strict';
 
+  var LS_SAMPLE = 'jc.expert.sample';
   var LS_POSTS = 'jc.expert.posts';       // 帖子库
   var LS_CURSOR = 'jc.expert.cursor';     // 游标（最新/最旧锚点）
   var LS_STATS = 'jc.expert.stats';       // 专家统计缓存
@@ -3782,6 +3783,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     return BASE + '/' + href;
   }
 
+  /* 最近一次抓取的逐 URL 尝试结果（供诊断展示） */
+  var RESULT_TRIED = [];
+
   /* ---------------- 抓取 + 游标 ---------------- */
   /**
    * 抓取并处理帖子。
@@ -3791,23 +3795,87 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
    */
   function fetchPosts(opts) {
     opts = opts || {};
-    var urls = opts.urls || [BASE + '/', BASE + '/expert', BASE + '/expert.html'];
+    /* 候选页：真实路径未验证过，因此覆盖尽量多的可能入口。
+       抓取时会逐个尝试，第一个成功的即用。
+       （曾只用 3 个猜测路径，若真实路径不在其中则永远 0 条） */
+    var urls = opts.urls || [
+      BASE + '/',
+      BASE + '/expert',
+      BASE + '/expert.html',
+      'https://www.92wq.com/',
+      BASE + '/forum.php',
+      BASE + '/vip',
+      BASE + '/tuijian',
+      BASE + '/news',
+      BASE + '/index.php'
+    ];
     var transport = (global.HKJC && global.HKJC.transport) ? global.HKJC.transport : null;
+    /* 降级：没有原生通道时用 fetch。
+       网页版会被 CORS 挡，但至少能明确区分"被挡"和"路径不对"。 */
+    if (!transport && typeof fetch === 'function') {
+      transport = function (url2, method, headers, body) {
+        return fetch(url2, { method: method || 'GET', headers: headers || {} })
+          .then(function (r) {
+            return r.text().then(function (t) {
+              return { ok: r.ok, status: r.status, text: t };
+            });
+          });
+      };
+    }
+    /* ★ 逐 URL 记录：让用户能看到"到底哪个通、拿到多少字符" */
+    var tried = [];
 
     function get(url) {
-      if (!transport) return Promise.resolve(null);
+      if (!transport) {
+        tried.push({ url: url, ok: false, why: '无传输通道' });
+        return Promise.resolve(null);
+      }
       return transport(url, 'GET', {
         'Accept': 'text/html,application/xhtml+xml',
         'Accept-Language': 'zh-CN,zh;q=0.9'
       }, '').then(function (r) {
-        return (r && r.ok) ? { url: url, html: r.text } : null;
+        if (r && r.ok && r.text) {
+          tried.push({ url: url, ok: true, chars: String(r.text).length });
+          return { url: url, html: r.text };
+        }
+        tried.push({
+          url: url, ok: false,
+          why: r ? ('HTTP ' + r.status + (r.text ? ' ' + String(r.text).slice(0, 40) : '')) : '无响应'
+        });
+        return null;
+      }).catch(function (e) {
+        tried.push({ url: url, ok: false, why: 'EXCEPTION ' + String((e && e.message) || e).slice(0, 40) });
+        return null;
       });
     }
 
     return Promise.all(urls.map(get)).then(function (res) {
       var pages = res.filter(Boolean);
+      /* ★ 留存原始页面样本：解析是依据猜测写出来的，
+         一旦真实结构与预期不符就会 0 条。留存样本后可通过
+         「导出原始页面」把真实 HTML 交给开发者修正解析。 */
+      var samples = [];
+      res.forEach(function (r) {
+        if (r && r.html) {
+          samples.push({
+            url: r.url,
+            len: r.html.length,
+            html: String(r.html).slice(0, 40000)
+          });
+        }
+      });
+      try {
+        if (samples.length) save(LS_SAMPLE, samples);
+      } catch (e) { }
       if (!pages.length) {
-        return { ok: false, error: '所有候选页均无法访问', posts: [], fresh: 0 };
+        /* 把每个候选页的失败原因带出来，便于定位 */
+        var why = res.map(function (r) {
+          return (r && r.url) ? r.url.replace(/^https?:\/\//, '') : 'null';
+        }).join(' / ');
+        return {
+          ok: false, error: '所有候选页均无法访问（已试 ' + (res.length || 0) + ' 个）',
+          posts: [], fresh: 0, tried: tried, transport: !!transport
+        };
       }
 
       var all = [];
@@ -3846,6 +3914,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       });
 
       save(LS_POSTS, posts);
+      RESULT_TRIED = tried;
 
       /* 游标：首条=最新，末条=最旧 */
       var cur = load(LS_CURSOR, null);
@@ -4004,7 +4073,53 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
     } catch (e) { }
   }
 
+  /* 导出原始页面样本（供开发者修正解析规则） */
+  function exportSample(maxChars) {
+    var arr = load(LS_SAMPLE, []);
+    if (!arr.length) return { ok: false, error: '尚未抓取到任何页面' };
+    var cap = maxChars || 20000;
+    var txt = arr.map(function (s2) {
+      return '===== URL: ' + s2.url + ' | 长度: ' + s2.len + ' =====\n' +
+        String(s2.html).slice(0, cap);
+    }).join('\n\n');
+    return { ok: true, text: txt, n: arr.length };
+  }
+
+  /* 结构诊断：不依赖解析规则，直接统计页面特征，
+     用于判断"页面拿到了但解析没对上"还是"页面根本没拿到"。 */
+  function diagnose(html) {
+    if (!html) return { ok: false };
+    var txt = String(html);
+    var stats = {
+      len: txt.length,
+      links: (txt.match(/<a\b/gi) || []).length,
+      li: (txt.match(/<li\b/gi) || []).length,
+      expert: (txt.match(/专家/g) || []).length,
+      tuijian: (txt.match(/推荐/g) || []).length,
+      vs: (txt.match(/\bVS\b|vs\b|VS\b/gi) || []).length,
+      dates: (txt.match(/20\d{2}[-\/]\d{1,2}[-\/]\d{1,2}/g) || []).length,
+      hasThread: /thread|viewthread|read-|topic|article/i.test(txt),
+      isJS: /<script[^>]*>[\s\S]{0,200}?window\.|React|Vue|__NUXT__/i.test(txt)
+    };
+    /* 提取疑似帖子区块（含日期的 li） */
+    var blocks = [];
+    var re = /<li[\s\S]{0,1500}?<\/li>/gi;
+    var m, n = 0;
+    while ((m = re.exec(txt)) !== null && n < 5) {
+      var b = m[0];
+      if (!/20\d{2}[-\/]\d{1,2}[-\/]\d{1,2}/.test(b) && !/VS|vs/i.test(b)) continue;
+      blocks.push(b.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220));
+      n++;
+    }
+    return { ok: true, stats: stats, blocks: blocks, head: txt.slice(0, 600) };
+  }
+
+  function lastTried() { return RESULT_TRIED || []; }
+
   global.Expert = {
+    lastTried: lastTried,
+    exportSample: exportSample,
+    diagnose: diagnose,
     LS_POSTS: LS_POSTS,
     fetchPosts: fetchPosts,
     todayPosts: todayPosts,
@@ -5366,6 +5481,27 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
     el.addEventListener('click', run, false);
     return run;
+  }
+
+  /* 复制文本（含降级：先试剪贴板，再试隐藏 textarea） */
+  function copyText(t) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t);
+        return true;
+      }
+    } catch (e) { }
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = t;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      return true;
+    } catch (e2) { return false; }
   }
 
   function toast(msg) {
@@ -6758,8 +6894,14 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       renderList();
       return;
     }
-    /* 已有数据且非强制 → 直接用本地库（含游标） */
-    if (!force && S.expert) return;
+    /* ★ 致命 bug 修复：
+       原先 `if (!force && S.expert) return;` 中 S.expert 只要被赋值过就非 null，
+       而下面 renderList 会预置一个空对象 → 从此永远 return，一次都不抓。
+       必须判断"有没有真实数据"，而不是"对象存不存在"。
+       另加 5 分钟节流，避免每次渲染都重复请求。 */
+    if (!force && S.expert && (S.expert.posts || []).length) {
+      if (Date.now() - (EX.at || 0) < 300000) return;   // 5 分钟内不重复抓
+    }
     if (EX.loading) return;
 
     EX.loading = true;
@@ -6805,6 +6947,110 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
 
   function rateText(r) {
     return (r === null || r === undefined) ? '待定' : r.toFixed(0) + '%';
+  }
+
+  /* ---------- 专家源诊断 ----------
+     解析规则是依据猜测写的。若真实页面结构与预期不同，
+     就会"页面拿到了但 0 条"。这个面板把真实结构特征显示出来，
+     并提供导出原始 HTML，便于修正解析。 */
+  function expertDiagHTML() {
+    if (typeof Expert === 'undefined' || !Expert.exportSample) return '';
+    /* 条数取 S.expert，错误取 EX（两者分工不同，别读错） */
+    var ex = S.expert || {};
+    var n = (ex.today || ex.posts || []).length;
+    var err = EX.err || '';
+
+    var head = '<div style="font-size:10.5px;font-weight:800;color:var(--muted);' +
+      'letter-spacing:1px;margin:14px 0 7px">数据源诊断</div>' +
+      '<div class="panel" style="padding:10px;margin-bottom:9px">' +
+      '<div style="font-size:10.5px;line-height:1.8;color:var(--muted2)">' +
+      '解析到 <b style="color:var(--text)">' + n + '</b> 条' +
+      (err ? '<br><span style="color:var(--warn)">' + escHtml(err) + '</span>' : '') +
+      '</div>' +
+      '<div style="font-size:9.5px;color:var(--muted2);line-height:1.7;margin-top:6px">' +
+      '若页面上确实有推荐但这里 0 条，说明解析规则与真实页面结构不一致。' +
+      '点下方按钮查看真实结构，或导出后发给开发者修正。</div>' +
+      expertTriedHTML() +
+      '<div style="display:flex;gap:8px;margin-top:9px">' +
+      '<button class="btn-ghost" id="exDiag" style="flex:1;padding:9px;font-size:11.5px">' +
+      '查看真实结构</button>' +
+      '<button class="btn-ghost" id="exExport" style="flex:1;padding:9px;font-size:11.5px">' +
+      '复制原始页面</button></div>' +
+      '<div id="exDiagOut" style="margin-top:9px"></div></div>';
+    return head;
+  }
+
+  /* 逐 URL 尝试结果：直接暴露"哪个通、拿到多少字符、为什么失败" */
+  function expertTriedHTML() {
+    try {
+      if (typeof Expert === 'undefined' || !Expert.lastTried) return '';
+      var arr = Expert.lastTried() || [];
+      if (!arr.length) return '';
+      var rows = arr.map(function (t) {
+        var col = t.ok ? 'var(--good)' : 'var(--danger)';
+        var info = t.ok ? ('✓ ' + (t.chars || 0) + ' 字符') : ('✗ ' + escHtml(t.why || '失败'));
+        return '<div style="display:flex;justify-content:space-between;gap:8px;' +
+          'font-size:9.5px;padding:4px 0;border-bottom:1px solid var(--border)">' +
+          '<span style="color:var(--muted2);word-break:break-all;flex:1">' +
+          escHtml(String(t.url || '').replace(/^https?:\/\//, '')) + '</span>' +
+          '<b style="color:' + col + ';flex:none">' + info + '</b></div>';
+      }).join('');
+      return '<div style="font-size:10px;font-weight:800;color:var(--accent);' +
+        'margin:9px 0 4px">逐地址尝试结果（' + arr.length + ' 个）</div>' + rows;
+    } catch (e) { return ''; }
+  }
+
+  function bindExpertDiag() {
+    var b1 = document.getElementById('exDiag');
+    if (b1) bindTap(b1, function () {
+      var out = document.getElementById('exDiagOut');
+      if (!out) return;
+      out.innerHTML = '<div style="font-size:10px;color:var(--muted2)">分析中…</div>';
+      try {
+        var sm = Expert.exportSample(40000);
+        if (!sm.ok) { out.innerHTML = '<div style="font-size:10px;color:var(--warn)">' +
+          escHtml(sm.error) + '</div>'; return; }
+        var d = Expert.diagnose(sm.text);
+        var st = d.stats || {};
+        var rows = [
+          ['页面长度', st.len + ' 字符'],
+          ['链接数', st.links],
+          ['列表项 li', st.li],
+          ['含"专家"', st.expert + ' 次'],
+          ['含"推荐"', st.tuijian + ' 次'],
+          ['含 VS', st.vs + ' 次'],
+          ['日期模式', st.dates + ' 个'],
+          ['有帖子链接', st.hasThread ? '是' : '否'],
+          ['疑似JS渲染', st.isJS ? '是（HTML里可能没数据）' : '否']
+        ].map(function (r) {
+          return '<div style="display:flex;justify-content:space-between;font-size:10px;' +
+            'padding:3px 0;border-bottom:1px solid var(--border)">' +
+            '<span style="color:var(--muted2)">' + r[0] + '</span>' +
+            '<b style="color:var(--text)">' + r[1] + '</b></div>';
+        }).join('');
+        var blocks = (d.blocks || []).map(function (b) {
+          return '<div style="font-size:9.5px;color:var(--muted2);padding:4px 0;' +
+            'border-bottom:1px dashed var(--border);word-break:break-all">' +
+            escHtml(b) + '</div>';
+        }).join('');
+        out.innerHTML = rows +
+          (blocks ? '<div style="font-size:10px;font-weight:800;margin:8px 0 4px;' +
+            'color:var(--accent)">疑似帖子区块</div>' + blocks : '');
+      } catch (e) {
+        out.innerHTML = '<div style="font-size:10px;color:var(--danger)">' +
+          escHtml(String((e && e.message) || e)) + '</div>';
+      }
+    });
+
+    var b2 = document.getElementById('exExport');
+    if (b2) bindTap(b2, function () {
+      try {
+        var sm = Expert.exportSample(20000);
+        if (!sm.ok) { toast(sm.error); return; }
+        copyText(sm.text);
+        toast('已复制 ' + sm.n + ' 个页面的原始 HTML，请粘贴发给开发者');
+      } catch (e) { toast('导出失败'); }
+    });
   }
 
   function expertViewHTML() {
@@ -7812,8 +8058,9 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       return;
     }
     if (S.filter === 'expert') {
-      if (!S.expert) S.expert = { touched: true, posts: [], today: [], groups: [], stats: [] };
-      el.innerHTML = expertViewHTML();
+      /* 标记"用户来过"，不再预置空对象（会触发上面的提前 return） */
+      S.expertTouched = true;
+      el.innerHTML = expertViewHTML() + expertDiagHTML();
       var eb1 = document.getElementById('exFetch');
       if (eb1) bindTap(eb1, function () { loadExpert(true); });
       var eb2 = document.getElementById('exClear');
@@ -7825,6 +8072,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       });
       el.innerHTML += historySectionHTML('expert', '专家推荐');
       bindHistoryBtns('expert');
+      bindExpertDiag();
       return;
     }
 
@@ -8776,7 +9024,7 @@ if (typeof globalThis !== 'undefined') globalThis.JCSource = JCSource;
       } catch (e) { }
       /* ② 专家推荐（92玩球）：进入过该分类才自动刷新，避免白耗流量 */
       try {
-        if (S.expert && typeof loadExpert === 'function') loadExpert(false);
+        if (S.expertTouched && typeof loadExpert === 'function') loadExpert(true);
       } catch (e) { }
       /* ③ 港澳赔率：进入过才刷 */
       try {
