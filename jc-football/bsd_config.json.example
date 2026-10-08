@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "api_key": "",
+  "odds_api_key": "",
+  "_说明": "两个增强模块的可选配置。留空则模块静默降级，主流程不受影响。也可改用环境变量 BSD_API_KEY / ODDS_API_KEY。",
+  "_api_key来源": "https://dashboard.api-football.com/register（免费层 100 次/天，提供伤停/首发/教练/AI预测）",
+  "_odds_api_key来源": "https://the-odds-api.com（免费层 500 次/月，提供 Pinnacle/Bet365 等实时赔率）"
+}

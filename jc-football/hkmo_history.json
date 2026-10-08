@@ -1,0 +1,7585 @@
+{
+ "records": [
+  {
+   "fid": "1415108",
+   "hk": {
+    "current": {
+     "h": 4.75,
+     "d": 4.33,
+     "a": 1.65,
+     "returnRate": 95.46,
+     "time": "2026-09-13 17:57:42"
+    },
+    "open": {
+     "h": 4.8,
+     "d": 4,
+     "a": 1.6,
+     "time": "2026-08-30 20:35:21"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 240
+   },
+   "mo": {
+    "current": {
+     "h": 4.8,
+     "d": 4.3,
+     "a": 1.63,
+     "returnRate": 94.84,
+     "time": "2026-09-13 20:20:18"
+    },
+    "open": {
+     "h": 5.25,
+     "d": 4.2,
+     "a": 1.63,
+     "time": "2026-08-31 16:55:58"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 15
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "勒芒",
+   "away": "朗斯",
+   "league": "法甲",
+   "num": "周日012",
+   "kickoff": "2026-09-13 23:15",
+   "asian": {
+    "open": "受半球/一球",
+    "open_num": -0.75,
+    "current": "受半球/一球",
+    "current_num": -0.75,
+    "change": "none",
+    "diff": 0.0
+   },
+   "date": "2026-09-13",
+   "fetched_at": "2026-09-13 22:07:56",
+   "result": "2:2",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受半球/一球",
+    "asianOpen": "受半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "asianHit": "hit",
+   "hhadHit": "hit"
+  },
+  {
+   "fid": "1418937",
+   "hk": {
+    "current": {
+     "h": 2,
+     "d": 3.25,
+     "a": 3.8,
+     "returnRate": 93.38,
+     "time": "2026-09-19 16:57:12"
+    },
+    "open": {
+     "h": 1.91,
+     "d": 3.3,
+     "a": 3.75,
+     "time": "2026-09-15 06:33:42"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 15
+   },
+   "mo": {
+    "current": {
+     "h": 2.1,
+     "d": 3.35,
+     "a": 3.5,
+     "returnRate": 94.3,
+     "time": "2026-09-19 17:12:47"
+    },
+    "open": {
+     "h": 2,
+     "d": 3.6,
+     "a": 3.4,
+     "time": "2026-09-12 19:47:49"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "横滨水手",
+   "away": "水户蜀葵",
+   "league": "日职",
+   "num": "周六004",
+   "kickoff": "2026-09-19 18:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-19",
+   "fetched_at": "2026-09-19 17:31:30",
+   "result": "2:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "d",
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1420420",
+   "hk": {
+    "current": {
+     "h": 3.1,
+     "d": 3.75,
+     "a": 2.15,
+     "returnRate": 94.84,
+     "time": "2026-09-20 15:55:48"
+    },
+    "open": {
+     "h": 3,
+     "d": 3.6,
+     "a": 2.1,
+     "time": "2026-09-06 00:19:47"
+    },
+    "drop_dirs": [],
+    "history_count": 193
+   },
+   "mo": {
+    "current": {
+     "h": 3.05,
+     "d": 3.75,
+     "a": 2.2,
+     "returnRate": 95.32,
+     "time": "2026-09-20 15:30:28"
+    },
+    "open": {
+     "h": 3.1,
+     "d": 3.75,
+     "a": 2.15,
+     "time": "2026-09-07 04:56:34"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 30
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "伯恩茅斯",
+   "away": "利物浦",
+   "league": "英超",
+   "num": "周日011",
+   "kickoff": "2026-09-20 21:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "0:1",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（平局+主队受让，让球后主胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心平局+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受半球/一球",
+    "asianOpen": "受半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1420435",
+   "hk": {
+    "current": {
+     "h": 1.7,
+     "d": 4,
+     "a": 4.75,
+     "returnRate": 95.35,
+     "time": "2026-09-20 11:15:47"
+    },
+    "open": {
+     "h": 2.2,
+     "d": 3.3,
+     "a": 3.1,
+     "time": "2026-09-06 00:19:25"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 297
+   },
+   "mo": {
+    "current": {
+     "h": 1.73,
+     "d": 3.95,
+     "a": 4.6,
+     "returnRate": 95.37,
+     "time": "2026-09-20 12:12:13"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.45,
+     "a": 3.5,
+     "time": "2026-09-07 04:57:58"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 32
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "利兹联",
+   "away": "水晶宫",
+   "league": "英超",
+   "num": "周日010",
+   "kickoff": "2026-09-20 21:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "0:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.5）",
+    "dir": "h",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "伤停·客队6人vs主队3人，客队阵容不整→让胜+1.5",
+     "AI预测·3-4（让球后2-4）→让负+2.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分4.0）",
+    "dir": "h",
+    "stars": 4,
+    "score": 4.0,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "伤停·客队6人vs主队3人，客队阵容不整→上盘+1.5",
+     "AI预测·3-4→下盘+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "miss",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1415119",
+   "hk": {
+    "current": {
+     "h": 3.4,
+     "d": 3.5,
+     "a": 2.15,
+     "returnRate": 95.7,
+     "time": "2026-09-20 16:04:47"
+    },
+    "open": {
+     "h": 3.9,
+     "d": 3.4,
+     "a": 1.91,
+     "time": "2026-09-06 22:16:12"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 228
+   },
+   "mo": {
+    "current": {
+     "h": 3.3,
+     "d": 3.5,
+     "a": 2.15,
+     "returnRate": 94.89,
+     "time": "2026-09-20 15:52:31"
+    },
+    "open": {
+     "h": 3.75,
+     "d": 3.5,
+     "a": 2,
+     "time": "2026-09-13 23:21:26"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 22
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "尼斯",
+   "away": "里尔",
+   "league": "法甲",
+   "num": "周日019",
+   "kickoff": "2026-09-20 23:15",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "2:1",
+   "hitFlag": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受半球/一球",
+    "asianOpen": "受半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "hit",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1414167",
+   "hk": {
+    "current": {
+     "h": 3.2,
+     "d": 3,
+     "a": 2.45,
+     "returnRate": 94.88,
+     "time": "2026-09-20 16:01:28"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 2.9,
+     "a": 2.63,
+     "time": "2026-09-07 01:40:48"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 257
+   },
+   "mo": {
+    "current": {
+     "h": 3,
+     "d": 3,
+     "a": 2.6,
+     "returnRate": 95.12,
+     "time": "2026-09-20 14:20:57"
+    },
+    "open": {
+     "h": 3.05,
+     "d": 3,
+     "a": 2.55,
+     "time": "2026-09-12 21:31:41"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 14
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "帕尔马",
+   "away": "热那亚",
+   "league": "意甲",
+   "num": "周日013",
+   "kickoff": "2026-09-20 21:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "2:1",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受平手/半球",
+    "asianOpen": "受平手/半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "hit",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1414219",
+   "hk": {
+    "current": {
+     "h": 6,
+     "d": 4.5,
+     "a": 1.5,
+     "returnRate": 94.74,
+     "time": "2026-09-20 14:23:39"
+    },
+    "open": {
+     "h": 5,
+     "d": 3.9,
+     "a": 1.62,
+     "time": "2026-09-07 01:40:21"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 334
+   },
+   "mo": {
+    "current": {
+     "h": 5.5,
+     "d": 4.8,
+     "a": 1.53,
+     "returnRate": 95.81,
+     "time": "2026-09-20 15:54:11"
+    },
+    "open": {
+     "h": 5.75,
+     "d": 4.1,
+     "a": 1.57,
+     "time": "2026-09-12 21:32:38"
+    },
+    "drop_dirs": [
+     "h",
+     "a"
+    ],
+    "history_count": 33
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "弗洛西诺内",
+   "away": "科莫",
+   "league": "意甲",
+   "num": "周日014",
+   "kickoff": "2026-09-20 21:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "2:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a",
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1362781",
+   "hk": {
+    "current": {
+     "h": 2.63,
+     "d": 3.5,
+     "a": 2.45,
+     "returnRate": 93.1,
+     "time": "2026-09-20 14:02:54"
+    },
+    "open": {
+     "h": 2.9,
+     "d": 3.4,
+     "a": 2.25,
+     "time": "2026-09-15 00:13:38"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 22
+   },
+   "mo": {
+    "current": {
+     "h": 2.7,
+     "d": 3.5,
+     "a": 2.5,
+     "returnRate": 94.69,
+     "time": "2026-09-17 09:07:12"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3.45,
+     "a": 2.4,
+     "time": "2026-09-13 22:52:05"
+    },
+    "drop_dirs": [],
+    "history_count": 5
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "米亚尔比",
+   "away": "哥德堡盖斯",
+   "league": "瑞超",
+   "num": "周日017",
+   "kickoff": "2026-09-20 22:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "0:3",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分3.5）",
+    "dir": "h",
+    "stars": 5,
+    "score": 3.5,
+    "reasons": [
+     "让球盘·让胜+1.5",
+     "AI预测·4-0（让球后5-0）→让胜+2.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分4.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 4.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "AI预测·4-0→上盘+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1364114",
+   "hk": {
+    "current": {
+     "h": 1.36,
+     "d": 5,
+     "a": 7,
+     "returnRate": 92.75,
+     "time": "2026-09-20 16:04:36"
+    },
+    "open": {
+     "h": 1.42,
+     "d": 4.75,
+     "a": 6,
+     "time": "2026-09-15 18:26:41"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 19
+   },
+   "mo": {
+    "current": {
+     "h": 1.4,
+     "d": 5.5,
+     "a": 6.25,
+     "returnRate": 94.69,
+     "time": "2026-09-20 14:20:34"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 4.6,
+     "a": 5.5,
+     "time": "2026-09-13 23:23:54"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 10
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "维京",
+   "away": "利勒斯特罗姆",
+   "league": "挪超",
+   "num": "周日018",
+   "kickoff": "2026-09-20 23:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-20",
+   "fetched_at": "2026-09-20 16:17:28",
+   "result": "3:0",
+   "hitFlag": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "miss",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1415977",
+   "hk": {
+    "current": {
+     "h": 3.1,
+     "d": 4.2,
+     "a": 1.96,
+     "returnRate": 93.38,
+     "time": "2026-09-25 19:39:23"
+    },
+    "open": {
+     "h": 2.9,
+     "d": 3.9,
+     "a": 2.1,
+     "time": "2026-09-21 22:09:31"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 8
+   },
+   "mo": {
+    "current": {
+     "h": 2.85,
+     "d": 3.8,
+     "a": 2.15,
+     "returnRate": 92.67,
+     "time": "2026-09-25 20:26:24"
+    },
+    "open": {
+     "h": 3.05,
+     "d": 3.65,
+     "a": 2.1,
+     "time": "2026-09-19 04:06:16"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 5
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "多德勒支",
+   "away": "阿尔梅勒城",
+   "league": "荷乙",
+   "num": "周五013",
+   "kickoff": "2026-09-26 03:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-25",
+   "fetched_at": "2026-09-25 21:01:07",
+   "result": "3:2",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "hit",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1398466",
+   "hk": {
+    "current": {
+     "h": 1.48,
+     "d": 4.33,
+     "a": 6.25,
+     "returnRate": 93.75,
+     "time": "2026-09-25 20:52:55"
+    },
+    "open": {
+     "h": 1.57,
+     "d": 3.8,
+     "a": 5,
+     "time": "2026-09-13 13:41:46"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 29
+   },
+   "mo": {
+    "current": {
+     "h": 1.57,
+     "d": 4.3,
+     "a": 5.75,
+     "returnRate": 95.84,
+     "time": "2026-09-25 20:25:47"
+    },
+    "open": {
+     "h": 1.57,
+     "d": 4.2,
+     "a": 5.75,
+     "time": "2026-08-28 17:26:16"
+    },
+    "drop_dirs": [],
+    "history_count": 15
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "波兰",
+   "away": "波黑",
+   "league": "欧国联",
+   "num": "周五010",
+   "kickoff": "2026-09-26 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-25",
+   "fetched_at": "2026-09-25 21:01:07",
+   "result": "0:0",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "hit",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1495380",
+   "hk": {
+    "current": {
+     "h": 2.1,
+     "d": 3.4,
+     "a": 2.9,
+     "returnRate": 89.68,
+     "time": "2026-09-26 12:55:07"
+    },
+    "open": {
+     "h": 2.05,
+     "d": 3.6,
+     "a": 2.88,
+     "time": "2026-09-24 22:13:46"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 29
+   },
+   "mo": {
+    "current": {
+     "h": 2.25,
+     "d": 2.95,
+     "a": 3.2,
+     "returnRate": 91.25,
+     "time": "2026-09-26 13:01:21"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.3,
+     "a": 3.4,
+     "time": "2026-09-24 21:05:48"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 26
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "中国亚运男足",
+   "away": "泰国亚运男足",
+   "league": "亚运男足",
+   "num": "周六001",
+   "kickoff": "2026-09-26 14:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 13:04:25",
+   "result": "1:1",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "d"
+  },
+  {
+   "fid": "1398474",
+   "hk": {
+    "current": {
+     "h": 2.38,
+     "d": 2.75,
+     "a": 3.6,
+     "returnRate": 94.2,
+     "time": "2026-09-26 20:58:42"
+    },
+    "open": {
+     "h": 2,
+     "d": 3.2,
+     "a": 4.1,
+     "time": "2026-09-21 18:55:45"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 2.4,
+     "d": 2.95,
+     "a": 3.4,
+     "returnRate": 95.26,
+     "time": "2026-09-26 19:48:52"
+    },
+    "open": {
+     "h": 2,
+     "d": 3.25,
+     "a": 4.1,
+     "time": "2026-09-18 15:28:26"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 15
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "保加利亚",
+   "away": "卢森堡",
+   "league": "欧国联",
+   "num": "周六012",
+   "kickoff": "2026-09-27 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "2:1",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（主胜+让2球，赢2球走让平概率最高）",
+    "dir": "d",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-2→让平（条件概率最高）"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "两球",
+    "asianOpen": "两球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398468",
+   "hk": {
+    "current": {
+     "h": 1.3,
+     "d": 5,
+     "a": 9.5,
+     "returnRate": 93.07,
+     "time": "2026-09-26 20:32:46"
+    },
+    "open": {
+     "h": 1.33,
+     "d": 4.75,
+     "a": 7.5,
+     "time": "2026-09-21 23:13:59"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 21
+   },
+   "mo": {
+    "current": {
+     "h": 1.3,
+     "d": 5.75,
+     "a": 11,
+     "returnRate": 96.71,
+     "time": "2026-09-26 20:42:37"
+    },
+    "open": {
+     "h": 1.43,
+     "d": 4.5,
+     "a": 7.5,
+     "time": "2026-09-18 15:29:57"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 23
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "冰岛",
+   "away": "爱沙尼亚",
+   "league": "欧国联",
+   "num": "周六011",
+   "kickoff": "2026-09-27 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "2:2",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（平局+主队让球，让球后主负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心平局+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "平手",
+    "asianOpen": "平手",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1495314",
+   "hk": {
+    "current": {
+     "h": 1.67,
+     "d": 3.7,
+     "a": 5.25,
+     "returnRate": 94.38,
+     "time": "2026-09-26 17:54:17"
+    },
+    "open": {
+     "h": 1.7,
+     "d": 3.6,
+     "a": 5,
+     "time": "2026-09-23 17:36:26"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 94
+   },
+   "mo": {
+    "current": {
+     "h": 1.73,
+     "d": 3.6,
+     "a": 4.8,
+     "returnRate": 93.97,
+     "time": "2026-09-26 12:44:06"
+    },
+    "open": {
+     "h": 1.73,
+     "d": 3.6,
+     "a": 4.3,
+     "time": "2026-09-23 17:41:37"
+    },
+    "drop_dirs": [],
+    "history_count": 6
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "加拿大",
+   "away": "智利",
+   "league": "国际赛",
+   "num": "周六018",
+   "kickoff": "2026-09-27 07:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "1:0",
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受平手/半球",
+    "asianOpen": "受平手/半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadResult": "",
+   "pickDir": null
+  },
+  {
+   "fid": "1398471",
+   "hk": {
+    "current": {
+     "h": 9.5,
+     "d": 4.75,
+     "a": 1.33,
+     "returnRate": 93.66,
+     "time": "2026-09-26 20:35:06"
+    },
+    "open": {
+     "h": 6,
+     "d": 4.33,
+     "a": 1.45,
+     "time": "2026-09-13 07:09:16"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 37
+   },
+   "mo": {
+    "current": {
+     "h": 9,
+     "d": 4.5,
+     "a": 1.4,
+     "returnRate": 95.45,
+     "time": "2026-09-26 19:50:15"
+    },
+    "open": {
+     "h": 4.5,
+     "d": 4,
+     "a": 1.7,
+     "time": "2026-07-13 22:27:48"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 31
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "北马其顿",
+   "away": "瑞士",
+   "league": "欧国联",
+   "num": "周六015",
+   "kickoff": "2026-09-27 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "1:0",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "半球",
+    "asianOpen": "半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1358597",
+   "hk": {
+    "current": {
+     "h": 1.95,
+     "d": 4,
+     "a": 3.4,
+     "returnRate": 94.61,
+     "time": "2026-09-26 21:12:23"
+    },
+    "open": {
+     "h": 1.95,
+     "d": 3.9,
+     "a": 3.4,
+     "time": "2026-09-17 17:23:06"
+    },
+    "drop_dirs": [],
+    "history_count": 184
+   },
+   "mo": {
+    "current": {
+     "h": 2.05,
+     "d": 3.8,
+     "a": 3.25,
+     "returnRate": 94.46,
+     "time": "2026-09-26 11:55:19"
+    },
+    "open": {
+     "h": 2.05,
+     "d": 3.9,
+     "a": 3.15,
+     "time": "2026-09-21 00:25:18"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 6
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "圣何塞地震",
+   "away": "波特兰伐木工",
+   "league": "美职足",
+   "num": "周六024",
+   "kickoff": "2026-09-27 10:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "3:1",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1418928",
+   "hk": {
+    "current": {
+     "h": 2.7,
+     "d": 3.1,
+     "a": 2.6,
+     "returnRate": 92.8,
+     "time": "2026-09-26 14:04:58"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3,
+     "a": 2.62,
+     "time": "2026-09-21 23:48:09"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 7
+   },
+   "mo": {
+    "current": {
+     "h": 2.7,
+     "d": 2.9,
+     "a": 2.65,
+     "returnRate": 91.53,
+     "time": "2026-09-26 11:57:53"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3,
+     "a": 2.6,
+     "time": "2026-09-19 18:43:39"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 2
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "大分三神",
+   "away": "藤枝MYFC",
+   "league": "日乙",
+   "num": "周六006",
+   "kickoff": "2026-09-26 16:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 15:02:40",
+   "result": "1:1",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "hit",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1419109",
+   "hk": {
+    "current": {
+     "h": 1.53,
+     "d": 4,
+     "a": 5.75,
+     "returnRate": 92.81,
+     "time": "2026-09-26 14:43:57"
+    },
+    "open": {
+     "h": 1.57,
+     "d": 3.8,
+     "a": 5.25,
+     "time": "2026-09-22 02:00:39"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 5
+   },
+   "mo": {
+    "current": {
+     "h": 1.55,
+     "d": 4,
+     "a": 5.5,
+     "returnRate": 92.85,
+     "time": "2026-09-26 14:58:09"
+    },
+    "open": {
+     "h": 1.55,
+     "d": 4,
+     "a": 5.5,
+     "time": "2026-09-19 18:44:16"
+    },
+    "drop_dirs": [],
+    "history_count": 9
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "大宫松鼠RB",
+   "away": "甲府风林",
+   "league": "日乙",
+   "num": "周六005",
+   "kickoff": "2026-09-26 16:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 15:02:40",
+   "result": "2:3",
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "平手",
+    "asianOpen": "平手",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": null
+  },
+  {
+   "fid": "1419124",
+   "hk": {
+    "current": {
+     "h": 2.5,
+     "d": 3.4,
+     "a": 2.63,
+     "returnRate": 93.08,
+     "time": "2026-09-26 14:19:58"
+    },
+    "open": {
+     "h": 2.63,
+     "d": 3.25,
+     "a": 2.4,
+     "time": "2026-09-22 01:55:46"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 16
+   },
+   "mo": {
+    "current": {
+     "h": 2.5,
+     "d": 3.35,
+     "a": 2.6,
+     "returnRate": 92.33,
+     "time": "2026-09-26 14:58:06"
+    },
+    "open": {
+     "h": 2.5,
+     "d": 3.35,
+     "a": 2.6,
+     "time": "2026-09-19 18:43:30"
+    },
+    "drop_dirs": [],
+    "history_count": 7
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "富山胜利",
+   "away": "横滨FC",
+   "league": "日乙",
+   "num": "周六003",
+   "kickoff": "2026-09-26 16:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 15:02:40",
+   "result": "2:1",
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "一球",
+    "asianOpen": "一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": null
+  },
+  {
+   "fid": "1398455",
+   "hk": {
+    "current": {
+     "h": 3.6,
+     "d": 3.7,
+     "a": 2,
+     "returnRate": 95.42,
+     "time": "2026-09-26 21:02:45"
+    },
+    "open": {
+     "h": 3.1,
+     "d": 3.5,
+     "a": 2.15,
+     "time": "2026-09-13 04:01:55"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 3.55,
+     "d": 3.5,
+     "a": 2.05,
+     "returnRate": 94.77,
+     "time": "2026-09-26 19:29:55"
+    },
+    "open": {
+     "h": 3.05,
+     "d": 3.45,
+     "a": 2.3,
+     "time": "2026-09-03 19:29:17"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 8
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "捷克",
+   "away": "克罗地亚",
+   "league": "欧国联",
+   "num": "周六014",
+   "kickoff": "2026-09-27 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "3:2",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "平手/半球",
+    "asianOpen": "平手/半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398469",
+   "hk": {
+    "current": {
+     "h": 2.55,
+     "d": 3.1,
+     "a": 2.8,
+     "returnRate": 93.29,
+     "time": "2026-09-26 19:16:50"
+    },
+    "open": {
+     "h": 2.6,
+     "d": 3,
+     "a": 2.7,
+     "time": "2026-09-13 03:35:30"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 23
+   },
+   "mo": {
+    "current": {
+     "h": 2.65,
+     "d": 3.1,
+     "a": 2.85,
+     "returnRate": 95.16,
+     "time": "2026-09-26 18:44:47"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3.3,
+     "a": 2.7,
+     "time": "2026-09-02 16:55:22"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "斯洛文尼亚",
+   "away": "苏格兰",
+   "league": "欧国联",
+   "num": "周六008",
+   "kickoff": "2026-09-26 21:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 19:49:45",
+   "result": "0:1",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "半球",
+    "asianOpen": "半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h"
+  },
+  {
+   "fid": "1495381",
+   "hk": {
+    "current": {
+     "h": 1.2,
+     "d": 5.5,
+     "a": 11,
+     "returnRate": 90.41,
+     "time": "2026-09-26 18:03:52"
+    },
+    "open": {
+     "h": 1.25,
+     "d": 5.5,
+     "a": 7.5,
+     "time": "2026-09-25 20:27:39"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 35
+   },
+   "mo": {
+    "current": {
+     "h": 1.2,
+     "d": 6.5,
+     "a": 12,
+     "returnRate": 93.41,
+     "time": "2026-09-26 17:57:24"
+    },
+    "open": {
+     "h": 1.4,
+     "d": 4.9,
+     "a": 6.5,
+     "time": "2026-09-24 21:30:06"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 29
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "日本亚足",
+   "away": "朝鲜亚运男足",
+   "league": "亚运男足",
+   "num": "周六007",
+   "kickoff": "2026-09-26 18:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 18:05:51",
+   "result": "1:1",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "半球/一球",
+    "asianOpen": "半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398470",
+   "hk": {
+    "current": {
+     "h": 2.2,
+     "d": 3.25,
+     "a": 3.25,
+     "returnRate": 93.46,
+     "time": "2026-09-26 19:03:55"
+    },
+    "open": {
+     "h": 2.5,
+     "d": 3,
+     "a": 2.9,
+     "time": "2026-09-21 17:39:16"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 21
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 3.25,
+     "a": 3.2,
+     "returnRate": 94.79,
+     "time": "2026-09-26 19:01:15"
+    },
+    "open": {
+     "h": 2.35,
+     "d": 3.15,
+     "a": 3.25,
+     "time": "2026-09-21 18:15:52"
+    },
+    "drop_dirs": [
+     "h",
+     "a"
+    ],
+    "history_count": 6
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "法罗群岛",
+   "away": "哈萨克斯坦",
+   "league": "欧国联",
+   "num": "周六010",
+   "kickoff": "2026-09-27 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "2:2",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+主队受让，必让胜）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球1→让胜（条件概率最高）"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "受半球/一球",
+    "asianOpen": "受半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1358594",
+   "hk": {
+    "current": {
+     "h": 2.45,
+     "d": 3.6,
+     "a": 2.75,
+     "returnRate": 95.28,
+     "time": "2026-09-26 21:05:43"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.7,
+     "a": 3.1,
+     "time": "2026-09-17 17:23:08"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 158
+   },
+   "mo": {
+    "current": {
+     "h": 2.5,
+     "d": 3.6,
+     "a": 2.6,
+     "returnRate": 94.13,
+     "time": "2026-09-26 13:17:05"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.7,
+     "a": 3.1,
+     "time": "2026-09-21 00:27:56"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 13
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "皇家盐湖城",
+   "away": "新英格兰革命",
+   "league": "美职足",
+   "num": "周六023",
+   "kickoff": "2026-09-27 09:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "3:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a",
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1418960",
+   "hk": {
+    "current": {
+     "h": 4,
+     "d": 3.4,
+     "a": 1.9,
+     "returnRate": 93.42,
+     "time": "2026-09-26 14:19:18"
+    },
+    "open": {
+     "h": 3.4,
+     "d": 3.2,
+     "a": 2.1,
+     "time": "2026-09-22 01:56:42"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 5
+   },
+   "mo": {
+    "current": {
+     "h": 3.6,
+     "d": 3.3,
+     "a": 2,
+     "returnRate": 92.52,
+     "time": "2026-09-26 14:26:58"
+    },
+    "open": {
+     "h": 3.35,
+     "d": 3.15,
+     "a": 2.15,
+     "time": "2026-09-20 16:28:32"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 5
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "磐城FC",
+   "away": "仙台七夕",
+   "league": "日乙",
+   "num": "周六002",
+   "kickoff": "2026-09-26 16:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 15:02:40",
+   "result": "1:1",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a"
+  },
+  {
+   "fid": "1358590",
+   "hk": {
+    "current": {
+     "h": 1.42,
+     "d": 5,
+     "a": 7,
+     "returnRate": 95.5,
+     "time": "2026-09-26 19:41:54"
+    },
+    "open": {
+     "h": 1.38,
+     "d": 4.75,
+     "a": 7,
+     "time": "2026-09-17 17:23:43"
+    },
+    "drop_dirs": [],
+    "history_count": 173
+   },
+   "mo": {
+    "current": {
+     "h": 1.45,
+     "d": 4.8,
+     "a": 6,
+     "returnRate": 93.93,
+     "time": "2026-09-26 13:17:28"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 4.6,
+     "a": 5.5,
+     "time": "2026-09-21 00:26:28"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 5
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "纳什维尔",
+   "away": "多伦多FC",
+   "league": "美职足",
+   "num": "周六022",
+   "kickoff": "2026-09-27 08:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "2:0",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1358582",
+   "hk": {
+    "current": {
+     "h": 3.6,
+     "d": 4.33,
+     "a": 1.85,
+     "returnRate": 95.3,
+     "time": "2026-09-26 18:58:32"
+    },
+    "open": {
+     "h": 2.5,
+     "d": 3.8,
+     "a": 2.4,
+     "time": "2026-09-17 17:14:10"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 254
+   },
+   "mo": {
+    "current": {
+     "h": 3.55,
+     "d": 4,
+     "a": 1.9,
+     "returnRate": 94.52,
+     "time": "2026-09-26 20:41:31"
+    },
+    "open": {
+     "h": 2.65,
+     "d": 3.8,
+     "a": 2.35,
+     "time": "2026-09-21 00:26:41"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 12
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "纽约红牛",
+   "away": "圣路易斯城",
+   "league": "美职足",
+   "num": "周六019",
+   "kickoff": "2026-09-27 07:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "AI预测·6-2→上盘+2.0",
+     "首发·主队完整vs客队不整→上盘+0.5"
+    ]
+   },
+   "hhadResult": "",
+   "pickDir": null
+  },
+  {
+   "fid": "1415990",
+   "hk": {
+    "current": {
+     "h": 2.2,
+     "d": 3.7,
+     "a": 2.82,
+     "returnRate": 92.64,
+     "time": "2026-09-26 20:46:28"
+    },
+    "open": {
+     "h": 2.45,
+     "d": 3.4,
+     "a": 2.5,
+     "time": "2026-09-21 23:00:26"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 2.25,
+     "d": 3.35,
+     "a": 2.85,
+     "returnRate": 91.42,
+     "time": "2026-09-26 20:41:59"
+    },
+    "open": {
+     "h": 3.15,
+     "d": 3.35,
+     "a": 2.15,
+     "time": "2026-09-20 02:57:34"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "罗达JC",
+   "away": "瓦尔韦克",
+   "league": "荷乙",
+   "num": "周六013",
+   "kickoff": "2026-09-27 02:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "3:4",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.0）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "让球盘·让负-1.0",
+     "AI预测·0-5（让球后1-5）→让负+2.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分4.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 4.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "AI预测·0-5→下盘+2.0",
+     "首发·主队完整vs客队不整→上盘+0.5"
+    ]
+   },
+   "pickDir": "h"
+  },
+  {
+   "fid": "1495313",
+   "hk": {
+    "current": {
+     "h": 1.45,
+     "d": 3.9,
+     "a": 7.5,
+     "returnRate": 92.64,
+     "time": "2026-09-26 20:58:48"
+    },
+    "open": {
+     "h": 1.48,
+     "d": 3.9,
+     "a": 7,
+     "time": "2026-09-23 17:36:55"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 105
+   },
+   "mo": {
+    "current": {
+     "h": 1.5,
+     "d": 4.2,
+     "a": 6.5,
+     "returnRate": 94.46,
+     "time": "2026-09-26 19:00:58"
+    },
+    "open": {
+     "h": 1.47,
+     "d": 4.4,
+     "a": 6.25,
+     "time": "2026-09-23 17:54:07"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 7
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "美国",
+   "away": "秘鲁",
+   "league": "国际赛",
+   "num": "周六017",
+   "kickoff": "2026-09-27 04:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "4:1",
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "平手/半球",
+    "asianOpen": "平手/半球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadResult": "",
+   "pickDir": null
+  },
+  {
+   "fid": "1398454",
+   "hk": {
+    "current": {
+     "h": 3.9,
+     "d": 3.6,
+     "a": 1.95,
+     "returnRate": 95.51,
+     "time": "2026-09-26 20:38:31"
+    },
+    "open": {
+     "h": 2.63,
+     "d": 3.3,
+     "a": 2.55,
+     "time": "2026-09-13 04:26:26"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 29
+   },
+   "mo": {
+    "current": {
+     "h": 3.85,
+     "d": 3.4,
+     "a": 2,
+     "returnRate": 94.89,
+     "time": "2026-09-26 20:58:28"
+    },
+    "open": {
+     "h": 2.6,
+     "d": 3.5,
+     "a": 2.6,
+     "time": "2026-07-21 19:45:16"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 15
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "英格兰",
+   "away": "西班牙",
+   "league": "欧国联",
+   "num": "周六016",
+   "kickoff": "2026-09-27 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "2:1",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "一球/球半",
+    "asianOpen": "一球/球半",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1358583",
+   "hk": {
+    "current": {
+     "h": 1.45,
+     "d": 5,
+     "a": 6,
+     "returnRate": 94.67,
+     "time": "2026-09-26 14:52:50"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 4.5,
+     "a": 5.25,
+     "time": "2026-09-17 17:14:44"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 82
+   },
+   "mo": {
+    "current": {
+     "h": 1.47,
+     "d": 5,
+     "a": 5.25,
+     "returnRate": 93.39,
+     "time": "2026-09-26 12:45:25"
+    },
+    "open": {
+     "h": 1.45,
+     "d": 5,
+     "a": 5.5,
+     "time": "2026-09-21 00:27:15"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 5
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "费城联合",
+   "away": "奥兰多城",
+   "league": "美职足",
+   "num": "周六020",
+   "kickoff": "2026-09-27 07:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "4:2",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1415980",
+   "hk": {
+    "current": {
+     "h": 1.55,
+     "d": 4.33,
+     "a": 5.25,
+     "returnRate": 93.76,
+     "time": "2026-09-26 20:28:46"
+    },
+    "open": {
+     "h": 1.53,
+     "d": 4.33,
+     "a": 5.25,
+     "time": "2026-09-21 22:09:31"
+    },
+    "drop_dirs": [],
+    "history_count": 25
+   },
+   "mo": {
+    "current": {
+     "h": 1.5,
+     "d": 4.4,
+     "a": 5.25,
+     "returnRate": 92.22,
+     "time": "2026-09-26 20:43:14"
+    },
+    "open": {
+     "h": 1.55,
+     "d": 4.2,
+     "a": 4.8,
+     "time": "2026-09-19 23:32:57"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 10
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "赫拉克勒斯",
+   "away": "维迪斯",
+   "league": "荷乙",
+   "num": "周六009",
+   "kickoff": "2026-09-26 22:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "1:1",
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-2→让负（条件概率最高）"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "球半/两球",
+    "asianOpen": "球半/两球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1358587",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 3.75,
+     "a": 2.9,
+     "returnRate": 94.7,
+     "time": "2026-09-26 19:43:32"
+    },
+    "open": {
+     "h": 2.38,
+     "d": 3.7,
+     "a": 2.63,
+     "time": "2026-09-17 17:23:09"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 143
+   },
+   "mo": {
+    "current": {
+     "h": 2.35,
+     "d": 3.6,
+     "a": 2.8,
+     "returnRate": 94.3,
+     "time": "2026-09-23 19:54:33"
+    },
+    "open": {
+     "h": 2.4,
+     "d": 3.75,
+     "a": 2.65,
+     "time": "2026-09-21 00:27:17"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 4
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "达拉斯FC",
+   "away": "洛杉矶FC",
+   "league": "美职足",
+   "num": "周六021",
+   "kickoff": "2026-09-27 08:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-26",
+   "fetched_at": "2026-09-26 21:17:05",
+   "result": "1:0",
+   "hitFlag": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "miss",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1494413",
+   "hk": {
+    "current": {
+     "h": 3.2,
+     "d": 3.2,
+     "a": 2.15,
+     "returnRate": 91.73,
+     "time": "2026-09-27 18:23:49"
+    },
+    "open": {
+     "h": 2.63,
+     "d": 3.2,
+     "a": 2.5,
+     "time": "2026-09-26 08:15:33"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 90
+   },
+   "mo": {
+    "current": {
+     "h": 3.1,
+     "d": 3.2,
+     "a": 2.25,
+     "returnRate": 92.63,
+     "time": "2026-09-27 18:19:50"
+    },
+    "open": {
+     "h": 2.55,
+     "d": 3.35,
+     "a": 2.55,
+     "time": "2026-09-25 19:56:27"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 17
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "中国",
+   "away": "新西兰",
+   "league": "国际赛",
+   "num": "周日002",
+   "kickoff": "2026-09-27 19:35",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 19:15:00",
+   "result": "2:4",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a"
+  },
+  {
+   "fid": "1398456",
+   "hk": {
+    "current": {
+     "h": 1.36,
+     "d": 5,
+     "a": 7,
+     "returnRate": 92.75,
+     "time": "2026-09-27 18:56:26"
+    },
+    "open": {
+     "h": 1.66,
+     "d": 3.6,
+     "a": 4.75,
+     "time": "2026-09-22 01:07:27"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 17
+   },
+   "mo": {
+    "current": {
+     "h": 1.4,
+     "d": 5,
+     "a": 7.5,
+     "returnRate": 95.45,
+     "time": "2026-09-27 19:21:45"
+    },
+    "open": {
+     "h": 1.7,
+     "d": 3.75,
+     "a": 5,
+     "time": "2026-09-02 16:55:32"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 38
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "丹麦",
+   "away": "威尔士",
+   "league": "欧国联",
+   "num": "周日004",
+   "kickoff": "2026-09-28 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "1:1",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分2.0）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.0,
+    "reasons": [
+     "让球盘·让负-1.0",
+     "AI预测·5-0（让球后6-0）→让胜+2.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分4.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 4.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "AI预测·5-0→上盘+2.0"
+    ]
+   },
+   "pickDir": "h"
+  },
+  {
+   "fid": "1358600",
+   "hk": {
+    "current": {
+     "h": 2.88,
+     "d": 3.9,
+     "a": 2.25,
+     "returnRate": 95.41,
+     "time": "2026-09-27 20:29:05"
+    },
+    "open": {
+     "h": 2.9,
+     "d": 4,
+     "a": 2.1,
+     "time": "2026-09-17 17:23:43"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 183
+   },
+   "mo": {
+    "current": {
+     "h": 2.7,
+     "d": 3.85,
+     "a": 2.3,
+     "returnRate": 93.91,
+     "time": "2026-09-27 20:31:22"
+    },
+    "open": {
+     "h": 2.9,
+     "d": 4,
+     "a": 2.1,
+     "time": "2026-09-21 00:26:42"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 7
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d",
+    "h"
+   ],
+   "home": "哥伦布机员",
+   "away": "迈阿密国际",
+   "league": "美职足",
+   "num": "周日009",
+   "kickoff": "2026-09-28 07:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "2:1",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0",
+     "AI预测·1-2（让球后2-2）→让平+2.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分4.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 4.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "AI预测·1-2→下盘+2.0",
+     "首发·主队完整vs客队不整→上盘+0.5"
+    ]
+   },
+   "hhadResult": "",
+   "pickDir": "d"
+  },
+  {
+   "fid": "1398458",
+   "hk": {
+    "current": {
+     "h": 8,
+     "d": 5,
+     "a": 1.38,
+     "returnRate": 95.27,
+     "time": "2026-09-27 20:36:59"
+    },
+    "open": {
+     "h": 5,
+     "d": 3.8,
+     "a": 1.61,
+     "time": "2026-09-22 01:07:27"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 34
+   },
+   "mo": {
+    "current": {
+     "h": 7.25,
+     "d": 5.25,
+     "a": 1.4,
+     "returnRate": 95.91,
+     "time": "2026-09-27 19:04:51"
+    },
+    "open": {
+     "h": 4.4,
+     "d": 3.9,
+     "a": 1.77,
+     "time": "2026-09-02 16:55:08"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 31
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "塞尔维亚",
+   "away": "荷兰",
+   "league": "欧国联",
+   "num": "周日005",
+   "kickoff": "2026-09-28 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "0:7",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a"
+  },
+  {
+   "fid": "1398473",
+   "hk": {
+    "current": {
+     "h": 1.57,
+     "d": 4,
+     "a": 5.5,
+     "returnRate": 93.57,
+     "time": "2026-09-27 20:12:31"
+    },
+    "open": {
+     "h": 1.53,
+     "d": 4.2,
+     "a": 5,
+     "time": "2026-09-22 00:04:23"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 46
+   },
+   "mo": {
+    "current": {
+     "h": 1.63,
+     "d": 4.1,
+     "a": 5.25,
+     "returnRate": 95.43,
+     "time": "2026-09-27 21:01:31"
+    },
+    "open": {
+     "h": 1.47,
+     "d": 4.5,
+     "a": 6.75,
+     "time": "2026-09-02 16:55:41"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 17
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "奥地利",
+   "away": "科索沃",
+   "league": "欧国联",
+   "num": "周日006",
+   "kickoff": "2026-09-28 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "1:1",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向主胜→上盘",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "一球",
+    "asianOpen": "一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "d"
+  },
+  {
+   "fid": "1398459",
+   "hk": {
+    "current": {
+     "h": 1.4,
+     "d": 5,
+     "a": 7,
+     "returnRate": 94.59,
+     "time": "2026-09-27 20:41:10"
+    },
+    "open": {
+     "h": 1.36,
+     "d": 5,
+     "a": 6.5,
+     "time": "2026-09-22 01:07:26"
+    },
+    "drop_dirs": [],
+    "history_count": 42
+   },
+   "mo": {
+    "current": {
+     "h": 1.43,
+     "d": 5.25,
+     "a": 6.5,
+     "returnRate": 95.82,
+     "time": "2026-09-27 20:46:57"
+    },
+    "open": {
+     "h": 1.25,
+     "d": 5.75,
+     "a": 14,
+     "time": "2026-09-02 16:53:30"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 34
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "德国",
+   "away": "希腊",
+   "league": "欧国联",
+   "num": "周日007",
+   "kickoff": "2026-09-28 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "1:0",
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "平手",
+    "asianOpen": "平手",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": null
+  },
+  {
+   "fid": "1398461",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 3.9,
+     "a": 2.75,
+     "returnRate": 93.94,
+     "time": "2026-09-27 20:35:43"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3.5,
+     "a": 2.3,
+     "time": "2026-09-22 01:07:26"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 27
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 3.75,
+     "a": 2.85,
+     "returnRate": 95.03,
+     "time": "2026-09-27 20:17:18"
+    },
+    "open": {
+     "h": 2.9,
+     "d": 3.65,
+     "a": 2.3,
+     "time": "2026-09-02 16:53:24"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 12
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "挪威",
+   "away": "葡萄牙",
+   "league": "欧国联",
+   "num": "周日008",
+   "kickoff": "2026-09-28 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 21:06:11",
+   "result": "1:0",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（客胜+主队让球，必让负）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心客胜+让球-1→让负（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "一球/球半",
+    "asianOpen": "一球/球半",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h"
+  },
+  {
+   "fid": "1415992",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 4.2,
+     "a": 2.5,
+     "returnRate": 92.38,
+     "time": "2026-09-27 19:30:33"
+    },
+    "open": {
+     "h": 1.9,
+     "d": 4,
+     "a": 3.25,
+     "time": "2026-09-21 23:00:13"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 27
+   },
+   "mo": {
+    "current": {
+     "h": 2.25,
+     "d": 3.9,
+     "a": 2.55,
+     "returnRate": 91.49,
+     "time": "2026-09-27 19:48:38"
+    },
+    "open": {
+     "h": 2.05,
+     "d": 3.8,
+     "a": 2.95,
+     "time": "2026-09-20 23:24:30"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 17
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "格拉夫夏普",
+   "away": "登博思",
+   "league": "荷乙",
+   "num": "周日003",
+   "kickoff": "2026-09-27 20:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 19:50:35",
+   "result": "0:1",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "核心方向客胜→下盘",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "asianLine": "半球/一球",
+    "asianOpen": "半球/一球",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a"
+  },
+  {
+   "fid": "1373214",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 3,
+     "a": 3.2,
+     "returnRate": 91.72,
+     "time": "2026-09-27 17:00:39"
+    },
+    "open": {
+     "h": 2.38,
+     "d": 3,
+     "a": 3,
+     "time": "2026-09-23 17:17:37"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 2.95,
+     "a": 3.25,
+     "returnRate": 92.47,
+     "time": "2026-09-27 16:38:23"
+    },
+    "open": {
+     "h": 2.45,
+     "d": 2.95,
+     "a": 2.9,
+     "time": "2026-09-23 23:36:42"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 6
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "江原FC",
+   "away": "仁川联",
+   "league": "韩职",
+   "num": "周日001",
+   "kickoff": "2026-09-27 18:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-27",
+   "fetched_at": "2026-09-27 17:14:55",
+   "result": "0:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0",
+     "教练·主队进攻型→上盘+0.8",
+     "首发·主队完整vs客队不整→上盘+0.5"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "miss",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1398590",
+   "hk": {
+    "current": {
+     "h": 2.88,
+     "d": 3,
+     "a": 2.63,
+     "returnRate": 94.27,
+     "time": "2026-09-28 20:40:08"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3,
+     "a": 2.5,
+     "time": "2026-09-21 23:58:30"
+    },
+    "drop_dirs": [],
+    "history_count": 47
+   },
+   "mo": {
+    "current": {
+     "h": 2.85,
+     "d": 3,
+     "a": 2.7,
+     "returnRate": 94.82,
+     "time": "2026-09-28 17:30:15"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3.05,
+     "a": 2.8,
+     "time": "2026-09-26 13:48:07"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 8
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "北爱尔兰",
+   "away": "匈牙利",
+   "league": "欧国联",
+   "num": "周一008",
+   "kickoff": "2026-09-29 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-28",
+   "fetched_at": "2026-09-28 21:06:04",
+   "result": "0:0",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "hit",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1398624",
+   "hk": {
+    "current": {
+     "h": 1.75,
+     "d": 3.3,
+     "a": 5,
+     "returnRate": 93.07,
+     "time": "2026-09-29 16:50:43"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 3.6,
+     "a": 7,
+     "time": "2026-09-26 22:07:28"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 23
+   },
+   "mo": {
+    "current": {
+     "h": 1.83,
+     "d": 3.4,
+     "a": 4.8,
+     "returnRate": 95.34,
+     "time": "2026-09-29 20:25:20"
+    },
+    "open": {
+     "h": 1.65,
+     "d": 3.6,
+     "a": 6,
+     "time": "2026-09-27 15:11:36"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 11
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "保加利亚",
+   "away": "爱沙尼亚",
+   "league": "欧国联",
+   "num": "周二014",
+   "kickoff": "2026-09-30 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-29",
+   "fetched_at": "2026-09-29 21:03:49",
+   "result": "0:0",
+   "hitFlag": "miss",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "a",
+   "hhadHit": "hit",
+   "asianHit": "n-a"
+  },
+  {
+   "fid": "1495345",
+   "hk": {
+    "current": {
+     "h": 1.5,
+     "d": 3.9,
+     "a": 5.75,
+     "returnRate": 91.16,
+     "time": "2026-09-29 20:38:10"
+    },
+    "open": {
+     "h": 1.38,
+     "d": 4.2,
+     "a": 7.5,
+     "time": "2026-09-27 09:05:10"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 84
+   },
+   "mo": {
+    "current": {
+     "h": 1.53,
+     "d": 4.2,
+     "a": 6,
+     "returnRate": 94.49,
+     "time": "2026-09-29 20:46:10"
+    },
+    "open": {
+     "h": 1.53,
+     "d": 4,
+     "a": 6,
+     "time": "2026-09-24 19:49:34"
+    },
+    "drop_dirs": [],
+    "history_count": 18
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "美国",
+   "away": "智利",
+   "league": "国际赛",
+   "num": "周二015",
+   "kickoff": "2026-09-30 08:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-29",
+   "fetched_at": "2026-09-29 21:03:49",
+   "result": "4:2",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分-1.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": -1.0,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1398613",
+   "hk": {
+    "current": {
+     "h": 1.22,
+     "d": 6.5,
+     "a": 11,
+     "returnRate": 93.95,
+     "time": "2026-09-29 15:18:10"
+    },
+    "open": {
+     "h": 1.33,
+     "d": 4.75,
+     "a": 7.5,
+     "time": "2026-09-22 01:56:06"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 26
+   },
+   "mo": {
+    "current": {
+     "h": 1.25,
+     "d": 6.5,
+     "a": 11,
+     "returnRate": 95.72,
+     "time": "2026-09-29 15:18:55"
+    },
+    "open": {
+     "h": 1.3,
+     "d": 5.75,
+     "a": 10,
+     "time": "2026-09-24 17:00:13"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 16
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "西班牙",
+   "away": "克罗地亚",
+   "league": "欧国联",
+   "num": "周二013",
+   "kickoff": "2026-09-30 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-29",
+   "fetched_at": "2026-09-29 21:03:49",
+   "result": "4:1",
+   "hitFlag": "hit",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "pickDir": "h",
+   "hhadHit": "hit",
+   "asianHit": "hit"
+  },
+  {
+   "fid": "1495376",
+   "hk": {
+    "current": {
+     "h": 5.5,
+     "d": 3.5,
+     "a": 1.6,
+     "returnRate": 91.53,
+     "time": "2026-09-30 18:00:17"
+    },
+    "open": {
+     "h": 3.25,
+     "d": 3.3,
+     "a": 2.05,
+     "time": "2026-09-28 12:28:50"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 58
+   },
+   "mo": {
+    "current": {
+     "h": 6,
+     "d": 3.65,
+     "a": 1.55,
+     "returnRate": 92.1,
+     "time": "2026-09-30 17:51:25"
+    },
+    "open": {
+     "h": 3.3,
+     "d": 3.35,
+     "a": 2.1,
+     "time": "2026-09-28 12:14:43"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 44
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "乌兹别克亚运男足",
+   "away": "日本亚足",
+   "league": "亚运男足",
+   "num": "周三002",
+   "kickoff": "2026-09-30 18:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-30",
+   "fetched_at": "2026-09-30 18:27:15",
+   "result": "1:1",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分1.5）",
+    "dir": "d",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让平+1.5",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1495377",
+   "hk": {
+    "current": {
+     "h": 1.25,
+     "d": 4.5,
+     "a": 13,
+     "returnRate": 90.98,
+     "time": "2026-09-30 12:47:59"
+    },
+    "open": {
+     "h": 1.2,
+     "d": 5.5,
+     "a": 12,
+     "time": "2026-09-28 12:28:46"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 45
+   },
+   "mo": {
+    "current": {
+     "h": 1.2,
+     "d": 5.75,
+     "a": 14,
+     "returnRate": 92.71,
+     "time": "2026-09-30 13:05:22"
+    },
+    "open": {
+     "h": 1.25,
+     "d": 5.5,
+     "a": 12,
+     "time": "2026-09-28 13:34:35"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 57
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "韩国亚运男足",
+   "away": "中国亚运男足",
+   "league": "亚运男足",
+   "num": "周三001",
+   "kickoff": "2026-09-30 14:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-09-30",
+   "fetched_at": "2026-09-30 13:18:05",
+   "result": "2:1",
+   "hitFlag": "n-a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "hhadHit": "miss",
+   "asianHit": "miss"
+  },
+  {
+   "fid": "1398609",
+   "hk": {
+    "current": {
+     "h": 2.4,
+     "d": 2.88,
+     "a": 3.3,
+     "returnRate": 93.73,
+     "time": "2026-10-05 20:37:40"
+    },
+    "open": {
+     "h": 2.5,
+     "d": 3.1,
+     "a": 2.88,
+     "time": "2026-10-03 10:22:46"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 35
+   },
+   "mo": {
+    "current": {
+     "h": 2.45,
+     "d": 2.95,
+     "a": 3.35,
+     "returnRate": 95.63,
+     "time": "2026-10-05 20:41:33"
+    },
+    "open": {
+     "h": 2.45,
+     "d": 3.6,
+     "a": 2.8,
+     "time": "2026-10-02 02:46:40"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 10
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "北爱尔兰",
+   "away": "格鲁吉亚",
+   "league": "欧国联",
+   "num": "周一005",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "0:0",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "hhadResult": "",
+   "pickDir": "d",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分-1.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": -1.0,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398658",
+   "hk": {
+    "current": {
+     "h": 1.55,
+     "d": 3.75,
+     "a": 6.5,
+     "returnRate": 93.84,
+     "time": "2026-10-05 17:55:05"
+    },
+    "open": {
+     "h": 1.73,
+     "d": 3.5,
+     "a": 5,
+     "time": "2026-10-03 21:37:25"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 24
+   },
+   "mo": {
+    "current": {
+     "h": 1.6,
+     "d": 3.8,
+     "a": 6,
+     "returnRate": 94.8,
+     "time": "2026-10-05 20:00:08"
+    },
+    "open": {
+     "h": 1.67,
+     "d": 3.75,
+     "a": 4.9,
+     "time": "2026-10-02 20:05:28"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 11
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "塞浦路斯",
+   "away": "拉脱维亚",
+   "league": "欧国联",
+   "num": "周一001",
+   "kickoff": "2026-10-06 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "2:1",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398659",
+   "hk": {
+    "current": {
+     "h": 1.36,
+     "d": 5.25,
+     "a": 7.5,
+     "returnRate": 94.42,
+     "time": "2026-10-05 19:35:39"
+    },
+    "open": {
+     "h": 1.44,
+     "d": 5,
+     "a": 6.5,
+     "time": "2026-10-03 06:57:38"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 26
+   },
+   "mo": {
+    "current": {
+     "h": 1.4,
+     "d": 4.9,
+     "a": 7.25,
+     "returnRate": 94.67,
+     "time": "2026-10-05 20:11:46"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 4.1,
+     "a": 5.75,
+     "time": "2026-10-02 02:45:12"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 18
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "意大利",
+   "away": "土耳其",
+   "league": "欧国联",
+   "num": "周一004",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "3:1",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.5）",
+    "dir": "h",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平-1.0",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398656",
+   "hk": {
+    "current": {
+     "h": 1.48,
+     "d": 4.5,
+     "a": 6,
+     "returnRate": 93.94,
+     "time": "2026-10-05 19:59:05"
+    },
+    "open": {
+     "h": 1.53,
+     "d": 4.2,
+     "a": 5.25,
+     "time": "2026-10-01 22:13:32"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 10
+   },
+   "mo": {
+    "current": {
+     "h": 1.5,
+     "d": 4.7,
+     "a": 6,
+     "returnRate": 95.59,
+     "time": "2026-10-05 19:20:46"
+    },
+    "open": {
+     "h": 1.55,
+     "d": 4.5,
+     "a": 5.5,
+     "time": "2026-10-02 02:47:25"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 7
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "法国",
+   "away": "比利时",
+   "league": "欧国联",
+   "num": "周一002",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "4:1",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.5）",
+    "dir": "d",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让平+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398615",
+   "hk": {
+    "current": {
+     "h": 2.8,
+     "d": 3.4,
+     "a": 2.38,
+     "returnRate": 93.33,
+     "time": "2026-10-05 19:56:39"
+    },
+    "open": {
+     "h": 3.2,
+     "d": 3.5,
+     "a": 2.15,
+     "time": "2026-10-03 10:22:08"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 24
+   },
+   "mo": {
+    "current": {
+     "h": 2.85,
+     "d": 3.4,
+     "a": 2.45,
+     "returnRate": 94.95,
+     "time": "2026-10-05 20:51:31"
+    },
+    "open": {
+     "h": 3.2,
+     "d": 3.35,
+     "a": 2.3,
+     "time": "2026-10-02 02:45:19"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "波黑",
+   "away": "波兰",
+   "league": "欧国联",
+   "num": "周一007",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "1:0",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398612",
+   "hk": {
+    "current": {
+     "h": 4.33,
+     "d": 4.1,
+     "a": 1.7,
+     "returnRate": 94.07,
+     "time": "2026-10-05 19:54:31"
+    },
+    "open": {
+     "h": 4.1,
+     "d": 3.7,
+     "a": 1.8,
+     "time": "2026-10-03 06:26:56"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 23
+   },
+   "mo": {
+    "current": {
+     "h": 4.3,
+     "d": 4.1,
+     "a": 1.75,
+     "returnRate": 95.43,
+     "time": "2026-10-05 18:10:28"
+    },
+    "open": {
+     "h": 3.8,
+     "d": 3.7,
+     "a": 1.95,
+     "time": "2026-10-02 02:47:35"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "罗马尼亚",
+   "away": "瑞典",
+   "league": "欧国联",
+   "num": "周一003",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "0:1",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0",
+     "让球盘·让平+1.5",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398654",
+   "hk": {
+    "current": {
+     "h": 1.48,
+     "d": 4.5,
+     "a": 5.75,
+     "returnRate": 93.3,
+     "time": "2026-10-05 20:56:11"
+    },
+    "open": {
+     "h": 1.55,
+     "d": 4.2,
+     "a": 5.5,
+     "time": "2026-10-03 19:22:49"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 1.5,
+     "d": 4.5,
+     "a": 6.25,
+     "returnRate": 95.34,
+     "time": "2026-10-05 18:41:33"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 3.9,
+     "a": 5.5,
+     "time": "2026-10-02 20:04:39"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 11
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "黑山",
+   "away": "亚美尼亚",
+   "league": "欧国联",
+   "num": "周一006",
+   "kickoff": "2026-10-06 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-05",
+   "fetched_at": "2026-10-05 21:02:22",
+   "result": "0:0",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1494417",
+   "hk": {
+    "current": {
+     "h": 1.75,
+     "d": 3.4,
+     "a": 4.2,
+     "returnRate": 90.61,
+     "time": "2026-10-06 18:46:28"
+    },
+    "open": {
+     "h": 1.57,
+     "d": 3.7,
+     "a": 5,
+     "time": "2026-10-06 05:13:51"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 35
+   },
+   "mo": {
+    "current": {
+     "h": 1.85,
+     "d": 3.35,
+     "a": 4.1,
+     "returnRate": 92.34,
+     "time": "2026-10-06 18:50:23"
+    },
+    "open": {
+     "h": 2.05,
+     "d": 3.45,
+     "a": 3.5,
+     "time": "2026-10-05 13:57:57"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 29
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "中国",
+   "away": "塔吉克斯坦",
+   "league": "国际赛",
+   "num": "周二002",
+   "kickoff": "2026-10-06 19:35",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 19:04:18",
+   "result": "0:1",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "d",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让平-1.0",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398663",
+   "hk": {
+    "current": {
+     "h": 8.5,
+     "d": 6.25,
+     "a": 1.27,
+     "returnRate": 93.89,
+     "time": "2026-10-06 19:29:24"
+    },
+    "open": {
+     "h": 7,
+     "d": 5,
+     "a": 1.42,
+     "time": "2026-10-04 09:52:38"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 38
+   },
+   "mo": {
+    "current": {
+     "h": 8.75,
+     "d": 6,
+     "a": 1.3,
+     "returnRate": 95.22,
+     "time": "2026-10-06 20:39:54"
+    },
+    "open": {
+     "h": 7,
+     "d": 4.6,
+     "a": 1.45,
+     "time": "2026-10-02 02:47:45"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 21
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "克罗地亚",
+   "away": "西班牙",
+   "league": "欧国联",
+   "num": "周二008",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "1:2",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398668",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 3.2,
+     "a": 3.25,
+     "returnRate": 93.93,
+     "time": "2026-10-06 20:06:26"
+    },
+    "open": {
+     "h": 1.83,
+     "d": 3.75,
+     "a": 3.5,
+     "time": "2026-10-04 19:19:08"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 11
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 3.1,
+     "a": 3.35,
+     "returnRate": 94.71,
+     "time": "2026-10-06 19:46:11"
+    },
+    "open": {
+     "h": 1.9,
+     "d": 3.9,
+     "a": 3.65,
+     "time": "2026-10-04 17:54:09"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 11
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "卢森堡",
+   "away": "保加利亚",
+   "league": "欧国联",
+   "num": "周二005",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "0:2",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0",
+     "让球盘·让平-1.0",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398660",
+   "hk": {
+    "current": {
+     "h": 2.7,
+     "d": 2.9,
+     "a": 2.9,
+     "returnRate": 94.34,
+     "time": "2026-10-06 21:02:42"
+    },
+    "open": {
+     "h": 2.4,
+     "d": 3.2,
+     "a": 3,
+     "time": "2026-10-03 19:22:41"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 51
+   },
+   "mo": {
+    "current": {
+     "h": 2.7,
+     "d": 2.95,
+     "a": 2.9,
+     "returnRate": 94.86,
+     "time": "2026-10-06 21:01:59"
+    },
+    "open": {
+     "h": 2.45,
+     "d": 3.2,
+     "a": 2.9,
+     "time": "2026-10-03 15:44:49"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "哈萨克斯坦",
+   "away": "法罗群岛",
+   "league": "欧国联",
+   "num": "周二003",
+   "kickoff": "2026-10-06 22:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "2:2",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "hhadResult": "",
+   "pickDir": "d",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398672",
+   "hk": {
+    "current": {
+     "h": 8,
+     "d": 4.5,
+     "a": 1.4,
+     "returnRate": 94.21,
+     "time": "2026-10-06 20:59:30"
+    },
+    "open": {
+     "h": 6,
+     "d": 4.33,
+     "a": 1.5,
+     "time": "2026-10-03 21:25:26"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 27
+   },
+   "mo": {
+    "current": {
+     "h": 8.25,
+     "d": 4.9,
+     "a": 1.4,
+     "returnRate": 96.19,
+     "time": "2026-10-06 15:02:45"
+    },
+    "open": {
+     "h": 6.25,
+     "d": 4.4,
+     "a": 1.53,
+     "time": "2026-10-03 16:04:45"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 12
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "摩尔多瓦",
+   "away": "斯洛伐克",
+   "league": "欧国联",
+   "num": "周二010",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "0:4",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398670",
+   "hk": {
+    "current": {
+     "h": 5.5,
+     "d": 4,
+     "a": 1.57,
+     "returnRate": 93.57,
+     "time": "2026-10-06 20:10:14"
+    },
+    "open": {
+     "h": 4,
+     "d": 3.8,
+     "a": 1.7,
+     "time": "2026-10-04 20:11:43"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 26
+   },
+   "mo": {
+    "current": {
+     "h": 5.5,
+     "d": 4,
+     "a": 1.63,
+     "returnRate": 95.66,
+     "time": "2026-10-06 20:50:51"
+    },
+    "open": {
+     "h": 3.4,
+     "d": 3.9,
+     "a": 1.97,
+     "time": "2026-10-04 17:55:07"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "爱沙尼亚",
+   "away": "冰岛",
+   "league": "欧国联",
+   "num": "周二004",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "0:0",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.5）",
+    "dir": "d",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0",
+     "让球盘·让平+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398617",
+   "hk": {
+    "current": {
+     "h": 1.06,
+     "d": 11,
+     "a": 34,
+     "returnRate": 94.01,
+     "time": "2026-10-06 19:16:11"
+    },
+    "open": {
+     "h": 1.1,
+     "d": 8,
+     "a": 23,
+     "time": "2026-10-04 20:10:35"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "mo": {
+    "current": {
+     "h": 1.1,
+     "d": 9,
+     "a": 28,
+     "returnRate": 94.7,
+     "time": "2026-10-06 16:05:22"
+    },
+    "open": {
+     "h": 1.15,
+     "d": 7.25,
+     "a": 21,
+     "time": "2026-10-04 08:44:53"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 12
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "瑞士",
+   "away": "北马其顿",
+   "league": "欧国联",
+   "num": "周二009",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "3:0",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1495294",
+   "hk": {
+    "current": {
+     "h": 1.62,
+     "d": 3.8,
+     "a": 4.75,
+     "returnRate": 91.66,
+     "time": "2026-10-06 20:15:39"
+    },
+    "open": {
+     "h": 1.9,
+     "d": 3.4,
+     "a": 3.7,
+     "time": "2026-10-04 21:04:46"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 80
+   },
+   "mo": {
+    "current": {
+     "h": 1.73,
+     "d": 3.8,
+     "a": 4.4,
+     "returnRate": 93.59,
+     "time": "2026-10-06 19:24:20"
+    },
+    "open": {
+     "h": 1.95,
+     "d": 3.45,
+     "a": 3.75,
+     "time": "2026-10-04 21:39:24"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 15
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "美国",
+   "away": "加拿大",
+   "league": "国际赛",
+   "num": "周二011",
+   "kickoff": "2026-10-07 08:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "1:0",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜+1.5",
+     "让球盘·让平+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1358414",
+   "hk": {
+    "current": {
+     "h": 2.9,
+     "d": 4.1,
+     "a": 2.15,
+     "returnRate": 94.89,
+     "time": "2026-10-06 20:16:57"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3.7,
+     "a": 2.3,
+     "time": "2026-06-30 20:34:11"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 200
+   },
+   "mo": {
+    "current": {
+     "h": 2.85,
+     "d": 3.75,
+     "a": 2.25,
+     "returnRate": 94.16,
+     "time": "2026-10-06 16:47:32"
+    },
+    "open": {
+     "h": 2.7,
+     "d": 3.75,
+     "a": 2.3,
+     "time": "2026-06-30 22:16:50"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 18
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "芝加哥火焰",
+   "away": "温哥华白帽",
+   "league": "美职足",
+   "num": "周二012",
+   "kickoff": "2026-10-07 08:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "3:1",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadResult": "",
+   "pickDir": "a",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让平+1.5",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398620",
+   "hk": {
+    "current": {
+     "h": 1.8,
+     "d": 3.3,
+     "a": 4.75,
+     "returnRate": 93.54,
+     "time": "2026-10-06 19:33:53"
+    },
+    "open": {
+     "h": 2,
+     "d": 3.4,
+     "a": 3.9,
+     "time": "2026-10-04 09:53:54"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 21
+   },
+   "mo": {
+    "current": {
+     "h": 1.85,
+     "d": 3.3,
+     "a": 4.8,
+     "returnRate": 95.07,
+     "time": "2026-10-06 20:50:24"
+    },
+    "open": {
+     "h": 2.2,
+     "d": 3.15,
+     "a": 3.55,
+     "time": "2026-10-03 19:05:05"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "苏格兰",
+   "away": "斯洛文尼亚",
+   "league": "欧国联",
+   "num": "周二006",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "1:2",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.5）",
+    "dir": "d",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0",
+     "让球盘·让平+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1398666",
+   "hk": {
+    "current": {
+     "h": 1.1,
+     "d": 9,
+     "a": 21,
+     "returnRate": 93.65,
+     "time": "2026-10-06 19:15:28"
+    },
+    "open": {
+     "h": 1.14,
+     "d": 7.5,
+     "a": 19,
+     "time": "2026-10-04 09:53:31"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 1.12,
+     "d": 8.75,
+     "a": 20,
+     "returnRate": 94.59,
+     "time": "2026-10-06 16:16:30"
+    },
+    "open": {
+     "h": 1.2,
+     "d": 6.5,
+     "a": 17,
+     "time": "2026-10-02 02:45:30"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 18
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "英格兰",
+   "away": "捷克",
+   "league": "欧国联",
+   "num": "周二007",
+   "kickoff": "2026-10-07 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 21:11:13",
+   "result": "3:0",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分1.5）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让胜+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1459748",
+   "hk": {
+    "current": {
+     "h": 1.55,
+     "d": 4.1,
+     "a": 4.5,
+     "returnRate": 89.99,
+     "time": "2026-10-06 17:59:06"
+    },
+    "open": {
+     "h": 1.62,
+     "d": 3.7,
+     "a": 4.5,
+     "time": "2026-10-05 16:44:45"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 56
+   },
+   "mo": {
+    "current": {
+     "h": 1.63,
+     "d": 4.1,
+     "a": 4.9,
+     "returnRate": 94.21,
+     "time": "2026-10-06 18:06:29"
+    },
+    "open": {
+     "h": 1.77,
+     "d": 3.7,
+     "a": 4.3,
+     "time": "2026-10-05 13:56:43"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 18
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "韩国",
+   "away": "乌兹别克斯坦",
+   "league": "国际赛",
+   "num": "周二001",
+   "kickoff": "2026-10-06 19:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-06",
+   "fetched_at": "2026-10-06 18:13:46",
+   "result": "2:0",
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分1.5）",
+    "dir": "d",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平+1.5",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1362422",
+   "hk": {
+    "current": {
+     "h": 2.15,
+     "d": 3.4,
+     "a": 3.4,
+     "returnRate": 94.94,
+     "time": "2026-10-08 12:05:39"
+    },
+    "open": {
+     "h": 1.95,
+     "d": 3.3,
+     "a": 3.9,
+     "time": "2026-09-14 21:06:33"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 167
+   },
+   "mo": {
+    "current": {
+     "h": 2.15,
+     "d": 3.25,
+     "a": 3.5,
+     "returnRate": 94.47,
+     "time": "2026-10-05 14:33:12"
+    },
+    "open": {
+     "h": 1.95,
+     "d": 3.3,
+     "a": 3.9,
+     "time": "2026-09-21 19:24:58"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 8
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "巴拉纳竞技",
+   "away": "米内罗竞技",
+   "league": "巴甲",
+   "num": "周四004",
+   "kickoff": "2026-10-09 07:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1362487",
+   "hk": {
+    "current": {
+     "h": 1.62,
+     "d": 3.9,
+     "a": 5.25,
+     "returnRate": 93.97,
+     "time": "2026-10-08 12:02:42"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 3.9,
+     "a": 5.25,
+     "time": "2026-09-14 21:07:37"
+    },
+    "drop_dirs": [],
+    "history_count": 160
+   },
+   "mo": {
+    "current": {
+     "h": 1.63,
+     "d": 4.1,
+     "a": 5,
+     "returnRate": 94.57,
+     "time": "2026-10-08 10:44:29"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 3.95,
+     "a": 5.5,
+     "time": "2026-09-21 19:23:35"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 9
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "帕尔梅拉斯",
+   "away": "巴伊亚",
+   "league": "巴甲",
+   "num": "周四006",
+   "kickoff": "2026-10-09 08:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让胜-1.0",
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1489046",
+   "hk": {
+    "current": {
+     "h": 1.57,
+     "d": 3.75,
+     "a": 5,
+     "returnRate": 90.61,
+     "time": "2026-09-22 19:26:55"
+    },
+    "open": {
+     "h": 1.57,
+     "d": 3.75,
+     "a": 5,
+     "time": "2026-09-22 19:26:55"
+    },
+    "drop_dirs": [],
+    "history_count": 1
+   },
+   "mo": {
+    "current": {
+     "h": 1.63,
+     "d": 3.7,
+     "a": 5.25,
+     "returnRate": 93.09,
+     "time": "2026-10-08 10:05:37"
+    },
+    "open": {
+     "h": 1.63,
+     "d": 3.7,
+     "a": 5.25,
+     "time": "2026-10-01 00:12:41"
+    },
+    "drop_dirs": [],
+    "history_count": 3
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "库奥皮奥",
+   "away": "AC奥卢",
+   "league": "芬兰超级联赛",
+   "num": "周四002",
+   "kickoff": "2026-10-09 00:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "0:1",
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1362406",
+   "hk": {
+    "current": {
+     "h": 1.5,
+     "d": 4,
+     "a": 7,
+     "returnRate": 94.38,
+     "time": "2026-10-08 12:09:42"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 3.8,
+     "a": 6.5,
+     "time": "2026-09-14 21:07:11"
+    },
+    "drop_dirs": [],
+    "history_count": 201
+   },
+   "mo": {
+    "current": {
+     "h": 1.5,
+     "d": 4.2,
+     "a": 6.25,
+     "returnRate": 93.92,
+     "time": "2026-10-01 08:08:05"
+    },
+    "open": {
+     "h": 1.5,
+     "d": 3.95,
+     "a": 7,
+     "time": "2026-09-21 19:22:11"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 7
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "弗鲁米嫩塞",
+   "away": "科里蒂巴",
+   "league": "巴甲",
+   "num": "周四005",
+   "kickoff": "2026-10-09 08:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1362462",
+   "hk": {
+    "current": {
+     "h": 4.5,
+     "d": 3.6,
+     "a": 1.8,
+     "returnRate": 94.74,
+     "time": "2026-10-05 10:07:56"
+    },
+    "open": {
+     "h": 3.9,
+     "d": 3.5,
+     "a": 1.85,
+     "time": "2026-09-14 21:06:44"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 72
+   },
+   "mo": {
+    "current": {
+     "h": 4.1,
+     "d": 3.55,
+     "a": 1.85,
+     "returnRate": 93.8,
+     "time": "2026-10-06 12:10:42"
+    },
+    "open": {
+     "h": 3.95,
+     "d": 3.55,
+     "a": 1.9,
+     "time": "2026-09-21 19:23:13"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 5
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "桑托斯",
+   "away": "弗拉门戈",
+   "league": "巴甲",
+   "num": "周四003",
+   "kickoff": "2026-10-09 06:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1489044",
+   "hk": {
+    "current": {
+     "h": 1.5,
+     "d": 3.9,
+     "a": 5.5,
+     "returnRate": 90.51,
+     "time": "2026-10-08 12:07:26"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 3.8,
+     "a": 4.75,
+     "time": "2026-09-22 19:26:46"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 4
+   },
+   "mo": {
+    "current": {
+     "h": 1.57,
+     "d": 4,
+     "a": 5.5,
+     "returnRate": 93.57,
+     "time": "2026-10-08 10:45:27"
+    },
+    "open": {
+     "h": 1.63,
+     "d": 3.9,
+     "a": 5,
+     "time": "2026-09-30 23:05:22"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 3
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "赫尔辛基",
+   "away": "瓦萨",
+   "league": "芬兰超级联赛",
+   "num": "周四001",
+   "kickoff": "2026-10-08 23:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-08",
+   "fetched_at": "2026-10-08 12:43:30",
+   "result": "6:0",
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "hhadResult": "",
+   "pickDir": "h",
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1362787",
+   "hk": {
+    "current": {
+     "h": 1.75,
+     "d": 3.75,
+     "a": 4.33,
+     "returnRate": 93.54,
+     "time": "2026-10-08 15:29:13"
+    },
+    "open": {
+     "h": 1.7,
+     "d": 3.8,
+     "a": 4.33,
+     "time": "2026-09-22 19:31:34"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 5
+   },
+   "mo": {
+    "current": {
+     "h": 1.8,
+     "d": 3.8,
+     "a": 4,
+     "returnRate": 93.57,
+     "time": "2026-10-08 06:26:38"
+    },
+    "open": {
+     "h": 1.7,
+     "d": 3.9,
+     "a": 4.4,
+     "time": "2026-10-01 01:09:32"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 4
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "IFK哥德堡",
+   "away": "韦斯特罗斯",
+   "league": "瑞超",
+   "num": "周五004",
+   "kickoff": "2026-10-10 01:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1415959",
+   "hk": {
+    "current": {
+     "h": 1.25,
+     "d": 6.5,
+     "a": 9,
+     "returnRate": 93.9,
+     "time": "2026-10-07 11:01:09"
+    },
+    "open": {
+     "h": 1.22,
+     "d": 6.5,
+     "a": 9.5,
+     "time": "2026-09-17 19:06:27"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 43
+   },
+   "mo": {
+    "current": {
+     "h": 1.25,
+     "d": 6.75,
+     "a": 8.5,
+     "returnRate": 93.83,
+     "time": "2026-10-08 21:58:05"
+    },
+    "open": {
+     "h": 1.22,
+     "d": 7.25,
+     "a": 9,
+     "time": "2026-09-21 23:35:57"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 6
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "PSV埃因霍温",
+   "away": "海伦芬",
+   "league": "荷甲",
+   "num": "周五006",
+   "kickoff": "2026-10-10 02:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1373230",
+   "hk": {
+    "current": {
+     "h": 2.2,
+     "d": 3.1,
+     "a": 3.2,
+     "returnRate": 91.77,
+     "time": "2026-10-05 19:47:03"
+    },
+    "open": {
+     "h": 2.2,
+     "d": 3.1,
+     "a": 3.2,
+     "time": "2026-10-05 19:47:03"
+    },
+    "drop_dirs": [],
+    "history_count": 1
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 2.95,
+     "a": 3.1,
+     "returnRate": 91.21,
+     "time": "2026-10-06 12:11:10"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 2.95,
+     "a": 3.65,
+     "time": "2026-10-02 15:57:09"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 4
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "仁川联",
+   "away": "浦项制铁",
+   "league": "韩职",
+   "num": "周五001",
+   "kickoff": "2026-10-09 15:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1428524",
+   "hk": {
+    "current": {
+     "h": 1.3,
+     "d": 5.5,
+     "a": 9,
+     "returnRate": 94.15,
+     "time": "2026-10-09 02:49:58"
+    },
+    "open": {
+     "h": 1.38,
+     "d": 5,
+     "a": 6.5,
+     "time": "2026-09-19 11:43:13"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 99
+   },
+   "mo": {
+    "current": {
+     "h": 1.37,
+     "d": 5.25,
+     "a": 7.75,
+     "returnRate": 95.29,
+     "time": "2026-10-09 02:49:31"
+    },
+    "open": {
+     "h": 1.4,
+     "d": 5.5,
+     "a": 6.75,
+     "time": "2026-09-19 18:04:34"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 24
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "多特蒙德",
+   "away": "云达不来梅",
+   "league": "德甲",
+   "num": "周五008",
+   "kickoff": "2026-10-10 02:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1364223",
+   "hk": {
+    "current": {
+     "h": 2.9,
+     "d": 3.8,
+     "a": 2.05,
+     "returnRate": 91.26,
+     "time": "2026-10-08 07:57:27"
+    },
+    "open": {
+     "h": 3.1,
+     "d": 3.8,
+     "a": 2,
+     "time": "2026-09-22 01:57:54"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "mo": {
+    "current": {
+     "h": 2.9,
+     "d": 3.8,
+     "a": 2.2,
+     "returnRate": 94.11,
+     "time": "2026-10-08 18:32:18"
+    },
+    "open": {
+     "h": 3.15,
+     "d": 3.8,
+     "a": 2.05,
+     "time": "2026-09-21 23:34:06"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "布兰",
+   "away": "维京",
+   "league": "挪超",
+   "num": "周五005",
+   "kickoff": "2026-10-10 01:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1438137",
+   "hk": {
+    "current": {
+     "h": 3.3,
+     "d": 3.4,
+     "a": 2.1,
+     "returnRate": 93.17,
+     "time": "2026-10-08 21:57:06"
+    },
+    "open": {
+     "h": 3.5,
+     "d": 3.4,
+     "a": 2,
+     "time": "2026-09-22 17:54:27"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 15
+   },
+   "mo": {
+    "current": {
+     "h": 3.35,
+     "d": 3.5,
+     "a": 2.1,
+     "returnRate": 94.3,
+     "time": "2026-10-08 21:58:26"
+    },
+    "open": {
+     "h": 3.45,
+     "d": 3.45,
+     "a": 2.1,
+     "time": "2026-09-22 23:37:31"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "布拉加",
+   "away": "里斯本竞技",
+   "league": "葡超",
+   "num": "周五012",
+   "kickoff": "2026-10-10 03:15",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1415124",
+   "hk": {
+    "current": {
+     "h": 2.35,
+     "d": 3.6,
+     "a": 2.8,
+     "returnRate": 94.3,
+     "time": "2026-10-09 02:45:49"
+    },
+    "open": {
+     "h": 2.05,
+     "d": 3.6,
+     "a": 3.2,
+     "time": "2026-09-17 17:28:28"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 257
+   },
+   "mo": {
+    "current": {
+     "h": 2.45,
+     "d": 3.6,
+     "a": 2.75,
+     "returnRate": 95.28,
+     "time": "2026-10-09 03:08:18"
+    },
+    "open": {
+     "h": 2.2,
+     "d": 3.75,
+     "a": 3.05,
+     "time": "2026-09-21 17:16:27"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 21
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "朗斯",
+   "away": "里昂",
+   "league": "法甲",
+   "num": "周五009",
+   "kickoff": "2026-10-10 02:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1419185",
+   "hk": {
+    "current": {
+     "h": 2.1,
+     "d": 3.2,
+     "a": 3.2,
+     "returnRate": 90.81,
+     "time": "2026-10-09 01:56:27"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.2,
+     "a": 3.2,
+     "time": "2026-10-05 13:26:28"
+    },
+    "drop_dirs": [],
+    "history_count": 8
+   },
+   "mo": {
+    "current": {
+     "h": 2.2,
+     "d": 3.35,
+     "a": 3.2,
+     "returnRate": 93.85,
+     "time": "2026-10-06 00:30:08"
+    },
+    "open": {
+     "h": 2.15,
+     "d": 3.35,
+     "a": 3.3,
+     "time": "2026-10-02 18:56:14"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 2
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "柏太阳神",
+   "away": "神户胜利船",
+   "league": "日职",
+   "num": "周五002",
+   "kickoff": "2026-10-09 18:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分1.5）",
+    "dir": "a",
+    "stars": 3,
+    "score": 1.5,
+    "reasons": [
+     "让球盘·让负+1.5"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1430165",
+   "hk": {
+    "current": {
+     "h": 1.85,
+     "d": 3.8,
+     "a": 3.6,
+     "returnRate": 92.47,
+     "time": "2026-09-24 10:07:49"
+    },
+    "open": {
+     "h": 1.65,
+     "d": 4,
+     "a": 4.5,
+     "time": "2026-09-22 19:26:15"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 7
+   },
+   "mo": {
+    "current": {
+     "h": 1.9,
+     "d": 3.7,
+     "a": 3.8,
+     "returnRate": 94.36,
+     "time": "2026-09-23 20:29:24"
+    },
+    "open": {
+     "h": 1.8,
+     "d": 3.8,
+     "a": 4.2,
+     "time": "2026-09-21 23:13:50"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 9
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "海登海姆",
+   "away": "凯泽斯劳滕",
+   "league": "德乙",
+   "num": "周五003",
+   "kickoff": "2026-10-10 00:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让平-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1416022",
+   "hk": {
+    "current": {
+     "h": 1.55,
+     "d": 4.2,
+     "a": 5.5,
+     "returnRate": 93.89,
+     "time": "2026-10-08 14:52:53"
+    },
+    "open": {
+     "h": 1.53,
+     "d": 4.2,
+     "a": 5.25,
+     "time": "2026-10-04 23:47:52"
+    },
+    "drop_dirs": [],
+    "history_count": 3
+   },
+   "mo": {
+    "current": {
+     "h": 1.55,
+     "d": 4.3,
+     "a": 5,
+     "returnRate": 92.79,
+     "time": "2026-10-06 12:11:17"
+    },
+    "open": {
+     "h": 1.55,
+     "d": 4.3,
+     "a": 4.8,
+     "time": "2026-10-04 02:37:20"
+    },
+    "drop_dirs": [],
+    "history_count": 4
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "赫拉克勒斯",
+   "away": "瓦尔韦克",
+   "league": "荷乙",
+   "num": "周五007",
+   "kickoff": "2026-10-10 02:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  },
+  {
+   "fid": "1428060",
+   "hk": {
+    "current": {
+     "h": 2.8,
+     "d": 3.1,
+     "a": 2.7,
+     "returnRate": 95.23,
+     "time": "2026-10-07 11:10:34"
+    },
+    "open": {
+     "h": 2.4,
+     "d": 3.2,
+     "a": 2.9,
+     "time": "2026-09-18 18:11:54"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 195
+   },
+   "mo": {
+    "current": {
+     "h": 2.75,
+     "d": 3.2,
+     "a": 2.7,
+     "returnRate": 95.56,
+     "time": "2026-10-07 03:29:33"
+    },
+    "open": {
+     "h": 2.45,
+     "d": 3.3,
+     "a": 2.9,
+     "time": "2026-09-19 18:04:49"
+    },
+    "drop_dirs": [
+     "d",
+     "a"
+    ],
+    "history_count": 10
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a",
+    "d"
+   ],
+   "home": "马拉加",
+   "away": "西班牙人",
+   "league": "西甲",
+   "num": "周五011",
+   "kickoff": "2026-10-10 03:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   },
+   "date": "2026-10-09",
+   "fetched_at": "2026-10-09 03:49:48",
+   "result": "",
+   "hitFlag": "",
+   "hhadHit": "",
+   "asianHit": "",
+   "hhadResult": "",
+   "pickDir": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   }
+  }
+ ]
+}
