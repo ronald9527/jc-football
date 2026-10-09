@@ -123,7 +123,18 @@ def main():
     with open(os.path.join(dist, "version.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False)
     # 部署数据文件，供页面端动态 fetch 实时刷新
-    for data_file in ["matches.json", "hkmo_cache.json", "odds_bsd_cache.json"]:
+    for data_file in ["matches.json", "hkmo_cache.json", "odds_bsd_cache.json",
+                      "odds_bsd.json", "fd_data.json"]:
+        src = os.path.join(BASE, data_file)
+        if os.path.exists(src):
+            shutil.copy(src, os.path.join(dist, data_file))
+
+    # 关键：历史战绩库一并部署到 Pages，作为云端副本。
+    # 一旦沙箱被重置、本地 history.json 丢失，ensure_history.py 能从这里拉回来，
+    # 避免「空历史重新部署 → 把线上那份也抹掉」的双杀。
+    for data_file in ["history.json", "parlay_history.json", "hkmo_history.json",
+                      "strongweak_history.json", "half_full_history.json",
+                      "smart_model.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))

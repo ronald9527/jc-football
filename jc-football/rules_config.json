@@ -18,10 +18,10 @@
  "组2正路确认": {
   "base": 9.58,
   "threshold": 8.6,
-  "samples": 24,
-  "hit": 18,
-  "miss": 6,
-  "hitRate": 75.0,
+  "samples": 26,
+  "hit": 19,
+  "miss": 7,
+  "hitRate": 73.1,
   "alpha": 9.87
  },
  "组3冷门监控": {
@@ -60,37 +60,37 @@
  "组9凯利价值": {
   "base": 1.59,
   "threshold": 1.51,
-  "samples": 91,
-  "hit": 53,
+  "samples": 92,
+  "hit": 54,
   "miss": 38,
-  "hitRate": 58.2,
+  "hitRate": 58.7,
   "alpha": 3.03
  },
  "组10排名压制": {
   "base": 8.39,
   "threshold": 7.4,
-  "samples": 49,
+  "samples": 50,
   "hit": 33,
-  "miss": 16,
-  "hitRate": 67.3,
+  "miss": 17,
+  "hitRate": 66.0,
   "alpha": 2.44
  },
  "组11进球预期": {
   "base": 3.0,
   "threshold": 2.0,
-  "samples": 209,
-  "hit": 145,
-  "miss": 64,
-  "hitRate": 69.4,
+  "samples": 212,
+  "hit": 147,
+  "miss": 65,
+  "hitRate": 69.3,
   "alpha": 0.16
  },
  "组12半场掌控": {
   "base": 57.04,
   "threshold": 56.0,
-  "samples": 54,
-  "hit": 39,
+  "samples": 55,
+  "hit": 40,
   "miss": 15,
-  "hitRate": 72.2,
+  "hitRate": 72.7,
   "alpha": 4.85
  },
  "组13攻防压制": {

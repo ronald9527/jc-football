@@ -101,9 +101,15 @@ def backtest_rules(cfg, records):
     return cfg
 
 def fetch_odds_history(mid):
-    """抓取单场赔率历史，返回各方向开盘→当前变动百分比和初盘赔率"""
-    url = BONUS_URL + "?clientCode=3001&matchId=" + str(mid)
-    try:
+    """抓取单场赔率历史，返回各方向开盘→当前变动百分比和初盘赔率
+
+    带 3 小时 TTL 缓存：赔率历史属慢变数据，每 30 分钟刷新一次无必要，
+    缓存后每天外部请求从 ~360 次降到 ~60 次，显著降低 sporttery 反爬风险。
+    """
+    from webcache import ttl_fetch
+
+    def _go():
+        url = BONUS_URL + "?clientCode=3001&matchId=" + str(mid)
         fb = fetch(url)
         oh = (fb.get("value") or {}).get("oddsHistory") or {}
         had_list = oh.get("hadList") or []
@@ -125,6 +131,9 @@ def fetch_odds_history(mid):
             first_h = hhad_list[0]
             hhad_open = {"h": to_float(first_h.get("h")), "d": to_float(first_h.get("d")), "a": to_float(first_h.get("a")), "goal": first_h.get("goal")}
         return {"mov": mov, "hadOpen": had_open, "hhadOpen": hhad_open}
+
+    try:
+        return ttl_fetch("odds_hist:" + str(mid), _go, ttl_hours=3)
     except Exception as e:
         print(f"  赔率历史失败 {mid}: {e}", flush=True)
         return {"mov": {"h": None, "d": None, "a": None}, "hadOpen": None, "hhadOpen": None}
@@ -392,47 +401,51 @@ def parse_team_form_html(html, tid, team_name, limit=6):
     }
 
 def fetch_team_form(tid, team_name):
-    """抓 500 球队页近况（带一天缓存）"""
-    cache_p = os.path.join(HERE, "form_cache.json")
-    cache = {}
-    if os.path.exists(cache_p):
-        try:
-            with open(cache_p, encoding="utf-8") as f:
-                cache = json.load(f)
-        except Exception:
-            cache = {}
-    today = time.strftime("%Y-%m-%d")
-    ent = cache.get(str(tid))
-    if ent and ent.get("date") == today:
-        return ent.get("form")
-    try:
+    """抓 500 球队页近况（带 6 小时 TTL 缓存，跨天复用）
+
+    原实现按「自然日」缓存，跨天会重抓 12 队；改为统一 web_cache 的 6 小时 TTL，
+    跨天边界也复用上一份近况（球队近况 6 小时变一次对分析无实质影响），
+    进一步把 500 球队页请求压到约 48 次/天。
+    """
+    from webcache import ttl_fetch
+
+    def _go():
         html = fetch_html(f"https://liansai.500.com/team/{tid}/", "https://liansai.500.com/", "gbk")
-        form = parse_team_form_html(html, tid, team_name)
-        cache[str(tid)] = {"date": today, "form": form}
-        with open(cache_p, "w", encoding="utf-8") as f:
-            json.dump(cache, f, ensure_ascii=False)
         time.sleep(0.25)
-        return form
+        return parse_team_form_html(html, tid, team_name)
+
+    try:
+        return ttl_fetch("team_form:" + str(tid), _go, ttl_hours=6)
     except Exception as e:
         print(f"  球队页失败 {tid}: {e}", flush=True)
         return None
 
 def fetch_jczq_teamids():
-    """抓 500 竞彩页的 场次编号->主客球队500ID 映射（用于抓球队页近况）"""
-    try:
+    """抓 500 竞彩页的 场次编号->主客球队500ID 映射（用于抓球队页近况）
+
+    带含日期的 6 小时 TTL 缓存：当天映射不变，30 次/天运行只用 ~4 次真实抓取。
+    """
+    from webcache import ttl_fetch
+
+    today = time.strftime("%Y-%m-%d")
+
+    def _go():
         html = fetch_html("https://trade.500.com/jczq/", "https://trade.500.com/", "gbk")
+        out = {}
+        for tr in re.findall(r"<tr[^>]*data-matchnum=\"[^\"]+\"[^>]*>", html):
+            g = lambda k: (re.search(k + r'="([^"]*)"', tr) or [None, ""])[1]
+            num = g("data-matchnum")
+            if not num:
+                continue
+            out[num] = {"home_id": g("data-homeid"), "away_id": g("data-awayid"),
+                        "home": g("data-homesxname"), "away": g("data-awaysxname")}
+        return out
+
+    try:
+        return ttl_fetch("jczq_teamids:" + today, _go, ttl_hours=6)
     except Exception as e:
         print("  竞彩页抓取失败:", e, flush=True)
         return {}
-    out = {}
-    for tr in re.findall(r"<tr[^>]*data-matchnum=\"[^\"]+\"[^>]*>", html):
-        g = lambda k: (re.search(k + r'="([^"]*)"', tr) or [None, ""])[1]
-        num = g("data-matchnum")
-        if not num:
-            continue
-        out[num] = {"home_id": g("data-homeid"), "away_id": g("data-awayid"),
-                    "home": g("data-homesxname"), "away": g("data-awaysxname")}
-    return out
 
 def cross_check(m, bd_matches):
     """竞彩×北单交叉验证：同一场（队名+日期±1天）两边概率对比。
@@ -1250,17 +1263,23 @@ def main():
     print(f"  近况/H2H 完成", flush=True)
 
     # BSD Sports API：伤停/首发/教练/xG/天气/裁判/AI预测
+    # 隔离原则（继承接管规范）：结果只写入「独立文件」bsd_data.json，绝不写回核心 matches.json，
+    # 避免免费额度耗尽导致部分比赛写入、部分未写，污染核心数据集与模型。
     print("[5.8/6] BSD伤停首发数据...", flush=True)
     try:
         from fetch_bsd import fetch_and_match
         bsd_data = fetch_and_match(matches, cache=True)
-        bsd_n = 0
-        for m in matches:
-            num = m.get("num", "")
-            if num in bsd_data:
-                m["bsd"] = bsd_data[num]
-                bsd_n += 1
-        print(f"  BSD匹配 {bsd_n}/{len(matches)} 场（伤停/首发/教练/天气/裁判/AI预测）", flush=True)
+        # 独立落盘：核心 matches 列表保持纯净，不被污染
+        _bsd_out = {
+            "updatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "source": "API-Football (伤停/首发/教练/天气/裁判/AI预测)",
+            "independent": True,
+            "byNum": bsd_data,
+        }
+        with open(os.path.join(HERE, "bsd_data.json"), "w", encoding="utf-8") as _f:
+            json.dump(_bsd_out, _f, ensure_ascii=False, indent=1)
+        bsd_n = len(bsd_data)
+        print(f"  BSD匹配 {bsd_n}/{len(matches)} 场（独立文件 bsd_data.json，未污染核心数据）", flush=True)
     except Exception as e:
         print(f"  BSD数据抓取失败: {e}", flush=True)
 
@@ -1373,19 +1392,27 @@ def main():
         print(f"  港澳历史二次回填失败: {e}", flush=True)
 
     # [5.10/6] BSD多博彩公司实时赔率（Pinnacle/Bet365/1xBet等权威博彩公司+水位变动）
-    print("[5.10/6] BSD多博彩公司实时赔率（Pinnacle/Bet365等）...", flush=True)
+    # 隔离原则（继承接管规范）：赔率结果只写入「独立文件」odds_bsd.json，
+    # 绝不写回核心 matches 列表（matches.json），也不进入 history.json（模型训练数据）。
+    # 前端从独立全局 ODDS_BSD 读取，本源与模型/核心数据零耦合。
+    print("[5.10/6] BSD多博彩公司实时赔率（Pinnacle/Bet365等，独立源）...", flush=True)
     try:
         from fetch_odds_bsd import fetch_and_match as fetch_odds_bsd_data
         odds_bsd_data = fetch_odds_bsd_data(matches)
         odds_bsd_matches = odds_bsd_data.get("matches", [])
-        odds_bsd_by_num = {m.get("num", ""): m for m in odds_bsd_matches}
-        odds_bsd_n = 0
-        for m in matches:
-            num = m.get("num", "")
-            if num in odds_bsd_by_num:
-                m["odds_bsd"] = odds_bsd_by_num[num]
-                odds_bsd_n += 1
-        print(f"  BSD多博彩赔率匹配 {odds_bsd_n}/{len(matches)} 场，赔率变动 {odds_bsd_data.get('total_movements', 0)} 次", flush=True)
+        # 独立落盘：核心 matches 列表保持纯净，不被污染
+        _obsd_out = {
+            "updatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "source": "The Odds API (Pinnacle/Bet365 等)",
+            "independent": True,
+            "matches": odds_bsd_matches,
+            "total_movements": odds_bsd_data.get("total_movements", 0),
+        }
+        with open(os.path.join(HERE, "odds_bsd.json"), "w", encoding="utf-8") as _f:
+            json.dump(_obsd_out, _f, ensure_ascii=False, indent=1)
+        odds_bsd_n = len(odds_bsd_matches)
+        print(f"  BSD多博彩赔率匹配 {odds_bsd_n}/{len(matches)} 场（独立文件 odds_bsd.json），"
+              f"赔率变动 {odds_bsd_data.get('total_movements', 0)} 次", flush=True)
     except Exception as e:
         print(f"  BSD多博彩赔率抓取失败: {e}", flush=True)
 
@@ -3676,6 +3703,56 @@ def five_dimension_rating(prob_score, rule_score, odds_score, form_score, market
     每个维度0-20分，总分100"""
     return min(100, max(0, prob_score + rule_score + odds_score + form_score + market_score))
 
+
+def calc_same_odds_signal(history_records, play_key, direction, ref_odds=None, goal=None, tol=0.12):
+    """历史同指：在相同赔率参考（胜平负）或相同盘口线（让球）下，该方向的历史命中率。
+    免费自建，仅用竞彩官方 history.json（354+ 已完赛记录），不依赖任何付费数据。
+    返回 (hit_rate 0-100 或 None, n)。样本<5 视为无统计意义，返回 (None, n)。
+
+    - play_key='spf'：用 ref_odds{h,d,a} 全赔率线匹配（三家赔率均落在容差内才算"同指"）
+    - play_key='hhad'：用 goal 盘口线 + 同方向 verdict 匹配（历史同盘口同方向命中）
+    """
+    hits = 0
+    n = 0
+    for r in history_records:
+        res = r.get("result")
+        if not isinstance(res, dict) or res.get("home") is None or res.get("cancel"):
+            continue
+        if play_key == "spf":
+            o = r.get("odds") or {}
+            # 当前候选赔率含 None（某方向未开售）则无法比"同指"，跳过
+            if not (isinstance(ref_odds, dict) and ref_odds.get(direction) is not None):
+                continue
+            ro = ref_odds.get(direction)
+            ho = o.get(direction)
+            if not (isinstance(ho, (int, float)) and isinstance(ro, (int, float))):
+                continue
+            # 同指：按所投方向的那一赔匹配（同一赔率参考 historically 命中率）；
+            # 放宽到单一方向容差，避免"三家全同"过于稀疏导致几乎无样本
+            if abs(ho - ro) > max(tol, 0.15):
+                continue
+            actual = res.get("had")
+            if actual == direction:
+                hits += 1
+            n += 1
+        elif play_key == "hhad":
+            if r.get("goal") != goal:
+                continue
+            hv = r.get("hhadVerdict") or {}
+            if hv.get("dir") != direction:
+                continue
+            hh = r.get("hhadHit")
+            if hh == "hit":
+                hits += 1
+            elif hh == "miss":
+                pass
+            else:
+                continue  # n-a 不计入样本
+            n += 1
+    if n < 5:
+        return (None, n)
+    return (round(hits / n * 100, 1), n)
+
 def _parlay_true_prob(m, d):
     """串关用：返回该方向的「校准后真实概率」(0-1)。
 
@@ -3716,6 +3793,11 @@ def gen_safe_parlay(matches):
     matches = [m for m in matches if m.get("date") == today]
     candidates = []
     now_ts = time.time()
+    # 历史同指：载入竞彩官方赛果库（354+ 已完赛），免费自建同指命中率
+    try:
+        _hist_recs = load_history()
+    except Exception:
+        _hist_recs = []
 
     for m in matches:
         kickoff = m.get("kickoff") or ""
@@ -3917,12 +3999,29 @@ def gen_safe_parlay(matches):
             else:
                 pass_filter = tech_count >= 2
             if pass_filter:
+                # ===== 历史同指（免费自建，仅用竞彩官方 history.json）=====
+                so_hit, so_n = calc_same_odds_signal(_hist_recs, "spf", d, ref_odds=had)
+                if so_hit is not None:
+                    if so_hit >= 60 and so_n >= 10:  # 同指高命中：价值确认，+1 技术维度
+                        tech_count += 1
+                    same_odds_hit, same_odds_n = so_hit, so_n
+                else:
+                    same_odds_hit, same_odds_n = None, so_n
+                # ===== 五维雷达（真实输出，已接线）：市场概率/规则/赔率价值/状态/市场共识 =====
+                fd_prob = min(20, strength_score + max(0, prob_align - 5) * 0.9)
+                fd_rule = min(20, rule_conf * 0.22)
+                fd_odds = min(20, max(0, kelly) * 4)
+                fd_form = min(20, abs(form_h - form_a) * 0.5)
+                fd_mkt = min(20, disp_score * 1.4 + cold_score * 0.6)
+                five_dim = round(five_dimension_rating(fd_prob, fd_rule, fd_odds, fd_form, fd_mkt), 1)
                 match_options.append({
                     "play": "胜平负", "playKey": "spf", "dir": d, "label": label,
                     "odds": odds, "confidence": round(conf, 1),
                     "score": round(conf * odds, 1), "reasons": reasons,
                     "techCount": tech_count,
-                    "pTrue": round(_parlay_true_prob(m, d) * 100, 2)
+                    "pTrue": round(_parlay_true_prob(m, d) * 100, 2),
+                    "sameOddsHit": same_odds_hit, "sameOddsN": same_odds_n,
+                    "fiveDim": five_dim
                 })
 
         # ========== 选项2：让球胜平负（辅助玩法，最多1场） ==========
@@ -4016,11 +4115,28 @@ def gen_safe_parlay(matches):
             else:
                 pass_filter = tech_count >= 2 and conf >= 58
             if pass_filter:
+                # ===== 历史同指（按盘口线 + 同方向匹配，免费自建）=====
+                so_hit, so_n = calc_same_odds_signal(_hist_recs, "hhad", d, goal=str(goal))
+                if so_hit is not None:
+                    if so_hit >= 60 and so_n >= 10:
+                        tech_count += 1
+                    same_odds_hit, same_odds_n = so_hit, so_n
+                else:
+                    same_odds_hit, same_odds_n = None, so_n
+                # ===== 五维雷达（让球盘：概率/规则/盘口价值/状态/市场）=====
+                fd_prob = min(20, d_prob * 0.4)
+                fd_rule = min(20, tech_count * 4)
+                fd_odds = min(20, max(0, conf - 55) * 0.7)
+                fd_form = min(20, form_score * 1.33)
+                fd_mkt = min(20, prob_align * 1.3)
+                five_dim = round(five_dimension_rating(fd_prob, fd_rule, fd_odds, fd_form, fd_mkt), 1)
                 match_options.append({
                     "play": f"让球{goal}", "playKey": "hhad", "dir": d, "label": label,
                     "odds": odds, "confidence": round(conf, 1),
                     "score": round(conf * odds, 1), "reasons": reasons,
-                    "techCount": tech_count
+                    "techCount": tech_count,
+                    "sameOddsHit": same_odds_hit, "sameOddsN": same_odds_n,
+                    "fiveDim": five_dim
                 })
 
         # ========== 选项3：总进球（辅助玩法，最多1场） ==========
@@ -4049,11 +4165,36 @@ def gen_safe_parlay(matches):
                 conf = min(85, max(58, conf))
                 if tech_count >= 2 and conf >= 70:
                     label = f"{k}球" if k < 7 else "7+球"
+                    # ===== 历史同指（总进球代理：同预期进球区间→实际总进球命中）=====
+                    so_hit, so_n = None, 0
+                    _gh = 0
+                    for r in _hist_recs:
+                        res = r.get("result")
+                        ge = r.get("goalsExp") or 0
+                        if not isinstance(res, dict) or res.get("home") is None or res.get("cancel"):
+                            continue
+                        if abs(ge - k) < 0.6:
+                            so_n += 1
+                            if (res.get("home", 0) + res.get("away", 0)) == k:
+                                _gh += 1
+                    if so_n >= 5:
+                        so_hit = round(_gh / so_n * 100, 1)
+                        if so_hit >= 55 and so_n >= 10:
+                            tech_count += 1
+                    # ===== 五维雷达（总进球：概率/规则/赔率价值/状态/市场）=====
+                    fd_prob = min(20, base_prob * 0.35)
+                    fd_rule = min(20, tech_count * 4)
+                    fd_odds = min(20, max(0, conf - 55) * 0.7)
+                    fd_form = min(20, stability * 20)
+                    fd_mkt = min(20, abs(k - lam) < 1.0 and 20 or 8)
+                    five_dim = round(five_dimension_rating(fd_prob, fd_rule, fd_odds, fd_form, fd_mkt), 1)
                     match_options.append({
                         "play": "总进球", "playKey": "ttg", "dir": str(k), "label": label,
                         "odds": odds, "confidence": round(conf, 1),
                         "score": round(conf * odds, 1), "reasons": reasons,
-                        "techCount": tech_count
+                        "techCount": tech_count,
+                        "sameOddsHit": so_hit, "sameOddsN": so_n,
+                        "fiveDim": five_dim
                     })
 
         # 每场保留最多3个最优选项。
@@ -4072,22 +4213,25 @@ def gen_safe_parlay(matches):
                     "stableIndex": stable_index,
                     "score": opt["score"], "reasons": opt["reasons"],
                     "techCount": opt.get("techCount", 0),
-                    "pTrue": opt.get("pTrue")
+                    "pTrue": opt.get("pTrue"),
+                    "sameOddsHit": opt.get("sameOddsHit"),
+                    "sameOddsN": opt.get("sameOddsN"),
+                    "fiveDim": opt.get("fiveDim")
                 })
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
     # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选「期望值 EV」最优组合 =====
-    # (输出字段, 档位名, 允许场数, 单场赔率下限, 总赔下限, 总赔上限, 说明)
+    # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 说明)
+    # 联合概率下限按「返奖率^n / 典型总赔」反推设定，避免与总赔区间自相矛盾
+    # EV下限：稳胆档只取≈盈亏平衡以上（不再推明显负期望"稳胆"）；均衡档放宽容差；搏击档纯娱乐不卡
     TIERS = [
-        #  key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, 说明
-        # 联合概率下限按「返奖率^n / 典型总赔」反推设定，避免与总赔区间自相矛盾
-        ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20,
-         "2串1 · 主打命中，单场不低于1.45（拒绝蚊子肉），总赔2.2-4.5倍"),
-        ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08,
-         "3串1 · 命中率与赔率折中，总赔4.5-10倍"),
-        ("parlayBoost", "搏击", (3, 4), 1.70, 10.0, 40.0, 45.0, 0.03,
-         "3-4串1 · 总赔10倍以上，命中率明显下降，方差极大"),
+        ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08,
+         "2串1 · 主打命中，单场不低于1.45（拒绝蚊子肉），总赔2.2-4.5倍；只取高信心组合里 EV≥-8% 的最不亏方案，EV<0 仍标不推荐"),
+        ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08, -0.15,
+         "3串1 · 命中率与赔率折中，总赔4.5-10倍；只取 EV≥-15% 的方案，EV<0 仍标不推荐"),
+        ("parlayBoost", "搏击", (3, 4), 1.70, 10.0, 40.0, 45.0, 0.03, -1.0,
+         "3-4串1 · 总赔10倍以上，命中率明显下降，方差极大，纯娱乐不卡EV"),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4114,7 +4258,7 @@ def gen_safe_parlay(matches):
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
     def build_tier(tier):
-        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, desc = tier
+        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, desc = tier
         from itertools import combinations
         best = None
         best_score = None
@@ -4148,10 +4292,20 @@ def gen_safe_parlay(matches):
                     continue
                 # 期望值：EV = 联合概率 × 总赔率 − 1
                 ev = joint_p * total_odds - 1.0
+                # EV 门槛：稳胆/均衡档只取达到 EV下限的组合，杜绝"明显负期望稳胆"
+                if ev < min_ev:
+                    continue
                 tech_sum = sum(c.get("techCount", 0) for c in combo)
                 stable_sum = sum(c.get("stableIndex", 0) for c in combo)
-                # EV 主导（量级 0.1~1）；技术/稳胆只在 EV 接近时做细微区分
-                score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum
+                five_dim_sum = sum(c.get("fiveDim") or 0 for c in combo)
+                # 同指陷阱惩罚：某腿历史同指命中率<45%且样本充足 → 该组合减分
+                so_penalty = 0.0
+                for c in combo:
+                    so = c.get("sameOddsHit")
+                    if so is not None and c.get("sameOddsN", 0) >= 10 and so < 45:
+                        so_penalty += 0.0006 * (45 - so)
+                # EV 主导（量级 0.1~1）；技术/稳胆/五维只在 EV 接近时做细微区分
+                score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
                 if best_score is None or score > best_score:
                     best_score = score
                     best = (list(combo), total_odds, joint_p, ev, n)
@@ -4186,6 +4340,8 @@ def gen_safe_parlay(matches):
             "suggestStake": round(stake, 1),
             "rake": round(rake, 1),
             "evNote": ev_note,
+            # 是否值得作为「推荐」展示：EV<0 的数学上长期必亏，不再以推荐组合形式展示
+            "recommended": ev >= 0,
         }
 
     built = {t[0]: build_tier(t) for t in TIERS}
@@ -4196,7 +4352,7 @@ def gen_safe_parlay(matches):
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
-        "strategy": "EV 驱动分层串关：拒绝蚊子肉（单场赔率下限 1.45），稳健/均衡/搏击三档各在自身赔率区间内取「期望值 EV」最优组合；EV = 联合校准概率 × 总赔率 − 1，概率取自智能引擎校准值",
+        "strategy": "EV 驱动分层串关：拒绝蚊子肉（单场赔率下限 1.45），稳健/均衡/搏击三档各在自身赔率区间内取「期望值 EV」最优组合；概率取自智能引擎校准值；并叠加历史同指命中率（免费自建，竞彩官方赛果库）与五维雷达评分做交叉验证，稳胆档强制 EV≥-3% 才推荐",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlayBoost": parlay_boost,
@@ -4445,26 +4601,30 @@ def save_parlay_history(safe_parlay, high_parlay):
         data = {"updatedAt": "", "records": []}
 
     records = data.get("records", [])
-    # 已有当天记录的类型不再覆盖（锁定机制：当天首次生成后不再变动）
-    today_types = {r.get("type") for r in records if r.get("date") == today}
+    # 锁定机制：当天已保存的「同一组 legs（按 场次+玩法+方向）」不再覆盖，避免重复。
+    # 用 legs 签名去重（不依赖展示用 type 文案），命名随档位变化也不产生重复。
+    def _leg_sig(legs):
+        return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir")) for l in (legs or [])))
+    today_sigs = {_leg_sig(r.get("legs", [])) for r in records if r.get("date") == today}
 
-    # 添加稳胆2串1（仅当天无此类型时）
-    if safe_parlay and safe_parlay.get("parlay2") and "稳胆2串1" not in today_types:
-        p = safe_parlay["parlay2"]
+    # 保存各档串关（稳健/均衡/搏击）：即便 EV<0 标「不推荐」也照常落盘，
+    # 方便赛后对照「不推荐」是否真的没中，反向验证 EV 模型是否成立。
+    for key in ("parlay2", "parlay3", "parlayBoost"):
+        p = (safe_parlay or {}).get(key)
+        if not p or not p.get("legs"):
+            continue
+        sig = _leg_sig(p["legs"])
+        if sig in today_sigs:
+            continue
+        today_sigs.add(sig)
+        ptype = f'{p.get("tier", "")}{p.get("type", "")}'
         records.append({
-            "date": today, "type": "稳胆2串1", "totalOdds": p["totalOdds"],
-            "avgConfidence": p["avgConfidence"], "legs": p["legs"],
-            "result": "pending", "savedAt": time.strftime("%Y-%m-%d %H:%M:%S")
+            "date": today, "type": ptype,
+            "totalOdds": p["totalOdds"], "avgConfidence": p.get("avgConfidence", 0),
+            "legs": p["legs"], "recommended": bool(p.get("recommended", False)),
+            "ev": p.get("ev"), "result": "pending",
+            "savedAt": time.strftime("%Y-%m-%d %H:%M:%S")
         })
-    # 添加稳胆3串1（仅当天无此类型时）
-    if safe_parlay and safe_parlay.get("parlay3") and "稳胆3串1" not in today_types:
-        p = safe_parlay["parlay3"]
-        records.append({
-            "date": today, "type": "稳胆3串1", "totalOdds": p["totalOdds"],
-            "avgConfidence": p["avgConfidence"], "legs": p["legs"],
-            "result": "pending", "savedAt": time.strftime("%Y-%m-%d %H:%M:%S")
-        })
-    # 注：高倍串关已按用户要求永久移除，不再生成/保存
 
     data["updatedAt"] = time.strftime("%Y-%m-%d %H:%M:%S")
     data["records"] = records
@@ -4473,7 +4633,17 @@ def save_parlay_history(safe_parlay, high_parlay):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        raise
+    except Exception as e:
+        # 顶层兜底：任何未预期异常都打印清晰错误并退出 1，
+        # 避免抛出原始 traceback；由 run_daily.sh 决定是否判失败。
+        import traceback
+        traceback.print_exc()
+        print(f"\n[致命] fetch_daily.py 执行异常: {e}", flush=True)
+        sys.exit(1)
     # 抓取高手推荐（92玩球易红单）：仅16:00-21:00每小时抓取
     current_hour = time.localtime().tm_hour
     if 16 <= current_hour <= 21:

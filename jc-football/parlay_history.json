@@ -1,106 +1,162 @@
 {
- "updatedAt": "2026-10-09 03:49:48",
+ "updatedAt": "2026-10-09 13:26:18",
  "records": [
   {
    "date": "2026-10-09",
-   "type": "稳胆2串1",
-   "totalOdds": 1.9,
-   "avgConfidence": 77.1,
+   "type": "稳健2串1",
+   "totalOdds": 2.79,
+   "avgConfidence": 70.8,
    "legs": [
     {
-     "num": "周五010",
-     "league": "英冠",
-     "home": "西汉姆联",
-     "away": "女王公园巡游者",
-     "kickoff": "2026-10-10 03:00",
+     "num": "周五005",
+     "league": "挪超",
+     "home": "布兰",
+     "away": "维京",
+     "kickoff": "2026-10-10 01:00",
      "play": "胜平负",
      "playKey": "spf",
-     "dir": "h",
-     "label": "主胜",
-     "odds": 1.41,
-     "confidence": 79.3,
-     "stableIndex": 75.8,
-     "score": 111.8,
+     "dir": "a",
+     "label": "客胜",
+     "odds": 1.85,
+     "confidence": 73.5,
+     "stableIndex": 73.8,
+     "score": 136.0,
      "reasons": [
-      "市场概率63%",
-      "反指3★(推平局)",
-      "主队状态50%"
+      "市场概率46%",
+      "泊松参考34%",
+      "反指3★(推主胜)",
+      "客队状态83%"
      ],
-     "techCount": 3
+     "techCount": 3,
+     "pTrue": 48.54,
+     "sameOddsHit": 44.4,
+     "sameOddsN": 27,
+     "fiveDim": 62.3
     },
     {
-     "num": "周五007",
-     "league": "荷乙",
-     "home": "赫拉克勒斯",
-     "away": "瓦尔韦克",
-     "kickoff": "2026-10-10 02:00",
+     "num": "周五004",
+     "league": "瑞超",
+     "home": "IFK哥德堡",
+     "away": "韦斯特罗斯",
+     "kickoff": "2026-10-10 01:00",
      "play": "胜平负",
      "playKey": "spf",
      "dir": "h",
      "label": "主胜",
-     "odds": 1.35,
-     "confidence": 74.9,
-     "stableIndex": 71.7,
-     "score": 101.2,
+     "odds": 1.51,
+     "confidence": 68.2,
+     "stableIndex": 53.6,
+     "score": 102.9,
      "reasons": [
-      "市场概率66%",
-      "反指0★(推平局)",
-      "主队状态83%"
+      "市场概率59%",
+      "正路3★"
      ],
-     "techCount": 3
+     "techCount": 2,
+     "pTrue": 76.18,
+     "sameOddsHit": 68.2,
+     "sameOddsN": 66,
+     "fiveDim": 56.4
     }
    ],
+   "recommended": false,
+   "ev": -6.7,
    "result": "pending",
-   "savedAt": "2026-10-09 01:19:57"
+   "savedAt": "2026-10-09 13:26:18"
   },
   {
    "date": "2026-10-09",
-   "type": "稳胆3串1",
-   "totalOdds": 3.43,
-   "avgConfidence": 75.9,
+   "type": "均衡3串1",
+   "totalOdds": 9.0,
+   "avgConfidence": 65.6,
    "legs": [
     {
-     "num": "周五010",
-     "league": "英冠",
-     "home": "西汉姆联",
-     "away": "女王公园巡游者",
-     "kickoff": "2026-10-10 03:00",
+     "num": "周五005",
+     "league": "挪超",
+     "home": "布兰",
+     "away": "维京",
+     "kickoff": "2026-10-10 01:00",
      "play": "胜平负",
      "playKey": "spf",
-     "dir": "h",
-     "label": "主胜",
-     "odds": 1.41,
-     "confidence": 79.3,
-     "stableIndex": 75.8,
-     "score": 111.8,
+     "dir": "a",
+     "label": "客胜",
+     "odds": 1.85,
+     "confidence": 73.5,
+     "stableIndex": 73.8,
+     "score": 136.0,
      "reasons": [
-      "市场概率63%",
-      "反指3★(推平局)",
-      "主队状态50%"
+      "市场概率46%",
+      "泊松参考34%",
+      "反指3★(推主胜)",
+      "客队状态83%"
      ],
-     "techCount": 3
+     "techCount": 3,
+     "pTrue": 48.54,
+     "sameOddsHit": 44.4,
+     "sameOddsN": 27,
+     "fiveDim": 62.3
     },
     {
-     "num": "周五007",
-     "league": "荷乙",
-     "home": "赫拉克勒斯",
-     "away": "瓦尔韦克",
-     "kickoff": "2026-10-10 02:00",
+     "num": "周五004",
+     "league": "瑞超",
+     "home": "IFK哥德堡",
+     "away": "韦斯特罗斯",
+     "kickoff": "2026-10-10 01:00",
      "play": "胜平负",
      "playKey": "spf",
      "dir": "h",
      "label": "主胜",
-     "odds": 1.35,
-     "confidence": 74.9,
-     "stableIndex": 71.7,
-     "score": 101.2,
+     "odds": 1.51,
+     "confidence": 68.2,
+     "stableIndex": 53.6,
+     "score": 102.9,
      "reasons": [
-      "市场概率66%",
-      "反指0★(推平局)",
-      "主队状态83%"
+      "市场概率59%",
+      "正路3★"
      ],
-     "techCount": 3
+     "techCount": 2,
+     "pTrue": 76.18,
+     "sameOddsHit": 68.2,
+     "sameOddsN": 66,
+     "fiveDim": 56.4
     },
+    {
+     "num": "周五002",
+     "league": "日职",
+     "home": "柏太阳神",
+     "away": "神户胜利船",
+     "kickoff": "2026-10-09 18:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "d",
+     "label": "平局",
+     "odds": 3.22,
+     "confidence": 55.1,
+     "stableIndex": 39.1,
+     "score": 177.5,
+     "reasons": [
+      "市场概率28%",
+      "泊松验证24%",
+      "凯利-4.4",
+      "正路3★"
+     ],
+     "techCount": 2,
+     "pTrue": 32.12,
+     "sameOddsHit": 26.8,
+     "sameOddsN": 71,
+     "fiveDim": 33.7
+    }
+   ],
+   "recommended": false,
+   "ev": -9.0,
+   "result": "pending",
+   "savedAt": "2026-10-09 13:26:18"
+  },
+  {
+   "date": "2026-10-09",
+   "type": "搏击3串1",
+   "totalOdds": 23.7,
+   "avgConfidence": 62.8,
+   "legs": [
     {
      "num": "周五003",
      "league": "德乙",
@@ -111,20 +167,78 @@
      "playKey": "hhad",
      "dir": "a",
      "label": "让负",
-     "odds": 1.8,
-     "confidence": 73.5,
-     "stableIndex": 69.1,
-     "score": 132.4,
+     "odds": 1.84,
+     "confidence": 72.6,
+     "stableIndex": 67.2,
+     "score": 133.6,
      "reasons": [
-      "让球概率49%",
+      "让球概率48%",
       "盘口-1",
       "反指平局→让负(高信心)"
      ],
-     "techCount": 3
+     "techCount": 3,
+     "pTrue": null,
+     "sameOddsHit": 41.9,
+     "sameOddsN": 129,
+     "fiveDim": 64.5
+    },
+    {
+     "num": "周五005",
+     "league": "挪超",
+     "home": "布兰",
+     "away": "维京",
+     "kickoff": "2026-10-10 01:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "d",
+     "label": "平局",
+     "odds": 4.0,
+     "confidence": 60.7,
+     "stableIndex": 73.8,
+     "score": 242.9,
+     "reasons": [
+      "市场概率23%",
+      "泊松验证21%",
+      "凯利-2.7",
+      "反指3★(推主胜)"
+     ],
+     "techCount": 3,
+     "pTrue": 24.27,
+     "sameOddsHit": 22.9,
+     "sameOddsN": 35,
+     "fiveDim": 62.3
+    },
+    {
+     "num": "周五002",
+     "league": "日职",
+     "home": "柏太阳神",
+     "away": "神户胜利船",
+     "kickoff": "2026-10-09 18:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "d",
+     "label": "平局",
+     "odds": 3.22,
+     "confidence": 55.1,
+     "stableIndex": 39.1,
+     "score": 177.5,
+     "reasons": [
+      "市场概率28%",
+      "泊松验证24%",
+      "凯利-4.4",
+      "正路3★"
+     ],
+     "techCount": 2,
+     "pTrue": 32.12,
+     "sameOddsHit": 26.8,
+     "sameOddsN": 71,
+     "fiveDim": 33.7
     }
    ],
+   "recommended": false,
+   "ev": -19.1,
    "result": "pending",
-   "savedAt": "2026-10-09 01:19:57"
+   "savedAt": "2026-10-09 13:26:18"
   }
  ]
 }

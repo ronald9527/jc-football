@@ -73,6 +73,33 @@ def main():
                 expertstats = esd.get("stats", {})
         except Exception:
             pass
+    # BSD 国际权威赔率（独立源，不污染核心 matches.json）
+    odds_bsd = {"updatedAt": "", "source": "", "independent": True, "matches": [], "total_movements": 0}
+    obp = os.path.join(HERE, "odds_bsd.json")
+    if os.path.exists(obp):
+        try:
+            with open(obp, encoding="utf-8") as f:
+                odds_bsd = json.load(f)
+        except Exception:
+            pass
+    # football-data.org 官方赛果核对（独立源，不参与模型）
+    fd = {"updatedAt": "", "source": "football-data.org", "enabled": False, "matches": [], "byNum": {}}
+    fdp = os.path.join(HERE, "fd_data.json")
+    if os.path.exists(fdp):
+        try:
+            with open(fdp, encoding="utf-8") as f:
+                fd = json.load(f)
+        except Exception:
+            pass
+    # BSD 伤停/首发/教练/天气/裁判/AI预测（独立源，不污染核心 matches.json）
+    bsd_data = {"byNum": {}}
+    bsp = os.path.join(HERE, "bsd_data.json")
+    if os.path.exists(bsp):
+        try:
+            with open(bsp, encoding="utf-8") as f:
+                bsd_data = json.load(f)
+        except Exception:
+            pass
     # 把专家战绩合并到每条推荐（主推荐expertStats + 其他专家hitRate）
     for _r in expert.get("recommendations", []):
         _name = _r.get("expertName", "")
@@ -99,6 +126,9 @@ def main():
     js_expert = json.dumps(expert, ensure_ascii=False).replace("</", "<\\/")
     js_exporth = json.dumps(exporth, ensure_ascii=False).replace("</", "<\\/")
     js_expertstats = json.dumps(expertstats, ensure_ascii=False).replace("</", "<\\/")
+    js_odds_bsd = json.dumps(odds_bsd, ensure_ascii=False).replace("</", "<\\/")
+    js_fd = json.dumps(fd, ensure_ascii=False).replace("</", "<\\/")
+    js_bsd = json.dumps(bsd_data.get("byNum", {}), ensure_ascii=False).replace("</", "<\\/")
     out = (tpl.replace("__DATA_PLACEHOLDER__", js_data)
               .replace("__HISTORY_PLACEHOLDER__", js_hist)
               .replace("__CONFIG_PLACEHOLDER__", js_cfg)
@@ -108,17 +138,21 @@ def main():
               .replace("__STRONGWEAK_HISTORY_PLACEHOLDER__", js_swh)
               .replace("__EXPERT_PLACEHOLDER__", js_expert)
               .replace("__EXPERT_HISTORY_PLACEHOLDER__", js_exporth)
-              .replace("__EXPERT_STATS_PLACEHOLDER__", js_expertstats))
+              .replace("__EXPERT_STATS_PLACEHOLDER__", js_expertstats)
+              .replace("__ODDS_BSD_PLACEHOLDER__", js_odds_bsd)
+              .replace("__FD_PLACEHOLDER__", js_fd)
+              .replace("__BSD_PLACEHOLDER__", js_bsd))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
                "__BD_DATA_PLACEHOLDER__", "__BD_HISTORY_PLACEHOLDER__", "__HKMO_HISTORY_PLACEHOLDER__",
                "__STRONGWEAK_HISTORY_PLACEHOLDER__",
-               "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__"):
+               "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__",
+               "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__"):
         assert ph not in out, f"占位符未替换: {ph}"
     out_path = os.path.join(HERE, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(out)
-    print("已生成:", out_path, f"({len(out)} 字符, 今日{data.get('count',0)}场, 历史{hist.get('total',0)}条, 港澳历史{len(hkmoh.get('records',[]))}条, 高手推荐{len(expert.get('recommendations',[]))}条)")
+    print("已生成:", out_path, f"({len(out)} 字符, 今日{data.get('count',0)}场, 历史{hist.get('total',0)}条, 港澳历史{len(hkmoh.get('records',[]))}条, 高手推荐{len(expert.get('recommendations',[]))}条, 国际权威赔率{len(odds_bsd.get('matches',[]))}场, 官方赛果{len(fd.get('matches',[]))}场)")
 
 if __name__ == "__main__":
     main()

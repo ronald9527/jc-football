@@ -1,0 +1,10 @@
+
+# 部署节流本地状态（不入库、不上传）
+.last_deploy.ts
+.last_deploy.sha
+web_cache.json
+form_cache.json
+matches.json.bak_run
+
+# 免费 API 密钥（含 football-data.org key，绝不入库）
+fd_config.json

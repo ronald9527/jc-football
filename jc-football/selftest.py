@@ -10,6 +10,8 @@ selftest.py —— 数据自检（每日自动跑，发现问题退出码非 0�
   4. 串关合理性：拒绝蚊子肉（单场 >= 1.45）、总赔 >= 2.2、EV/命中率字段存在
   5. 历史库：条数、日期连续、命中判定字段完整
   6. 页面产物：占位符是否已全部替换、无未替换标记
+  7. 数据源隔离：独立源（The Odds API / football-data.org / 高手荐单）不得写回核心
+     matches.json 或 history.json（模型训练数据），各自落独立文件
 
 输出：selftest_report.json；控制台打印 [OK]/[WARN]/[ERROR]
 退出码：0=通过  1=有 ERROR  2=仅有 WARN（可用 --strict 让 WARN 也失败）
@@ -184,6 +186,35 @@ def check_page():
         add("WARN", "版本", "版本一致性检查失败：%s" % e)
 
 
+def check_isolation():
+    print("· 检查 7/7 数据源隔离（独立源不得污染核心数据/模型）")
+    data = load("matches.json", {})
+    ms = (data or {}).get("matches", [])
+    leaked = [m.get("num") for m in ms if isinstance(m, dict) and "odds_bsd" in m]
+    if leaked:
+        add("ERROR", "隔离", "核心 matches.json 仍含 odds_bsd 字段（%d 场），未与独立源解耦" % len(leaked))
+    else:
+        print("  核心 matches.json 不含 odds_bsd（已解耦）")
+
+    # 独立源文件结构校验（存在即校验合法性；缺失不报错，属正常降级）
+    obsd = load("odds_bsd.json")
+    if obsd is not None:
+        if not isinstance(obsd.get("matches"), list) or not obsd.get("independent"):
+            add("WARN", "隔离", "odds_bsd.json 结构异常")
+        else:
+            print("  独立源 odds_bsd.json：%d 场（The Odds API）" % len(obsd.get("matches", [])))
+    fd = load("fd_data.json")
+    if fd is not None:
+        if not isinstance(fd.get("matches"), list) or fd.get("source") != "football-data.org":
+            add("WARN", "隔离", "fd_data.json 结构异常")
+        else:
+            print("  独立源 fd_data.json：%d 场（football-data.org）" % len(fd.get("matches", [])))
+    # 高手荐单（独立展示源）：只校验存在时不污染核心数据
+    exp = load("expert_recommendations.json")
+    if exp is not None and not isinstance(exp.get("recommendations"), list):
+        add("WARN", "隔离", "expert_recommendations.json 结构异常")
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -198,6 +229,7 @@ def main():
     check_parlay(data)
     check_history(hist)
     check_page()
+    check_isolation()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

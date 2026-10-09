@@ -97,7 +97,14 @@ def fetch_jc_fids(date_str=None):
     """从500彩票网竞彩足球页面解析竞彩比赛的fid映射
     date_str: 指定日期(YYYY-MM-DD)，None为当日
     返回: {队名vs队名: fid}，队名为500页面显示名（可能为简称）
+
+    带含日期的 6 小时 TTL 缓存：当天 fid 映射不变，30 次/天运行只真实抓 ~4 次。
     """
+    from webcache import get, set as _wcset
+    cache_key = "jc_fids:" + (date_str or time.strftime("%Y-%m-%d"))
+    _c = get(cache_key)
+    if _c is not None:
+        return _c
     if date_str:
         url = f"https://trade.500.com/jczq/?date={date_str}"
     else:
@@ -144,6 +151,7 @@ def fetch_jc_fids(date_str=None):
                     "home": home, "away": away,
                     "num": num_m.group(1) if num_m else "",
                 }
+    _wcset(cache_key, result, ttl_hours=6)
     return result
 
 def parse_odds_history(data):
@@ -171,6 +179,11 @@ def parse_odds_history(data):
 
 def fetch_hkmo_for_match(fid):
     """抓取单场比赛的香港马会和澳门彩票赔率"""
+    from webcache import get, set as _wcset
+    cache_key = "hkmo:" + str(fid)
+    _c = get(cache_key)
+    if _c is not None:
+        return _c
     result = {"fid": fid, "hk": None, "mo": None, "both_drop": False, "common_drop_dirs": []}
     try:
         # 香港马会
@@ -189,6 +202,8 @@ def fetch_hkmo_for_match(fid):
             result["both_drop"] = len(common) > 0
     except Exception as e:
         print(f"  港澳赔率抓取失败 fid={fid}: {e}", flush=True)
+    if result.get("hk") or result.get("mo"):
+        _wcset(cache_key, result, ttl_hours=3)
     return result
 
 def fetch_and_match(bd_matches, date_str=None):

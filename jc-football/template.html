@@ -405,6 +405,17 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .obsd-prev{font-size:9px;color:var(--weak);text-decoration:line-through}
 .obsd-arrow{font-size:10px;font-weight:700}
 @media(max-width:768px){.obsd-cell{font-size:10px;padding:2px 1px}.obsd-cur{font-size:11px}.obsd-book{font-size:8.5px}}
+/* 官方赛果核对（football-data.org 独立源） */
+.fd-view{padding:4px 0}
+.fd-group{margin-bottom:14px}
+.fd-group-title{font-size:12px;font-weight:700;color:var(--accent);margin:6px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
+.fd-card{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-bottom:6px}
+.fd-comp{font-size:9.5px;color:var(--weak);background:var(--panel3);padding:1px 6px;border-radius:4px}
+.fd-teams{font-weight:700;font-size:13px;flex:1;min-width:160px}
+.fd-num{font-size:10px;color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:4px}
+.fd-score{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.fd-score.fd-live{color:#faad14}
+.fd-winner{font-size:10px;color:var(--good);margin-left:4px;font-weight:700}
 .hkmo-rec-val.hit{color:var(--good)}
 .hkmo-rec-val.miss{color:var(--bad)}
 .hkmo-rec-stars{color:#faad14;font-size:11px}
@@ -985,6 +996,7 @@ footer b{color:var(--sub)}
   <button data-tab="hkmo">港澳赔率<span class="hkmo-tab-badge" id="hkmoTabBadge" style="display:none">0</span></button>
   <button data-tab="highodds">分层串关<span class="bdg" id="highOddsBdg">0</span></button>
   <button data-tab="expert">高手推荐<span class="bdg" id="expertBdg">0</span></button>
+  <button data-tab="fd">官方赛果<span class="bdg" id="fdBdg">0</span></button>
 </div>
 
 <main>
@@ -1000,7 +1012,6 @@ footer b{color:var(--sub)}
   <div class="upd-banner" id="updBanner"></div>
 
   <div class="focus-board" id="focusBoard"></div>
-  <div class="parlay-board" id="parlayBoard"></div>
   <div id="cardsView"></div>
   <div class="tview" id="tableView"></div>
 
@@ -1016,11 +1027,6 @@ footer b{color:var(--sub)}
     <div class="star-board" id="starBoard"></div>
     <div class="hnote" id="histNote"></div>
     <div class="rg-board" id="rgBoard"></div>
-    <div class="parlay-hist">
-      <div class="fb-title">串关历史 · 永久保存<span class="tip">每天16:00后锁定当天精选，方便追溯</span></div>
-      <div class="toolbar" style="margin:8px 0"><span class="label">日期</span><div id="parlayDateFilterWrap"></div></div>
-      <div id="parlayHistBoard"></div>
-    </div>
     <div class="hlist" id="histList"></div>
   </div>
 
@@ -1076,6 +1082,12 @@ footer b{color:var(--sub)}
     </div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="expertSummary"></div>
     <div id="expertList"></div>
+  </div>
+
+  <div class="fd-view" id="fdView" style="display:none">
+    <div class="fb-title">football-data.org 官方赛果核对 · 独立数据源<span class="tip">专业免费源（football-data.org），仅作官方赛果/赛程独立核对，不参与任何推荐与模型计算；与竞彩官方数据零耦合</span></div>
+    <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="fdSummary"></div>
+    <div id="fdList"></div>
   </div>
 
 </main>
@@ -1291,8 +1303,33 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.6.0";
+const VERSION = "v1.7.1";
 const CHANGELOG = [
+  {
+    version: "v1.7.1",
+    date: "2026-10-09",
+    title: "串关展示与定时任务加固",
+    fixes: [
+      "不推荐串关卡片现展示完整赛程(场次/每腿赔率/方向/同指/五维)，赛后可逐场核对命中",
+      "卡片内「联合命中」改为「预测胜率」(模型校准)，与上方「历史命中率」(实战)明确区分，避免混淆",
+      "清理未追踪、与服务器双口径的死代码客户端串关系统，串关统一为服务端safeParlay+parlay_history.json单一来源",
+      "串关历史记录按档位命名(稳健/均衡/搏击)并标记「不推荐」，三档全落盘便于赛后验证EV模型",
+      "run_daily.sh 构建步骤容错(set +e)，整条流水线软失败也退出0，杜绝定时任务误判失败",
+    ]
+  },
+  {
+    version: "v1.7.0",
+    date: "2026-10-09",
+    title: "串关质量三项增强",
+    features: [
+      "历史同指：免费自建，基于竞彩官方赛果库按同赔率/同盘口线计算该方向历史命中率，作价值确认与陷阱减分",
+      "五维雷达接线：真实计算市场概率/规则/赔率价值/状态/市场五维评分并接入串关选择与展示",
+      "稳胆档加EV门槛：稳健档只取EV≥-8%、均衡档EV≥-15%的最不亏方案，杜绝负期望稳胆误导",
+    ],
+    fixes: [
+      "同指与五维信息从reasons文本改为结构化徽标（绿=价值/红=偏冷/黄=中性），前端清晰展示",
+    ]
+  },
   {
     version: "v1.6.0",
     date: "2026-10-09",
@@ -1572,6 +1609,14 @@ const BUILT_SWH = __STRONGWEAK_HISTORY_PLACEHOLDER__;
 const BUILT_EXPERT = __EXPERT_PLACEHOLDER__;
 const BUILT_EXPORTH = __EXPERT_HISTORY_PLACEHOLDER__;
 const BUILT_EXPERTSTATS = __EXPERT_STATS_PLACEHOLDER__;
+/* 独立数据源（不写回核心 matches / history / 模型，仅供页面独立展示与核对） */
+const BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
+const BUILT_BSD = __BSD_PLACEHOLDER__;
+const BUILT_FD = __FD_PLACEHOLDER__;
+const ODDS_BSD = {};
+(BUILT_ODDS_BSD.matches || []).forEach(x => { if (x && x.num) ODDS_BSD[x.num] = x; });
+const FD = {};
+(BUILT_FD.matches || []).forEach(x => { if (x && x.num) FD[x.num] = x; });
 const state = {
   data: JSON.parse(JSON.stringify(BUILT_DATA.matches || [])),
   history: JSON.parse(JSON.stringify(BUILT_HISTORY.records || [])),
@@ -1630,7 +1675,7 @@ function applyDateFilter(prefix, y, m, d){
   else { state[key]="all"; return; }
   if(prefix==="hist"){ renderHistory(); }
   else if(prefix==="bd"){ renderBD(); }
-  else { renderParlayPage(); renderParlayHistory(); }
+  else { renderHighOdds(); }
 }
 
 /* ---------- 规则引擎（竞彩版，与数据管道一致） ---------- */
@@ -1743,276 +1788,6 @@ function renderFocus(){
 }
 
 /* ---------- 串关精选保存（16:00后锁定，页面加载时自动保存） ---------- */
-function saveParlayPicks(){
-  const now = new Date();
-  const ymd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  const locked = now.getHours() >= 16;
-  const storageKey = "parlay_" + ymd;
-  try{
-    const cached = localStorage.getItem(storageKey);
-    if(locked && cached) return; // 已锁定，不覆盖
-    const picks = calcParlayPicks();
-    localStorage.setItem(storageKey, JSON.stringify({date:ymd, locked:locked, picks:picks}));
-  }catch(e){}
-}
-
-/* ---------- 今天串关（自动精选 Top5，2/3/4/5串1，16:00后锁定） ---------- */
-function calcParlayPicks(){
-  const dirName = {h:"主胜",d:"平局",a:"客胜"};
-  const valid = state.data.filter(m=>{
-    const sc = m.score||{};
-    if(!sc.dir) return false;
-    const odds = m.had||{};
-    return odds[sc.dir] != null && odds[sc.dir] > 0;
-  });
-  valid.sort((a,b)=> (b.score?.score||0)-(a.score?.score||0) || (b.score?.stars||0)-(a.score?.stars||0));
-  return valid.slice(0,5).map(m=>({
-    num: m.num||"", home: m.home, away: m.away,
-    dir: m.score.dir, dirName: dirName[m.score.dir],
-    odds: m.had[m.score.dir]
-  }));
-}
-function renderParlay(containerId){
-  const box = $(containerId || "#parlayBoard");
-  const now = new Date();
-  const ymd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  const hour = now.getHours();
-  const locked = hour >= 16;
-  const storageKey = "parlay_" + ymd;
-  let picks = null;
-  // 16:00后锁定当天精选；之前实时计算并缓存
-  try{
-    const cached = localStorage.getItem(storageKey);
-    if(locked && cached){
-      picks = JSON.parse(cached).picks;
-    } else {
-      picks = calcParlayPicks();
-      localStorage.setItem(storageKey, JSON.stringify({date:ymd, locked:locked, picks:picks}));
-    }
-  }catch(e){ picks = calcParlayPicks(); }
-  if(!picks || picks.length < 2){ box.style.display="none"; return; }
-  box.style.display="block";
-  const combos = [2,3,4,5].filter(n=>n<=picks.length);
-  const cards = combos.map(n=>{
-    const pk = picks.slice(0,n);
-    let total = 1;
-    const rows = pk.map((p,i)=>{
-      total *= p.odds;
-      return `<div class="pl-row">
-        <span class="pl-idx">${i+1}</span>
-        <span class="pl-match" title="${p.num} ${p.home}vs${p.away}">${p.num} ${p.home}vs${p.away}</span>
-        <span class="pl-dir">${p.dirName}</span>
-        <span class="pl-odds">${p.odds}</span>
-      </div>`;
-    }).join("");
-    return `<div class="pl-card">
-      <div class="pl-head"><b>${n}串1</b><span class="pl-total">回报 ${total.toFixed(2)}</span></div>
-      ${rows}
-    </div>`;
-  }).join("");
-  const lockTip = locked ? `<span class="ph-locked">16:00后已锁定</span>` : `<span style="font-size:10px;color:var(--weak)">16:00后锁定当天精选</span>`;
-  box.innerHTML = `<div class="fb-title">今天串关 · 自动精选${lockTip}
-      <span class="tip">综合评分 Top${picks.length}，胜平负固定奖金相乘（仅供参考）</span></div>
-    <div class="pl-grid">${cards}</div>`;
-}
-
-/* ---------- 串关历史（最近7天，方便追溯） ---------- */
-function renderParlayHistory(containerId){
-  const box = $(containerId || "#parlayHistBoard");
-  if(!box) return;
-  // 读取所有 parlay_* 历史（永久保存，不限制天数）
-  const allDays = [];
-  try{
-    for(let i=0;i<localStorage.length;i++){
-      const k = localStorage.key(i);
-      if(k && k.startsWith("parlay_")){
-        const ymd = k.slice(8);
-        if(/^\d{4}-\d{2}-\d{2}$/.test(ymd)) allDays.push(ymd);
-      }
-    }
-  }catch(e){}
-  allDays.sort((a,b)=>b.localeCompare(a));
-  // 日期筛选
-  const years = [...new Set(allDays.map(d=>d.slice(0,4)))].sort().reverse();
-  if(!years.length) years.push(new Date().getFullYear());
-  const filterWrapId = containerId==="#parlayHistBoard2" ? "parlayDateFilterWrap2" : "parlayDateFilterWrap";
-  const fw = document.getElementById(filterWrapId);
-  if(fw) fw.innerHTML = dateSelectHtml("parlay", state.parlayDate, years);
-  const days = state.parlayDate==="all" ? allDays : allDays.filter(d=>d===state.parlayDate);
-  const items = [];
-  days.forEach(ymd=>{
-    try{
-      const cached = localStorage.getItem("parlay_"+ymd);
-      if(!cached) return;
-      const data = JSON.parse(cached);
-      if(!data.picks || data.picks.length<2) return;
-      const combos = [2,3,4,5].filter(n=>n<=data.picks.length);
-      const cards = combos.map(n=>{
-        const pk = data.picks.slice(0,n);
-        let total = 1;
-        const rows = pk.map((p,i)=>{ total *= p.odds; return `<div class="ph-row"><span class="ph-idx">${i+1}</span><span class="ph-match">${p.num} ${p.home}vs${p.away}</span><span class="ph-dir">${p.dirName}</span><span class="ph-odds">${p.odds}</span></div>`; }).join("");
-        return `<div class="ph-card"><div class="ph-head"><b>${n}串1</b><span>回报 ${total.toFixed(2)}</span></div>${rows}</div>`;
-      }).join("");
-      const wd = ["日","一","二","三","四","五","六"][new Date(ymd+"T12:00:00").getDay()];
-      items.push(`<div class="ph-day">${ymd.slice(5)} 周${wd}${data.locked?' <span class="ph-locked">已锁定</span>':''}</div>${cards}`);
-    }catch(e){}
-  });
-  if(!items.length){ box.innerHTML = `<div class="ph-day" style="color:var(--weak)">暂无串关历史（每天16:00后自动保存当天精选）</div>`; return; }
-  box.innerHTML = items.join("");
-}
-
-/* ---------- 串关命中统计核心 ---------- */
-// 单场比赛命中判定：从竞彩历史匹配比分，根据让球数计算实际方向
-function getParlayMatchHit(pick, date){
-  const hist = state.history || [];
-  const rec = hist.find(r=>r.num===pick.num && r.date===date);
-  if(!rec) return "na"; // 无历史记录
-  const res = rec.result;
-  if(!res || !res.score) return "pending"; // 待开赛/无赛果
-  // 解析比分
-  const parts = String(res.score).split(/[:\-]/);
-  if(parts.length<2) return "na";
-  const hg = parseInt(parts[0]), ag = parseInt(parts[1]);
-  if(isNaN(hg)||isNaN(ag)) return "na";
-  // 让球数：负=主让，正=主受让；让球后主进球 = hg + goal
-  const goal = rec.goal!=null ? parseFloat(rec.goal) : 0;
-  const adj = hg + goal;
-  let actual = "d";
-  if(adj > ag) actual = "h";
-  else if(adj < ag) actual = "a";
-  return actual === pick.dir ? "hit" : "miss";
-}
-// n串1命中判定：前n场都命中才算
-function getParlayComboHit(picks, n, date){
-  if(picks.length < n) return null;
-  let allDone = true;
-  for(let i=0;i<n;i++){
-    const s = getParlayMatchHit(picks[i], date);
-    if(s==="hit") continue;
-    if(s==="miss") return "miss";
-    if(s==="pending"){ allDone=false; continue; }
-    if(s==="na"){ allDone=false; continue; }
-  }
-  return allDone ? "hit" : "pending";
-}
-// 统计所有串关历史：2/3/4/5串1 × 周/月/年/总
-function getAllParlayStats(){
-  const allDays = [];
-  try{
-    for(let i=0;i<localStorage.length;i++){
-      const k = localStorage.key(i);
-      if(k && k.startsWith("parlay_")){
-        const ymd = k.slice(8);
-        if(/^\d{4}-\d{2}-\d{2}$/.test(ymd)){
-          try{
-            const data = JSON.parse(localStorage.getItem(k));
-            if(data && data.picks && data.picks.length>=2) allDays.push({date:ymd, picks:data.picks});
-          }catch(e){}
-        }
-      }
-    }
-  }catch(e){}
-  allDays.sort((a,b)=>b.date.localeCompare(a.date));
-  const now = new Date();
-  const weekAgo = new Date(now.getTime()-7*86400000);
-  const monthAgo = new Date(now.getTime()-30*86400000);
-  const yearStart = `${now.getFullYear()}-01-01`;
-  const inRange = (d, start) => d >= start;
-  const stats = {};
-  [2,3,4,5].forEach(n=>{
-    stats[n] = {week:{hit:0,total:0,pending:0}, month:{hit:0,total:0,pending:0}, year:{hit:0,total:0,pending:0}, all:{hit:0,total:0,pending:0}};
-  });
-  allDays.forEach(({date,picks})=>{
-    [2,3,4,5].forEach(n=>{
-      if(picks.length < n) return;
-      const hit = getParlayComboHit(picks, n, date);
-      if(hit===null) return;
-      const s = stats[n];
-      s.all.total++;
-      if(hit==="hit") s.all.hit++; else if(hit==="pending") s.all.pending++;
-      if(inRange(date, weekAgo.toISOString().slice(0,10))){ s.week.total++; if(hit==="hit")s.week.hit++; else if(hit==="pending")s.week.pending++; }
-      if(inRange(date, monthAgo.toISOString().slice(0,10))){ s.month.total++; if(hit==="hit")s.month.hit++; else if(hit==="pending")s.month.pending++; }
-      if(inRange(date, yearStart)){ s.year.total++; if(hit==="hit")s.year.hit++; else if(hit==="pending")s.year.pending++; }
-    });
-  });
-  return {stats, days: allDays};
-}
-
-/* ---------- 串关命中战绩渲染（纵向卡片，手机竖屏无需横滑） ---------- */
-function renderParlayStats(){
-  const {stats, days} = getAllParlayStats();
-  const periods = [["week","近7天"],["month","近30天"],["year","今年"],["all","总计"]];
-  const combos = [2,3,4,5];
-  let html = `<div class="ps-cards">`;
-  combos.forEach(n=>{
-    html += `<div class="ps-card">
-      <div class="ps-card-title">${n}串1</div>
-      <div class="ps-grid">`;
-    periods.forEach(([k,v])=>{
-      const s = stats[n][k];
-      const done = s.total - s.pending;
-      const rate = done ? Math.round(s.hit/done*100) : 0;
-      const cls = done>=5 ? (rate>=60?"ps-high":rate>=40?"ps-mid":"ps-low") : "ps-na";
-      html += `<div class="ps-cell ${cls}" data-n="${n}" data-p="${k}">
-        <div class="ps-period">${v}</div>
-        <div class="ps-rate">${done?rate+"%":"—"}</div>
-        <div class="ps-sub">${s.hit}/${done}中${s.pending?` · ${s.pending}待`:''}</div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  });
-  html += `</div>`;
-  $("#parlayStatsBoard").innerHTML = html;
-  // 点击格子查看详情
-  document.querySelectorAll("#parlayStatsBoard .ps-cell").forEach(cell=>{
-    cell.addEventListener("click", ()=>{
-      const n = parseInt(cell.dataset.n);
-      const p = cell.dataset.p;
-      showParlayStatsDetail(n, p, days);
-    });
-  });
-}
-function showParlayStatsDetail(n, p, days){
-  const now = new Date();
-  const weekAgo = new Date(now.getTime()-7*86400000).toISOString().slice(0,10);
-  const monthAgo = new Date(now.getTime()-30*86400000).toISOString().slice(0,10);
-  const yearStart = `${now.getFullYear()}-01-01`;
-  const filtered = days.filter(d=>{
-    if(p==="week") return d.date >= weekAgo;
-    if(p==="month") return d.date >= monthAgo;
-    if(p==="year") return d.date >= yearStart;
-    return true;
-  });
-  const pname = {week:"近7天",month:"近30天",year:"今年",all:"总计"}[p];
-  let html = `<div class="ps-detail-head"><b>${n}串1 · ${pname}</b> 共${filtered.length}天 <button class="btn ghost" id="psCloseBtn" style="float:right;font-size:12px;padding:4px 10px">关闭</button></div>`;
-  if(!filtered.length){ html += `<div class="empty">暂无记录</div>`; }
-  filtered.forEach(({date,picks})=>{
-    if(picks.length < n) return;
-    const pk = picks.slice(0,n);
-    const hit = getParlayComboHit(picks, n, date);
-    const totalOdds = pk.reduce((a,p)=>a*p.odds,1).toFixed(2);
-    const hitCls = hit==="hit"?"ps-hit":hit==="miss"?"ps-miss":"ps-pend";
-    const hitTxt = hit==="hit"?"✓ 命中":hit==="miss"?"✗ 错误":"○ 待结算";
-    const rows = pk.map((p,i)=>`<div class="ps-row"><span class="ps-idx">${i+1}</span><span class="ps-match">${p.num} ${p.home}vs${p.away}</span><span class="ps-dir">${p.dirName}</span><span class="ps-odds">${p.odds}</span></div>`).join("");
-    html += `<div class="ps-day-card">
-      <div class="ps-day-head"><span>${date}</span><span class="${hitCls}">${hitTxt}</span><span class="ps-total">回报 ${totalOdds}</span></div>
-      ${rows}
-    </div>`;
-  });
-  $("#parlayStatsDetail").innerHTML = html;
-  $("#parlayStatsDetail").style.display = "block";
-  const cb = document.getElementById("psCloseBtn");
-  if(cb) cb.addEventListener("click", ()=>{ $("#parlayStatsDetail").style.display="none"; });
-}
-
-/* ---------- 串关独立页（今天串关 + 历史战绩） ---------- */
-function renderParlayPage(){
-  renderParlay("#parlayTodayBoard");
-  renderParlayStats();
-  renderParlayHistory("#parlayHistBoard2");
-}
-
-/* ---------- 渲染：筛选 ---------- */
 function renderFilters(){
   const defs = [["all","全部"],["good","正路"],["bad","危险"],["cold","冷门"],["warn","谨慎"]];
   // 统计各类别场次数
@@ -2394,7 +2169,6 @@ function renderHistory(){
   renderHistFilters();
   renderStarBoard();
   renderRuleBoard();
-  renderParlayHistory();
   renderHistList();
 }
 
@@ -2478,17 +2252,17 @@ function sigRow(m){
     cells.push(`<span class="mv-item"><span class="hname">北单参考</span><b class="${ok?"xok":"xdiff"}">${level}</b><span class="hname">概率差${m.cross.diff>0?"+":""}${m.cross.diff}pt${m.cross.asian?` · 亚盘 <i class="asian-pill">${m.cross.asian}</i>`:""}</span></span>`);
   }
   // BSD伤停信息
-  if (m.bsd){
-    const ih = m.bsd.injury_count_home || 0;
-    const ia = m.bsd.injury_count_away || 0;
+  if (BUILT_BSD[m.num]){
+    const ih = BUILT_BSD[m.num].injury_count_home || 0;
+    const ia = BUILT_BSD[m.num].injury_count_away || 0;
     if (ih>0 || ia>0){
       const severity = (ih+ia) >= 8 ? "严重" : (ih+ia)>=4 ? "较多" : "一般";
       const sevColor = (ih+ia)>=8 ? "var(--bad)" : (ih+ia)>=4 ? "var(--warn)" : "var(--good)";
       cells.push(`<span class="mv-item"><span class="hname">伤停</span><b style="color:${sevColor}">主${ih}人 客${ia}人</b><span class="hname">${severity}</span></span>`);
     }
     // 天气
-    if (m.bsd.weather && m.bsd.weather.temperature_c){
-      cells.push(`<span class="mv-item"><span class="hname">天气</span><b>${m.bsd.weather.temperature_c}°C</b><span class="hname">风速${m.bsd.weather.wind_speed||"-"}m/s</span></span>`);
+    if (BUILT_BSD[m.num].weather && BUILT_BSD[m.num].weather.temperature_c){
+      cells.push(`<span class="mv-item"><span class="hname">天气</span><b>${BUILT_BSD[m.num].weather.temperature_c}°C</b><span class="hname">风速${BUILT_BSD[m.num].weather.wind_speed||"-"}m/s</span></span>`);
     }
   }
   if (!cells.length) return "";
@@ -2497,8 +2271,8 @@ function sigRow(m){
 
 /* ---------- BSD伤停首发详情 ---------- */
 function renderBSDDetail(m){
-  if (!m.bsd) return "";
-  const b = m.bsd;
+  if (!BUILT_BSD[m.num]) return "";
+  const b = BUILT_BSD[m.num];
   const mid = "bsd_" + (m.num||"").replace(/\W/g,"");
   let html = `<div class="bsd-sec">`;
   const hasInjury = (b.injury_count_home||0)>0 || (b.injury_count_away||0)>0;
@@ -2602,7 +2376,6 @@ function render(){
   renderStats();
   renderFilters();
   renderFocus();
-  saveParlayPicks();
   saveBDPicks();
   $("#todayBdg").textContent = state.data.length;
   $("#histBdg").textContent = (state.history||[]).length;
@@ -2627,12 +2400,12 @@ function render(){
   const isHighOdds = state.tab==="highodds";
   const isHF = false;
   const isExpert = state.tab==="expert";
+  const isFD = state.tab==="fd";
   document.querySelectorAll(".maintab button").forEach(b=>b.classList.toggle("on", b.dataset.tab===state.tab));
   $("#todayToolbar").style.display = isToday ? "flex" : "none";
   $("#cardsView").style.display = isToday ? "block" : "none";
   $("#tableView").style.display = isToday ? "block" : "none";
   $("#focusBoard").style.display = isToday ? "block" : "none";
-  $("#parlayBoard").style.display = "none";
   $("#historyView").classList.toggle("show", state.tab==="history");
   const bdViewEl = $("#bdView"); if(bdViewEl) bdViewEl.classList.toggle("show", false);
   $("#swView").style.display = isSW ? "block" : "none";
@@ -2640,10 +2413,12 @@ function render(){
   $("#highOddsView").style.display = isHighOdds ? "block" : "none";
   const hfViewEl = $("#hfView"); if(hfViewEl) hfViewEl.style.display = "none";
   $("#expertView").style.display = isExpert ? "block" : "none";
+  $("#fdView").style.display = isFD ? "block" : "none";
   if (isSW){ renderStrongWeak(); return; }
   if (isHKMO){ renderHKMO(); return; }
   if (isHighOdds){ renderHighOdds(); return; }
   if (isExpert){ renderExpert(); return; }
+  if (isFD){ renderFD(); return; }
   if (!isToday){ renderHistory(); return; }
   if (state.view==="card"){ renderCards(); $("#cardsView").style.display="block"; $("#tableView").style.display="none"; }
   else { renderTable(); $("#tableView").style.display="block"; $("#cardsView").style.display="none"; }
@@ -3244,7 +3019,7 @@ function renderHKMO(){
   const summary = $("#hkmoSummary");
   if(!list) return;
   const matches = (state.data||{}).matches || state.data || [];
-  const hkmoMatches = matches.filter(m=>(m.hkmo && (m.hkmo.hk || m.hkmo.mo)) || m.odds_bsd);
+  const hkmoMatches = matches.filter(m=>(m.hkmo && (m.hkmo.hk || m.hkmo.mo)) || ODDS_BSD[m.num]);
   const bothDrop = hkmoMatches.filter(m=>m.hkmo && m.hkmo.both_drop);
   if(badge){
     if(bothDrop.length > 0){
@@ -3257,7 +3032,7 @@ function renderHKMO(){
   if(summary){
     const asianUp = hkmoMatches.filter(m=>m.hkmo && m.hkmo.asian && m.hkmo.asian.change==="up").length;
     const asianDown = hkmoMatches.filter(m=>m.hkmo && m.hkmo.asian && m.hkmo.asian.change==="down").length;
-    const obsdCount = hkmoMatches.filter(m=>m.odds_bsd).length;
+    const obsdCount = hkmoMatches.filter(m=>ODDS_BSD[m.num]).length;
     summary.textContent = `共 ${hkmoMatches.length} 场数据（港澳${hkmoMatches.filter(m=>m.hkmo).length}场+国际权威${obsdCount}场） · 双方同时降水 ${bothDrop.length} 场 · 亚盘升盘 ${asianUp} 场 · 降盘 ${asianDown} 场 · 更新于 ${state.meta.updateTime||"-"}`;
   }
   if(!hkmoMatches.length){
@@ -3331,7 +3106,7 @@ function renderHKMO(){
         }).join("")}
       </div>`:""}
       ${(()=>{
-        const obsd = m.odds_bsd;
+        const obsd = ODDS_BSD[m.num];
         if(!obsd || !obsd.bookmakers) return "";
         const books = obsd.bookmakers;
         const bookList = Object.keys(books);
@@ -3631,6 +3406,38 @@ function renderHKMOHistory(filterDate){
 }
 
 /* ---------- 高倍串关 ---------- */
+/* ---------- 串关 legs 渲染（推荐与不推荐共用，确保不推荐也展示完整赛程） ---------- */
+function parlayLegsHtml(legs){
+  if(!legs || !legs.length) return "";
+  return `<div class="ho-legs">` + legs.map((leg,i)=>{
+    const conf = leg.confidence || 0;
+    const reasons = leg.reasons || [];
+    const reasonsHtml = reasons.map(r=>`<span style="display:inline-block;background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px;margin-right:4px;color:var(--sub)">${r}</span>`).join("");
+    // 历史同指徽标（免费自建，竞彩官方赛果库）：绿=价值 / 红=偏冷陷阱 / 黄=中性
+    const so = leg.sameOddsHit, son = leg.sameOddsN || 0;
+    let soBadge = "";
+    if(so != null && son >= 5){
+      const soc = so >= 60 ? "var(--good)" : (so < 45 ? "var(--bad)" : "var(--warn)");
+      const sot = so >= 60 ? "同指价值" : (so < 45 ? "同指偏冷" : "同指中性");
+      soBadge = `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:6px;color:${soc};border:1px solid ${soc};">${sot} ${so}%(n=${son})</span>`;
+    }
+    // 五维雷达徽标（已接线，真实输出）
+    const fd = leg.fiveDim;
+    let fdBadge = (fd != null) ? `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;color:var(--accent);border:1px solid var(--accent);">五维 ${fd}分</span>` : "";
+    const oddsTxt = (typeof leg.odds === "number") ? leg.odds.toFixed(2) : (leg.odds || "—");
+    const ko = leg.kickoff ? String(leg.kickoff).slice(0,5) : "";
+    return `<div class="ho-leg">
+      <div class="ho-num">第${i+1}场<br><span style="font-size:9px">${leg.num||""}</span></div>
+      <div>
+        <div class="ho-match"><span class="ho-league">${leg.league||""}</span>${leg.home||""} vs ${leg.away||""}</div>
+        <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b>${soBadge}${fdBadge}</div>
+        <div style="margin-top:3px">${reasonsHtml}</div>
+      </div>
+      <div class="ho-odds" style="color:var(--good)">${oddsTxt}<small>@${ko}</small></div>
+    </div>`;
+  }).join("") + `</div>`;
+}
+
 function renderHighOdds(){
   const ho = state.highOddsParlay || {};
   const sp = state.safeParlay || {};
@@ -3691,7 +3498,7 @@ function renderHighOdds(){
       }).join(" ");
       html += `<div style="padding:8px;border-bottom:1px solid var(--border);">
         <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-          <span style="font-size:11.5px;color:var(--sub);">${r.date||""} <b style="color:var(--text)">${r.type||""}</b></span>
+          <span style="font-size:11.5px;color:var(--sub);">${r.date||""} <b style="color:var(--text)">${r.type||""}</b>${r.recommended===false?' <span style="color:var(--bad);font-size:10px;border:1px solid var(--bad);border-radius:3px;padding:0 3px;margin-left:2px;">不推荐</span>':''}</span>
           <span style="display:flex;align-items:center;gap:8px;">
             <span style="color:var(--accent);font-weight:600;font-size:12px;">${r.totalOdds||0}倍</span>
             <span style="color:${resultColor};font-weight:600;font-size:11px;">${resultText}</span>
@@ -3720,16 +3527,33 @@ function renderHighOdds(){
   html += `</div>`;
 
   // ===== 稳胆串关（高命中率版） =====
-  if(sp && (sp.parlay2 || sp.parlay3)){
+  if(sp){
     spCand = sp.candidateCount || 0;
     if(bdg) bdg.textContent = spCand > 99 ? "99+" : spCand;
-    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 搏击（各档在自身赔率区间内取「期望值 EV」最优，拒绝蚊子肉）</div>`;
-    [sp.parlay2, sp.parlay3, sp.parlayBoost].forEach(p=>{
+    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 搏击（各档在自身赔率区间内取「期望值 EV」最优，拒绝蚊子肉；已叠加历史同指命中率与五维雷达评分交叉验证）</div>`;
+    // 三档均无达标组合（EV 全部低于档位门槛）：诚实提示，避免空档像故障
+    if(!(sp.parlay2 || sp.parlay3 || sp.parlayBoost)){
+      html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
+        <div class="ho-head"><span class="ho-type" style="color:var(--warn)">ℹ️ 今日无达标串关组合</span></div>
+        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但任意组合期望值 EV 均低于档位门槛（串关抽水按场数放大：2串1约21.6%、3串1约30.6%），数学上长期必亏，<b>不推荐下注</b>。可关注单场「稳胆」推荐。</div>
+      </div>`;
+    }
+      [sp.parlay2, sp.parlay3, sp.parlayBoost].forEach(p=>{
       if(!p) return;
-      const legs = p.legs || [];
+      const ev = (p.ev==null? null : p.ev);
+      // 负期望档位：标「不推荐」，但仍展示完整赛程，方便赛后逐场核对命中
+      if(ev != null && ev < 0 && !p.recommended){
+        const jp = (p.jointProb==null? null : p.jointProb);
+        html += `<div class="ho-card" style="border-left:3px solid var(--bad);margin-bottom:10px">
+          <div class="ho-head"><span class="ho-type" style="color:var(--bad)">⚠️ ${p.tier||""} · ${p.type} · <b>不推荐</b></span><span class="ho-total" style="color:var(--bad)">${p.totalOdds.toFixed(2)} 倍</span></div>
+          <div style="margin:8px 0 4px;font-size:12px;color:var(--bad)">本档最优组合期望值 <b>EV ${ev}%</b> 为负，<b>无正期望机会，不推荐下注</b>。串关抽水按场数放大（${p.rake!=null?p.rake+"%":"—"}）。</div>
+          ${parlayLegsHtml(p.legs)}
+          <div style="margin-top:8px;font-size:11px;color:var(--sub)">预测胜率（模型校准）<b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b> · 赛后可在上方「串关历史战绩」核对每场实际赛果与命中（<b>预测胜率≠实战命中率</b>，实战命中率见上方统计）。</div>
+        </div>`;
+        return;
+      }
       const avgConf = p.avgConfidence || 0;
       const jp = (p.jointProb==null? null : p.jointProb);
-      const ev = (p.ev==null? null : p.ev);
       const stake = p.suggestStake || 0;
       const tierColor = p.tier==="稳健"?"var(--good)":(p.tier==="均衡"?"var(--accent)":"var(--warn)");
       const evColor = ev==null?"var(--sub)":(ev>=5?"var(--good)":(ev>=-10?"var(--warn)":"var(--bad)"));
@@ -3741,31 +3565,16 @@ function renderHighOdds(){
         </div>
         <div style="margin-bottom:8px;font-size:11.5px;color:var(--sub)">${p.tierDesc||""}</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px">
-          <span>联合命中 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b></span>
+          <span>预测胜率 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b></span>
           <span>期望值EV <b style="color:${evColor}">${ev!=null?(ev>0?"+":"")+ev+"%":"—"}</b></span>
           <span>抽水 <b style="color:var(--sub)">${p.rake!=null?p.rake+"%":"—"}</b></span>
           <span style="color:${stake>0?'var(--good)':'var(--bad)'}">${stakeTxt}</span>
         </div>
         <div style="margin-bottom:10px;font-size:11px;color:var(--sub)">${p.evNote||""}${avgConf?" · 平均信心 "+avgConf+"%":""}</div>
-        <div class="ho-legs">`;
-      legs.forEach((leg,i)=>{
-        const conf = leg.confidence || 0;
-        const reasons = leg.reasons || [];
-        const reasonsHtml = reasons.map(r=>`<span style="display:inline-block;background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px;margin-right:4px;color:var(--sub)">${r}</span>`).join("");
-        html += `<div class="ho-leg">
-          <div class="ho-num">第${i+1}场<br><span style="font-size:9px">${leg.num||""}</span></div>
-          <div>
-            <div class="ho-match"><span class="ho-league">${leg.league||""}</span>${leg.home||""} vs ${leg.away||""}</div>
-            <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b></div>
-            <div style="margin-top:3px">${reasonsHtml}</div>
-          </div>
-          <div class="ho-odds" style="color:var(--good)">${leg.odds?.toFixed(2)||"—"}<small>@${leg.kickoff?.slice(0,5)||""}</small></div>
-        </div>`;
-      });
-      html += `</div>
+        ${parlayLegsHtml(p.legs)}
         <div class="ho-meta">
-          <span>📊 最低赔率 ${p.minOdds?.toFixed(2)||"—"}</span>
-          <span>📈 最高赔率 ${p.maxOdds?.toFixed(2)||"—"}</span>
+          <span>📊 最低赔率 ${p.minOdds!=null?p.minOdds.toFixed(2):"—"}</span>
+          <span>📈 最高赔率 ${p.maxOdds!=null?p.maxOdds.toFixed(2):"—"}</span>
           <span>🎯 平均信心 ${avgConf}%</span>
           <span>${p.isMixed?"🔀 混合过关":"📌 单一玩法"}</span>
         </div>
@@ -3785,6 +3594,49 @@ function renderHighOdds(){
 }
 
 /* ============ 高手推荐渲染 ============ */
+function renderFD(){
+  const list = $("#fdList");
+  const summary = $("#fdSummary");
+  if(!list) return;
+  const fd = BUILT_FD || {matches:[]};
+  const ms = fd.matches || [];
+  const bdg = $("#fdBdg");
+  if(bdg){ bdg.textContent = ms.length; }
+  if(summary){
+    summary.textContent = `共 ${ms.length} 场（football-data.org 官方源${fd.enabled ? "已启用" : "未启用"}，窗口 ${fd.dateFrom||"-"} ~ ${fd.dateTo||"-"}，更新于 ${fd.updatedAt||"-"}）${fd.note?(" · "+fd.note):""}`;
+  }
+  if(!ms.length){
+    list.innerHTML = `<div class="empty">当前暂无 football-data.org 赛事数据${fd.note?("（"+fd.note+"）"):""}</div>`;
+    return;
+  }
+  const statusName = {SCHEDULED:"未开赛", LIVE:"进行中", IN_PLAY:"进行中", PAUSED:"中场", FINISHED:"已结束", POSTPONED:"延期", SUSPENDED:"暂停", CANCELLED:"取消"};
+  const winnerName = {HOME:"主胜", DRAW:"平局", AWAY:"客胜"};
+  const groups = {};
+  ms.forEach(m=>{ const k = m.league || m.competition || "其他"; (groups[k] = groups[k] || []).push(m); });
+  let html = "";
+  Object.keys(groups).forEach(lg=>{
+    html += `<div class="fd-group"><div class="fd-group-title">${lg}（${groups[lg].length}）</div>`;
+    groups[lg].forEach(m=>{
+      const sc = m.score || {};
+      const hs = sc.home==null ? "-" : sc.home, as = sc.away==null ? "-" : sc.away;
+      const w = m.winner || null;
+      const wTag = w ? `<span class="fd-winner">${winnerName[w]||""}</span>` : "";
+      const matched = m.num ? `<span class="fd-num">竞彩 ${m.num}</span>` : "";
+      const fdScore = (m.status==="FINISHED")
+        ? `<span class="fd-score">${hs} : ${as} ${wTag}</span>`
+        : `<span class="fd-score ${m.status==="LIVE"||m.status==="IN_PLAY"?"fd-live":""}">${statusName[m.status]||m.status||""}</span>`;
+      html += `<div class="fd-card">
+        <span class="fd-comp">${m.competition||""}</span>
+        <span class="fd-teams">${m.home||"?"} vs ${m.away||"?"}</span>
+        ${matched}
+        ${fdScore}
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+}
+
 function renderExpert(){
   const exp = state.expert || {};
   const expH = state.expertHistory || {};
@@ -4288,6 +4140,7 @@ function refreshRealtimeData(showTip){
       else if(curTab==="highodds"){ renderHighOdds(); }
       else if(curTab==="halffull"){ renderHalfFull(); }
       else if(curTab==="expert"){ renderExpert(); }
+      else if(curTab==="fd"){ renderFD(); }
       // 更新角标
       $("#todayBdg").textContent = state.data.length;
       const swBdg = $("#swBdg");

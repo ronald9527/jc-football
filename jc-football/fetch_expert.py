@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""高手推荐抓取与生成
-数据源：92玩球(92wq.com) - 易红单平台真实专家推荐（欧核、彭阿多等）
+"""高手推荐抓取与生成（独立展示源，不参与模型）
+数据源：92玩球(92wq.com) - 易红单平台真实专家推荐（欧核、彭阿多等）、懂球帝荐单
 - 抓取最新专家文章，提取竞彩推荐方向、比分、分析
 - 历史战绩回溯
 - 仅保留当天竞彩官方赛程比赛
+
+【独立源声明 · 继承接管规范】
+本模块只产出独立的 expert_recommendations.json / expert_stats.json / expert_history.json，
+由前端「高手推荐」tab 独立展示。它只「只读」matches.json 与 history.json 用于赛果回溯，
+绝不回写核心 matches.json、绝不写入 history.json（模型训练数据）、绝不改动 smart_model.json。
+即：高手荐单与模型/核心数据零耦合，仅作参考展示。
 """
 import json, time, os, re, urllib.request
 

@@ -6132,12 +6132,12 @@
    },
    "date": "2026-10-08",
    "fetched_at": "2026-10-08 12:43:30",
-   "result": "",
-   "hitFlag": "",
-   "hhadHit": "",
-   "asianHit": "",
+   "result": "2:2",
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
    "hhadResult": "",
-   "pickDir": null,
+   "pickDir": "a",
    "hhadVerdict": {
     "t": "good",
     "txt": "推荐让负（综合评分0.0）",
@@ -6219,22 +6219,20 @@
    },
    "date": "2026-10-08",
    "fetched_at": "2026-10-08 12:43:30",
-   "result": "",
-   "hitFlag": "",
-   "hhadHit": "",
-   "asianHit": "",
+   "result": "1:0",
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
    "hhadResult": "",
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让负（综合评分1.5）",
-    "dir": "a",
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
     "stars": 3,
-    "score": 1.5,
+    "score": 1.0,
     "reasons": [
-     "让球盘·让平-1.0",
-     "让球盘·让胜-1.0",
-     "让球盘·让负+1.5"
+     "核心主胜+让球-1→让胜（条件概率最高）"
     ],
     "goal": "-1"
    },
@@ -6391,19 +6389,21 @@
    },
    "date": "2026-10-08",
    "fetched_at": "2026-10-08 12:43:30",
-   "result": "",
-   "hitFlag": "",
-   "hhadHit": "",
-   "asianHit": "",
+   "result": "4:0",
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "miss",
    "hhadResult": "",
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让负（综合评分0.0）",
-    "dir": "a",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
+    "txt": "推荐让胜（主胜+让1球，赢2球+概率最高约55%）",
+    "dir": "h",
+    "stars": 3,
+    "score": 1.0,
+    "reasons": [
+     "核心主胜+让球-1→让胜（条件概率最高）"
+    ],
     "goal": "-1"
    },
    "asianVerdict": {
@@ -6479,12 +6479,12 @@
    },
    "date": "2026-10-08",
    "fetched_at": "2026-10-08 12:43:30",
-   "result": "",
-   "hitFlag": "",
-   "hhadHit": "",
-   "asianHit": "",
+   "result": "2:2",
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
    "hhadResult": "",
-   "pickDir": null,
+   "pickDir": "a",
    "hhadVerdict": {
     "t": "good",
     "txt": "推荐让负（综合评分0.0）",
@@ -6660,7 +6660,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -6714,10 +6714,10 @@
    "mo": {
     "current": {
      "h": 1.25,
-     "d": 6.75,
-     "a": 8.5,
-     "returnRate": 93.83,
-     "time": "2026-10-08 21:58:05"
+     "d": 7,
+     "a": 9,
+     "returnRate": 94.88,
+     "time": "2026-10-09 11:01:43"
     },
     "open": {
      "h": 1.22,
@@ -6726,15 +6726,12 @@
      "time": "2026-09-21 23:35:57"
     },
     "drop_dirs": [
-     "d",
-     "a"
+     "d"
     ],
-    "history_count": 6
+    "history_count": 7
    },
-   "both_drop": true,
-   "common_drop_dirs": [
-    "a"
-   ],
+   "both_drop": false,
+   "common_drop_dirs": [],
    "home": "PSV埃因霍温",
    "away": "海伦芬",
    "league": "荷甲",
@@ -6749,7 +6746,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -6758,8 +6755,8 @@
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让负（综合评分0.0）",
-    "dir": "a",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [],
@@ -6767,8 +6764,8 @@
    },
    "asianVerdict": {
     "t": "good",
-    "txt": "推荐下盘（—，综合评分2.5）",
-    "dir": "a",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
     "stars": 4,
     "score": 2.5,
     "asianLine": "—",
@@ -6783,11 +6780,11 @@
    "fid": "1373230",
    "hk": {
     "current": {
-     "h": 2.2,
+     "h": 2.3,
      "d": 3.1,
-     "a": 3.2,
-     "returnRate": 91.77,
-     "time": "2026-10-05 19:47:03"
+     "a": 3.1,
+     "returnRate": 92.6,
+     "time": "2026-10-09 09:50:51"
     },
     "open": {
      "h": 2.2,
@@ -6795,8 +6792,10 @@
      "a": 3.2,
      "time": "2026-10-05 19:47:03"
     },
-    "drop_dirs": [],
-    "history_count": 1
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 2
    },
    "mo": {
     "current": {
@@ -6817,8 +6816,10 @@
     ],
     "history_count": 4
    },
-   "both_drop": false,
-   "common_drop_dirs": [],
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
    "home": "仁川联",
    "away": "浦项制铁",
    "league": "韩职",
@@ -6833,7 +6834,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -6924,7 +6925,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -6933,12 +6934,15 @@
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让平（综合评分0.0）",
-    "dir": "d",
-    "stars": 1,
-    "score": 0.0,
+    "txt": "推荐让胜（综合评分0.5）",
+    "dir": "h",
+    "stars": 2,
+    "score": 0.5,
     "reasons": [
-     "让球盘·让胜-1.0"
+     "让球盘·让胜-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平-1.0",
+     "让球盘·让负-1.0"
     ],
     "goal": "-1"
    },
@@ -7014,7 +7018,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7050,11 +7054,11 @@
    "fid": "1438137",
    "hk": {
     "current": {
-     "h": 3.3,
+     "h": 3.4,
      "d": 3.4,
      "a": 2.1,
-     "returnRate": 93.17,
-     "time": "2026-10-08 21:57:06"
+     "returnRate": 93.95,
+     "time": "2026-10-09 10:47:44"
     },
     "open": {
      "h": 3.5,
@@ -7065,7 +7069,7 @@
     "drop_dirs": [
      "h"
     ],
-    "history_count": 15
+    "history_count": 16
    },
    "mo": {
     "current": {
@@ -7104,7 +7108,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7142,7 +7146,7 @@
      "d": 3.6,
      "a": 2.8,
      "returnRate": 94.3,
-     "time": "2026-10-09 02:45:49"
+     "time": "2026-10-09 03:58:38"
     },
     "open": {
      "h": 2.05,
@@ -7153,7 +7157,7 @@
     "drop_dirs": [
      "a"
     ],
-    "history_count": 257
+    "history_count": 260
    },
    "mo": {
     "current": {
@@ -7193,7 +7197,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7207,7 +7211,8 @@
     "stars": 3,
     "score": 1.5,
     "reasons": [
-     "让球盘·让负+1.5"
+     "让球盘·让负+1.5",
+     "让球盘·让胜-1.0"
     ],
     "goal": "-1"
    },
@@ -7229,11 +7234,11 @@
    "fid": "1419185",
    "hk": {
     "current": {
-     "h": 2.1,
+     "h": 2.15,
      "d": 3.2,
      "a": 3.2,
-     "returnRate": 90.81,
-     "time": "2026-10-09 01:56:27"
+     "returnRate": 91.73,
+     "time": "2026-10-09 03:48:37"
     },
     "open": {
      "h": 2.1,
@@ -7242,7 +7247,7 @@
      "time": "2026-10-05 13:26:28"
     },
     "drop_dirs": [],
-    "history_count": 8
+    "history_count": 9
    },
    "mo": {
     "current": {
@@ -7279,7 +7284,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7288,11 +7293,14 @@
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让负（综合评分1.5）",
+    "txt": "推荐让负（综合评分3.0）",
     "dir": "a",
-    "stars": 3,
-    "score": 1.5,
+    "stars": 5,
+    "score": 3.0,
     "reasons": [
+     "让球盘·让负+1.5",
+     "让球盘·让胜-1.0",
+     "让球盘·让平-1.0",
      "让球盘·让负+1.5"
     ],
     "goal": "-1"
@@ -7355,8 +7363,8 @@
    },
    "both_drop": true,
    "common_drop_dirs": [
-    "a",
-    "d"
+    "d",
+    "a"
    ],
    "home": "海登海姆",
    "away": "凯泽斯劳滕",
@@ -7372,7 +7380,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7408,11 +7416,11 @@
    "fid": "1416022",
    "hk": {
     "current": {
-     "h": 1.55,
-     "d": 4.2,
-     "a": 5.5,
-     "returnRate": 93.89,
-     "time": "2026-10-08 14:52:53"
+     "h": 1.5,
+     "d": 4.33,
+     "a": 5.75,
+     "returnRate": 93.32,
+     "time": "2026-10-09 10:50:50"
     },
     "open": {
      "h": 1.53,
@@ -7420,16 +7428,18 @@
      "a": 5.25,
      "time": "2026-10-04 23:47:52"
     },
-    "drop_dirs": [],
-    "history_count": 3
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 4
    },
    "mo": {
     "current": {
-     "h": 1.55,
+     "h": 1.53,
      "d": 4.3,
-     "a": 5,
-     "returnRate": 92.79,
-     "time": "2026-10-06 12:11:17"
+     "a": 5.25,
+     "returnRate": 92.88,
+     "time": "2026-10-09 10:29:26"
     },
     "open": {
      "h": 1.55,
@@ -7437,11 +7447,15 @@
      "a": 4.8,
      "time": "2026-10-04 02:37:20"
     },
-    "drop_dirs": [],
-    "history_count": 4
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 5
    },
-   "both_drop": false,
-   "common_drop_dirs": [],
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
    "home": "赫拉克勒斯",
    "away": "瓦尔韦克",
    "league": "荷乙",
@@ -7456,7 +7470,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7465,8 +7479,8 @@
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让负（综合评分0.0）",
-    "dir": "a",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [
@@ -7476,8 +7490,8 @@
    },
    "asianVerdict": {
     "t": "good",
-    "txt": "推荐下盘（—，综合评分2.5）",
-    "dir": "a",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
     "stars": 4,
     "score": 2.5,
     "asianLine": "—",
@@ -7496,7 +7510,7 @@
      "d": 3.1,
      "a": 2.7,
      "returnRate": 95.23,
-     "time": "2026-10-07 11:10:34"
+     "time": "2026-10-09 11:08:19"
     },
     "open": {
      "h": 2.4,
@@ -7508,15 +7522,15 @@
      "d",
      "a"
     ],
-    "history_count": 195
+    "history_count": 197
    },
    "mo": {
     "current": {
-     "h": 2.75,
+     "h": 2.8,
      "d": 3.2,
-     "a": 2.7,
-     "returnRate": 95.56,
-     "time": "2026-10-07 03:29:33"
+     "a": 2.65,
+     "returnRate": 95.51,
+     "time": "2026-10-09 10:45:17"
     },
     "open": {
      "h": 2.45,
@@ -7528,12 +7542,12 @@
      "d",
      "a"
     ],
-    "history_count": 10
+    "history_count": 11
    },
    "both_drop": true,
    "common_drop_dirs": [
-    "a",
-    "d"
+    "d",
+    "a"
    ],
    "home": "马拉加",
    "away": "西班牙人",
@@ -7549,7 +7563,7 @@
     "diff": 0
    },
    "date": "2026-10-09",
-   "fetched_at": "2026-10-09 03:49:48",
+   "fetched_at": "2026-10-09 13:26:18",
    "result": "",
    "hitFlag": "",
    "hhadHit": "",
@@ -7558,12 +7572,13 @@
    "pickDir": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让平（综合评分0.0）",
-    "dir": "d",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
     "stars": 1,
     "score": 0.0,
     "reasons": [
-     "让球盘·让负-1.0"
+     "让球盘·让负-1.0",
+     "让球盘·让负+1.5"
     ],
     "goal": "+1"
    },

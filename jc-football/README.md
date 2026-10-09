@@ -45,21 +45,41 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 | `bump_version.py` | 版本号 +1、写更新日志、**自动同步 APK 版本**、重建 index.html |
 
 ### 可选增强模块（需 API Key，未配置时静默降级）
-| 文件 | 作用 | Key 来源 |
-|---|---|---|
-| `fetch_bsd.py` | 伤停/首发/教练/天气/裁判/AI预测 | https://dashboard.api-football.com/register |
-| `fetch_odds_bsd.py` | Pinnacle/Bet365 等实时赔率与水位变动 | https://the-odds-api.com |
+| 文件 | 作用 | Key 来源（均为**免费层**） | 启用状态 |
+|---|---|---|---|
+| `fetch_bsd.py` | 伤停/首发/教练/天气/裁判/AI预测 | https://dashboard.api-football.com/register（免费 100 次/天） | ⛔ **暂不启用**：免费额度严重不足（详见下） |
+| `fetch_odds_bsd.py` | Pinnacle/Bet365 等实时赔率与水位变动（**独立源**：只写 `odds_bsd.json`） | https://the-odds-api.com（免费 500 次/月） | ⛔ **暂不启用**：免费额度不足（详见下） |
+| `fetch_football_data.py` | football-data.org 官方赛果/赛程核对（**独立源**：只写 `fd_data.json`） | https://www.football-data.org/client/register（免费层） | ✅ 已启用（你提供的 key） |
 
-配置方式：`cp bsd_config.json.example bsd_config.json` 填 Key，或设环境变量 `BSD_API_KEY` / `ODDS_API_KEY`。
+> ⚠️ **免费额度实测结论（按自动任务 30 次/天、约 900 次/月）**：
+> - **API-Football（100/天）**：每次运行约 60–120 次调用（1 次索引 + 每场 3 次），**首跑即超额 18–36 倍**，完全不够。
+> - **The Odds API（500/月）**：每次运行 5–10 次（按当日联赛数），月均需 4500–9000 次，**超额 9–18 倍**，不够。
+> - 两者免费层均**不足以支撑本项目的刷新频率**，按"免费优先铁律"**直接过滤、暂不启用**。若日后需要，必须加节流（如赔率每天只抓几次）另议。
+
+配置方式：`cp bsd_config.json.example bsd_config.json` 填 Key，或设环境变量 `BSD_API_KEY` / `ODDS_API_KEY` / `FD_API_KEY`。
+
+> 🔒 **免费优先铁律（用户硬性要求）**：本项目**只使用免费层数据源**，任何需要付费/订阅的源或付费升级方案，**一律不过问用户、直接过滤掉**。若某免费层额度用尽，对应模块**静默降级**（不报错、不提示付费、不阻塞主流程）。核心竞彩数据与模型训练永远零成本。
+
+> 📉 **Cloudflare Pages 构建配额（重要）**：免费层仅 **500 次构建/月**。自动任务原 30 次/天 ≈ 900 次/月会超限（约第 17 天起新部署被拒、站点停更）。已在 `run_daily.sh` 加**部署节流**：① 核心数据无变化则跳过；② 两次部署至少间隔 90 分钟 → 上限 ≈16 次/天（≈480/月，留余量）。抓取/分析仍 30 次/天照常免费跑，只有"部署上站"被节流。
+
+> 🕷️ **抓取防反爬节流（重要）**：每天 30 次运行对 sporttery.cn / 500.com 的慢变抓取（赔率历史、球队近况、港澳赔率、竞彩页）原来约 **1470 次/天**，易触发限频/封 IP 导致数据退化。已加统一 `webcache.py` TTL 缓存层：赔率历史/港澳赔率 3 小时、球队近况/竞彩页 6 小时刷新一次，压到约 **250–300 次/天（省 ~80%）**。冷/热两次压测验证：冷缓存 49 MISS、热缓存 49 HIT / 0 MISS。沙箱重置丢失缓存时自动降级为全抓（与改造前一致），不报错、不影响核心数据。
+
+> **数据源隔离原则（接管规范）**：`fetch_odds_bsd.py`（The Odds API）、`fetch_football_data.py`（football-data.org）、
+> `fetch_bsd.py`（API-Football）、`fetch_expert.py`（92玩球/懂球帝高手荐单）均为**独立展示/核对源**。它们只产出各自的 JSON
+> （`odds_bsd.json` / `fd_data.json` / `bsd_data.json` / `expert_recommendations.json`），**绝不写回核心 `matches.json`、
+> 绝不写入 `history.json`（模型训练数据）、绝不改动 `smart_model.json`**。模型只读取竞彩官方 `history.json`，
+> 与上述独立源零耦合。`selftest.py` 第 7 类专门校验此隔离（已确认 `matches.json` 不含 `odds_bsd`/`bsd` 字段）。
 
 ### 配置与模板
 - `template.html` — 页面模板（CSS/JS 全内联，无外部 CDN；已内置 PWA manifest）
 - `rules_config.json` — 12 组规则引擎配置（含回测样本数与命中率）
 - `cf_config.json.example` — 部署凭据样例
 - `bsd_config.json.example` — 增强模块凭据样例
+- `fd_config.json.example` — football-data.org 凭据样例（实际 `fd_config.json` 权限 600，已本地化）
 
 ### 数据文件（自动生成）
-`matches.json`（当日比赛）、`history.json`（历史战绩，永久累计）、`parlay_history.json`（串关）、`hkmo_history.json` / `hkmo_cache.json`（港澳赔率）、`strongweak_history.json`、`form_cache.json`、`check_report.json`
+`matches.json`（当日比赛，**核心数据集，不含任何独立源字段**）、`history.json`（历史战绩，永久累计，**模型训练数据**）、`parlay_history.json`（串关）、`hkmo_history.json` / `hkmo_cache.json`（港澳赔率）、`strongweak_history.json`、`web_cache.json`（本地 TTL 抓取缓存，**不上传**、不上库）、`check_report.json`；
+独立源文件：`odds_bsd.json`（The Odds API 国际赔率）、`fd_data.json`（football-data.org 官方赛果）、`expert_recommendations.json` / `expert_stats.json` / `expert_history.json`（高手荐单）
 
 ## 数据自检
 
@@ -70,7 +90,7 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 python3 selftest.py          # 同上，报告写入 selftest_report.json
 ```
 
-检查 6 大类：数据完整性 / 赔率合理性（实测返奖率应≈88.6%）/ 概率一致性 / 串关蚊子肉检测 / 历史库 / 页面产物（含**版本一致性**）。
+检查 7 大类：数据完整性 / 赔率合理性（实测返奖率应≈88.6%）/ 概率一致性 / 串关蚊子肉检测 / 历史库 / 页面产物（含**版本一致性**）/ **数据源隔离**（独立源不得写回核心 `matches.json` 或 `history.json`）。
 
 ## 版本号统一（不许再分叉）
 
@@ -105,11 +125,24 @@ python3 version_sync.py --check    # 不一致退出码非 0（CI 调用）
 
 ## 定时更新
 
-推荐 crontab（详见接管文档第七节）：
+✅ **已启用平台自动化定时任务**（任务 ID `11572893`）：每天 **09:00–23:59 每 30 分钟**
+自动执行 `./run_daily.sh deploy`（抓取 → 自检 → 失败自动修复 → 构建 → 部署）。
 
 ```bash
-0 12-21 * * * cd /opt/jc-football && python3 fetch_daily.py && python3 build_panel.py && python3 deploy_cf.py
-0 6 * * *     cd /opt/jc-football && python3 check_and_fix.py && python3 build_panel.py && python3 deploy_cf.py
+# 管理命令
+cd /root/.codebuddy/skills/automation-task-manager
+./scripts/scheduler-api.sh get --id 11572893          # 查看
+./scripts/scheduler-api.sh update --id 11572893 --status 0   # 暂停
+```
+
+> **为什么不用 GitHub Actions**：实测 GitHub Runner 在境外，竞彩官方接口
+> `webapi.sporttery.cn` 返回 `HTTP 567` 拒绝，物理上拿不到国内数据（详见接管文档 7.3）。
+> GitHub 仓库仅作代码备份与 `history.json` 云端留存。
+
+**备用方案**（国内服务器 / NAS crontab，见接管文档 7.2）：
+
+```bash
+*/30 9-21 * * * cd /opt/jc-football && ./run_daily.sh deploy >> /var/log/jc.log 2>&1
 ```
 
 ## 更新日志（每次改动必做）
