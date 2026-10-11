@@ -129,6 +129,26 @@ def main():
     js_odds_bsd = json.dumps(odds_bsd, ensure_ascii=False).replace("</", "<\\/")
     js_fd = json.dumps(fd, ensure_ascii=False).replace("</", "<\\/")
     js_bsd = json.dumps(bsd_data.get("byNum", {}), ensure_ascii=False).replace("</", "<\\/")
+    # 比分预测（独立源：football-data.org + 自建 Poisson，零耦合核心数据/模型）
+    score_pred = {"matches": [], "reliable": {}, "accuracy": {}, "source": "", "updatedAt": "", "note": ""}
+    spp = os.path.join(HERE, "score_predict.json")
+    if os.path.exists(spp):
+        try:
+            with open(spp, encoding="utf-8") as f:
+                score_pred = json.load(f)
+        except Exception:
+            pass
+    js_scorepred = json.dumps(score_pred, ensure_ascii=False).replace("</", "<\\/")
+    # WhoScored 人工预测比分（独立源，与核心数据/模型零耦合）
+    ws_data = {"matches": [], "dateList": [], "history": [], "historyDateList": [], "reliable": {}}
+    wsp = os.path.join(HERE, "whoscored_data.json")
+    if os.path.exists(wsp):
+        try:
+            with open(wsp, encoding="utf-8") as f:
+                ws_data = json.load(f)
+        except Exception:
+            pass
+    js_ws = json.dumps(ws_data, ensure_ascii=False).replace("</", "<\\/")
     out = (tpl.replace("__DATA_PLACEHOLDER__", js_data)
               .replace("__HISTORY_PLACEHOLDER__", js_hist)
               .replace("__CONFIG_PLACEHOLDER__", js_cfg)
@@ -141,18 +161,21 @@ def main():
               .replace("__EXPERT_STATS_PLACEHOLDER__", js_expertstats)
               .replace("__ODDS_BSD_PLACEHOLDER__", js_odds_bsd)
               .replace("__FD_PLACEHOLDER__", js_fd)
-              .replace("__BSD_PLACEHOLDER__", js_bsd))
+              .replace("__BSD_PLACEHOLDER__", js_bsd)
+              .replace("__SCORE_PREDICT_PLACEHOLDER__", js_scorepred)
+              .replace("__WHOSCORED_PLACEHOLDER__", js_ws))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
                "__BD_DATA_PLACEHOLDER__", "__BD_HISTORY_PLACEHOLDER__", "__HKMO_HISTORY_PLACEHOLDER__",
                "__STRONGWEAK_HISTORY_PLACEHOLDER__",
                "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__",
-               "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__"):
+               "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__",
+               "__SCORE_PREDICT_PLACEHOLDER__", "__WHOSCORED_PLACEHOLDER__"):
         assert ph not in out, f"占位符未替换: {ph}"
     out_path = os.path.join(HERE, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(out)
-    print("已生成:", out_path, f"({len(out)} 字符, 今日{data.get('count',0)}场, 历史{hist.get('total',0)}条, 港澳历史{len(hkmoh.get('records',[]))}条, 高手推荐{len(expert.get('recommendations',[]))}条, 国际权威赔率{len(odds_bsd.get('matches',[]))}场, 官方赛果{len(fd.get('matches',[]))}场)")
+    print("已生成:", out_path, f"({len(out)} 字符, 今日{data.get('count',0)}场, 历史{hist.get('total',0)}条, 港澳历史{len(hkmoh.get('records',[]))}条, 高手推荐{len(expert.get('recommendations',[]))}条, 国际权威赔率{len(odds_bsd.get('matches',[]))}场, 官方赛果{len(fd.get('matches',[]))}场, 比分预测{len(score_pred.get('matches',[]))}场)")
 
 if __name__ == "__main__":
     main()

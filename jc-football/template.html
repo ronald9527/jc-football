@@ -416,6 +416,118 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .fd-score{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
 .fd-score.fd-live{color:#faad14}
 .fd-winner{font-size:10px;color:var(--good);margin-left:4px;font-weight:700}
+/* ============ 比分预测（独立源） ============ */
+.sp-view{padding:4px 0}
+.sp-reliable{margin:6px 0 10px}
+.sp-rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sp-rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.sp-rel-h{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.sp-big{font-size:26px;font-weight:800;color:var(--text);line-height:1.1}
+.sp-big span{display:block;font-size:11px;font-weight:500;color:var(--sub);margin-top:2px}
+.sp-sub{font-size:11px;color:var(--sub);margin-top:4px}
+.sp-rows{display:flex;flex-direction:column;gap:4px}
+.sp-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;font-size:11.5px;padding:3px 0;border-bottom:1px dashed var(--line2)}
+.sp-row:last-child{border-bottom:none}
+.sp-name{font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-val{font-weight:800;font-size:13px}
+.sp-val.good{color:var(--good)}
+.sp-meta{font-size:10px;color:var(--weak);text-align:right}
+.sp-rel-note{font-size:11.5px;color:var(--sub);background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
+.sp-filters{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}
+.sp-chip{padding:5px 12px;border-radius:16px;border:1px solid var(--line2);background:var(--panel);color:var(--sub);font-size:12px;cursor:pointer;transition:all .15s}
+.sp-chip.on{color:#fff;background:var(--accent);border-color:var(--accent);font-weight:700}
+.sp-chip:hover{color:var(--text)}
+.sp-group{margin-bottom:14px}
+.sp-group-title{font-size:12px;font-weight:700;color:var(--accent);margin:6px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
+.sp-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.sp-card.sp-live{border-left:3px solid #faad14}
+.sp-card.sp-fin{border-left:3px solid var(--line2)}
+.sp-teams{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;margin-bottom:8px}
+.sp-home,.sp-away{color:var(--text)}
+.sp-vs{color:var(--weak);font-size:10px;font-weight:400}
+.sp-scoreline{display:flex;gap:18px;align-items:center;margin-bottom:8px}
+.sp-label{font-size:10px;color:var(--weak);margin-bottom:2px}
+.sp-pred{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.sp-pred i{font-style:normal;color:var(--weak);margin:0 2px}
+.sp-actual{font-size:18px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.sp-actual.sp-live{color:#faad14;font-size:13px}
+.sp-actual.sp-sched{color:var(--sub);font-size:12px;font-weight:600}
+.sp-prob{display:flex;height:18px;border-radius:9px;overflow:hidden;background:var(--panel3);font-size:10px;font-weight:700;margin-bottom:6px}
+.sp-p{display:flex;align-items:center;justify-content:center;color:#fff;min-width:0;overflow:hidden;white-space:nowrap}
+.sp-p.sp-h{background:#e8473f}
+.sp-p.sp-d{background:#8a8f99}
+.sp-p.sp-a{background:#2f7de0}
+.sp-foot{display:flex;gap:10px;align-items:center;font-size:11px;color:var(--sub);flex-wrap:wrap}
+.sp-out{font-weight:600;color:var(--text)}
+.sp-hit.good{color:var(--good);font-weight:700}
+.sp-hit.bad{color:var(--bad);font-weight:700}
+.ws-rank-table{margin:4px 0}
+.ws-rank-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)}
+.ws-rank-row:last-child{border-bottom:none}
+.ws-rank-i{width:22px;height:22px;border-radius:50%;background:var(--line);color:var(--sub);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ws-rank-i.top{background:linear-gradient(135deg,#f7b733,#fc4a1a);color:#fff;font-weight:700}
+.ws-rank-name{width:34%;font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ws-rank-name i{display:block;font-size:10px;color:var(--weak);font-weight:400;font-style:normal}
+.ws-rank-bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.ws-rank-bar i{display:block;height:100%;border-radius:4px}
+.ws-rank-bar i.exact{background:linear-gradient(90deg,#2e7d32,#66bb6a)}
+.ws-rank-bar i.out{background:linear-gradient(90deg,#1565c0,#42a5f5)}
+.ws-rank-v{width:44px;text-align:right;font-size:13px;font-weight:700;color:var(--text)}
+.ws-rank-n{width:44px;text-align:right;font-size:11px;color:var(--weak)}
+.sp-rank-note{font-size:11px;color:var(--weak);align-self:center;margin-left:4px}
+.ws-conf{margin:6px 0 0;padding:7px 8px;border-radius:6px;background:var(--line);border-left:3px solid var(--weak)}
+.ws-conf.high{background:rgba(247,183,51,.12);border-left-color:#f7b733}
+.ws-conf.mid{background:rgba(21,101,192,.10);border-left-color:#1565c0}
+.ws-conf.none{background:var(--line);border-left-color:var(--weak);display:flex;gap:6px;align-items:center}
+.ws-conf-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ws-conf-tag{font-size:12px;font-weight:700;color:var(--text)}
+.ws-conf.high .ws-conf-tag{color:#f7b733}
+.ws-conf-note{font-size:10.5px;color:var(--weak)}
+.ws-conf-bars{margin-top:5px;display:flex;flex-direction:column;gap:4px}
+.ws-conf-line{display:flex;align-items:center;gap:6px}
+.ws-conf-t{font-size:10.5px;color:var(--sub);width:28px;flex-shrink:0}
+.ws-conf-v{font-size:11px;font-weight:700;color:var(--text);width:40px;text-align:right}
+.ws-rank-bar i.exact.hi{background:linear-gradient(90deg,#f7b733,#fc4a1a)}
+.ws-rank-bar i.out.hi{background:linear-gradient(90deg,#f7b733,#fc4a1a)}
+.ws-conf-tip{margin-top:5px;font-size:11.5px;color:var(--text);font-weight:600}
+.ws-conf.high .ws-conf-tip{color:#f7b733}
+@media(max-width:640px){ .ws-rank-name{width:40%} }
+.sp-jcnum{margin-left:auto;font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:9px;padding:2px 8px;white-space:nowrap}
+.sp-enline{font-size:10px;color:var(--weak);margin:-4px 0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-en{font-size:9.5px;color:var(--weak);font-weight:400;margin-left:6px}
+.sp-date-sec{margin-top:18px;border-top:1px dashed var(--line2);padding-top:12px}
+.sp-date-head{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.sp-date-sum{font-size:11.5px;color:var(--sub);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+.sp-date-sum b{color:var(--text)}
+.sp-date-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sp-dcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.sp-dteams{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-dscores{display:flex;gap:12px;font-size:12px;margin-bottom:6px;flex-wrap:wrap}
+.sp-dpred{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.sp-dact{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.sp-dfoot{display:flex;gap:8px;align-items:center;font-size:10.5px;flex-wrap:wrap}
+.sp-dfoot .good{color:var(--good);font-weight:700}
+.sp-dfoot .bad{color:var(--bad);font-weight:700}
+.sp-dlg{color:var(--weak);margin-left:auto}
+.sp-sec-head{font-size:13px;font-weight:800;color:var(--text);margin:16px 0 6px;padding-left:8px;border-left:4px solid var(--accent)}
+.ws-jc{border-left:3px solid #faad14 !important}
+.ws-jcnum{display:inline-block;margin-left:auto;font-size:11px;font-weight:800;color:#5c3a00;background:linear-gradient(180deg,#ffd76b,#f0b429);border:1px solid #d99b1c;border-radius:10px;padding:2px 9px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.ws-jcnum.sm{font-size:9.5px;padding:1px 6px;margin-left:6px}
+.ws-scoreline{display:flex;gap:18px;align-items:center;margin:6px 0 4px;flex-wrap:wrap}
+.ws-pred{font-size:24px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2}
+.ws-pred i{font-style:normal;color:var(--weak);margin:0 2px}
+.ws-metawrap{min-width:120px}
+.ws-meta{font-size:11px;color:var(--sub);font-weight:600}
+.ws-res{display:flex;gap:10px;align-items:center;font-size:11px;margin-top:6px;flex-wrap:wrap;padding-top:6px;border-top:1px dashed var(--line2)}
+.ws-res .good{color:var(--good);font-weight:700}
+.ws-res .bad{color:var(--bad);font-weight:700}
+.ws-jc-tip{font-size:11.5px;color:var(--sub);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:8px}
+.ws-jc-tip b{color:#d99b1c}
+@media(max-width:640px){
+  .sp-rel-grid{grid-template-columns:1fr}
+  .sp-date-grid{grid-template-columns:1fr}
+  .sp-scoreline{gap:12px}
+}
 .hkmo-rec-val.hit{color:var(--good)}
 .hkmo-rec-val.miss{color:var(--bad)}
 .hkmo-rec-stars{color:#faad14;font-size:11px}
@@ -997,6 +1109,7 @@ footer b{color:var(--sub)}
   <button data-tab="highodds">分层串关<span class="bdg" id="highOddsBdg">0</span></button>
   <button data-tab="expert">高手推荐<span class="bdg" id="expertBdg">0</span></button>
   <button data-tab="fd">官方赛果<span class="bdg" id="fdBdg">0</span></button>
+  <button data-tab="scorepred">比分预测<span class="bdg" id="spBdg">0</span></button>
 </div>
 
 <main>
@@ -1088,6 +1201,40 @@ footer b{color:var(--sub)}
     <div class="fb-title">football-data.org 官方赛果核对 · 独立数据源<span class="tip">专业免费源（football-data.org），仅作官方赛果/赛程独立核对，不参与任何推荐与模型计算；与竞彩官方数据零耦合</span></div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="fdSummary"></div>
     <div id="fdList"></div>
+  </div>
+
+  <div class="sp-view" id="scorePredView" style="display:none">
+    <div class="fb-title">比分预测 · 独立参考源<span class="tip">独立数据源，与竞彩官方数据/推荐/模型零耦合，仅作比分参考，不构成任何投注建议</span></div>
+
+    <!-- WhoScored 人工预测比分（主力） -->
+    <div class="sp-sec-head">⚽ WhoScored 人工预测比分<span class="tip">抓取自 whoscored.com/previews 官方人工赛前预测；开球时间为北京时间；对应竞彩赛程的场次会标出编号</span></div>
+    <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
+    <div class="sp-filters" id="wsDateBar"></div>
+    <div id="wsList"></div>
+    <div class="sp-date-sec">
+      <div class="sp-date-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按北京日期回看，验证预测准不准</span></div>
+      <div class="sp-filters" id="wsHistBar"></div>
+      <div id="wsHistList"></div>
+    </div>
+    <div class="sp-date-sec">
+      <div class="sp-date-head">🏆 准确度排行<span class="tip">基于 WhoScored 预测的真实赛后回测累积：精确命中=预测比分与实际完全一致；方向命中=胜负平方向一致。至少 3 场才入榜</span></div>
+      <div class="sp-filters" id="wsRankBar"></div>
+      <div id="wsRankList"></div>
+    </div>
+
+    <!-- 自建 Poisson 模型（辅助参考） -->
+    <div class="sp-sec-head">🤖 自建 Poisson 模型参考<span class="tip">透明自动化模型，与 WhoScored 互相独立，仅作交叉参考</span></div>
+    <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="spSummary"></div>
+    <div class="sp-reliable" id="spReliable"></div>
+    <div class="sp-filters" id="spFilters"></div>
+    <div id="spList"></div>
+    <div class="sp-date-sec">
+      <div class="sp-date-head">📅 日期回溯 · 按日期回看历史预测与实际赛果
+        <span class="tip">数据来自本 Tab 自建模型的本地历史（每日自动累积），与竞彩核心模型无关</span>
+      </div>
+      <div class="sp-filters" id="spDateBar"></div>
+      <div id="spDateList"></div>
+    </div>
   </div>
 
 </main>
@@ -1303,8 +1450,128 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.1";
+const VERSION = "v1.7.9";
 const CHANGELOG = [
+  {
+    version: "v1.7.9",
+    date: "2026-10-10",
+    title: "修复缓存导致页面/数据不更新：强制刷新兜底 + 全链缓存穿透",
+    fixes: [
+      "所有 fetch 请求（matches.json/version.json）加动态时间戳 ?_t=Date.now()，彻底穿透浏览器/中间缓存",
+      "「最新数据」按钮拉取失败时，800ms 后自动强制刷新页面（URL 加时间戳），不再让用户卡在旧页面",
+      "页面加载 8 秒后自动比对云端 version.json：若云端数据比本页新超过 10 分钟，自动刷新",
+      "App 壳同步 AndroidSync.syncNow() 增加时间戳参数，便于原生端识别需要拉新页面",
+      "弹层「刷新页面」按钮改用硬刷新（location.replace + 时间戳），绕过 WebView/PWA 缓存",
+    ],
+    notes: [
+      "此前云端已是最新数据（10-10 14:33），但用户端缓存了旧页面；本次改动专门解决「客户端看到旧数据」问题",
+    ]
+  },
+  {
+    version: "v1.7.8",
+    date: "2026-10-09",
+    title: "预测可信度评分：联赛/球队命中率反哺单场，给出跟注建议",
+    features: [
+      "新增可信度评分：用历史真实回测，按联赛+球队的命中率（贝叶斯收缩防小样本虚高）给每场未开赛预测打分，输出方向可信度%/比分可信度%",
+      "卡片新增可信度区块：🔥高可信/中等/⚠️谨慎三档 + 双进度条 + 明文建议（如「比分可信度高，可跟注比分 2:0」「方向可信度高，可跟注方向「主胜」」），并标出样本场数",
+      "新增「🔥只看高可信」一键筛选，高可信场次与竞彩场次一起置顶",
+    ],
+    notes: [
+      "冷启动：目前历史回测 0 场（比赛未开赛），全部显示「可信度待积累·按全局基线」；今晚开赛后开始校准，样本少于 6 场不给高可信",
+    ]
+  },
+  {
+    version: "v1.7.7",
+    date: "2026-10-09",
+    title: "准确度排行：谁预测得准一目了然",
+    features: [
+      "新增「准确度排行」：基于 WhoScored 预测的真实赛后回测，联赛榜+球队榜，可按精确命中/方向命中切换排序，前三名高亮，至少 3 场完赛才入榜",
+    ],
+    fixes: [
+      "放宽可靠度统计门槛（6场→3场），榜单更早可用",
+    ],
+    notes: [
+      "WhoScored /previews 全站每日仅发布约 140 场预测（未来7天，无分页，实测确认非漏抓）；排行数据随每日完赛自动累积",
+    ]
+  },
+  {
+    version: "v1.7.6",
+    date: "2026-10-09",
+    title: "接入 WhoScored 人工预测比分（含竞彩编号标记 + 日期选项 + 赛后回溯）",
+    features: [
+      "新增独立抓取模块 fetch_whoscored.py：抓取 whoscored.com/previews 官方人工预测，140 场每场带预测比分（如多特 2-0 不莱梅）",
+      "Tab 重构为两段：上方 WhoScored 人工预测（主力，含日期选项条、竞彩编号金色徽标、★只看竞彩筛选），下方自建 Poisson 模型参考",
+      "队名汉化扩充：新增 WhoScored 简写别名（West Ham→西汉姆联、PSV Eindhoven→埃因霍温 等 60+ 条）",
+      "赛后回溯：按北京日期回看 WhoScored 预测 vs 实际比分，标记精确/方向命中，开球约 2 小时后自动回填赛果",
+    ],
+    fixes: [
+      "修预测比分解析漏掉客队进球（正则只截到主队）；默认日期改为最近的下一个比赛日；竞彩对照改为北京时间并加前一天容差（凌晨场次挂前一天场次号）",
+    ],
+    notes: [
+      "反爬突破：python 默认 TLS 指纹被 Cloudflare 403，改用 curl_cffi impersonate=chrome124 成功抓取；预测比分已永久缓存，每日仅抓新增场次",
+    ]
+  },
+  {
+    version: "v1.7.5",
+    date: "2026-10-09",
+    title: "比分预测 Tab：队名汉化 + 竞彩赛程编号 + 日期回溯",
+    features: [
+      "队名汉化：116 支球队英文名映射为竞彩中文名（如 Manchester United FC→曼联），卡片并列显示英文原名",
+      "日期回溯：按日期回看历史预测与实际赛果，支持 82 个日期切换，含当日精确/方向命中统计",
+      "竞彩赛程编号：按 日期+中文队名 对照竞彩赛程，命中时显示编号（如 周五001），仅作标签不参与模型",
+    ],
+    fixes: [
+      "补齐 Tab 缺失的历史回溯数据注入（history/dateIndex/dateList），新增 --keep-cache 避免每日重复抓取球队",
+    ],
+    notes: [
+      "WhoScored(previews/livescores) 经实测被 Cloudflare 指纹验证拦截(403)，本环境数据中心IP无法抓取；Tab 仍基于可稳定访问的 football-data.org + 自建 Poisson，保持与核心数据/模型零耦合",
+    ]
+  },
+  {
+    version: "v1.7.4",
+    date: "2026-10-09",
+    title: "新增独立「比分预测」Tab（与核心数据/模型零耦合）",
+    features: [
+      "新增独立 Tab：基于 football-data.org 赛程/赛果 + 自建透明 Poisson 比分模型，预测每场比分与胜平负概率",
+      "准确性回溯：按联赛/球队累计精确比分命中率与方向命中率，自动挑出历史预测较准的联赛/球队作参考",
+    ],
+    fixes: [
+      "隔离原则：本 Tab 仅读 fd_config.json 的 Key，不读 matches.json/history.json/parlay/expert/模型，结果只写 score_predict.json，杜绝污染竞彩核心数据",
+    ],
+    notes: [
+      "WhoScored 因 Cloudflare+指纹验证拦截（数据中心IP）无法直接抓取，且公开页不提供精确比分预测，故以可稳定访问的免费独立源替代；如需接入 WhoScored 请提供可用的访问方式（住宅代理/可用接口）",
+    ]
+  },
+  {
+    version: "v1.7.3",
+    date: "2026-10-09",
+    title: "串关命中率改用竞彩官方实战同指",
+    features: [
+      "稳健档排序依据从「模型预测联合命中率」改为「竞彩官方赛果库真实历史同指命中率」（地面真实数据），选出同条件下最稳组合",
+      "页面稳健档展示「历史同指命中率（实战）」，与模型预测明确区分；策略文案明确为竞彩混合过关（胜平负+让球+总进球）",
+    ],
+    fixes: [
+      "修正对稳健档命中率口径的描述，避免模型概率被误读为实战命中率",
+    ],
+    notes: [
+      "抽水口径维持实测 0.886（对竞彩官方赔率实测庄家边际，非名义73%财务口径，无需改动）",
+    ]
+  },
+  {
+    version: "v1.7.2",
+    date: "2026-10-09",
+    title: "串关分层双哲学：稳健档改命中率优先",
+    features: [
+      "稳健档(2串1)在 EV≥-8% 护栏内改为『联合命中率最高』优先，场场最有把握拼一起、尽量中奖",
+      "均衡/搏击档保持 EV 价值优先，两类目标各归其位",
+    ],
+    fixes: [
+      "修正 strategy 文案与实际口径不一致（原写 EV≥-3% 实为 -8%）",
+    ],
+    notes: [
+      "抽水仅用于去水还原公平概率与展示，不参与组串；EV 已含去水，非『按抽水组串』",
+    ]
+  },
   {
     version: "v1.7.1",
     date: "2026-10-09",
@@ -1613,6 +1880,8 @@ const BUILT_EXPERTSTATS = __EXPERT_STATS_PLACEHOLDER__;
 const BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
 const BUILT_BSD = __BSD_PLACEHOLDER__;
 const BUILT_FD = __FD_PLACEHOLDER__;
+const BUILT_SCOREPRED = __SCORE_PREDICT_PLACEHOLDER__;
+const BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
 const ODDS_BSD = {};
 (BUILT_ODDS_BSD.matches || []).forEach(x => { if (x && x.num) ODDS_BSD[x.num] = x; });
 const FD = {};
@@ -2401,6 +2670,7 @@ function render(){
   const isHF = false;
   const isExpert = state.tab==="expert";
   const isFD = state.tab==="fd";
+  const isScorePred = state.tab==="scorepred";
   document.querySelectorAll(".maintab button").forEach(b=>b.classList.toggle("on", b.dataset.tab===state.tab));
   $("#todayToolbar").style.display = isToday ? "flex" : "none";
   $("#cardsView").style.display = isToday ? "block" : "none";
@@ -2414,11 +2684,13 @@ function render(){
   const hfViewEl = $("#hfView"); if(hfViewEl) hfViewEl.style.display = "none";
   $("#expertView").style.display = isExpert ? "block" : "none";
   $("#fdView").style.display = isFD ? "block" : "none";
+  $("#scorePredView").style.display = isScorePred ? "block" : "none";
   if (isSW){ renderStrongWeak(); return; }
   if (isHKMO){ renderHKMO(); return; }
   if (isHighOdds){ renderHighOdds(); return; }
   if (isExpert){ renderExpert(); return; }
   if (isFD){ renderFD(); return; }
+  if (isScorePred){ renderScorePred(); return; }
   if (!isToday){ renderHistory(); return; }
   if (state.view==="card"){ renderCards(); $("#cardsView").style.display="block"; $("#tableView").style.display="none"; }
   else { renderTable(); $("#tableView").style.display="block"; $("#cardsView").style.display="none"; }
@@ -3544,16 +3816,18 @@ function renderHighOdds(){
       // 负期望档位：标「不推荐」，但仍展示完整赛程，方便赛后逐场核对命中
       if(ev != null && ev < 0 && !p.recommended){
         const jp = (p.jointProb==null? null : p.jointProb);
+        const rh = p.realHit;
         html += `<div class="ho-card" style="border-left:3px solid var(--bad);margin-bottom:10px">
           <div class="ho-head"><span class="ho-type" style="color:var(--bad)">⚠️ ${p.tier||""} · ${p.type} · <b>不推荐</b></span><span class="ho-total" style="color:var(--bad)">${p.totalOdds.toFixed(2)} 倍</span></div>
           <div style="margin:8px 0 4px;font-size:12px;color:var(--bad)">本档最优组合期望值 <b>EV ${ev}%</b> 为负，<b>无正期望机会，不推荐下注</b>。串关抽水按场数放大（${p.rake!=null?p.rake+"%":"—"}）。</div>
           ${parlayLegsHtml(p.legs)}
-          <div style="margin-top:8px;font-size:11px;color:var(--sub)">预测胜率（模型校准）<b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b> · 赛后可在上方「串关历史战绩」核对每场实际赛果与命中（<b>预测胜率≠实战命中率</b>，实战命中率见上方统计）。</div>
+          <div style="margin-top:8px;font-size:11px;color:var(--sub)">${rh!=null?`历史同指命中率（实战）<b style="color:var(--text)">${rh}%</b>`:`预测胜率（模型校准）<b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b>`} · 赛后可在上方「串关历史战绩」核对每场实际赛果与命中（<b>历史同指≠模型预测</b>，历史同指来自竞彩官方赛果库同条件实战）。</div>
         </div>`;
         return;
       }
       const avgConf = p.avgConfidence || 0;
       const jp = (p.jointProb==null? null : p.jointProb);
+      const rh = p.realHit;
       const stake = p.suggestStake || 0;
       const tierColor = p.tier==="稳健"?"var(--good)":(p.tier==="均衡"?"var(--accent)":"var(--warn)");
       const evColor = ev==null?"var(--sub)":(ev>=5?"var(--good)":(ev>=-10?"var(--warn)":"var(--bad)"));
@@ -3565,7 +3839,7 @@ function renderHighOdds(){
         </div>
         <div style="margin-bottom:8px;font-size:11.5px;color:var(--sub)">${p.tierDesc||""}</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px">
-          <span>预测胜率 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b></span>
+          <span>${rh!=null?`历史同指命中率 <b style="color:var(--text)">${rh}%</b>`:`预测胜率 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b>`}</span>
           <span>期望值EV <b style="color:${evColor}">${ev!=null?(ev>0?"+":"")+ev+"%":"—"}</b></span>
           <span>抽水 <b style="color:var(--sub)">${p.rake!=null?p.rake+"%":"—"}</b></span>
           <span style="color:${stake>0?'var(--good)':'var(--bad)'}">${stakeTxt}</span>
@@ -3635,6 +3909,479 @@ function renderFD(){
     html += `</div>`;
   });
   list.innerHTML = html;
+}
+
+/* ================= 比分预测（独立源） ================= */
+/* 英文队名 → 竞彩中文名 映射（仅用于「比分预测」独立 Tab 汉化展示，不影响任何核心数据/模型） */
+const SP_TEAM_ZH = {
+  // 英超
+  "Arsenal FC":"阿森纳","Manchester United FC":"曼联","Aston Villa FC":"阿斯顿维拉",
+  "Brighton & Hove Albion FC":"布莱顿","Brentford FC":"布伦特福德","Burnley FC":"伯恩利",
+  "Chelsea FC":"切尔西","Fulham FC":"富勒姆","Ipswich Town FC":"伊普斯维奇",
+  "Leeds United FC":"利兹联","Tottenham Hotspur FC":"热刺","West Ham United FC":"西汉姆联",
+  "Wolverhampton Wanderers FC":"狼队","AFC Bournemouth":"伯恩茅斯",
+  // 西甲
+  "Athletic Club":"毕尔巴鄂竞技","Club Atlético de Madrid":"马德里竞技","Deportivo Alavés":"阿拉维斯",
+  "FC Barcelona":"巴塞罗那","Getafe CF":"赫塔费","RCD Espanyol de Barcelona":"西班牙人",
+  "Rayo Vallecano de Madrid":"巴列卡诺","Real Madrid CF":"皇家马德里","Villarreal CF":"比利亚雷亚尔",
+  "Málaga CF":"马拉加",
+  // 德甲
+  "1. FC Union Berlin":"柏林联合","1. FSV Mainz 05":"美因茨","Bayer 04 Leverkusen":"勒沃库森",
+  "Borussia Dortmund":"多特蒙德","Eintracht Frankfurt":"法兰克福","FC Augsburg":"奥格斯堡",
+  "FC Bayern München":"拜仁慕尼黑","RB Leipzig":"RB莱比锡","SV Werder Bremen":"云达不莱梅",
+  "TSG 1899 Hoffenheim":"霍芬海姆","VfB Stuttgart":"斯图加特",
+  // 德乙
+  "SC Paderborn 07":"帕德博恩","Hamburger SV":"汉堡","SV 07 Elversberg":"埃弗斯贝格",
+  // 意甲
+  "ACF Fiorentina":"佛罗伦萨","FC Internazionale Milano":"国际米兰","Frosinone Calcio":"弗罗西诺内",
+  "Genoa CFC":"热那亚","Parma Calcio 1913":"帕尔马","SSC Napoli":"那不勒斯",
+  // 法甲
+  "AS Monaco FC":"摩纳哥","Le Havre AC":"勒阿弗尔","Lille OSC":"里尔","Olympique Lyonnais":"里昂",
+  "Paris Saint-Germain FC":"巴黎圣日耳曼","Racing Club de Lens":"朗斯","Stade Brestois 29":"布雷斯特",
+  "Toulouse FC":"图卢兹","Angers SCO":"昂热",
+  // 法乙
+  "FC Lorient":"洛里昂","Paris FC":"巴黎FC","Le Mans FC":"勒芒",
+  // 荷甲
+  "AFC Ajax":"阿贾克斯","AZ":"阿尔克马尔","Feyenoord Rotterdam":"费耶诺德","FC Twente '65":"特温特",
+  "Fortuna Sittard":"福图纳锡塔德","Go Ahead Eagles":"前进之鹰","NEC":"奈梅亨",
+  "PSV":"埃因霍温","SC Heerenveen":"海伦芬","Sparta Rotterdam":"鹿特丹斯巴达",
+  // 葡超
+  "CD Santa Clara":"圣克拉拉","Casa Pia AC":"卡萨皮亚","FC Porto":"波尔图","GD Estoril Praia":"埃斯托里尔",
+  "Gil Vicente FC":"吉维森特","Moreirense FC":"莫雷拉人","Sporting Clube de Braga":"布拉加",
+  "Sporting Clube de Portugal":"葡萄牙体育","Académico de Viseu FC":"维塞乌学院",
+  // 巴甲
+  "Botafogo FR":"博塔弗戈","CA Mineiro":"米内罗竞技","CA Paranaense":"巴拉纳竞技","Chapecoense AF":"沙佩科恩斯",
+  "Clube do Remo":"雷莫","Coritiba FBC":"科里蒂巴","CR Flamengo":"弗拉门戈","CR Vasco da Gama":"瓦斯科达伽马",
+  "Cruzeiro EC":"克鲁塞罗","EC Bahia":"巴伊亚","EC Vitória":"维多利亚","Grêmio FBPA":"格雷米奥",
+  "Mirassol FC":"米拉索尔","RB Bragantino":"布拉甘蒂诺RB","SC Corinthians Paulista":"科林蒂安",
+  "SC Internacional":"国际","SE Palmeiras":"帕尔梅拉斯","Santos FC":"桑托斯","São Paulo FC":"圣保罗",
+  // 英冠及下级
+  "Birmingham City FC":"伯明翰","Blackburn Rovers FC":"布莱克本","Bolton Wanderers FC":"博尔顿",
+  "Bristol City FC":"布里斯托尔城","Cardiff City FC":"卡迪夫城","Charlton Athletic FC":"查尔顿",
+  "Derby County FC":"德比郡","Lincoln City FC":"林肯城","Middlesbrough FC":"米德尔斯堡","Millwall FC":"米尔沃尔",
+  "Norwich City FC":"诺维奇","Preston North End FC":"普雷斯顿","Queens Park Rangers FC":"女王公园巡游者",
+  "Sheffield United FC":"谢菲尔德联","Stoke City FC":"斯托克城","Sunderland AFC":"桑德兰",
+  "Swansea City AFC":"斯旺西","Watford FC":"沃特福德","West Bromwich Albion FC":"西布朗维奇","Wrexham AFC":"雷克瑟姆",
+  // WhoScored 简写别名（WhoScored 队名与 football-data 不同）
+  "West Ham":"西汉姆联","PSV Eindhoven":"埃因霍温","Malaga":"马拉加","Espanyol":"西班牙人",
+  "Werder Bremen":"云达不莱梅","Borussia Dortmund":"多特蒙德","Sporting CP":"葡萄牙体育",
+  "Braga":"布拉加","Moreirense":"莫雷拉人","Gil Vicente":"吉维森特","Santa Clara":"圣克拉拉",
+  "Casa Pia":"卡萨皮亚","Estoril":"埃斯托里尔","Lens":"朗斯","Lyon":"里昂","Brest":"布雷斯特",
+  "Le Havre":"勒阿弗尔","Galatasaray":"加拉塔萨雷","Kasimpasa":"卡斯帕萨","Fenerbahce":"费内巴切",
+  "Besiktas":"贝西克塔斯","Trabzonspor":"特拉布宗体育","SK Beveren":"贝弗伦","Lommel":"洛默尔",
+  "Ajax":"阿贾克斯","Feyenoord":"费耶诺德","Twente":"特温特","Heerenveen":"海伦芬",
+  "Sparta Rotterdam":"鹿特丹斯巴达","Fortuna Sittard":"福图纳锡塔德","Go Ahead Eagles":"前进之鹰",
+  "NEC Nijmegen":"奈梅亨","AZ Alkmaar":"阿尔克马尔","Bayern Munich":"拜仁慕尼黑","Bayern München":"拜仁慕尼黑",
+  "Bayer Leverkusen":"勒沃库森","RB Leipzig":"RB莱比锡","Eintracht Frankfurt":"法兰克福",
+  "Union Berlin":"柏林联合","Mainz 05":"美因茨","Mainz":"美因茨","VfB Stuttgart":"斯图加特",
+  "Hoffenheim":"霍芬海姆","Augsburg":"奥格斯堡","Werder Bremen":"云达不莱梅","Freiburg":"弗赖堡",
+  "Wolfsburg":"沃尔夫斯堡","Borussia M'gladbach":"门兴格拉德巴赫","Monaco":"摩纳哥","Lille":"里尔",
+  "Nice":"尼斯","Marseille":"马赛","Rennes":"雷恩","Toulouse":"图卢兹","Strasbourg":"斯特拉斯堡",
+  "Nantes":"南特","Auxerre":"欧塞尔","Metz":"梅斯","Le Mans":"勒芒","Lorient":"洛里昂","Angers":"昂热",
+  "Paris FC":"巴黎FC","Real Madrid":"皇家马德里","Barcelona":"巴塞罗那","Atletico Madrid":"马德里竞技",
+  "Athletic Bilbao":"毕尔巴鄂竞技","Villarreal":"比利亚雷亚尔","Rayo Vallecano":"巴列卡诺",
+  "Getafe":"赫塔费","Alaves":"阿拉维斯","Real Betis":"皇家贝蒂斯","Real Sociedad":"皇家社会",
+  "Sevilla":"塞维利亚","Valencia":"巴伦西亚","Girona":"赫罗纳","Celta Vigo":"塞尔塔",
+  "Osasuna":"奥萨苏纳","Mallorca":"马略卡","Espanyol":"西班牙人","Levante":"莱万特",
+  "Oviedo":"皇家奥维耶多","Elche":"埃尔切","Almeria":"阿尔梅里亚","Las Palmas":"拉斯帕尔马斯"
+};
+/* 联赛中文名（历史记录兜底，正常已为中文） */
+const WS_LEAGUE_ZH = {"Premier League":"英超","Championship":"英冠","LaLiga":"西甲","Bundesliga":"德甲","Serie A":"意甲","Ligue 1":"法甲","Eredivisie":"荷甲","Liga Portugal":"葡超","Jupiler Pro League":"比甲","Super Lig":"土超","Allsvenskan":"瑞超","Eliteserien":"挪超","Brasileirao":"巴甲","MLS":"美职联"};
+
+function spZh(n){ return (n && SP_TEAM_ZH[n]) ? SP_TEAM_ZH[n] : (n || "?"); }
+
+/* WhoScored 人工预测区块（主力内容）：日期选项 + 当日预测列表 + 竞彩编号醒目标记 + 赛后回溯 */
+function renderWhoScored(){
+  const ws = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? BUILT_WHOSCORED : {};
+  const ms = ws.matches || [];
+  const sum = $("#wsSummary");
+  if(sum){
+    const ov = (ws.reliable||{}).overall||{};
+    sum.innerHTML = `共 <b style="color:var(--text)">${ms.length}</b> 场 · 历史回测 <b style="color:var(--text)">${ov.n||0}</b> 场`
+      + `（精确比分命中 <b style="color:var(--text)">${ov.exactHit!=null?ov.exactHit+"%":"-"}</b>，方向命中 <b style="color:var(--text)">${ov.outcomeHit!=null?ov.outcomeHit+"%":"-"}</b>）`
+      + ` · 来源：${ws.source||"WhoScored"} · 更新 ${ws.updatedAt||"-"}`;
+  }
+  const bar = $("#wsDateBar"), list = $("#wsList");
+  if(!bar || !list) return;
+  const dl = ws.dateList || [];
+  if(!dl.length){
+    bar.innerHTML = `<div class="empty">暂无 WhoScored 预测数据（每日自动抓取）</div>`;
+    list.innerHTML = "";
+  } else {
+    if(!state.wsDate || dl.indexOf(state.wsDate)<0){
+      // 默认选中"最近的下一个比赛日"（欧洲夜场按北京时间落在次日）
+      const bjToday = new Date(Date.now() + 8*3600*1000).toISOString().slice(0,10);
+      state.wsDate = dl.find(d=>d >= bjToday) || dl[0];
+    }
+    let bh = `<button class="sp-chip ${state.wsOnlyJc?"on":""}" data-act="jc">★只看竞彩</button>`
+      + `<button class="sp-chip ${state.wsOnlyHot?"on":""}" data-act="hot">🔥只看高可信</button>`;
+    dl.slice(0,14).forEach(d=>{
+      bh += `<button class="sp-chip ${state.wsDate===d?"on":""}" data-dt="${d}">${d}</button>`;
+    });
+    bar.innerHTML = bh;
+    bar.querySelectorAll(".sp-chip").forEach(b=>{
+      b.onclick = ()=>{ if(b.dataset.act==="jc"){ state.wsOnlyJc = !state.wsOnlyJc; }
+                        else if(b.dataset.act==="hot"){ state.wsOnlyHot = !state.wsOnlyHot; }
+                        else { state.wsDate = b.dataset.dt; } renderScorePred(); };
+    });
+    let view = ms.filter(m=>m.date===state.wsDate);
+    if(state.wsOnlyJc) view = view.filter(m=>spJcNum(m));
+    if(state.wsOnlyHot) view = view.filter(m=>wsIsHot(m));
+    const hotRank = m=> (wsIsHot(m)?1:0);
+    view = view.slice().sort((a,b)=>(spJcNum(b)?1:0)-(spJcNum(a)?1:0) || hotRank(b)-hotRank(a));
+    if(!view.length){
+      list.innerHTML = `<div class="empty">该日期无${state.wsOnlyJc?"对应竞彩的":""}预测场次</div>`;
+    } else {
+      const jcN = view.filter(m=>spJcNum(m)).length;
+      const hotN = view.filter(m=>wsIsHot(m)).length;
+      let html = (jcN||hotN)? `<div class="ws-jc-tip">本日 ${jcN?`<b>${jcN}</b> 场对应竞彩赛程（已置顶）：`:``}${hotN?` 其中 <b>${hotN}</b> 场可信度较高 🔥`:``}</div>` : "";
+      view.forEach(m=>{
+        const jc = spJcNum(m);
+        const zhH = spZh(m.home), zhA = spZh(m.away);
+        const hasPred = m.predH!=null && m.predA!=null;
+        let res = "";
+        if(m.evaluated && m.actH!=null){
+          res = `<div class="ws-res"><span class="sp-dact">实际 ${m.actH}:${m.actA}</span>`
+            + `<span class="${m.exactHit?"good":"bad"}">${m.exactHit?"✓精确命中":"✗比分未中"}</span>`
+            + `<span class="${m.outcomeHit?"good":"bad"}">${m.outcomeHit?"方向✓":"方向✗"}</span></div>`;
+        }
+        html += `<div class="sp-card ${jc?"ws-jc":""}">
+          <div class="sp-teams"><span class="sp-home">${zhH}</span><span class="sp-vs">vs</span><span class="sp-away">${zhA}</span>
+            ${jc?`<span class="ws-jcnum">竞彩 ${jc}</span>`:``}</div>
+          ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
+          <div class="ws-scoreline">
+            <div><div class="sp-label">WhoScored 预测比分</div>
+              <div class="ws-pred">${hasPred? (m.predH+" <i>:</i> "+m.predA) : "—"}</div></div>
+            <div class="ws-metawrap"><div class="sp-label">${m.league||m.leagueEn||""}</div>
+              <div class="ws-meta">北京时间 ${m.bjTime||"-"}</div></div>
+          </div>
+          ${wsConfHtml(m)}
+          ${res}
+        </div>`;
+      });
+      list.innerHTML = html;
+    }
+  }
+  /* 赛后回溯 */
+  const hb = $("#wsHistBar"), hl = $("#wsHistList");
+  if(hb && hl){
+    const hdl = ws.historyDateList || [];
+    const hist = ws.history || [];
+    if(!hdl.length){
+      hb.innerHTML = `<div class="empty">暂无完赛回溯（开球约 2 小时后自动回填赛果）</div>`;
+      hl.innerHTML = "";
+    } else {
+      if(!state.wsHistDate || hdl.indexOf(state.wsHistDate)<0) state.wsHistDate = hdl[0];
+      let hh = "";
+      hdl.slice(0,14).forEach(d=>{ hh += `<button class="sp-chip ${state.wsHistDate===d?"on":""}" data-dt="${d}">${d}</button>`; });
+      hb.innerHTML = hh;
+      hb.querySelectorAll(".sp-chip").forEach(b=>{ b.onclick=()=>{ state.wsHistDate=b.dataset.dt; renderScorePred(); }; });
+      const rows = hist.filter(r=>r.date===state.wsHistDate);
+      if(!rows.length){ hl.innerHTML = `<div class="empty">该日期无记录</div>`; }
+      else {
+        let he=0, ho=0;
+        rows.forEach(r=>{ if(r.exactHit) he++; if(r.outcomeHit) ho++; });
+        let x = `<div class="sp-date-sum">${state.wsHistDate} · 共 <b>${rows.length}</b> 场完赛 · 精确命中 <b>${he}</b>（${(he/rows.length*100).toFixed(0)}%）· 方向命中 <b>${ho}</b>（${(ho/rows.length*100).toFixed(0)}%）</div><div class="sp-date-grid">`;
+        rows.forEach(r=>{
+          const jc = spJcNum(r);
+          const zhH = spZh(r.home), zhA = spZh(r.away);
+          x += `<div class="sp-dcard ${jc?"ws-jc":""}">
+            <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}${jc?`<span class="ws-jcnum sm">竞彩 ${jc}</span>`:``}</div>
+            <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
+            <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span><span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span><span class="sp-dlg">${r.league||""}</span></div>
+          </div>`;
+        });
+        x += `</div>`;
+        hl.innerHTML = x;
+      }
+    }
+  }
+  /* 准确度排行（联赛/球队，基于真实回测累积） */
+  const rb = $("#wsRankBar"), rl = $("#wsRankList");
+  if(rb && rl){
+    const hist = ws.history || [];
+    if(!hist.length){
+      rb.innerHTML = `<div class="empty">暂无排行数据（今晚比赛完赛后自动累积）</div>`;
+      rl.innerHTML = "";
+    } else {
+      const mode = state.wsRankMode || "lg-exact";  // lg-exact | lg-out | team-exact | team-out
+      const isTeam = mode.startsWith("team");
+      const byOutcome = mode.endsWith("out");
+      const MINN = 3;
+      const g = {};
+      hist.forEach(r=>{
+        const keys = isTeam ? [r.home, r.away] : [r.league || r.leagueEn];
+        keys.forEach(k=>{
+          if(!k) return;
+          (g[k] = g[k] || []).push(r);
+        });
+      });
+      let rows = Object.entries(g).map(([k, rs])=>{
+        const n = rs.length;
+        return {
+          name: k, n,
+          exact: rs.filter(x=>x.exactHit).length / n * 100,
+          out: rs.filter(x=>x.outcomeHit).length / n * 100,
+        };
+      }).filter(r=>r.n >= MINN);
+      rows.sort((a,b)=> (byOutcome ? (b.out-a.out || b.exact-a.exact || b.n-a.n) : (b.exact-a.exact || b.out-a.out || b.n-a.n)));
+      const chips = [["lg-exact","联赛·精确"],["lg-out","联赛·方向"],["team-exact","球队·精确"],["team-out","球队·方向"]];
+      rb.innerHTML = chips.map(c=>`<button class="sp-chip ${mode===c[0]?"on":""}" data-rk="${c[0]}">${c[1]}</button>`).join("")
+        + `<span class="sp-rank-note">共 ${hist.length} 场回测 · 榜单按${byOutcome?"方向命中":"精确命中"}排序</span>`;
+      rb.querySelectorAll(".sp-chip").forEach(b=>{ b.onclick=()=>{ state.wsRankMode=b.dataset.rk; renderScorePred(); }; });
+      if(!rows.length){
+        rl.innerHTML = `<div class="empty">样本不足（每项至少 ${MINN} 场完赛才入榜）</div>`;
+      } else {
+        const MAXV = 40;  // 精确命中的满分参考（超过即满条）
+        let t = `<div class="ws-rank-table">`;
+        rows.slice(0, 20).forEach((r, i)=>{
+          const zh = isTeam ? spZh(r.name) : (WS_LEAGUE_ZH[r.name] || r.name);
+          const v = byOutcome ? r.out : r.exact;
+          const w = Math.min(100, v / (byOutcome ? 100 : MAXV) * 100);
+          const cls = byOutcome ? "out" : "exact";
+          t += `<div class="ws-rank-row">
+            <span class="ws-rank-i ${i<3?"top":""}">${i+1}</span>
+            <span class="ws-rank-name">${zh}${zh!==r.name?`<i class="sp-enline">${r.name}</i>`:``}</span>
+            <span class="ws-rank-bar"><i class="${cls}" style="width:${w.toFixed(0)}%"></i></span>
+            <span class="ws-rank-v">${(byOutcome?r.out:r.exact).toFixed(0)}%</span>
+            <span class="ws-rank-n">${r.n}场</span>
+          </div>`;
+        });
+        t += `</div>`;
+        rl.innerHTML = t;
+      }
+    }
+  }
+}
+
+/* 该场预测是否"高可信"（比分或方向任一达到高） */
+function wsIsHot(m){ return !!(m && m.conf && (m.conf.exactLevel==="high" || m.conf.dirLevel==="high")); }
+
+/* 可信度区块：历史命中率反哺 → 该场预测的可信度 + 跟注建议（仅参考，不构成投注建议） */
+function wsConfHtml(m){
+  const c = m && m.conf;
+  if(!c || !c.sample){
+    const wsd = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? BUILT_WHOSCORED : {};
+    const bl = (wsd.reliable||{}).baseline || {};
+    const nm = (bl.dir!=null ? bl.dir+"%" : "-");
+    return `<div class="ws-conf none"><span class="ws-conf-tag">可信度待积累</span>`
+      + `<span class="ws-conf-note">历史样本 0 场，暂按全局基线（方向 ${nm}）显示，随每日完赛自动校准</span></div>`;
+  }
+  const lv = (c.exactLevel==="high") ? "high" : (c.dirLevel==="high" ? "high" : (c.exactLevel==="mid"||c.dirLevel==="mid" ? "mid" : "low"));
+  const tag = lv==="high" ? "🔥 高可信" : (lv==="mid" ? "可信度中等" : "⚠️ 谨慎");
+  return `<div class="ws-conf ${lv}">
+    <div class="ws-conf-h"><span class="ws-conf-tag">${tag}</span>
+      <span class="ws-conf-note">样本 ${c.sample} 场（联赛 ${c.leagueN} / 球队 ${c.teamN}）</span></div>
+    <div class="ws-conf-bars">
+      <div class="ws-conf-line"><span class="ws-conf-t">方向</span>
+        <span class="ws-rank-bar"><i class="out ${c.dirLevel==="high"?"hi":""}" style="width:${Math.min(100,c.dir).toFixed(0)}%"></i></span>
+        <span class="ws-conf-v">${c.dir}%</span></div>
+      <div class="ws-conf-line"><span class="ws-conf-t">比分</span>
+        <span class="ws-rank-bar"><i class="exact ${c.exactLevel==="high"?"hi":""}" style="width:${Math.min(100,c.exact*3).toFixed(0)}%"></i></span>
+        <span class="ws-conf-v">${c.exact}%</span></div>
+    </div>
+    <div class="ws-conf-tip">${c.tip||""}</div>
+  </div>`;
+}
+
+/* UTC → 北京时间日期（竞彩赛程按北京日期编排；UTC 晚场属于次日，必须 +8h 归一） */
+function spBjDate(utc){
+  if(!utc) return "";
+  let s = utc;
+  if(!/Z$|[+-]\d{2}:?\d{2}$/.test(s)) s += "Z";
+  const t = Date.parse(s);
+  if(isNaN(t)) return (utc||"").slice(0,10);
+  return new Date(t + 8*3600*1000).toISOString().slice(0,10);
+}
+
+/* 竞彩赛程编号对照：按「北京日期 + 中文队名」匹配竞彩赛程(BUILT_DATA)，仅作标签对照，不参与本 Tab 任何模型计算 */
+function spJcNum(m){
+  try{
+    const bd = (typeof BUILT_DATA!=="undefined" && BUILT_DATA && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
+    if(!bd.length || !m) return null;
+    // 竞彩按"销售日"编排：凌晨开踢的比赛常挂在【前一天】场次号下（如周六03:30标"周五001"）
+    // 故同时用北京日期与前一天做容差匹配
+    const base = m.utcDate ? spBjDate(m.utcDate) : (m.date || "");
+    const cands = [base];
+    if(base){
+      const t = Date.parse(base + "T00:00:00Z");
+      if(!isNaN(t)) cands.push(new Date(t - 24*3600*1000).toISOString().slice(0,10));
+    }
+    const zhH = spZh(m.home), zhA = spZh(m.away);
+    for(const d of cands){
+      if(!d) continue;
+      for(const j of bd){
+        if(!j || (j.date||"")!==d) continue;
+        if(j.home===zhH && j.away===zhA) return j.num || null;
+        if(j.home===m.home && j.away===m.away) return j.num || null;
+      }
+    }
+  }catch(e){}
+  return null;
+}
+
+function renderScorePred(){
+  try{ renderWhoScored(); }catch(e){}
+  const sp = BUILT_SCOREPRED || {matches:[], reliable:{}};
+  const ms = sp.matches || [];
+  const rel = sp.reliable || {};
+  const bdg = $("#spBdg");
+  const wsAll = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? (BUILT_WHOSCORED.matches||[]) : [];
+  if(bdg){ bdg.textContent = wsAll.length || ms.length; }
+  const summary = $("#spSummary");
+  if(summary){
+    const acc = sp.accuracy || {};
+    summary.innerHTML = `共 <b style="color:var(--text)">${ms.length}</b> 场待预测/赛果 · 大模型回溯 <b style="color:var(--text)">${acc.n||0}</b> 场`
+      + `（精确比分命中 <b style="color:var(--text)">${acc.exactHit!=null?acc.exactHit+"%":"-"}</b>，方向命中 <b style="color:var(--text)">${acc.outcomeHit!=null?acc.outcomeHit+"%":"-"}</b>，平均误差 <b style="color:var(--text)">${acc.mae!=null?acc.mae:"-"}</b> 球）`
+      + ` · 独立源：${sp.source||"-"} · 更新 ${sp.updatedAt||"-"}`;
+  }
+
+  /* ---- 可靠参考面板：整体 + 高准联赛 + 高准球队 ---- */
+  const relBox = $("#spReliable");
+  if(relBox){
+    const ov = rel.overall || {};
+    const lg = rel.leagues || [];
+    const tm = rel.teams || [];
+    let h = `<div class="sp-rel-grid">`;
+    h += `<div class="sp-rel-card"><div class="sp-rel-h">整体模型命中（回溯${ov.n||0}场）</div>
+      <div class="sp-big">${ov.exactHit!=null?ov.exactHit+"%":"-"}<span>精确比分</span></div>
+      <div class="sp-sub">方向命中 ${ov.outcomeHit!=null?ov.outcomeHit+"%":"-"} · 平均误差 ${ov.mae!=null?ov.mae:"-"} 球</div></div>`;
+    if(lg.length){
+      h += `<div class="sp-rel-card"><div class="sp-rel-h">🏆 预测较准的联赛（按精确比分命中）</div><div class="sp-rows">`;
+      lg.slice(0,6).forEach(x=>{
+        h += `<div class="sp-row"><span class="sp-name">${x.league}</span>`
+          + `<span class="sp-val good">${x.exactHit}%</span>`
+          + `<span class="sp-meta">方向${x.outcomeHit}% · ${x.n}场</span></div>`;
+      });
+      h += `</div></div>`;
+    }
+    if(tm.length){
+      h += `<div class="sp-rel-card"><div class="sp-rel-h">⭐ 预测较准的球队（按精确比分命中）</div><div class="sp-rows">`;
+      tm.slice(0,8).forEach(x=>{
+        const zhn = spZh(x.team);
+        h += `<div class="sp-row"><span class="sp-name">${zhn}</span>`
+          + (zhn!==x.team ? `<span class="sp-en">${x.team}</span>` : ``)
+          + `<span class="sp-val good">${x.exactHit}%</span>`
+          + `<span class="sp-meta">方向${x.outcomeHit}% · ${x.n}场</span></div>`;
+      });
+      h += `</div></div>`;
+    }
+    h += `</div>`;
+    if(!lg.length && !tm.length){
+      h += `<div class="sp-rel-note">回溯样本积累中（需≥6场/联赛或球队），暂无可推荐的「可靠参考」；随每日运行会自动补充。</div>`;
+    }
+    relBox.innerHTML = h;
+  }
+
+  /* ---- 联赛筛选 ---- */
+  const filters = $("#spFilters");
+  if(filters){
+    const ligs = Array.from(new Set(ms.map(m=>m.league).filter(Boolean)));
+    let fh = `<button class="sp-chip ${ (state.spFilter||"all")==="all" ? "on":"" }" data-lg="all">全部</button>`;
+    ligs.forEach(lg=>{ fh += `<button class="sp-chip ${ (state.spFilter||"all")===lg ? "on":"" }" data-lg="${lg}">${lg}</button>`; });
+    filters.innerHTML = fh;
+    filters.querySelectorAll(".sp-chip").forEach(b=>b.onclick=()=>{ state.spFilter=b.dataset.lg; renderScorePred(); });
+  }
+
+  /* ---- 比赛列表 ---- */
+  const list = $("#spList");
+  if(!list) return;
+  if(!ms.length){
+    list.innerHTML = `<div class="empty">当前窗口暂无赛事数据${sp.note?("（"+sp.note+"）"):""}</div>`;
+    return;
+  }
+  const filt = state.spFilter || "all";
+  const view = (filt==="all" ? ms : ms.filter(m=>m.league===filt));
+  const stName = {SCHEDULED:"未开赛", LIVE:"进行中", IN_PLAY:"进行中", PAUSED:"中场", FINISHED:"已结束", POSTPONED:"延期", SUSPENDED:"暂停", CANCELLED:"取消"};
+  const outName = {H:"主胜", D:"平局", A:"客胜"};
+  const groups = {};
+  view.forEach(m=>{ const k=m.league||"其他"; (groups[k]=groups[k]||[]).push(m); });
+  let html = "";
+  Object.keys(groups).forEach(lg=>{
+    html += `<div class="sp-group"><div class="sp-group-title">${lg}（${groups[lg].length}）</div>`;
+    groups[lg].forEach(m=>{
+      const finished = m.status==="FINISHED";
+      const live = (m.status==="LIVE"||m.status==="IN_PLAY"||m.status==="PAUSED");
+      // 概率条
+      const pH=m.pHome||0, pD=m.pDraw||0, pA=m.pAway||0;
+      const probBar = `<div class="sp-prob"><span class="sp-p sp-h" style="width:${pH}%">${pH}%</span>`
+        + `<span class="sp-p sp-d" style="width:${pD}%">${pD}%</span>`
+        + `<span class="sp-p sp-a" style="width:${pA}%">${pA}%</span></div>`;
+      // 比分展示
+      const predScore = `<span class="sp-pred">${m.predH} <i>:</i> ${m.predA}</span>`;
+      let actual = "";
+      let hit = "";
+      if(finished && m.actH!=null){
+        actual = `<span class="sp-actual">${m.actH} : ${m.actA}</span>`;
+        if(m.evaluated){
+          const ex = m.exactHit ? `<span class="sp-hit good">✓ 精确命中</span>` : `<span class="sp-hit bad">✗ 未中</span>`;
+          const ou = m.outcomeHit ? `<span class="sp-hit good">方向✓</span>` : `<span class="sp-hit bad">方向✗</span>`;
+          hit = ex + " " + ou;
+        }
+      } else if(live){
+        actual = `<span class="sp-actual sp-live">${stName[m.status]||"进行中"}</span>`;
+      } else {
+        actual = `<span class="sp-actual sp-sched">${stName[m.status]||"未开赛"}</span>`;
+      }
+      const statusCls = finished ? "sp-fin" : (live ? "sp-live" : "sp-sched");
+      const zhH = spZh(m.home), zhA = spZh(m.away);
+      const jcNum = spJcNum(m);
+      html += `<div class="sp-card ${statusCls}">
+        <div class="sp-teams"><span class="sp-home">${zhH}</span><span class="sp-vs">vs</span><span class="sp-away">${zhA}</span>${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
+        ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
+        <div class="sp-scoreline">
+          <div class="sp-predwrap"><div class="sp-label">预测比分</div>${predScore}</div>
+          <div class="sp-actwrap"><div class="sp-label">实际赛果</div>${actual}</div>
+        </div>
+        ${probBar}
+        <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${hit}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+
+  /* ---- 日期回溯：按日期回看历史预测 vs 实际赛果（纯本地历史，不触发抓取） ---- */
+  const dateBar = $("#spDateBar");
+  const dateListBox = $("#spDateList");
+  if(dateBar && dateListBox){
+    const dl = sp.dateList || [];
+    if(!dl.length){
+      dateBar.innerHTML = `<div class="empty">暂无历史回溯数据（每日运行后自动累积）</div>`;
+      dateListBox.innerHTML = "";
+      return;
+    }
+    if(!state.spDate || dl.indexOf(state.spDate) < 0) state.spDate = dl[0];
+    let dh = "";
+    dl.slice(0, 30).forEach(d=>{
+      dh += `<button class="sp-chip ${state.spDate===d?"on":""}" data-dt="${d}">${d}</button>`;
+    });
+    dateBar.innerHTML = dh;
+    dateBar.querySelectorAll(".sp-chip").forEach(b=>{
+      b.onclick=()=>{ state.spDate=b.dataset.dt; renderScorePred(); };
+    });
+    const rows = (sp.dateIndex||{})[state.spDate] || [];
+    if(!rows.length){
+      dateListBox.innerHTML = `<div class="empty">该日期无记录</div>`;
+      return;
+    }
+    let hitE=0, hitO=0;
+    rows.forEach(r=>{ if(r.exactHit) hitE++; if(r.outcomeHit) hitO++; });
+    let lh = `<div class="sp-date-sum">${state.spDate} · 共 <b>${rows.length}</b> 场 · 精确命中 <b>${hitE}</b> 场（${(hitE/rows.length*100).toFixed(1)}%）`
+      + ` · 方向命中 <b>${hitO}</b> 场（${(hitO/rows.length*100).toFixed(1)}%）</div><div class="sp-date-grid">`;
+    rows.forEach(r=>{
+      const zhH = spZh(r.home), zhA = spZh(r.away);
+      lh += `<div class="sp-dcard">
+        <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}</div>
+        <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
+        <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span>`
+        + `<span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span>`
+        + `<span class="sp-dlg">${r.league||""}</span></div>
+      </div>`;
+    });
+    lh += `</div>`;
+    dateListBox.innerHTML = lh;
+  }
 }
 
 function renderExpert(){
@@ -4108,11 +4855,16 @@ let __lastRealtimeFetch = null;
 let __realtimeFetching = false;
 
 /* 实时刷新数据：直接fetch matches.json，动态更新state.data，不需要刷新页面 */
+const __cacheBust = ()=>"_t="+Date.now()+"_r="+Math.random().toString(36).slice(2,8);
+function __hardReload(){
+  const url = location.href.split("?")[0] + "?" + __cacheBust();
+  location.replace(url);
+}
 function refreshRealtimeData(showTip){
   if(__realtimeFetching) return;
   __realtimeFetching = true;
   if(showTip){ const t=$("#toast"); t.textContent="正在拉取最新数据…"; t.classList.add("show"); }
-  fetch("matches.json", {cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(d=>{
+  fetch("matches.json?"+__cacheBust(), {cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(d=>{
     const newMatches = d.matches || d || [];
     const newUpdateTime = d.updateTime || "";
     const curUpdateTime = state.meta.updateTime || "";
@@ -4162,15 +4914,16 @@ function refreshRealtimeData(showTip){
   }).catch(()=>{
     __realtimeFetching = false;
     if(showTip){
-      const t=$("#toast"); t.textContent="数据拉取失败，请稍后重试"; t.classList.add("show");
+      const t=$("#toast"); t.textContent="拉取失败，正在强制刷新页面…"; t.classList.add("show");
       clearTimeout(window.__toastT); window.__toastT=setTimeout(()=>t.classList.remove("show"),3000);
+      setTimeout(__hardReload, 800);
     }
   });
 }
 
 function checkNewVersion(showTip){
   if(!window.fetch) return;
-  fetch("version.json", {cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(v=>{
+  fetch("version.json?"+__cacheBust(), {cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(v=>{
     __remoteVer = v;
     const cur = state.meta.updateTime || "";
     const newer = v.updateTime && v.updateTime > cur;
@@ -4201,13 +4954,14 @@ function openFreshModal(){
     <div class="istep"><span class="ino">2</span><span>最近一批将在 <b>今日 ${nextLabel}</b> 自动更新，之后点刷新即可</span></div>
     <div class="istep"><span class="ino">3</span><span>固定链接 jc-football-1eo.pages.dev，建议收藏或添加到主屏幕</span></div>`;
   $("#copyFreshBtn").textContent = "刷新页面";
-  $("#copyFreshBtn").onclick = ()=>{ location.reload(); };
+  $("#copyFreshBtn").onclick = ()=>{ __hardReload(); };
   mask.classList.add("show");
   checkNewVersion(false);
 }
 $("#freshBtn").addEventListener("click", ()=>{
   // App 内：通知原生壳立即拉一次线上数据与页面（网页端无此对象，自动忽略）
-  try{ if(window.AndroidSync && AndroidSync.syncNow) AndroidSync.syncNow(); }catch(e){}
+  const bust = __cacheBust();
+  try{ if(window.AndroidSync && AndroidSync.syncNow) AndroidSync.syncNow(bust); }catch(e){}
   refreshRealtimeData(true);
 });
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
@@ -4216,6 +4970,22 @@ $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("
 setInterval(()=>refreshRealtimeData(false), 120000);
 setInterval(()=>checkNewVersion(false), 300000);
 setTimeout(()=>refreshRealtimeData(false), 5000);
+/* 页面加载 8 秒后比对版本：若云端数据比本页更新超过 10 分钟，说明本页被缓存，强制刷新 */
+setTimeout(()=>{
+  if(!window.fetch) return;
+  fetch("version.json?"+__cacheBust(), {cache:"no-store"}).then(r=>r.json()).then(v=>{
+    const cur = state.meta.updateTime || "";
+    if(v && v.updateTime && cur && v.updateTime > cur){
+      const t1 = new Date(cur.replace(" ","T")).getTime();
+      const t2 = new Date(v.updateTime.replace(" ","T")).getTime();
+      if(!isNaN(t1) && !isNaN(t2) && (t2 - t1) > 10*60*1000){
+        const toast = $("#toast");
+        if(toast){ toast.textContent="检测到云端有新版本，正在刷新…"; toast.classList.add("show"); }
+        setTimeout(__hardReload, 1200);
+      }
+    }
+  }).catch(()=>{});
+}, 8000);
 function fallbackCopy(text, cb){
   try{
     const ta = document.createElement("textarea");

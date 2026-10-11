@@ -3780,14 +3780,15 @@ def _parlay_true_prob(m, d):
 
 
 def gen_safe_parlay(matches):
-    """智能混合过关稳串（命中率优先策略）：
+    """智能混合过关稳串（分层双哲学策略）：
     核心原则：
     1. 混合过关：胜平负+让球+总进球，每场选最优选项
-    2. 命中率优先：基于历史数据校准，单场信心>70%
-    3. 赔率合理：单场1.6-3.0，总赔3-8倍，拒绝蚊子肉
-    4. 数据驱动：每场至少3项技术指标支撑
+    2. 分层选择哲学：稳健档=命中率优先（EV 护栏内选联合命中率最高，尽量中奖）；
+       均衡/搏击档=期望值(EV)优先（选相对庄家有优势的组合）
+    3. 赔率合理：单场≥1.45（拒绝蚊子肉），各档在自身总赔区间内挑选
+    4. 数据驱动：每场至少多维度技术指标支撑，叠加历史同指命中率与五维雷达交叉验证
     5. 动态场数：比赛质量高时3串1，质量一般时2串1
-    返回 {parlay2, parlay3, generatedAt, strategy}
+    返回 {parlay2, parlay3, parlayBoost, generatedAt, strategy}
     """
     today = time.strftime("%Y-%m-%d")
     matches = [m for m in matches if m.get("date") == today]
@@ -4226,12 +4227,12 @@ def gen_safe_parlay(matches):
     # 联合概率下限按「返奖率^n / 典型总赔」反推设定，避免与总赔区间自相矛盾
     # EV下限：稳胆档只取≈盈亏平衡以上（不再推明显负期望"稳胆"）；均衡档放宽容差；搏击档纯娱乐不卡
     TIERS = [
-        ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08,
-         "2串1 · 主打命中，单场不低于1.45（拒绝蚊子肉），总赔2.2-4.5倍；只取高信心组合里 EV≥-8% 的最不亏方案，EV<0 仍标不推荐"),
-        ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08, -0.15,
-         "3串1 · 命中率与赔率折中，总赔4.5-10倍；只取 EV≥-15% 的方案，EV<0 仍标不推荐"),
-        ("parlayBoost", "搏击", (3, 4), 1.70, 10.0, 40.0, 45.0, 0.03, -1.0,
-         "3-4串1 · 总赔10倍以上，命中率明显下降，方差极大，纯娱乐不卡EV"),
+        ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08, "hit",
+         "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐"),
+        ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08, -0.15, "ev",
+         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔4.5-10倍；EV<0 仍标不推荐"),
+        ("parlayBoost", "搏击", (3, 4), 1.70, 10.0, 40.0, 45.0, 0.03, -1.0, "ev",
+         "3-4串1 · 价值/娱乐：总赔10倍以上，取 EV 最优，方差极大，纯娱乐不卡EV"),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4258,7 +4259,7 @@ def gen_safe_parlay(matches):
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
     def build_tier(tier):
-        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, desc = tier
+        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc = tier
         from itertools import combinations
         best = None
         best_score = None
@@ -4304,14 +4305,29 @@ def gen_safe_parlay(matches):
                     so = c.get("sameOddsHit")
                     if so is not None and c.get("sameOddsN", 0) >= 10 and so < 45:
                         so_penalty += 0.0006 * (45 - so)
-                # EV 主导（量级 0.1~1）；技术/稳胆/五维只在 EV 接近时做细微区分
-                score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
+                # 组合真实历史命中率估计：每腿优先用竞彩官方赛果库实测的
+                # 同指命中率（地面真实），样本不足时回退到模型去水概率；
+                # 串关命中率=各腿命中率连乘。
+                combo_hit = 1.0
+                for c in combo:
+                    so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
+                    leg_p = (so / 100.0) if (so is not None and n_ >= 10) else _leg_prob(c)
+                    combo_hit *= leg_p
+                # 选择哲学分支：
+                if mode == "hit":
+                    # 稳胆哲学（命中率优先）：以真实历史命中率主导排序，
+                    # 选出「历史上同条件最稳」的组合，而非模型概率伪装命中率；
+                    # EV 下限由 min_ev 护栏保证，避免退化为大热负期望组合
+                    score = combo_hit * 100 + 0.01 * ev - so_penalty
+                else:
+                    # 价值哲学：EV 主导（量级 0.1~1）；技术/稳胆/五维只在 EV 接近时做细微区分
+                    score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
                 if best_score is None or score > best_score:
                     best_score = score
-                    best = (list(combo), total_odds, joint_p, ev, n)
+                    best = (list(combo), total_odds, joint_p, ev, n, combo_hit)
         if not best:
             return None
-        selected, total_odds, joint_p, ev, n = best
+        selected, total_odds, joint_p, ev, n, real_hit = best
         avg_conf = sum(s["confidence"] for s in selected) / len(selected)
         play_types = list(set(s["play"] for s in selected))
         # 凯利仓位：四分之一凯利，上限 10%
@@ -4336,6 +4352,7 @@ def gen_safe_parlay(matches):
             "playTypes": play_types,
             "isMixed": len(play_types) > 1,
             "jointProb": round(joint_p * 100, 1),
+            "realHit": round(real_hit * 100, 1) if real_hit is not None else None,
             "ev": round(ev * 100, 1),
             "suggestStake": round(stake, 1),
             "rake": round(rake, 1),
@@ -4352,7 +4369,7 @@ def gen_safe_parlay(matches):
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
-        "strategy": "EV 驱动分层串关：拒绝蚊子肉（单场赔率下限 1.45），稳健/均衡/搏击三档各在自身赔率区间内取「期望值 EV」最优组合；概率取自智能引擎校准值；并叠加历史同指命中率（免费自建，竞彩官方赛果库）与五维雷达评分做交叉验证，稳胆档强制 EV≥-3% 才推荐",
+        "strategy": "分层串关双哲学（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：稳健档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡/搏击档=价值哲学（EV 最优）。各档拒绝蚊子肉（单场≥1.45），叠加历史同指命中率（免费自建）与五维雷达交叉验证",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlayBoost": parlay_boost,

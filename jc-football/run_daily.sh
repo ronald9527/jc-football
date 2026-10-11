@@ -42,6 +42,15 @@ fi
 # 沙箱若被重置，本地 history.json 会丢失；若直接抓取并部署，
 # 会把 Pages 上完好的历史副本一起覆盖掉，造成不可恢复的损失。
 # 因此先比对本地与线上记录数，本地残缺时从线上拉回。
+# ---------- 时间预算：平台定时任务有超时上限（当前 600s）----------
+# 若抓取步骤把时间耗光，最关键的「构建+部署」会被超时掐断，线上永远停在旧版本。
+# 因此给每个非核心步骤设预算门槛：剩余时间不足就跳过（用上一轮缓存数据），
+# 确保部署步骤一定有机会执行。
+START_TS=$(date +%s)
+BUDGET=${DAILY_BUDGET:-480}          # 抓取阶段总预算（秒），留 ~2 分钟给构建+部署
+elapsed(){ echo $(( $(date +%s) - START_TS )); }
+have_time(){ local need=$1; local left=$(( BUDGET - $(elapsed) )); [ "$left" -ge "$need" ]; }
+
 if [ "$MODE" != "selfcheck" ] && [ "$MODE" != "note" ]; then
   log "==> 步骤0 历史数据对账 (ensure_history.py)"
   set +e
@@ -86,7 +95,39 @@ fi
 # ---------- 步骤1.8：football-data.org 官方赛果核对（独立源，绝不参与模型）----------
 log "==> 步骤1.8 football-data.org 官方赛果 (fetch_football_data.py)"
 set +e
-"$PY" fetch_football_data.py
+if have_time 120; then
+  "$PY" fetch_football_data.py
+else
+  log "!! 剩余时间不足，跳过官方赛果抓取（沿用上次数据），优先保证部署"
+fi
+set -e
+
+# ---------- 步骤1.85：独立「比分预测」Tab（football-data.org + 自建 Poisson，零耦合核心模型）----------
+log "==> 步骤1.85 比分预测 (fetch_scores.py)"
+# 球队详情每天只需刷新一次（全量刷新曾耗时 16 分钟，是流水线的头号超时元凶）
+TEAM_FLAG=.last_team_refresh
+if [ "$(cat $TEAM_FLAG 2>/dev/null)" = "$(date +%F)" ]; then
+  log "   球队缓存今日已刷新，本轮跳过球队抓取（--keep-cache）"
+  SCORES_ARG="--keep-cache"
+else
+  SCORES_ARG=""
+fi
+set +e
+if have_time 150; then
+  "$PY" fetch_scores.py $SCORES_ARG --max-teams 25
+  [ -z "$SCORES_ARG" ] && date +%F > $TEAM_FLAG
+else
+  log "!! 剩余时间不足，跳过比分预测抓取（沿用上次数据），优先保证部署"
+fi
+set -e
+
+log "==> 步骤1.88 WhoScored 人工预测比分 (fetch_whoscored.py)"
+set +e
+if have_time 120; then
+  "$PY" fetch_whoscored.py
+else
+  log "!! 剩余时间不足，跳过 WhoScored 抓取（沿用上次数据），优先保证部署"
+fi
 set -e
 
 log "==> 步骤2 构建页面 (build_panel.py)"
@@ -126,6 +167,8 @@ def filehash(p):
 parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak")
 parts += norm("history.json", "records")
 parts += norm("fd_data.json", "matches", "byNum")
+parts += norm("score_predict.json", "matches", "reliable", "accuracy")
+parts += norm("whoscored_data.json", "matches", "dateList", "history", "reliable")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")
