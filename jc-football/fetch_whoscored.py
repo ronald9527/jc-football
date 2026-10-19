@@ -18,18 +18,60 @@ import re
 import sys
 import time
 from datetime import datetime, timedelta
+# 竞彩中文队名 ↔ 英文队名 权威映射（单一真相源），用于服务端精确匹配竞彩编号
+try:
+    from team_map import en_to_zh, zh_norm
+except Exception:
+    def en_to_zh(n):
+        return n
+    def zh_norm(n):
+        return n or ""
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_PATH = os.path.join(HERE, "whoscored_data.json")
 PREVIEW_CACHE = os.path.join(HERE, "whoscored_preview_cache.json")   # 预测比分不可变 → 永久缓存
 HISTORY_PATH = os.path.join(HERE, "whoscored_history.json")          # 累积历史（按比赛 id 去重）
+# 近期比赛元数据持久化：/previews 只列「未开球」的比赛，一旦开球就从列表消失。
+# 每轮把见到的比赛 upsert 到这里；输出时把「今天及往前几天」的比赛从存储补回，
+# 保证当天竞彩场次全天都在（不会一开球就从面板消失）。仅存元数据，不存预测（预测在 PREVIEW_CACHE）。
+RECENT_PATH = os.path.join(HERE, "whoscored_recent.json")
+RECENT_KEEP_DAYS = 7      # 存储保留天数
+RECENT_BACKFILL_DAYS = 4  # 回填窗口：今天往前 4 天（覆盖周末/节假日连赛）
 
 BASE = "https://www.whoscored.com"
-IMPS = ["chrome124", "chrome131", "chrome120", "safari184"]  # 指纹降级链
+# 指纹链：chrome124 / safari184 实测可完整拿到数据（含软挑战真实页）；
+# chrome131 会被 Cloudflare 403 硬封，排后面兜底。链的顺序影响硬封锁 URL 的
+# 重试成本（每个全封锁 URL ≈ 指纹数×请求耗时 + 退避），已知能用的放最前。
+IMPS = ["chrome124", "safari184", "chrome131", "chrome120"]
 DELAY = 0.4                    # 每次页面抓取间隔（秒）
 MAX_PREVIEW_FETCH = 220        # 单次运行最多抓多少个 preview 页（首_run 全量约 140）
 MAX_RESULT_FETCH = 60          # 单次运行最多补多少个历史赛果（按 title）
 BJ_OFFSET = 8 * 3600           # 北京时间 = UTC + 8h
+# 反爬页面识别（数据感知，绝不误杀软挑战真实页）。WhoScored 的反爬有两种形态：
+#   ① 软挑战：真实完整页面（100~600KB）顶部注入 verify-client.js 验证脚本，
+#      **数据完整可直接解析**——曾因把它当挑战页拒绝，导致 /livescores、/previews、
+#      单场 preview 全部解析失败（历史 records 为空、回溯按钮 0 个）。
+#   ② 硬封锁：仅几百字节的质询页 / Cloudflare 403「Attention Required」页，无数据。
+CHALLENGE_MARKS = ("Just a moment", "Attention Required", "cf-chl",
+                   "challenge-platform", "Enable JavaScript and cookies to continue")
+MIN_PAGE_BYTES = 5000          # 硬封锁质询页仅几百~几KB
+REAL_PAGE_MARKS = ("hypernova", "predicted-score")   # 真实内容标记
+GET_RETRIES = 1                # 已改为快速失败（见 _get docstring），保留常量兼容
+GET_BACKOFF = (0,)             # 同上：不再做长退避
+# 进程内短期页面缓存：同一轮内同一 URL 只抓一次。
+# /livescores 会被 fetch_livescores_matches 和 fetch_results_today 两个解析函数
+# 用到，各抓一次既浪费 10s+ 时间又加倍限流压力；软挑战真实页响应慢（3s+/页），
+# 重复抓取的代价更高。成功页缓存 PAGE_CACHE_TTL_S；失败/封锁页缓存
+# FAIL_CACHE_TTL_S——IP 级封锁持续数小时，45s 内不会翻转，短缓存可避免
+# 同轮内重复白抓；又不至于把偶发网络抖动错误缓存太久。
+PAGE_CACHE_TTL_S = 120
+FAIL_CACHE_TTL_S = 45
+_page_cache = {}               # url -> (ts, status, text)
+PREVIEW_BUDGET_S = 70          # 预览抓取阶段预算（秒）：必须给赛果回填留时间，
+                               # 否则「预测×赛果」的历史累积永远排不上队
+TOTAL_BUDGET_S = 110           # 整体预算（秒）：调度器 have_time 120 门槛内收工
+EVAL_RESERVE_S = 15            # 赛果回填预留（秒）：单笔 title 抓取可能耗时 10s+，
+                               # 不预留的话最后一笔会跨过 deadline 拖长整轮
 
 # 联赛中文名（竞彩习惯叫法；未收录的保留英文）
 LEAGUE_ZH = {
@@ -71,29 +113,60 @@ def _save(path, obj):
     os.replace(tmp, path)
 
 
-# ---------------- 抓取（curl_cffi 指纹伪装） ----------------
+# ---------------- 抓取（curl_cffi 指纹伪装 + 挑战页识别） ----------------
+def _is_challenge(txt):
+    """WhoScored 反爬页面识别（数据感知，绝不误杀软挑战真实页）。
+
+    两种形态：
+      ① 软挑战：真实完整页面（100~600KB）顶部注入 verify-client.js 验证脚本，
+         数据完整、可直接解析 —— 必须放行。历史上因把它当挑战页拒绝，
+         /livescores、/previews、单场 preview 全部解析失败。
+      ② 硬封锁：几百字节质询页 / Cloudflare 403「Attention Required」页，无数据。
+    """
+    if not txt:
+        return True
+    if any(k in txt for k in CHALLENGE_MARKS):   # 硬封锁标记
+        return True
+    if len(txt) < MIN_PAGE_BYTES:                 # 几百字节质询页
+        return True
+    if any(k in txt for k in REAL_PAGE_MARKS):    # 真实内容标记 → 放行
+        return False
+    return True                                   # 中等大小但无数据标记 → 重试
+
+
 def _get(url, referer=BASE + "/"):
-    """chrome124 指纹请求，失败按指纹链降级重试。返回 (status, text)。"""
+    """chrome 指纹链请求（2 次快速尝试，不做长退避）。
+
+    为什么不做长退避：WhoScored 的封锁多为 IP 级限流（实测持续数小时），
+    秒级退避等不来解封，只会把时间预算烧光。快速失败 → 把时间让给同批次
+    其他 URL → 下轮调度（30 分钟）自然重试。软挑战真实页（带数据）直接放行。
+    同轮内重复 URL 走进程内缓存（PAGE_CACHE_TTL_S），只抓一次。
+    返回 (status, text)。"""
+    cached = _page_cache.get(url)
+    if cached:
+        ttl = PAGE_CACHE_TTL_S if cached[1] == 200 else FAIL_CACHE_TTL_S
+        if time.time() - cached[0] < ttl:
+            return cached[1], cached[2]
     try:
         from curl_cffi import requests as cr
     except Exception:
         return 0, ""
     last = (0, "")
-    for imp in IMPS:
-        for attempt in range(2):
-            try:
-                r = cr.get(url, impersonate=imp, timeout=30,
-                           headers={"Referer": referer,
-                                    "Accept-Language": "en-US,en;q=0.9",
-                                    "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8"})
-                txt = r.text or ""
-                challenged = ("Just a moment" in txt) or ("Attention Required" in txt)
-                if r.status_code == 200 and not challenged:
-                    return 200, txt
-                last = (r.status_code, txt[:120])
-            except Exception as e:
-                last = (0, repr(e)[:120])
-            time.sleep(0.6)
+    for imp in IMPS[:2]:   # chrome124 / safari184：实测可完整拿到数据
+        try:
+            r = cr.get(url, impersonate=imp, timeout=30,
+                       headers={"Referer": referer,
+                                "Accept-Language": "en-US,en;q=0.9",
+                                "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8"})
+            txt = r.text or ""
+            if r.status_code == 200 and not _is_challenge(txt):
+                _page_cache[url] = (time.time(), 200, txt)
+                return 200, txt
+            last = (r.status_code, txt[:120])
+        except Exception as e:
+            last = (0, repr(e)[:120])
+        time.sleep(0.3)
+    _page_cache[url] = (time.time(), last[0], last[1])   # 失败/封锁也短缓存
     return last
 
 
@@ -185,11 +258,65 @@ def fetch_results_today():
     return out
 
 
+def fetch_livescores_matches():
+    """从 /livescores 抓「今天」的比赛清单（完赛/在赛/今晚未开球全含）。
+    /previews 只列未开球的比赛，开球后即从列表消失；这里补齐当天场次，
+    保证当天竞彩比赛全天都在面板里。返回 [{id, home, away, leagueEn, utcDate,
+    homeScore, awayScore, finished, hasPreview}]。"""
+    st, html = _get(BASE + "/livescores", BASE + "/")
+    if st != 200 or not html:
+        return []
+    m = re.search(r'<script[^>]*data-hypernova-key="livescores"[^>]*>(.*?)</script>', html, re.S)
+    if not m:
+        return []
+    raw = re.sub(r"^<!--|-->$", "", m.group(1).strip()).strip()
+    try:
+        d = json.loads(raw)
+    except Exception:
+        return []
+    out = []
+    for t in d.get("tournaments") or []:
+        lg = t.get("tournamentName") or t.get("stageName") or ""
+        for ms in t.get("matches") or []:
+            try:
+                mid = str(ms.get("id"))
+                hn = ms.get("homeTeamName"); an = ms.get("awayTeamName")
+                if not (hn and an):
+                    continue
+                out.append({
+                    "id": mid, "home": hn, "away": an, "leagueEn": lg,
+                    "utcDate": ms.get("startTimeUtc") or ms.get("startTime"),
+                    "homeScore": ms.get("homeScore"), "awayScore": ms.get("awayScore"),
+                    "finished": ms.get("status") == 6,
+                    "hasPreview": bool(ms.get("hasPreview")),
+                })
+            except Exception:
+                continue
+    return out
+
+
+def _bj_from_utc(utc_val):
+    """把 /livescores 的 startTimeUtc（ISO 或 epoch 秒/毫秒）转 (北京日期, 时分)。"""
+    if utc_val is None:
+        return "", ""
+    try:
+        if isinstance(utc_val, (int, float)):
+            sec = float(utc_val)
+            if sec > 1e12:      # 毫秒
+                sec /= 1000.0
+            u = datetime.utcfromtimestamp(sec)
+        else:
+            s = str(utc_val).replace("Z", "").split(".")[0]
+            u = datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S")
+        b = u + timedelta(seconds=BJ_OFFSET)
+        return b.strftime("%Y-%m-%d"), b.strftime("%H:%M")
+    except Exception:
+        return "", ""
+
+
 def fetch_result_by_title(mid):
     """已完赛但不在当日列表的比赛 → 抓 /matches/{id}/live 用 <title> 解析赛果。"""
     st, html = _get(f"{BASE}/matches/{mid}/live", BASE + "/livescores")
-    if st != 200 or not html:
-        return None
     t = re.search(r"<title>(.*?)</title>", html, re.S)
     if not t:
         return None
@@ -200,19 +327,140 @@ def fetch_result_by_title(mid):
             "awayScore": int(m.group(3)), "awayName": m.group(4).strip()}
 
 
+# ---------------- 竞彩编号匹配（服务端，跨越英文↔中文队名） ----------------
+def _load_jc_matches():
+    p = os.path.join(HERE, "matches.json")
+    if not os.path.exists(p):
+        return []
+    try:
+        d = json.load(open(p, encoding="utf-8")) or {}
+        return d.get("matches", []) or []
+    except Exception:
+        return []
+
+
+def _load_jc_archive():
+    """竞彩持久档案（history.json）：含 num 编号 + 中文队名 + 销售日，跨日累积。
+
+    matches.json 只保留【当前销售日】的比赛，比赛滚出销售窗口后就从文件里消失，
+    赛后回溯记录（history）若只靠 matches.json 匹配，编号必然丢失。
+    这份档案是唯一能在比赛结束多日后仍然补挂竞彩编号的数据源。
+    """
+    p = os.path.join(HERE, "history.json")
+    if not os.path.exists(p):
+        return []
+    try:
+        d = json.load(open(p, encoding="utf-8")) or {}
+        return [r for r in (d.get("records") or [])
+                if r.get("num") and r.get("date") and r.get("home")]
+    except Exception:
+        return []
+
+
+def _jc_by_date(jc, archive):
+    """竞彩比赛按销售日索引：当前销售日（matches.json）优先，持久档案（history.json）兜底。
+    返回 {date: [(home, away, num), ...]}"""
+    by_date = {}
+    for m in jc:
+        dt = m.get("date")
+        if not dt:
+            continue
+        by_date.setdefault(dt, []).append(
+            (m.get("home", ""), m.get("away", ""), m.get("num", "")))
+    for a in archive:
+        dt = a.get("date")
+        if not dt:
+            continue
+        # 档案条目去重：同日期同队名同编号不重复插入
+        ent = (a.get("home", ""), a.get("away", ""), a.get("num", ""))
+        if ent not in by_date.setdefault(dt, []):
+            by_date[dt].append(ent)
+    return by_date
+
+
+def _match_jc_num(home_en, away_en, wdate, by_date):
+    """英文队名 → 竞彩编号：翻译成中文后与竞彩比赛按「队名精确/归一化 + 日期±2天」匹配。"""
+    home_zh = en_to_zh(home_en or "")
+    away_zh = en_to_zh(away_en or "")
+    hz = zh_norm(home_zh)
+    az = zh_norm(away_zh)
+    cands = {wdate}
+    if wdate:
+        try:
+            dd = datetime.strptime(wdate, "%Y-%m-%d")
+            # ±2 天容差：竞彩销售日期与 WhoScored 实际开球日期常因时差（尤其美洲赛事）漂移 1~2 天
+            for off in (-2, -1, 1, 2):
+                cands.add((dd + timedelta(days=off)).strftime("%Y-%m-%d"))
+        except Exception:
+            pass
+    for cd in cands:
+        for (jh, ja, jnum) in by_date.get(cd, []):
+            # 先精确（中英文），再归一化兜底
+            if (jh == home_zh and ja == away_zh) or (jh == (home_en or "") and ja == (away_en or "")) \
+                    or (zh_norm(jh) == hz and zh_norm(ja) == az):
+                return jnum
+    return None
+
+
+def attach_jc_numbers(matches, jc=None, archive=None):
+    """为每条 WhoScored 比赛匹配竞彩编号（服务端，避免脆弱的客户端队名匹配）。
+
+    双数据源：matches.json（当前销售日，编号最新最全）+ history.json（持久档案，
+    比赛滚出销售窗口后仍能补挂编号，赛后回溯依赖它）。
+    返回 (命中数, 竞彩总场数, 未匹配WhoScored场次列表)。
+    仅当「翻译后的中文名 == 某条竞彩比赛的 home/away（且日期容差内）」才算命中，
+    因此别名表可「宁多勿漏」，不会造成误匹配。
+    """
+    if jc is None:
+        jc = _load_jc_matches()
+    if archive is None:
+        archive = _load_jc_archive()
+    by_date = _jc_by_date(jc, archive)
+    n = 0
+    unmatched = []
+    for wm in matches:
+        found = _match_jc_num(wm.get("home", ""), wm.get("away", ""),
+                              wm.get("date", ""), by_date)
+        if found:
+            wm["jcNum"] = found
+            n += 1
+        else:
+            unmatched.append("%s %s vs %s" % (wm.get("date", ""), wm.get("home", ""), wm.get("away", "")))
+    return n, len(jc), unmatched
+
+
 # ---------------- 主流程 ----------------
 def _outcome(h, a):
     return "H" if h > a else ("D" if h == a else "A")
 
 
-def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
+def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
+                    budget_s=TOTAL_BUDGET_S):
+    """主流程。budget_s：整体时间预算（秒）——调度器整条流水线共 480s，
+    本环节必须自律：预览抓取限 PREVIEW_BUDGET_S，剩余时间留给赛果回填
+    （「预测×赛果」才是历史累积的原料）；超预算就跳过剩余可选抓取
+    （缓存只补缺失，下轮再来），但**必须保证走到写输出那一步**。"""
+    t_start = time.time()
+    deadline = t_start + budget_s
+    preview_deadline = t_start + PREVIEW_BUDGET_S
     now = datetime.utcnow()
+
+    def _kickoff_past(x, grace_sec=600):
+        """开球已超过 grace（默认10分钟）：进行中或已结束，其 preview 页只返回
+        硬封锁质询页，抓了也白费——预测必须在开球前拿到。"""
+        try:
+            u = datetime.strptime((x.get("utcDate") or "")[:19], "%Y-%m-%dT%H:%M:%S")
+            return (now - u).total_seconds() > grace_sec
+        except Exception:
+            return False
+
     pc = _load(PREVIEW_CACHE, {})          # {mid: {predH, predA, ts}}
     hist = _load(HISTORY_PATH, {"records": {}})  # {records: {mid: {...}}}
     records = hist.get("records") or {}
 
     items, err = fetch_previews()
     matches = []
+    jc_n = 0
     if items:
         for it in items:
             lg = it.get("leagueEn") or ""
@@ -231,30 +479,134 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
                 m["date"], m["bjTime"] = "", ""
             matches.append(m)
 
-        # 抓预测比分（带永久缓存；只补缺失的）
-        # 未缓存 或 上次解析失败（predH 为空）→ 需重抓
-        need = [x for x in matches
-                if x["id"] not in pc or pc[x["id"]].get("predH") is None]
-        n_need = len(need)
-        fetched = 0
-        for x in need:
-            if fetched >= max_preview:
-                break
-            st, html = _get(x["url"], BASE + "/previews")
-            fetched += 1
-            time.sleep(DELAY)
-            ph, pa = parse_prediction(html) if st == 200 else (None, None)
-            # 解析失败不写缓存，下轮自动重试
-            if ph is not None:
-                pc[x["id"]] = {"predH": ph, "predA": pa, "ts": int(now.timestamp())}
-            else:
-                pc.pop(x["id"], None)
-        if fetched:
-            _save(PREVIEW_CACHE, pc)
+    # ---- /livescores 今日场次并入：/previews 只列未开球比赛，开球后即撤下；
+    #      这里把"今天"的完赛/在赛/今晚未开球场次补进来，保证当天竞彩比赛全天在列 ----
+    ls_added = 0
+    fetched_ls = 0
+    try:
+        for lm in fetch_livescores_matches():
+            if any(x["id"] == lm["id"] for x in matches):
+                continue
+            lg = lm.get("leagueEn") or ""
+            d, tm = _bj_from_utc(lm.get("utcDate"))
+            m = {
+                "id": lm["id"], "utcDate": lm.get("utcDate"),
+                "league": LEAGUE_ZH.get(lg, lg), "leagueEn": lg,
+                "home": lm["home"], "away": lm["away"],
+                "url": "%s/matches/%s/preview" % (BASE, lm["id"]),
+                "date": d, "bjTime": tm,
+                # 已完赛标记：完赛场次的 preview 页只返回硬封锁质询页，
+                # 无需抓取（预测必须在开球前抓到）；也无需再抓赛果（livescores 已带比分）
+                "_finished": lm.get("homeScore") is not None,
+            }
+            # 有预测标记、未开球、未缓存 → 抓该场 /preview 页拿预测比分（永久缓存）。
+            # 已完赛/已开球的不抓：其 preview 页只返回硬封锁质询页（无数据），
+            # 每场白费十几秒重试——这是本环节曾经的头号时间黑洞。
+            if (lm.get("hasPreview") and lm.get("homeScore") is None
+                    and not _kickoff_past(lm)
+                    and fetched_ls < max_preview and time.time() < preview_deadline):
+                st, html = _get(m["url"], BASE + "/livescores")
+                fetched_ls += 1
+                time.sleep(DELAY)
+                ph, pa = parse_prediction(html) if st == 200 else (None, None)
+                if ph is not None:
+                    pc[m["id"]] = {"predH": ph, "predA": pa, "ts": int(now.timestamp())}
+            matches.append(m)
+            ls_added += 1
+    except Exception as e:
+        print("  [livescores] 今日场次并入异常：%s" % e)
+    if ls_added:
+        print("  [livescores] 并入今日场次 %d 场（其中抓取 preview %d 页，补 /previews 已撤下的当天比赛）"
+              % (ls_added, fetched_ls))
 
-        for x in matches:
-            c = pc.get(x["id"]) or {}
-            x["predH"], x["predA"] = c.get("predH"), c.get("predA")
+    # ---- 抓预测比分（覆盖 previews + livescores 全部场次；带永久缓存，只补缺失）----
+    # 优先级：今天/明天的比赛最先抓。它们即将开球，/previews 一撤下就再也抓不到
+    # 预测比分（已开球 preview 页只返回硬封锁质询页），而未来日期的比赛会一直
+    # 挂在列表里，下一轮再抓也不迟。历史上「只有未来日期有预测、过去日期 0 预测」
+    # 的根因就是没按这个优先级抓 + 把带数据的软挑战页误判为封锁。
+    need = [x for x in matches
+            if (x["id"] not in pc or pc[x["id"]].get("predH") is None)
+            and not x.get("_finished") and not _kickoff_past(x)]
+    _today_bj = (datetime.utcnow() + timedelta(seconds=BJ_OFFSET)).replace(
+        hour=0, minute=0, second=0, microsecond=0)
+
+    def _prio(x):
+        d = x.get("date") or ""
+        try:
+            delta = (datetime.strptime(d, "%Y-%m-%d") - _today_bj).days
+        except Exception:
+            delta = 99
+        return (delta if delta >= 0 else -1, x.get("bjTime") or "")
+    need.sort(key=_prio)
+    fetched = challenged = 0
+    for x in need:
+        if fetched >= max_preview:
+            break
+        # 时间预算：调度器整条流水线共 480s，本环节必须自律。
+        # 预览阶段只分到 PREVIEW_BUDGET_S，超了就停下轮再来（缓存只补缺失，不会漏），
+        # 把剩余时间留给赛果回填——没有赛果，预测再多也进不了历史。
+        if fetched and time.time() > preview_deadline:
+            print("  [预览抓取] 已达阶段预算 %ds，剩余 %d 场下轮补抓"
+                  % (PREVIEW_BUDGET_S, len(need) - fetched))
+            break
+        st, html = _get(x["url"], BASE + "/previews")
+        fetched += 1
+        if st != 200:
+            challenged += 1
+        time.sleep(DELAY)
+        ph, pa = parse_prediction(html) if st == 200 else (None, None)
+        # 解析失败不写缓存，下轮自动重试
+        if ph is not None:
+            pc[x["id"]] = {"predH": ph, "predA": pa, "ts": int(now.timestamp())}
+        else:
+            pc.pop(x["id"], None)
+    if fetched or ls_added:
+        _save(PREVIEW_CACHE, pc)
+    if challenged:
+        print("  [预览抓取] %d/%d 场被反爬挑战或抓取失败（已退避重试），下轮自动补抓"
+              % (challenged, fetched))
+    print("  [预览抓取] 完成 %d 场，耗时 %.0fs" % (fetched, time.time() - t_start))
+
+    for x in matches:
+        c = pc.get(x["id"]) or {}
+        x["predH"], x["predA"] = c.get("predH"), c.get("predA")
+
+    # ---- 近期比赛回填：/previews 傍晚会把「今天」已开球的比赛撤下，
+    #      用持久化 recent 存储把它们补回输出，保证当天竞彩场次全天显示预测 ----
+    recent = _load(RECENT_PATH, {})
+    ids_now = {x["id"] for x in matches}
+    for x in matches:
+        recent[x["id"]] = {
+            "id": x["id"], "utcDate": x.get("utcDate"), "date": x.get("date"),
+            "bjTime": x.get("bjTime"), "league": x.get("league"), "leagueEn": x.get("leagueEn"),
+            "home": x["home"], "away": x["away"], "url": x.get("url"),
+        }
+    bj_now = datetime.utcnow() + timedelta(seconds=BJ_OFFSET)
+    today_bj = bj_now.strftime("%Y-%m-%d")
+    lo_bj = (bj_now - timedelta(days=RECENT_BACKFILL_DAYS)).strftime("%Y-%m-%d")
+    keep_from = (bj_now - timedelta(days=RECENT_KEEP_DAYS)).strftime("%Y-%m-%d")
+    backfilled = 0
+    for mid, meta in list(recent.items()):
+        d = meta.get("date") or ""
+        if mid in ids_now or not d or not (lo_bj <= d <= today_bj):
+            continue
+        m = dict(meta)
+        c = pc.get(mid) or {}
+        m["predH"], m["predA"] = c.get("predH"), c.get("predA")
+        matches.append(m)
+        backfilled += 1
+    # 清理过期元数据，避免无限增长
+    recent = {k: v for k, v in recent.items()
+              if (v.get("date") or "") >= keep_from}
+    _save(RECENT_PATH, recent)
+    if backfilled:
+        print("  [近期回填] 从 recent 存储补回 %d 场已滚出 /previews 的近期比赛（含今天）" % backfilled)
+
+    # ---- 竞彩编号匹配（服务端，跨越英文↔中文队名） ----
+    jc_n, jc_total, jc_unmatched = attach_jc_numbers(matches)
+    if jc_unmatched:
+        print("  [竞彩编号] 未匹配 %d 场（多为 WhoScored 有但竞彩未开售的场次）：%s"
+              % (len(jc_unmatched), "; ".join(jc_unmatched[:12])))
 
     # ---- 赛果回填 ----
     results = fetch_results_today()
@@ -266,7 +618,8 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
             # 判断是否大概率已开赛（UTC 开球 + 2.2h）
             try:
                 u = datetime.strptime(x["utcDate"][:19], "%Y-%m-%dT%H:%M:%S")
-                if (now - u).total_seconds() > 2.2 * 3600 and eval_fetch < max_result:
+                if ((now - u).total_seconds() > 2.2 * 3600 and eval_fetch < max_result
+                        and time.time() < deadline - EVAL_RESERVE_S):
                     r = fetch_result_by_title(mid)
                     eval_fetch += 1
                     time.sleep(DELAY)
@@ -280,8 +633,13 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
         else:
             x["actH"] = x.get("actH")
             x["evaluated"] = bool(records.get(mid, {}).get("evaluated"))
+    print("  [赛果回填] 补抓 %d 场，累计已评估 %d 场，总耗时 %.0fs"
+          % (eval_fetch, sum(1 for x in matches if x.get("evaluated")), time.time() - t_start))
 
     # ---- 历史累积（按 mid 去重，含本轮新评估） ----
+    # 竞彩编号双保险：matches 上的 jcNum（本轮 attach 挂的，含持久档案兜底）
+    # 优先；老记录（往轮累积、当时 matches.json 已滚动导致没挂上）在输出前
+    # 再用持久档案统一补挂（见下方 backfill 段）。
     for x in matches:
         if x.get("evaluated") and x.get("predH") is not None:
             records[x["id"]] = {
@@ -290,10 +648,30 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
                 "predH": x["predH"], "predA": x["predA"],
                 "actH": x["actH"], "actA": x["actA"],
                 "exactHit": x["exactHit"], "outcomeHit": x["outcomeHit"],
+                "jcNum": x.get("jcNum"),
             }
     hist["records"] = records
     hist["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
     _save(HISTORY_PATH, hist)
+
+    # ---- 存量历史记录补挂竞彩编号（持久档案匹配，只补缺失不覆盖） ----
+    # 场景：比赛在多轮前就已完赛评估，但那轮的 matches.json 已滚动到新销售日，
+    # 编号没挂上；此后每轮都用持久档案（history.json）尝试补挂一次。
+    jc_archive = _load_jc_archive()
+    if jc_archive:
+        arc_by_date = _jc_by_date([], jc_archive)
+        backfilled = 0
+        for r in records.values():
+            if r.get("jcNum") or not r.get("date"):
+                continue
+            num = _match_jc_num(r.get("home", ""), r.get("away", ""), r.get("date", ""), arc_by_date)
+            if num:
+                r["jcNum"] = num
+                backfilled += 1
+        if backfilled:
+            hist["records"] = records
+            _save(HISTORY_PATH, hist)
+            print("  [竞彩编号] 存量历史记录补挂 %d 条（持久档案匹配）" % backfilled)
 
     # ---- 可靠参考（按联赛/球队命中率，来自 WhoScored 预测的真实回测） ----
     eva = [r for r in records.values() if r.get("date") and r.get("predH") is not None]
@@ -443,8 +821,9 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH):
     }
     _save(OUT_PATH, out)
     print(f"WhoScored 预测：{len(matches)} 场（含预测比分 {sum(1 for x in matches if x.get('predH') is not None)} 场），"
+          f"对应竞彩编号 {jc_n} 场，"
           f"历史回测 {n} 场（精确命中 {overall.get('exactHit', '-')}%、方向 {overall.get('outcomeHit', '-')}%），"
-          f"新抓 preview {min(n_need, max_preview)} 页 / 补赛果 {eval_fetch} 场 → {OUT_PATH}")
+          f"新抓 preview {fetched} 页 / 补赛果 {eval_fetch} 场 → {OUT_PATH}")
     return out
 
 

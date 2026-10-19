@@ -111,6 +111,10 @@ def fetch_odds_history(mid):
     def _go():
         url = BONUS_URL + "?clientCode=3001&matchId=" + str(mid)
         fb = fetch(url)
+        if not fb.get("success"):
+            # 必须抛异常：ttl_fetch 对「返回值」会缓存、对「异常」不缓存。
+            # 若这里返回空结构，一次 WAF 拦截就会把空结果缓存 3 小时。
+            raise RuntimeError(fb.get("errorMessage") or "赔率历史接口失败")
         oh = (fb.get("value") or {}).get("oddsHistory") or {}
         had_list = oh.get("hadList") or []
         hhad_list = oh.get("hhadList") or []
@@ -138,10 +142,52 @@ def fetch_odds_history(mid):
         print(f"  赔率历史失败 {mid}: {e}", flush=True)
         return {"mov": {"h": None, "d": None, "a": None}, "hadOpen": None, "hhadOpen": None}
 
-def fetch(url):
-    req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read().decode("utf-8"))
+# 竞彩 WAF 反爬（2026-10-15 实测定位）：webapi.sporttery.cn 对单次请求**概率性**返回
+# 403（腾讯云 WAF 拦截页）或 200 但空数据（无 matchInfoList），10 连采仅 3 次通过。
+# 重试即可通过（8 次内几乎必过，403 响应本身 <1s，重试成本低）。
+# 此前 fetch() 无重试：一次 403 就抛异常 → run_daily.sh 按容错设计恢复旧数据、
+# 跳过更新（exit 0）→ 定时任务每天"成功"但数据永远停在旧批次
+# （用户侧症状：页面提示「数据已过期，云端抓取任务未执行」）。
+WAF_RETRY_CODES = (403, 567)     # 403=腾讯云 WAF；567=竞彩自有反爬
+
+
+def fetch(url, must_contain=None, tries=8):
+    """竞彩 webapi JSON 接口（带 WAF 概率拦截重试）。
+
+    must_contain：响应正文必须包含的子串（如 "matchInfoList"）——WAF 会
+    概率性放行却返回空数据（success:true 但无内容），用它识别并重试。
+    重试耗尽后若最后拿到的是合法 JSON（只是缺该字段），照样返回该 JSON，
+    由调用方按「官方暂无数据」降级处理；只有全程被拦/网络失败才返回
+    {"success": False, "errorMessage": ...}。
+    """
+    last_body, last_err = "", ""
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=HEADERS)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                last_body = r.read().decode("utf-8", "ignore")
+                last_err = ""
+        except urllib.error.HTTPError as e:
+            last_body, last_err = "", "HTTP %s" % e.code
+            if e.code not in WAF_RETRY_CODES:
+                break                      # 非 WAF 错误（404/500 等）不重试
+            time.sleep(0.5 + 0.4 * i)
+            continue
+        except Exception as e:
+            last_body, last_err = "", repr(e)[:80]
+            time.sleep(0.5 + 0.4 * i)
+            continue
+        if must_contain and must_contain not in last_body:
+            last_err = "空响应(缺 %s)" % must_contain
+            time.sleep(0.5 + 0.4 * i)
+            continue
+        break
+    if last_body:
+        try:
+            return json.loads(last_body)
+        except Exception as e:
+            return {"success": False, "errorMessage": "JSON 解析失败: %r" % e}
+    return {"success": False, "errorMessage": last_err or "未知错误"}
 
 def to_float(x):
     try:
@@ -322,12 +368,30 @@ def merge_match_records():
     return out
 
 # ---------------- 500 球队页近况（服务端渲染，含近期比分/盘路） ----------------
-def fetch_html(url, ref, decode="utf-8", t=15):
-    req = urllib.request.Request(url, headers={
-        "Referer": ref, "User-Agent": HEADERS["User-Agent"],
-        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
-        "Accept-Language": "zh-CN,zh;q=0.9"})
-    return urllib.request.urlopen(req, timeout=t).read().decode(decode, "ignore")
+def fetch_html(url, ref, decode="utf-8", t=15, tries=6):
+    """抓 HTML 页面（带 WAF/网络重试；与 fetch() 同一套概率拦截对策）。
+
+    重试耗尽仍失败则抛异常——调用方（球队近况/竞彩映射）均有 try/except 兜底，
+    静默降级不影响主流程。
+    """
+    headers = {"Referer": ref, "User-Agent": HEADERS["User-Agent"],
+               "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+               "Accept-Language": "zh-CN,zh;q=0.9"}
+    last_err = ""
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=t) as r:
+                return r.read().decode(decode, "ignore")
+        except urllib.error.HTTPError as e:
+            last_err = "HTTP %s" % e.code
+            if e.code not in WAF_RETRY_CODES:
+                break
+            time.sleep(0.5 + 0.4 * i)
+        except Exception as e:
+            last_err = repr(e)[:80]
+            time.sleep(0.5 + 0.4 * i)
+    raise RuntimeError("页面抓取失败(%s): %s" % (url[:60], last_err or "未知错误"))
 
 def parse_team_form_html(html, tid, team_name, limit=6):
     """解析 500 球队页"近期战绩"表：每行一场比赛，按 球队ID 归属主/客，返回与 team_form 同结构"""
@@ -901,7 +965,10 @@ def backfill_hkmo_history(matches):
 
 def main():
     print("[1/5] 抓取赛事与赔率...", flush=True)
-    calc = fetch(CALC_URL)
+    # must_contain：WAF 会概率性放行却返回空数据（success:true 但无 matchInfoList，
+    # 实测约 1/15），带上该参数后空响应也会触发重试；重试后仍是合法空响应时
+    # 走下方「官方暂无在售比赛」降级路径。
+    calc = fetch(CALC_URL, must_contain="matchInfoList")
     if not calc.get("success"):
         raise RuntimeError("计算器接口失败: " + calc.get("errorMessage", ""))
     blocks = calc.get("value", {}).get("matchInfoList", []) or []
@@ -1416,18 +1483,35 @@ def main():
     except Exception as e:
         print(f"  BSD多博彩赔率抓取失败: {e}", flush=True)
 
-    # 串关推荐：每天只在第一次运行时生成并锁定，后续批次直接读取锁定的推荐，不再变动
+    # 串关推荐：当天首次成功生成即锁定发布，之后不再改动已发布档位；
+    # 尚未发布过的档位允许补生成（只增不改）——推荐一旦发布就不可篡改，
+    # 用户翻查历史时看到的必须和当初发布的完全一致。
     locked_safe, locked_high = load_locked_parlay()
     if locked_safe or locked_high:
-        # 只要今天生成过任何一条串关记录，就整体锁定不再变动
+        # 只要今天发布过任何一档，该档即锁定，后续跑批无权改写
         safe_parlay = locked_safe if locked_safe else None
         high_odds_parlay = None  # 高倍串关已移除
         gen_at = (locked_safe or locked_high).get('generatedAt', '')
-        # 如果当天没生成稳胆（只有高倍），补生成稳胆，避免中倍稳胆tab空白
-        if not safe_parlay:
-            safe_parlay = gen_safe_parlay(matches)
-            if safe_parlay:
-                print(f"  中倍稳胆补生成：2串1/3串1", flush=True)
+        # 补生成：当天还没发布过的档位（首发时该档无达标组合，后来赔率变化达标了）。
+        # 只增不改——已发布档位永远保持原样，绝不被后续跑批覆盖。
+        _missing = [k for k in ("parlay2", "parlay3", "parlay4")
+                    if not (locked_safe or {}).get(k)]
+        if _missing:
+            _fresh = gen_safe_parlay(matches) or {}
+            _filled = {k: _fresh[k] for k in _missing
+                       if _fresh.get(k) and _fresh[k].get("legs")}
+            if _filled:
+                if not safe_parlay:
+                    safe_parlay = {"generatedAt": gen_at,
+                                   "candidateCount": _fresh.get("candidateCount", 0),
+                                   "strategy": "中倍稳串（今日已锁定，不再变动）",
+                                   "locked": True}
+                safe_parlay.update(_filled)
+                try:
+                    save_parlay_history(_filled, None)
+                except Exception as e:
+                    print(f"  串关历史保存失败: {e}", flush=True)
+                print(f"  串关补生成：{len(_filled)} 个未发布档位（已发布档位不变）", flush=True)
         print(f"  串关推荐：今日已锁定（{gen_at}），不再变动", flush=True)
     else:
         # 稳胆串关：低赔高信心，追求高命中率（高倍串关已按用户要求永久移除）
@@ -4222,17 +4306,18 @@ def gen_safe_parlay(matches):
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
-    # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选「期望值 EV」最优组合 =====
-    # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 说明)
-    # 联合概率下限按「返奖率^n / 典型总赔」反推设定，避免与总赔区间自相矛盾
-    # EV下限：稳胆档只取≈盈亏平衡以上（不再推明显负期望"稳胆"）；均衡档放宽容差；搏击档纯娱乐不卡
+    # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选最优组合 =====
+    # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明)
+    # 2026-10-19 改革：搏击档（10倍+高赔 EV 优先）历史 23 战 0 胜、腿部同指命中率
+    # 仅 22-54%（纯挑高倍无数据支撑），按用户要求永久移除；新增「精锐4串1」——
+    # 与稳健档同一套命中率哲学（强数据支撑优先），不刻意挑高倍。
     TIERS = [
         ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08, "hit",
-         "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐"),
+         "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐", 4.0),
         ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08, -0.15, "ev",
-         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔4.5-10倍；EV<0 仍标不推荐"),
-        ("parlayBoost", "搏击", (3, 4), 1.70, 10.0, 40.0, 45.0, 0.03, -1.0, "ev",
-         "3-4串1 · 价值/娱乐：总赔10倍以上，取 EV 最优，方差极大，纯娱乐不卡EV"),
+         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔4.5-10倍；EV<0 仍标不推荐", 4.0),
+        ("parlay4", "精锐", (4,), 1.35, 5.0, 20.0, 66.0, 0.08, -0.08, "hit",
+         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐", 3.2),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4259,7 +4344,7 @@ def gen_safe_parlay(matches):
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
     def build_tier(tier):
-        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc = tier
+        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc, max_leg = tier
         from itertools import combinations
         best = None
         best_score = None
@@ -4278,6 +4363,19 @@ def gen_safe_parlay(matches):
                 # 拒绝蚊子肉：单场赔率必须达到档位下限
                 if any(c["odds"] < min_odds for c in combo):
                     continue
+                # 单腿赔率上限：精锐档 ≤3.2——高赔腿市场共识概率低、同指命中差，
+                # 「纯挑高倍」正是搏击档 23 战 0 胜的根因，从选腿环节杜绝
+                if any(c["odds"] > max_leg for c in combo):
+                    continue
+                # 同指陷阱过滤（搏击档 23 战 0 胜的根因是同指命中 22-40% 的高赔软腿）：
+                # 2/3 串精品组合零容忍；4 串 1 要凑齐 4 条强腿太难，最多容忍 1 条软腿。
+                # 无同指样本（None）的腿不算软腿，由 combo_hit 在排序中自然压低权重。
+                _soft_legs = sum(1 for c in combo
+                                 if c.get("sameOddsHit") is not None
+                                 and (c.get("sameOddsN") or 0) >= 10
+                                 and c.get("sameOddsHit") < 45)
+                if _soft_legs > (1 if n >= 4 else 0):
+                    continue
                 # 档位信心门槛（单腿）
                 if any((c.get("confidence") or 0) < min_conf for c in combo):
                     continue
@@ -4291,10 +4389,22 @@ def gen_safe_parlay(matches):
                 # 联合概率下限：避免选出数学上几乎不可能中的组合
                 if joint_p < min_joint:
                     continue
+                # 组合真实历史命中率（地面真实优先，样本不足回退去水概率）
+                combo_hit = 1.0
+                for c in combo:
+                    so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
+                    leg_p = (so / 100.0) if (so is not None and n_ >= 10) else _leg_prob(c)
+                    combo_hit *= leg_p
                 # 期望值：EV = 联合概率 × 总赔率 − 1
                 ev = joint_p * total_odds - 1.0
-                # EV 门槛：稳胆/均衡档只取达到 EV下限的组合，杜绝"明显负期望稳胆"
+                # 不再用 EV下限硬卡：负期望日整层消失违背"分层串关"初衷。
+                # 始终取各档最优组合，靠 recommended(EV≥0) 与 evNote 如实标注。
                 if ev < min_ev:
+                    # 兜底记录：取该档 EV 最高（最接近达标）的组合，避免整层不显示
+                    fb_score = combo_hit * 100 + 0.01 * ev
+                    if best is None or fb_score > best_score:
+                        best_score = fb_score
+                        best = (list(combo), total_odds, joint_p, ev, n, combo_hit)
                     continue
                 tech_sum = sum(c.get("techCount", 0) for c in combo)
                 stable_sum = sum(c.get("stableIndex", 0) for c in combo)
@@ -4305,14 +4415,7 @@ def gen_safe_parlay(matches):
                     so = c.get("sameOddsHit")
                     if so is not None and c.get("sameOddsN", 0) >= 10 and so < 45:
                         so_penalty += 0.0006 * (45 - so)
-                # 组合真实历史命中率估计：每腿优先用竞彩官方赛果库实测的
-                # 同指命中率（地面真实），样本不足时回退到模型去水概率；
-                # 串关命中率=各腿命中率连乘。
-                combo_hit = 1.0
-                for c in combo:
-                    so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
-                    leg_p = (so / 100.0) if (so is not None and n_ >= 10) else _leg_prob(c)
-                    combo_hit *= leg_p
+                # 组合真实历史命中率已在前述 EV 门槛前计算（combo_hit），此处直接用于排序。
                 # 选择哲学分支：
                 if mode == "hit":
                     # 稳胆哲学（命中率优先）：以真实历史命中率主导排序，
@@ -4364,15 +4467,15 @@ def gen_safe_parlay(matches):
     built = {t[0]: build_tier(t) for t in TIERS}
     parlay2 = built.get("parlay2")
     parlay3 = built.get("parlay3")
-    parlay_boost = built.get("parlayBoost")
+    parlay4 = built.get("parlay4")
 
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
-        "strategy": "分层串关双哲学（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：稳健档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡/搏击档=价值哲学（EV 最优）。各档拒绝蚊子肉（单场≥1.45），叠加历史同指命中率（免费自建）与五维雷达交叉验证",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
         "parlay2": parlay2,
         "parlay3": parlay3,
-        "parlayBoost": parlay_boost,
+        "parlay4": parlay4,
         "legNote": "串关抽水按场数放大：单场抽水11.4%，2串1约21.6%、3串1约30.6%、4串1约38.5%——串得越多，抽水越狠"
     }
 
@@ -4381,7 +4484,7 @@ def gen_safe_parlay(matches):
             return "N/A"
         return f"{p['totalOdds']}倍(命中{p['jointProb']}% EV{p['ev']:+.1f}% 建议{p['suggestStake']}%)"
 
-    print(f"  分层串关：候选{len(candidates)}个 | 稳健 {_fmt(parlay2)} | 均衡 {_fmt(parlay3)} | 搏击 {_fmt(parlay_boost)}", flush=True)
+    print(f"  分层串关：候选{len(candidates)}个 | 稳健 {_fmt(parlay2)} | 均衡 {_fmt(parlay3)} | 精锐 {_fmt(parlay4)}", flush=True)
     return result
 
 
@@ -4538,13 +4641,24 @@ def check_parlay_history():
     return {
         "total": total, "hit": hit, "miss": miss, "pending": pending,
         "hitRate": hit_rate, "recent7Rate": recent_rate,
-        "records": records[-20:]  # 最近20条
+        # 全量返回，绝不截断：历史记录是「已发布推荐」的凭证，
+        # 曾因只返回最近20条，导致昨日14组只露出6组、今天组数一涨
+        # 就把昨天的推荐全部挤出页面——用户翻查时「昨天的推荐不见了」。
+        # 记录量级很小（日均<20组），全量注入无压力。
+        "records": records
     }
 
 
 def load_locked_parlay():
     """从parlay_history.json加载今天已锁定的串关推荐，避免每批次变动。
-    返回 (safe_parlay, high_odds_parlay) 或 (None, None) 表示今天尚未锁定。"""
+    返回 (safe_parlay, high_odds_parlay) 或 (None, None) 表示今天尚未锁定。
+
+    锁定规则（2026-10-13 修正）：
+    当天一旦发布过任何一档串关，立即整体锁定，之后无论赔率怎么变都不再改动。
+    —— 已发布的推荐必须是「不可篡改」的：用户拿着昨天的推荐来翻查对账，
+       如果同一档位隔几小时就换一组，等于推荐可以被随时改写，专业性无从谈起。
+    当天尚未发布过的档位，由主流程补生成（只增不改），不影响已发布档位。
+    """
     import os
     parlay_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "parlay_history.json")
     today = time.strftime("%Y-%m-%d")
@@ -4559,43 +4673,44 @@ def load_locked_parlay():
     if not today_records:
         return None, None
 
-    # 若串关涉及的比赛尚未开赛，允许重算（让赔率/数据变化反映到串关里）；
-    # 一旦有任何一场已开赛，即锁定当天方案，避免临场追涨杀跌。
-    try:
-        now_ts = time.time()
-        kicks = []
-        for r in today_records:
-            for leg in (r.get("legs") or []):
-                k = leg.get("kickoff") or ""
-                if len(k) >= 16:
-                    kicks.append(time.mktime(time.strptime(k[:16], "%Y-%m-%d %H:%M")))
-        if kicks and min(kicks) > now_ts:
-            return None, None
-    except Exception:
-        pass
-
-    def rebuild(records_of_type, ptype):
-        rec = next((r for r in records_of_type if r.get("type") == ptype), None)
+    def rebuild(tier_name):
+        """按档位名（稳健/均衡/搏击）找回当天已发布的该档推荐。
+        历史 type 形如 稳健2串1/均衡3串1/搏击3串1（2026-10-13 修复：
+        旧代码找的是"稳胆2串1/稳胆3串1"旧档位名，档位改造后从未匹配上，
+        锁定机制实际是死代码，导致每轮跑批都重新生成、卡片推荐被反复改写）。
+        同一档位当天有多条记录时取第一条——发布顺序即锁定顺序，
+        第一条就是当初对用户公布的那组，后续生成的绝不覆盖它。
+        有 snapshot 字段的记录按快照完整还原发布时的卡片（EV/仓位/说明等）；
+        旧格式记录（无 snapshot）用顶层字段兜底还原。"""
+        rec = next((r for r in today_records
+                    if str(r.get("type", "")).startswith(tier_name)), None)
         if not rec:
             return None
-        return {
-            "type": ptype.replace("稳胆", "").replace("高倍", ""),
-            "legs": rec.get("legs", []),
-            "totalOdds": rec.get("totalOdds", 0),
-            "avgConfidence": rec.get("avgConfidence", 0),
-            "locked": True,
-            "savedAt": rec.get("savedAt", "")
-        }
+        snap = rec.get("snapshot") or {}
+        p = dict(snap) if snap else {}
+        p.setdefault("tier", tier_name)
+        p.setdefault("type", rec.get("type", "").replace(tier_name, "", 1) or "串1")
+        p["legs"] = rec.get("legs", [])
+        p["totalOdds"] = rec.get("totalOdds", 0)
+        p["avgConfidence"] = rec.get("avgConfidence", 0)
+        if rec.get("ev") is not None:
+            p["ev"] = rec.get("ev")
+        p["recommended"] = bool(rec.get("recommended", False))
+        p["locked"] = True
+        p["savedAt"] = rec.get("savedAt", "")
+        return p
 
-    safe_p2 = rebuild(today_records, "稳胆2串1")
-    safe_p3 = rebuild(today_records, "稳胆3串1")
+    safe_p2 = rebuild("稳健")   # parlay2 槽位：稳健档（2串1）
+    safe_p3 = rebuild("均衡")   # parlay3 槽位：均衡档（3串1）
+    safe_p4 = rebuild("精锐")   # parlay4 槽位：精锐档（4串1）
 
     safe_parlay = {
         "generatedAt": today_records[0].get("savedAt", ""),
         "candidateCount": 0,
-        "strategy": "中倍稳串（今日已锁定，不再变动）",
-        "parlay2": safe_p2, "parlay3": safe_p3, "locked": True
-    } if (safe_p2 or safe_p3) else None
+        "strategy": "分层串关（今日已锁定，不再变动）",
+        "parlay2": safe_p2, "parlay3": safe_p3,
+        "parlay4": safe_p4, "locked": True
+    } if (safe_p2 or safe_p3 or safe_p4) else None
 
     # 高倍串关已按用户要求永久移除，不再返回
     high_parlay = None
@@ -4624,9 +4739,9 @@ def save_parlay_history(safe_parlay, high_parlay):
         return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir")) for l in (legs or [])))
     today_sigs = {_leg_sig(r.get("legs", [])) for r in records if r.get("date") == today}
 
-    # 保存各档串关（稳健/均衡/搏击）：即便 EV<0 标「不推荐」也照常落盘，
+    # 保存各档串关（稳健/均衡/精锐）：即便 EV<0 标「不推荐」也照常落盘，
     # 方便赛后对照「不推荐」是否真的没中，反向验证 EV 模型是否成立。
-    for key in ("parlay2", "parlay3", "parlayBoost"):
+    for key in ("parlay2", "parlay3", "parlay4"):
         p = (safe_parlay or {}).get(key)
         if not p or not p.get("legs"):
             continue
@@ -4640,7 +4755,11 @@ def save_parlay_history(safe_parlay, high_parlay):
             "totalOdds": p["totalOdds"], "avgConfidence": p.get("avgConfidence", 0),
             "legs": p["legs"], "recommended": bool(p.get("recommended", False)),
             "ev": p.get("ev"), "result": "pending",
-            "savedAt": time.strftime("%Y-%m-%d %H:%M:%S")
+            "savedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
+            # 完整快照：把发布时该档的全部字段原样留存（EV/建议仓位/档位说明/
+            # 命中率/抽水等）。锁定回放时按快照还原，用户翻看历史看到的
+            # 必须和当初发布的卡片一模一样，不能是残缺重建。
+            "snapshot": {k: v for k, v in p.items()},
         })
 
     data["updatedAt"] = time.strftime("%Y-%m-%d %H:%M:%S")

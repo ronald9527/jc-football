@@ -523,6 +523,14 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .ws-res .bad{color:var(--bad);font-weight:700}
 .ws-jc-tip{font-size:11.5px;color:var(--sub);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:8px}
 .ws-jc-tip b{color:#d99b1c}
+/* 未推荐场次：明确标注 + 原因（数据源未覆盖 / 联赛暂无预测 / 疑似漏匹配待核对） */
+.ws-nopred{display:flex;align-items:center;gap:8px;margin:6px 0 2px;padding:8px 10px;border-radius:6px;background:var(--line);border-left:3px solid var(--weak);flex-wrap:wrap}
+.ws-nopred-tag{font-size:12px;font-weight:800;color:var(--sub);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:2px 8px;white-space:nowrap}
+.ws-nopred-why{font-size:11px;color:var(--weak);line-height:1.5}
+.ws-nopred.warn{border-left-color:#f7b733;background:rgba(247,183,51,.10)}
+.ws-nopred.warn .ws-nopred-tag{color:#8a5a00;border-color:#d99b1c;background:rgba(247,183,51,.18)}
+.ws-nopred.warn .ws-nopred-why{color:#a06a00}
+.ws-namewarn{color:#f7b733;font-weight:700}
 @media(max-width:640px){
   .sp-rel-grid{grid-template-columns:1fr}
   .sp-date-grid{grid-template-columns:1fr}
@@ -1171,7 +1179,7 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="highodds-view" id="highOddsView" style="display:none">
-    <div class="fb-title">分层串关 · 稳健/均衡/搏击三档<span class="tip">拒绝蚊子肉：单场赔率下限1.45；每档在自身赔率区间内取「期望值 EV」最优组合，并给出联合命中率、EV 与建议仓位</span></div>
+    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">拒绝蚊子肉也拒绝纯高倍：单腿赔率1.40-3.20、同指命中<45%的软腿直接过滤；每档在自身区间内选「联合命中率+EV」最优组合。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="highOddsSummary"></div>
     <div id="highOddsList"></div>
   </div>
@@ -1206,8 +1214,8 @@ footer b{color:var(--sub)}
   <div class="sp-view" id="scorePredView" style="display:none">
     <div class="fb-title">比分预测 · 独立参考源<span class="tip">独立数据源，与竞彩官方数据/推荐/模型零耦合，仅作比分参考，不构成任何投注建议</span></div>
 
-    <!-- WhoScored 人工预测比分（主力） -->
-    <div class="sp-sec-head">⚽ WhoScored 人工预测比分<span class="tip">抓取自 whoscored.com/previews 官方人工赛前预测；开球时间为北京时间；对应竞彩赛程的场次会标出编号</span></div>
+    <!-- WhoScored 人工预测比分（主力）：以当天竞彩赛程为主干，全部列出，有预测挂比分/无预测标未推荐 -->
+    <div class="sp-sec-head">⚽ WhoScored 人工预测比分 · 竞彩赛程对照<span class="tip">以当天竞彩开出的比赛为唯一主干全部列出：WhoScored 有预测的对应挂上比分（附可信度与英文原名核对），没有的标「未推荐」并说明原因；比赛结束后自动回填实际赛果与命中情况</span></div>
     <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
     <div class="sp-filters" id="wsDateBar"></div>
     <div id="wsList"></div>
@@ -1450,8 +1458,117 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.9";
+const VERSION = "v1.7.23";
 const CHANGELOG = [
+  {
+    version: "v1.7.23",
+    date: "2026-10-20",
+    title: "比分预测竞彩主干化：当天赛程全部列出，有预测挂比分/无推荐标未推荐",
+    fixes: [
+      "比分预测只显示竞彩每日比赛，其他比赛隐藏",
+      "当天竞彩赛程全部列出为主干，赛后自动回填赛果",
+    ],
+    notes: [
+      "① WhoScored 区块重构为「竞彩主干」：以当天竞彩开出的比赛为唯一主干全部列出（不再以 WhoScored 比赛列表为主），有预测的挂上比分+可信度+英文原名核对行，无预测的明确标「未推荐」并注明原因（同联赛有推荐=疑似漏匹配待核对⚠️ / 联赛暂无人工预测 / 数据源未覆盖）；② 关联键改为「竞彩编号+日期±2天」——竞彩编号每周循环（每周一都有周一002），此前只按编号直查会把上周同号比赛误配到本周，日期过滤后匹配唯一；③ 赛后回溯只显示对应竞彩的场次，编号由服务端用竞彩持久档案（history.json）补挂，比赛滚出销售窗口后仍能对应上；④ 服务端 attach_jc_numbers 改为双数据源（当前销售日+持久档案），存量 94 条回溯记录一次性补挂 24 条竞彩编号，1308 场预测挂编号 11→93 场；⑤ team_map 修正两处队名（Telstar→特尔斯达、Inter→国际米兰，此前误译为特尔斯塔/巴西国际）；⑥ 自建 Poisson 模型区同样只显示竞彩场次（队名组合过滤，非竞彩隐藏），历史回溯行补竞彩编号徽章",
+    ]
+  },
+  {
+    version: "v1.7.19",
+    date: "2026-10-19",
+    title: "移除搏击狂击档，精锐4串1上线",
+    fixes: [
+      "三档分层（稳健/均衡/精锐），4串1只挑数据支撑最强的腿",
+    ],
+    notes: [
+      "搏击档历史23战0胜（腿部同指命中率仅22-54%，纯挑高倍无支撑）按用户要求永久移除，狂击档（28倍+纯娱乐）同批移除；新增「精锐4串1」——与稳健档同一套选腿标准：信心≥66、同指命中<45%的软腿最多容忍1条（2/3串零容忍）、单腿赔率1.35-3.2拒绝纯高倍、EV≥-8%护栏、联合概率≥8%，排序以真实同指命中率主导。今晚实测：精锐4串1 10.18倍 EV-7.6%，腿部同指72%/72%/56%/37%，与旧狂击档（28倍EV-29%、同指全低于50%）完全是两个物种",
+    ]
+  },
+  {
+    version: "v1.7.18",
+    date: "2026-10-19",
+    title: "分层串关新增狂击4串1 + EV/抽水/命中率科普",
+    fixes: [
+      "四档分层；EV负期望表述纠偏；新增串关原理说明",
+    ],
+    notes: [
+      "① 新增独立「狂击4串1」档位（总赔18倍+，联合命中率天然不足10%，标注纯娱乐）；搏击档回归纯3串1；② 页面新增「三个问题看懂串关」科普卡：EV定义（负EV=长期每注平均亏损比例）、竞彩返奖率88.6%与串关抽水按腿数复合放大（2串21.6%/3串30.6%/4串38.5%）、3串1命中率=各腿概率乘积的提高路径与高命中高回报的本质矛盾；③ 全负总结卡明确「EV为负的档位没有哪档更值得推荐，只有亏得多与亏得少的区别」，纠正「稳健不推荐反而像推荐搏击」的误导；④ 负期望卡片补充白话解读（长期平均每注亏损约X%）",
+    ]
+  },
+  {
+    version: "v1.7.17",
+    date: "2026-10-18",
+    title: "APK 上线机制修复",
+    fixes: [
+      "定时部署不再丢失 APK 安装包",
+    ],
+    notes: [
+      "自举包显式携带 APK（解包后落在 deploy_cf.py 寻找位置），杜绝 Pages 全量替换后线上 .apk 退化为 HTML fallback 的「假 200」；另修复凌晨时段数据新鲜度误报（夜间批次降级为 warn 提示）",
+    ]
+  },
+  {
+    version: "v1.7.16",
+    date: "2026-10-18",
+    title: "凌晨误报过期提示修复",
+    fixes: [
+      "夜间批次不再误判为数据过期",
+    ],
+    notes: [
+      "凌晨 0-9 点打开页面时，昨晚 20:00 后的晚间批次属正常无新赛事数据，此前被误报为红色「数据已过期（非今日批次），说明云端抓取任务未执行」；现降级为 warn 提示「夜间批次，09:00 首轮更新」，通知面板数据状态同步该规则",
+    ]
+  },
+  {
+    version: "v1.7.15",
+    date: "2026-10-15",
+    title: "定时更新修复验证通过 + 自举包安全加固",
+    fixes: [
+      "本地版本源对齐沙箱自动升版结果（v1.7.15），防版本分叉",
+    ],
+    notes: [
+      "12:00/13:00 两轮定时任务自动跑通：数据当日 13 场、自动部署成功；自举包打包新增 _is_secret 排除凭据文件",
+    ]
+  },
+  {
+    version: "v1.7.13",
+    date: "2026-10-15",
+    title: "修复定时更新失效：竞彩接口概率性拦截现改为自动重试",
+    fixes: [
+      "定时任务每天跑但数据不更新的根因：竞彩官方接口（webapi.sporttery.cn）启用了概率性 WAF 拦截——单次请求约 70% 返回 403 或空数据，而抓取脚本没有重试，一次被拦就整体失败、按容错设计跳过更新（任务显示成功但数据停在旧批次）。现已改为自动重试（最多 8 次退避重试，8 次内几乎必过），全链路 100 秒内完成",
+      "顺带修复两个隐患：赔率历史抓取失败时不再把空结果写进 3 小时缓存（失败即重试）；500.com 球队近况页抓取也加了同样的重试",
+    ],
+    notes: [
+      "本次修复在服务端（定时任务代码包），App 无需重装；数据更新会随下个周期自动同步",
+    ]
+  },
+  {
+    version: "v1.7.12",
+    date: "2026-10-14",
+    title: "串关推荐少而精，三档按钮切换；比分预测可回溯历史；修复 App 页面同步",
+    features: [
+      "分层串关三档（稳健/均衡/搏击）改为按钮点击切换显示，不再叠放",
+      "比分预测新增历史日期回溯：WhoScored 人工预测按比赛累积「预测×赛果」回测记录，可按过去日期查看命中情况",
+    ],
+    fixes: [
+      "串关推荐改为少而精：三档全负期望时只出一张总结卡（负期望详情折叠可展开），有正期望档时只展正期望档——不再推一堆负期望组合",
+      "修复 App 整页同步失效：Cloudflare Pages 对 /index.html 返回 308 永久重定向，App 网络组件默认不跟随 307/308，导致网页改动只有数据能同步、页面结构永远不同步（网页版有的，App 版没有）。已改为手动跟随重定向 + 根路径直连",
+      "WhoScored 抓取调优：软挑战真实页放行不再误杀、快速失败替代长退避、跳过已开球场次、同轮页面缓存，单轮耗时 129s→98s",
+      "部署侧新增版本自动提升防护：模板改了忘手升版本号时自动补升；version.json 新增 pageBuild 构建指纹",
+    ],
+    notes: [
+      "旧版 App 需重装一次最新安装包（之后网页改动永久自动同步，无需再装）",
+      "串关三档 EV 为负是市场真实数学期望（竞彩单场抽水 11.4%，2串1 21.6%、3串1 30.6%），此时建议观望，不要跟投负期望组合",
+    ]
+  },
+  {
+    version: "v1.7.10",
+    date: "2026-10-11",
+    title: "APP 数据同步修复 v1.7.9",
+    features: [
+      "APP 现在与网页一致，每 30 分钟自动刷新，无需重装",
+    ],
+    fixes: [
+      "修复了 APP 重新安装/覆盖安装后一直显示旧数据的问题：① 覆盖安装时强制用安装包自带的新页面覆盖旧缓存；② 加载页面时清除 WebView 本地缓存并加时间戳，避免旧页面被缓存；③ 线上数据时间更新即自动重拉整页。",
+    ]
+  },
   {
     version: "v1.7.9",
     date: "2026-10-10",
@@ -1826,9 +1943,17 @@ function updBannerHtml(){
   const realtime = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}:${String(now.getSeconds()).padStart(2,"0")}`;
   const autoTxt = state.autoReload ? `<button class="ub-btn" id="ubToggle">自动刷新:开</button>`
                                    : `<button class="ub-btn off" id="ubToggle">自动刷新:关</button>`;
-  const expireTxt = dataDay < today
-    ? `<span style="color:var(--bad);font-weight:700">数据已过期（非今日批次），说明云端抓取任务未执行；点顶部「最新数据」按钮可立即重拉</span>`
-    : `<span>· 本日 ${BATCH_LABEL} 高频自动更新</span>`;
+  // 夜间宽容：凌晨 0-9 点打开页面时，昨晚 20:00 后的批次属正常「无新赛事」数据，
+  // 非抓取任务故障（定时批次 9:00 才启动），不应误报红色「已过期/任务未执行」。
+  const _y = new Date(now.getTime() - 86400000);
+  const _yDay = `${_y.getFullYear()}-${String(_y.getMonth()+1).padStart(2,"0")}-${String(_y.getDate()).padStart(2,"0")}`;
+  const _isNight = now.getHours() < 9;
+  const _isLateBatch = upd.slice(11,13) >= "20";
+  const expireTxt = dataDay >= today
+    ? `<span>· 本日 ${BATCH_LABEL} 高频自动更新</span>`
+    : (_isNight && dataDay === _yDay && _isLateBatch)
+    ? `<span style="color:var(--warn);font-weight:700">· 夜间无新赛事批次（昨晚 ${upd.slice(11,16)} 仍为最新），09:00 首轮自动更新</span>`
+    : `<span style="color:var(--bad);font-weight:700">数据已过期（非今日批次），说明云端抓取任务未执行；点顶部「最新数据」按钮可立即重拉</span>`;
   el.innerHTML = `<span class="ub-live">${isLive} 实时 ${realtime}</span>
     <span>· 距下次数据自动更新（${BATCH_LABEL}）还有 ${cd}</span>
     <span>· 数据更新于 ${upd.slice(5,16)}</span>
@@ -1906,7 +2031,7 @@ const state = {
   halfFullHistory: JSON.parse(JSON.stringify(BUILT_DATA.halfFullHistory || {})),
   meta: { updateTime: BUILT_DATA.updateTime || "" },
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
-  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today",
+  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", parlayTier: "parlay2", parlayNegOpen: false,
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })()
 };
 /* 恢复主题偏好 */
@@ -2992,6 +3117,21 @@ document.addEventListener("click", e=>{
   const t = e.target.closest(".maintab button");
   if (t){ state.tab = t.dataset.tab; render(); }
 });
+/* 串关历史：按日期查看（快捷胶囊） */
+document.addEventListener("click", e=>{
+  const c = e.target.closest(".pdate-chip");
+  if (c){ state.parlayDate = c.dataset.pdate; renderHighOdds(); }
+});
+/* 分层串关：档位按钮切换（稳健/均衡/精锐） */
+document.addEventListener("click", e=>{
+  const c = e.target.closest(".ptier-chip");
+  if (c && c.dataset.tier !== state.parlayTier){ state.parlayTier = c.dataset.tier; renderHighOdds(); }
+});
+/* 串关历史：日期下拉「选项」 */
+document.addEventListener("change", e=>{
+  const s = e.target.closest("#parlayHistDate");
+  if (s){ state.parlayDate = s.value; renderHighOdds(); }
+});
 /* 日期筛选器：监听所有年月日下拉 */
 document.addEventListener("change", e=>{
   const sel = e.target.closest(".date-filter select");
@@ -3041,7 +3181,16 @@ function renderDataFreshness(){
       else if(mins <= 60){ level="ok"; label="最新（" + mins + " 分钟前）"; color="var(--good)"; bg="var(--good-bg)"; }
       else { level="warn"; label="今日数据，已过 " + Math.floor(mins/60) + " 小时"; color="var(--warn)"; bg="rgba(250,173,20,.12)"; }
     }else if(dDay < today){
-      level = "stale"; label = "数据已过期（非今日）"; color = "var(--bad)"; bg = "var(--bad-bg)";
+      // 夜间宽容：凌晨 0-9 点打开时，昨晚 20:00 后的批次属正常夜间数据（无新赛事），
+      // 定时批次 9:00 才启动，降级为 warn 而非误报「已过期/任务未执行」。
+      const _y = new Date(now.getTime() - 86400000);
+      const _yDay = `${_y.getFullYear()}-${String(_y.getMonth()+1).padStart(2,"0")}-${String(_y.getDate()).padStart(2,"0")}`;
+      if(now.getHours() < 9 && dDay === _yDay && upd.slice(11,13) >= "20"){
+        level = "warn"; label = "夜间批次（昨晚 " + upd.slice(11,16) + "），09:00 首轮更新";
+        color = "var(--warn)"; bg = "rgba(250,173,20,.12)";
+      }else{
+        level = "stale"; label = "数据已过期（非今日）"; color = "var(--bad)"; bg = "var(--bad-bg)";
+      }
     }else{
       level = "ok"; label = "最新"; color = "var(--good)"; bg = "var(--good-bg)";
     }
@@ -3755,10 +3904,30 @@ function renderHighOdds(){
       </div>
     </div>`;
 
-  // 历史记录列表（最近20条，可展开查看每场详情）
+  // ===== 历史记录：按日期查看（日期下拉「选项」+ 快捷按钮） =====
+  const phDates = [...new Set(histRecords.map(r=> (r.date||"")).filter(Boolean))].sort().reverse();
+  const phCount = {};
+  histRecords.forEach(r=>{ const d=r.date||""; if(d) phCount[d]=(phCount[d]||0)+1; });
+  const _pickDate = (state.parlayDate && state.parlayDate!=="all");
+  const viewRecs = _pickDate
+      ? histRecords.filter(r => (r.date||"")===state.parlayDate).slice().sort((a,b)=> (a.savedAt||"").localeCompare(b.savedAt||""))
+      : histRecords.slice().sort((a,b)=> (b.savedAt||"").localeCompare(a.savedAt||""));
   if(histRecords.length > 0){
-    html += `<div style="margin-top:8px;"><div style="font-size:12px;color:var(--sub);margin-bottom:6px;">历史记录（点击展开查看每场赛果和命中详情）：</div><div style="max-height:320px;overflow-y:auto;">`;
-    histRecords.slice(-20).reverse().forEach((r,idx)=>{
+    // 主「选项」：单一下拉框，选中某一天即看当天全部推荐
+    let dateOpts = `<option value="all">📅 全部日期（${histRecords.length} 组）</option>`;
+    phDates.forEach(dt=>{ dateOpts += `<option value="${dt}"${_pickDate&&state.parlayDate===dt?" selected":""}>${dt}（${phCount[dt]} 组）</option>`; });
+    // 快捷按钮（备选）
+    let chipHtml = `<button class="sp-chip pdate-chip ${!_pickDate?'on':''}" data-pdate="all">全部</button>`;
+    phDates.forEach(dt=>{ chipHtml += `<button class="sp-chip pdate-chip ${_pickDate&&state.parlayDate===dt?'on':''}" data-pdate="${dt}">${dt.slice(5)}</button>`; });
+    html += `<div id="parlayDateFilterWrap" style="margin:10px 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <label for="parlayHistDate" style="font-size:12.5px;color:var(--text);font-weight:600;">选择日期：</label>
+      <select id="parlayHistDate" class="pdate-select" style="font-size:13px;padding:6px 10px;border:1px solid var(--accent);border-radius:8px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;">${dateOpts}</select></div>
+      <div style="margin:0 0 6px;display:flex;gap:6px;flex-wrap:wrap;">${chipHtml}</div>
+      <div style="margin:0 0 8px;font-size:10.5px;color:var(--sub);line-height:1.6;">📦 以下为历史存档：早期发布过的「搏击 / 狂击」档位因长期无数据支撑（23 战 0 中）已永久下线，记录仅作赛果回溯，不再发布新推荐；当前在档位为 🛡️稳健 / ⚖️均衡 / 💎精锐。</div>`;
+    if(viewRecs.length > 0){
+      const dateLabel = _pickDate ? `📅 ${state.parlayDate} 推荐（${viewRecs.length} 组，按发布时间排序）` : `全部日期 · 共 ${histRecords.length} 组（按发布时间倒序，点击展开查看每场赛果和命中详情；也可用上方日期选项只看某一天）：`;
+      html += `<div style="margin-top:8px;"><div style="font-size:12px;color:var(--sub);margin-bottom:6px;">${dateLabel}</div><div style="max-height:360px;overflow-y:auto;">`;
+      viewRecs.forEach((r,idx)=>{
       const resultColor = r.result==="hit"?"var(--good)":r.result==="miss"?"var(--bad)":"var(--warn)";
       const resultText = r.result==="hit"?"✅ 全中":r.result==="miss"?"❌ 未中":"⏳ 待赛";
       const legs = r.legs || [];
@@ -3794,7 +3963,10 @@ function renderHighOdds(){
       });
       html += `</div></div>`;
     });
-    html += `</div></div>`;
+      html += `</div></div>`;
+    } else {
+      html += `<div class="empty">该日期暂无串关历史推荐</div>`;
+    }
   }
   html += `</div>`;
 
@@ -3802,41 +3974,44 @@ function renderHighOdds(){
   if(sp){
     spCand = sp.candidateCount || 0;
     if(bdg) bdg.textContent = spCand > 99 ? "99+" : spCand;
-    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 搏击（各档在自身赔率区间内取「期望值 EV」最优，拒绝蚊子肉；已叠加历史同指命中率与五维雷达评分交叉验证）</div>`;
-    // 三档均无达标组合（EV 全部低于档位门槛）：诚实提示，避免空档像故障
-    if(!(sp.parlay2 || sp.parlay3 || sp.parlayBoost)){
+    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
+    <div style="margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
+      <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
+      ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：这一注长期平均每花 100 元亏 12 元。<b style="color:var(--bad)">EV 为负 = 长期必亏，没有哪一档「更值得推荐」，只有亏得多与亏得少的区别。</b><br>
+      ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
+      ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">提高命中的唯一办法是选概率更高的腿（赔率更低、回报更少）</b>——高命中与高回报不可兼得，这是串关的本质矛盾。低赔「蚊子肉」腿命中高但回报薄，高赔腿回报厚但拉低联合命中率，各档的赔率区间就是在这个矛盾上取平衡。
+    </div>`;
+    // 四档均无达标组合（EV 全部低于档位门槛）：诚实提示，避免空档像故障
+    if(!(sp.parlay2 || sp.parlay3 || sp.parlay4)){
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
         <div class="ho-head"><span class="ho-type" style="color:var(--warn)">ℹ️ 今日无达标串关组合</span></div>
         <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但任意组合期望值 EV 均低于档位门槛（串关抽水按场数放大：2串1约21.6%、3串1约30.6%），数学上长期必亏，<b>不推荐下注</b>。可关注单场「稳胆」推荐。</div>
       </div>`;
     }
-      [sp.parlay2, sp.parlay3, sp.parlayBoost].forEach(p=>{
-      if(!p) return;
+    // ===== 分层串关展示策略（少而精，杜绝「推荐一大堆、什么方向都有」）=====
+    // 只有「正期望」档位算推荐：串关抽水按场数放大（2串1约21.6%、3串1约30.6%），
+    // EV 为负的档位数学上长期必亏——默认只出一行说明，完整赛程折叠收起（仅供赛后核对）；
+    // 三档全负时出一张诚实总结卡，明确告知今日不建议玩串关。
+    const _TIER_DEFS = [["parlay2","🛡️ 稳健"],["parlay3","⚖️ 均衡"],["parlay4","💎 精锐"]];
+    const _pos = (k)=>{ const p = sp[k]; return !!(p && p.recommended && (p.ev==null || p.ev>=0)); };
+    const _recTiers = _TIER_DEFS.filter(([k])=>sp[k] && _pos(k));
+    const _negTiers = _TIER_DEFS.filter(([k])=>sp[k] && !_pos(k));
+    const _tierCardHtml = (p)=>{
       const ev = (p.ev==null? null : p.ev);
-      // 负期望档位：标「不推荐」，但仍展示完整赛程，方便赛后逐场核对命中
-      if(ev != null && ev < 0 && !p.recommended){
-        const jp = (p.jointProb==null? null : p.jointProb);
-        const rh = p.realHit;
-        html += `<div class="ho-card" style="border-left:3px solid var(--bad);margin-bottom:10px">
-          <div class="ho-head"><span class="ho-type" style="color:var(--bad)">⚠️ ${p.tier||""} · ${p.type} · <b>不推荐</b></span><span class="ho-total" style="color:var(--bad)">${p.totalOdds.toFixed(2)} 倍</span></div>
-          <div style="margin:8px 0 4px;font-size:12px;color:var(--bad)">本档最优组合期望值 <b>EV ${ev}%</b> 为负，<b>无正期望机会，不推荐下注</b>。串关抽水按场数放大（${p.rake!=null?p.rake+"%":"—"}）。</div>
-          ${parlayLegsHtml(p.legs)}
-          <div style="margin-top:8px;font-size:11px;color:var(--sub)">${rh!=null?`历史同指命中率（实战）<b style="color:var(--text)">${rh}%</b>`:`预测胜率（模型校准）<b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b>`} · 赛后可在上方「串关历史战绩」核对每场实际赛果与命中（<b>历史同指≠模型预测</b>，历史同指来自竞彩官方赛果库同条件实战）。</div>
-        </div>`;
-        return;
-      }
-      const avgConf = p.avgConfidence || 0;
       const jp = (p.jointProb==null? null : p.jointProb);
       const rh = p.realHit;
-      const stake = p.suggestStake || 0;
+      const avgConf = p.avgConfidence || 0;
       const tierColor = p.tier==="稳健"?"var(--good)":(p.tier==="均衡"?"var(--accent)":"var(--warn)");
       const evColor = ev==null?"var(--sub)":(ev>=5?"var(--good)":(ev>=-10?"var(--warn)":"var(--bad)"));
+      const stake = p.suggestStake || 0;
       const stakeTxt = stake>0 ? `建议仓位 ${stake}%` : "不建议下注（负期望）";
-      html += `<div class="ho-card" style="border-left:3px solid ${tierColor};">
+      const negTag = (ev!=null && ev<0 && !p.recommended);
+      return `<div class="ho-card" style="border-left:3px solid ${negTag?"var(--bad)":tierColor};${negTag?"margin-bottom:10px;":""}">
         <div class="ho-head">
-          <span class="ho-type" style="color:${tierColor}">🛡️ ${p.tier||""} · ${p.type}</span>
-          <span class="ho-total" style="color:${tierColor}">${p.totalOdds.toFixed(2)} <small>倍总赔率</small></span>
+          <span class="ho-type" style="color:${negTag?"var(--bad)":tierColor}">${negTag?"⚠️":"🛡️"} ${p.tier||""} · ${p.type}${negTag?" · <b>不推荐</b>":""}</span>
+          <span class="ho-total" style="color:${negTag?"var(--bad)":tierColor}">${p.totalOdds.toFixed(2)} <small>倍总赔率</small></span>
         </div>
+        ${negTag?`<div style="margin:8px 0 4px;font-size:12px;color:var(--bad)">本档最优组合期望值 <b>EV ${ev}%</b> 为负（长期平均每注亏损约 ${Math.abs(ev)}%），<b>无正期望机会，不推荐下注</b>。串关抽水按场数放大（${p.rake!=null?p.rake+"%":"—"}）。</div>`:""}
         <div style="margin-bottom:8px;font-size:11.5px;color:var(--sub)">${p.tierDesc||""}</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px">
           <span>${rh!=null?`历史同指命中率 <b style="color:var(--text)">${rh}%</b>`:`预测胜率 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b>`}</span>
@@ -3853,11 +4028,41 @@ function renderHighOdds(){
           <span>${p.isMixed?"🔀 混合过关":"📌 单一玩法"}</span>
         </div>
       </div>`;
-    });
+    };
+    const _tierBtnsHtml = (tiers, barId)=> tiers.length>1
+      ? `<div id="${barId}" style="margin:8px 0 10px;display:flex;gap:8px;flex-wrap:wrap;">` + tiers.map(([k,lb])=>{
+          const _lg = (sp[k].legs||[]).length;
+          return `<button class="sp-chip ptier-chip ${state.parlayTier===k?"on":""}" data-tier="${k}">${lb}${_lg?` · ${_lg}场`:""}</button>`;
+        }).join("") + `</div>` : "";
+    // 负期望详情收起区（展开状态记忆到 state，避免点档位按钮重渲染后被重置）
+    const _negDetailHtml = (negDesc, note)=>{
+      if(!_negTiers.length) return "";
+      const showKey = _negTiers.some(([k])=>k===state.parlayTier) ? state.parlayTier : _negTiers[0][0];
+      return `<div style="margin:10px 0 4px;font-size:11.5px;color:var(--sub)">${note}<a href="javascript:void(0)" onclick="state.parlayNegOpen=!state.parlayNegOpen;var _d=document.getElementById('parlayNegDetail');if(_d)_d.style.display=state.parlayNegOpen?'block':'none';this.textContent=state.parlayNegOpen?'点击收起':'点击展开查看完整赛程'" style="color:var(--accent)">${state.parlayNegOpen?"点击收起":"点击展开查看完整赛程"}</a>（仅供赛后核对，请勿下注）。</div>
+      <div id="parlayNegDetail" style="display:${state.parlayNegOpen?"block":"none"};">${_tierBtnsHtml(_negTiers, "parlayNegTierBar")}${_tierCardHtml(sp[showKey])}</div>`;
+    };
+    if(_recTiers.length){
+      // 有正期望档位 → 按钮只在正期望档位间切换，默认展示第一个
+      if(!_recTiers.some(([k])=>k===state.parlayTier)) state.parlayTier = _recTiers[0][0];
+      html += _tierBtnsHtml(_recTiers, "parlayTierBar");
+      html += _tierCardHtml(sp[state.parlayTier]);
+      if(_negTiers.length){
+        const negDesc = _negTiers.map(([k,lb])=>`${lb} EV ${sp[k].ev!=null?sp[k].ev+"%":"—"}`).join(" · ");
+        html += _negDetailHtml(negDesc, `另有 ${_negTiers.length} 档期望值为负（${negDesc}），长期必亏已折叠，`);
+      }
+    } else {
+      // 四档全负 → 一张诚实总结卡，不铺开赛程
+      const negDesc = _negTiers.map(([k,lb])=>`${lb} <b style="color:var(--bad)">EV ${sp[k].ev!=null?sp[k].ev+"%":"—"}</b>`).join(" · ");
+      html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
+        <div class="ho-head"><span class="ho-type" style="color:var(--warn)">🚫 今日无正期望串关机会</span></div>
+        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，<b>全部档位</b>最优组合期望值均为负（${negDesc}）。<b style="color:var(--text)">注意：EV 为负的档位长期玩都必亏——档位之间没有「哪档更值得推荐」，只有亏得多与亏得少的区别，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
+      </div>`;
+      html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");
+    }
   }
 
   // ===== 高倍串关已移除，只保留稳胆串关 =====
-  if(summary && sp && (sp.parlay2 || sp.parlay3)){
+  if(summary && sp && (sp.parlay2 || sp.parlay3 || sp.parlay4)){
     spCand = sp.candidateCount || 0;
     const genAt = sp.generatedAt || "";
     const legNote = sp.legNote || "";
@@ -3913,180 +4118,211 @@ function renderFD(){
 
 /* ================= 比分预测（独立源） ================= */
 /* 英文队名 → 竞彩中文名 映射（仅用于「比分预测」独立 Tab 汉化展示，不影响任何核心数据/模型） */
-const SP_TEAM_ZH = {
-  // 英超
-  "Arsenal FC":"阿森纳","Manchester United FC":"曼联","Aston Villa FC":"阿斯顿维拉",
-  "Brighton & Hove Albion FC":"布莱顿","Brentford FC":"布伦特福德","Burnley FC":"伯恩利",
-  "Chelsea FC":"切尔西","Fulham FC":"富勒姆","Ipswich Town FC":"伊普斯维奇",
-  "Leeds United FC":"利兹联","Tottenham Hotspur FC":"热刺","West Ham United FC":"西汉姆联",
-  "Wolverhampton Wanderers FC":"狼队","AFC Bournemouth":"伯恩茅斯",
-  // 西甲
-  "Athletic Club":"毕尔巴鄂竞技","Club Atlético de Madrid":"马德里竞技","Deportivo Alavés":"阿拉维斯",
-  "FC Barcelona":"巴塞罗那","Getafe CF":"赫塔费","RCD Espanyol de Barcelona":"西班牙人",
-  "Rayo Vallecano de Madrid":"巴列卡诺","Real Madrid CF":"皇家马德里","Villarreal CF":"比利亚雷亚尔",
-  "Málaga CF":"马拉加",
-  // 德甲
-  "1. FC Union Berlin":"柏林联合","1. FSV Mainz 05":"美因茨","Bayer 04 Leverkusen":"勒沃库森",
-  "Borussia Dortmund":"多特蒙德","Eintracht Frankfurt":"法兰克福","FC Augsburg":"奥格斯堡",
-  "FC Bayern München":"拜仁慕尼黑","RB Leipzig":"RB莱比锡","SV Werder Bremen":"云达不莱梅",
-  "TSG 1899 Hoffenheim":"霍芬海姆","VfB Stuttgart":"斯图加特",
-  // 德乙
-  "SC Paderborn 07":"帕德博恩","Hamburger SV":"汉堡","SV 07 Elversberg":"埃弗斯贝格",
-  // 意甲
-  "ACF Fiorentina":"佛罗伦萨","FC Internazionale Milano":"国际米兰","Frosinone Calcio":"弗罗西诺内",
-  "Genoa CFC":"热那亚","Parma Calcio 1913":"帕尔马","SSC Napoli":"那不勒斯",
-  // 法甲
-  "AS Monaco FC":"摩纳哥","Le Havre AC":"勒阿弗尔","Lille OSC":"里尔","Olympique Lyonnais":"里昂",
-  "Paris Saint-Germain FC":"巴黎圣日耳曼","Racing Club de Lens":"朗斯","Stade Brestois 29":"布雷斯特",
-  "Toulouse FC":"图卢兹","Angers SCO":"昂热",
-  // 法乙
-  "FC Lorient":"洛里昂","Paris FC":"巴黎FC","Le Mans FC":"勒芒",
-  // 荷甲
-  "AFC Ajax":"阿贾克斯","AZ":"阿尔克马尔","Feyenoord Rotterdam":"费耶诺德","FC Twente '65":"特温特",
-  "Fortuna Sittard":"福图纳锡塔德","Go Ahead Eagles":"前进之鹰","NEC":"奈梅亨",
-  "PSV":"埃因霍温","SC Heerenveen":"海伦芬","Sparta Rotterdam":"鹿特丹斯巴达",
-  // 葡超
-  "CD Santa Clara":"圣克拉拉","Casa Pia AC":"卡萨皮亚","FC Porto":"波尔图","GD Estoril Praia":"埃斯托里尔",
-  "Gil Vicente FC":"吉维森特","Moreirense FC":"莫雷拉人","Sporting Clube de Braga":"布拉加",
-  "Sporting Clube de Portugal":"葡萄牙体育","Académico de Viseu FC":"维塞乌学院",
-  // 巴甲
-  "Botafogo FR":"博塔弗戈","CA Mineiro":"米内罗竞技","CA Paranaense":"巴拉纳竞技","Chapecoense AF":"沙佩科恩斯",
-  "Clube do Remo":"雷莫","Coritiba FBC":"科里蒂巴","CR Flamengo":"弗拉门戈","CR Vasco da Gama":"瓦斯科达伽马",
-  "Cruzeiro EC":"克鲁塞罗","EC Bahia":"巴伊亚","EC Vitória":"维多利亚","Grêmio FBPA":"格雷米奥",
-  "Mirassol FC":"米拉索尔","RB Bragantino":"布拉甘蒂诺RB","SC Corinthians Paulista":"科林蒂安",
-  "SC Internacional":"国际","SE Palmeiras":"帕尔梅拉斯","Santos FC":"桑托斯","São Paulo FC":"圣保罗",
-  // 英冠及下级
-  "Birmingham City FC":"伯明翰","Blackburn Rovers FC":"布莱克本","Bolton Wanderers FC":"博尔顿",
-  "Bristol City FC":"布里斯托尔城","Cardiff City FC":"卡迪夫城","Charlton Athletic FC":"查尔顿",
-  "Derby County FC":"德比郡","Lincoln City FC":"林肯城","Middlesbrough FC":"米德尔斯堡","Millwall FC":"米尔沃尔",
-  "Norwich City FC":"诺维奇","Preston North End FC":"普雷斯顿","Queens Park Rangers FC":"女王公园巡游者",
-  "Sheffield United FC":"谢菲尔德联","Stoke City FC":"斯托克城","Sunderland AFC":"桑德兰",
-  "Swansea City AFC":"斯旺西","Watford FC":"沃特福德","West Bromwich Albion FC":"西布朗维奇","Wrexham AFC":"雷克瑟姆",
-  // WhoScored 简写别名（WhoScored 队名与 football-data 不同）
-  "West Ham":"西汉姆联","PSV Eindhoven":"埃因霍温","Malaga":"马拉加","Espanyol":"西班牙人",
-  "Werder Bremen":"云达不莱梅","Borussia Dortmund":"多特蒙德","Sporting CP":"葡萄牙体育",
-  "Braga":"布拉加","Moreirense":"莫雷拉人","Gil Vicente":"吉维森特","Santa Clara":"圣克拉拉",
-  "Casa Pia":"卡萨皮亚","Estoril":"埃斯托里尔","Lens":"朗斯","Lyon":"里昂","Brest":"布雷斯特",
-  "Le Havre":"勒阿弗尔","Galatasaray":"加拉塔萨雷","Kasimpasa":"卡斯帕萨","Fenerbahce":"费内巴切",
-  "Besiktas":"贝西克塔斯","Trabzonspor":"特拉布宗体育","SK Beveren":"贝弗伦","Lommel":"洛默尔",
-  "Ajax":"阿贾克斯","Feyenoord":"费耶诺德","Twente":"特温特","Heerenveen":"海伦芬",
-  "Sparta Rotterdam":"鹿特丹斯巴达","Fortuna Sittard":"福图纳锡塔德","Go Ahead Eagles":"前进之鹰",
-  "NEC Nijmegen":"奈梅亨","AZ Alkmaar":"阿尔克马尔","Bayern Munich":"拜仁慕尼黑","Bayern München":"拜仁慕尼黑",
-  "Bayer Leverkusen":"勒沃库森","RB Leipzig":"RB莱比锡","Eintracht Frankfurt":"法兰克福",
-  "Union Berlin":"柏林联合","Mainz 05":"美因茨","Mainz":"美因茨","VfB Stuttgart":"斯图加特",
-  "Hoffenheim":"霍芬海姆","Augsburg":"奥格斯堡","Werder Bremen":"云达不莱梅","Freiburg":"弗赖堡",
-  "Wolfsburg":"沃尔夫斯堡","Borussia M'gladbach":"门兴格拉德巴赫","Monaco":"摩纳哥","Lille":"里尔",
-  "Nice":"尼斯","Marseille":"马赛","Rennes":"雷恩","Toulouse":"图卢兹","Strasbourg":"斯特拉斯堡",
-  "Nantes":"南特","Auxerre":"欧塞尔","Metz":"梅斯","Le Mans":"勒芒","Lorient":"洛里昂","Angers":"昂热",
-  "Paris FC":"巴黎FC","Real Madrid":"皇家马德里","Barcelona":"巴塞罗那","Atletico Madrid":"马德里竞技",
-  "Athletic Bilbao":"毕尔巴鄂竞技","Villarreal":"比利亚雷亚尔","Rayo Vallecano":"巴列卡诺",
-  "Getafe":"赫塔费","Alaves":"阿拉维斯","Real Betis":"皇家贝蒂斯","Real Sociedad":"皇家社会",
-  "Sevilla":"塞维利亚","Valencia":"巴伦西亚","Girona":"赫罗纳","Celta Vigo":"塞尔塔",
-  "Osasuna":"奥萨苏纳","Mallorca":"马略卡","Espanyol":"西班牙人","Levante":"莱万特",
-  "Oviedo":"皇家奥维耶多","Elche":"埃尔切","Almeria":"阿尔梅里亚","Las Palmas":"拉斯帕尔马斯"
-};
+const SP_TEAM_ZH = __SP_TEAM_ZH_PLACEHOLDER__;
 /* 联赛中文名（历史记录兜底，正常已为中文） */
 const WS_LEAGUE_ZH = {"Premier League":"英超","Championship":"英冠","LaLiga":"西甲","Bundesliga":"德甲","Serie A":"意甲","Ligue 1":"法甲","Eredivisie":"荷甲","Liga Portugal":"葡超","Jupiler Pro League":"比甲","Super Lig":"土超","Allsvenskan":"瑞超","Eliteserien":"挪超","Brasileirao":"巴甲","MLS":"美职联"};
 
-function spZh(n){ return (n && SP_TEAM_ZH[n]) ? SP_TEAM_ZH[n] : (n || "?"); }
+/* 英文队名 → 中文：先精确查表，再剥离 FC/Calcio/成立年份等冗余 token 兜底
+   （与服务端 team_map.norm_team 规则对齐的常见情形，如 Parma Calcio 1913 → Parma） */
+function spZh(n){
+  if(!n) return "?";
+  if(SP_TEAM_ZH[n]) return SP_TEAM_ZH[n];
+  const t = String(n)
+    .replace(/\b(FC|CF|AC|AS|SC|SV|SK|NK|FK|Calcio|Club|Clube|Futebol|Football|Fotbal|Fotboll)\b/gi, "")
+    .replace(/\b(1[89]\d{2}|20[0-2]\d)\b/g, "")
+    .replace(/\s+/g, " ").trim();
+  return (t && SP_TEAM_ZH[t]) ? SP_TEAM_ZH[t] : n;
+}
 
-/* WhoScored 人工预测区块（主力内容）：日期选项 + 当日预测列表 + 竞彩编号醒目标记 + 赛后回溯 */
+/* ================= 比分预测 · WhoScored 区块（竞彩主干化，v1.7.23） =================
+   口径（用户需求）：只显示竞彩每天开出的比赛；当天竞彩赛程【全部列出】为主干；
+   WhoScored 有预测的对应挂上比分，无预测标「未推荐」并说明原因；赛后自动回填赛果。
+   关联键：竞彩编号（num）+ 日期 ±2 天。
+   ⚠️ 为什么必须带日期：竞彩编号每周循环（每周一都有「周一002」），只按编号直查会把
+   上周同号比赛误配到本周（曾出现「周一002 代格福什vs卡尔马 → 上周亚特兰大」错配），
+   日期过滤后编号在 ±2 天窗口内不可能重复，匹配才唯一。 */
+function wsJcCandidate(j, wsByNum){
+  const cands = wsByNum[j.num] || [];
+  if(!cands.length) return null;
+  const base = (j.kickoff || j.date || "").slice(0,10);
+  const scored = [];
+  cands.forEach(c=>{
+    let dd = 99;
+    try{
+      dd = Math.abs((Date.parse(c.date+"T00:00:00Z") - Date.parse(base+"T00:00:00Z")) / 86400000);
+    }catch(e){}
+    if(dd > 2) return;  // 编号每周循环，超出 ±2 天必为其他周的同号比赛，丢弃
+    // 队名一致仅作同级排序权重（翻译失败时不淘汰，避免误杀）
+    const teamOk = (spZh(c.home)===j.home && spZh(c.away)===j.away) ? 0 : 1;
+    scored.push({c:c, dd:dd, teamOk:teamOk});
+  });
+  if(!scored.length) return null;
+  scored.sort((a,b)=> (a.dd-b.dd) || (a.teamOk-b.teamOk));
+  return scored[0].c;
+}
+
+/* 联赛 → {n:场次数, p:有预测场次数}（WhoScored 的 league 字段入库时已译为中文，可与竞彩中文联赛名直接比对） */
+function wsLeagueStat(wsMs){
+  const g = {};
+  (wsMs||[]).forEach(m=>{
+    const lg = m.league || "";
+    if(!lg) return;
+    const s = g[lg] || (g[lg] = {n:0, p:0});
+    s.n++;
+    if(m.predH != null) s.p++;
+  });
+  return g;
+}
+
+/* 竞彩场次状态推断（无回填数据时展示） */
+function wsJcStatusText(j){
+  const st = j.status || "";
+  if(st && st !== "Selling"){
+    const m = {"Finished":"已结束","Ended":"已结束","Live":"进行中","InPlay":"进行中","Paused":"中场",
+               "Cancelled":"已取消","Postponed":"已延期","Suspended":"已暂停"};
+    return m[st] || st;
+  }
+  try{
+    const k = Date.parse((j.kickoff || "").replace(" ", "T") + "+08:00");
+    if(!isNaN(k)){
+      const diff = k - Date.now();
+      if(diff > 0) return "未开赛";
+      if(diff > -2.5*3600*1000) return "进行中";
+      return "已结束 · 赛果待回填";
+    }
+  }catch(e){}
+  return "";
+}
+
+/* WhoScored 人工预测区块（主力内容）：竞彩当日全部场次为主干 + 预测挂载 + 未推荐原因 + 赛后回填 */
 function renderWhoScored(){
   const ws = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? BUILT_WHOSCORED : {};
-  const ms = ws.matches || [];
+  const wsMs = ws.matches || [];
   const sum = $("#wsSummary");
   if(sum){
     const ov = (ws.reliable||{}).overall||{};
-    sum.innerHTML = `共 <b style="color:var(--text)">${ms.length}</b> 场 · 历史回测 <b style="color:var(--text)">${ov.n||0}</b> 场`
-      + `（精确比分命中 <b style="color:var(--text)">${ov.exactHit!=null?ov.exactHit+"%":"-"}</b>，方向命中 <b style="color:var(--text)">${ov.outcomeHit!=null?ov.outcomeHit+"%":"-"}</b>）`
-      + ` · 来源：${ws.source||"WhoScored"} · 更新 ${ws.updatedAt||"-"}`;
+    sum.innerHTML = `主干 = 当天竞彩开出的全部比赛；有预测挂比分，无预测标「未推荐」并注明原因，赛后自动回填赛果。`
+      + ` · 全源回测 <b style="color:var(--text)">${ov.n||0}</b> 场（精确比分命中 <b style="color:var(--text)">${ov.exactHit!=null?ov.exactHit+"%":"-"}</b>，方向命中 <b style="color:var(--text)">${ov.outcomeHit!=null?ov.outcomeHit+"%":"-"}</b>）`
+      + ` · 更新 ${ws.updatedAt||"-"}`;
   }
   const bar = $("#wsDateBar"), list = $("#wsList");
   if(!bar || !list) return;
-  const dl = ws.dateList || [];
-  if(!dl.length){
-    bar.innerHTML = `<div class="empty">暂无 WhoScored 预测数据（每日自动抓取）</div>`;
+  const jcAll = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
+  const wsByNum = {};
+  wsMs.forEach(m=>{ if(m.jcNum){ (wsByNum[m.jcNum] = wsByNum[m.jcNum] || []).push(m); } });
+  const lgStat = wsLeagueStat(wsMs);
+  // 日期选项 = 竞彩销售日（matches.json 即当天开售赛程）
+  const jcDates = Array.from(new Set(jcAll.map(m=>m.date).filter(Boolean))).sort().reverse();
+  if(!jcDates.length){
+    bar.innerHTML = `<div class="empty">暂无竞彩赛程数据（每日自动更新）</div>`;
     list.innerHTML = "";
   } else {
-    if(!state.wsDate || dl.indexOf(state.wsDate)<0){
-      // 默认选中"最近的下一个比赛日"（欧洲夜场按北京时间落在次日）
-      const bjToday = new Date(Date.now() + 8*3600*1000).toISOString().slice(0,10);
-      state.wsDate = dl.find(d=>d >= bjToday) || dl[0];
-    }
-    let bh = `<button class="sp-chip ${state.wsOnlyJc?"on":""}" data-act="jc">★只看竞彩</button>`
-      + `<button class="sp-chip ${state.wsOnlyHot?"on":""}" data-act="hot">🔥只看高可信</button>`;
-    dl.slice(0,14).forEach(d=>{
-      bh += `<button class="sp-chip ${state.wsDate===d?"on":""}" data-dt="${d}">${d}</button>`;
+    if(!state.wsJcDate || jcDates.indexOf(state.wsJcDate)<0) state.wsJcDate = jcDates[0];
+    let bh = `<button class="sp-chip ${state.wsOnlyHot?"on":""}" data-act="hot">🔥只看高可信</button>`;
+    jcDates.slice(0,14).forEach(d=>{
+      bh += `<button class="sp-chip ${state.wsJcDate===d?"on":""}" data-dt="${d}">${d.slice(5).replace("-","/")}</button>`;
     });
     bar.innerHTML = bh;
     bar.querySelectorAll(".sp-chip").forEach(b=>{
-      b.onclick = ()=>{ if(b.dataset.act==="jc"){ state.wsOnlyJc = !state.wsOnlyJc; }
-                        else if(b.dataset.act==="hot"){ state.wsOnlyHot = !state.wsOnlyHot; }
-                        else { state.wsDate = b.dataset.dt; } renderScorePred(); };
+      b.onclick = ()=>{ if(b.dataset.act==="hot"){ state.wsOnlyHot = !state.wsOnlyHot; }
+                        else { state.wsJcDate = b.dataset.dt; } renderScorePred(); };
     });
-    let view = ms.filter(m=>m.date===state.wsDate);
-    if(state.wsOnlyJc) view = view.filter(m=>spJcNum(m));
-    if(state.wsOnlyHot) view = view.filter(m=>wsIsHot(m));
-    const hotRank = m=> (wsIsHot(m)?1:0);
-    view = view.slice().sort((a,b)=>(spJcNum(b)?1:0)-(spJcNum(a)?1:0) || hotRank(b)-hotRank(a));
+    let view = jcAll.filter(m=>m.date===state.wsJcDate).map(j=>({j:j, wm:wsJcCandidate(j, wsByNum)}));
+    if(state.wsOnlyHot) view = view.filter(x=>x.wm && wsIsHot(x.wm));
+    view.sort((a,b)=> (a.j.time||"").localeCompare(b.j.time||""));
     if(!view.length){
-      list.innerHTML = `<div class="empty">该日期无${state.wsOnlyJc?"对应竞彩的":""}预测场次</div>`;
+      list.innerHTML = `<div class="empty">该日期竞彩无比赛${state.wsOnlyHot?"（或没有高可信预测）":""}</div>`;
     } else {
-      const jcN = view.filter(m=>spJcNum(m)).length;
-      const hotN = view.filter(m=>wsIsHot(m)).length;
-      let html = (jcN||hotN)? `<div class="ws-jc-tip">本日 ${jcN?`<b>${jcN}</b> 场对应竞彩赛程（已置顶）：`:``}${hotN?` 其中 <b>${hotN}</b> 场可信度较高 🔥`:``}</div>` : "";
-      view.forEach(m=>{
-        const jc = spJcNum(m);
-        const zhH = spZh(m.home), zhA = spZh(m.away);
-        const hasPred = m.predH!=null && m.predA!=null;
-        let res = "";
-        if(m.evaluated && m.actH!=null){
-          res = `<div class="ws-res"><span class="sp-dact">实际 ${m.actH}:${m.actA}</span>`
-            + `<span class="${m.exactHit?"good":"bad"}">${m.exactHit?"✓精确命中":"✗比分未中"}</span>`
-            + `<span class="${m.outcomeHit?"good":"bad"}">${m.outcomeHit?"方向✓":"方向✗"}</span></div>`;
+      const nPred = view.filter(x=>x.wm && x.wm.predH!=null).length;
+      const noPred = view.filter(x=>!(x.wm && x.wm.predH!=null));
+      // 未推荐原因归类：同联赛有推荐 → 疑似漏匹配（待核对）；否则 → 数据源未覆盖
+      const warnLgs = [], coverLgs = [];
+      noPred.forEach(x=>{
+        const s = lgStat[x.j.league];
+        if(s && s.p>0){ if(warnLgs.indexOf(x.j.league)<0) warnLgs.push(x.j.league); }
+        else { if(coverLgs.indexOf(x.j.league)<0) coverLgs.push(x.j.league); }
+      });
+      let html = `<div class="ws-jc-tip">本日竞彩 <b>${view.length}</b> 场 · 有预测 <b>${nPred}</b> 场 · 未推荐 <b>${noPred.length}</b> 场`
+        + (coverLgs.length ? `（${coverLgs.join("、")} 数据源暂无人工预测）` : ``)
+        + (warnLgs.length ? ` · <span class="ws-namewarn">⚠️ ${warnLgs.join("、")} 有同联赛推荐却未匹配，请人工核对</span>` : ``)
+        + `</div>`;
+      view.forEach(({j, wm})=>{
+        const hasPred = wm && wm.predH!=null;
+        const zhH = wm ? spZh(wm.home) : "", zhA = wm ? spZh(wm.away) : "";
+        // 队名核对：WhoScored 英文名译回中文后与竞彩官方名不一致 → 醒目提示人工核对
+        const nameMismatch = !!wm && (zhH!==j.home || zhA!==j.away);
+        let predBlock = "";
+        if(hasPred){
+          predBlock = `<div class="ws-scoreline">
+              <div><div class="sp-label">WhoScored 预测比分</div>
+                <div class="ws-pred">${wm.predH} <i>:</i> ${wm.predA}</div></div>
+              <div class="ws-metawrap"><div class="sp-label">${wm.league||j.league||""}</div>
+                <div class="ws-meta">北京时间 ${wm.bjTime||j.time||"-"}</div></div>
+            </div>
+            ${wsConfHtml(wm)}
+            ${(zhH!==wm.home||zhA!==wm.away)?`<div class="sp-enline">${wm.home||""} vs ${wm.away||""}</div>`:``}`;
+        } else {
+          const s = lgStat[j.league];
+          let reason, warn = false;
+          if(wm){
+            reason = `该场已收录但无人工预测${wm.evaluated?"（赛后赛果见下方）":""}`;
+          } else if(s && s.p>0){
+            reason = `该场暂无人工预测（同联赛共 ${s.p} 场有推荐，如认为应有预测请人工核对队名/日期）`;
+            warn = true;
+          } else if(s){
+            reason = `该联赛暂无人工预测（${s.n} 场 0 推荐）`;
+          } else {
+            reason = `数据源未覆盖该联赛`;
+          }
+          predBlock = `<div class="ws-nopred${warn?" warn":""}"><span class="ws-nopred-tag">未推荐</span>`
+            + `<span class="ws-nopred-why">${reason}</span></div>`;
         }
-        html += `<div class="sp-card ${jc?"ws-jc":""}">
-          <div class="sp-teams"><span class="sp-home">${zhH}</span><span class="sp-vs">vs</span><span class="sp-away">${zhA}</span>
-            ${jc?`<span class="ws-jcnum">竞彩 ${jc}</span>`:``}</div>
-          ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
-          <div class="ws-scoreline">
-            <div><div class="sp-label">WhoScored 预测比分</div>
-              <div class="ws-pred">${hasPred? (m.predH+" <i>:</i> "+m.predA) : "—"}</div></div>
-            <div class="ws-metawrap"><div class="sp-label">${m.league||m.leagueEn||""}</div>
-              <div class="ws-meta">北京时间 ${m.bjTime||"-"}</div></div>
-          </div>
-          ${wsConfHtml(m)}
+        // 赛后回填：WhoScored 评估出的实际比分 + 命中情况（无预测的场次只展示赛果）
+        let res = "";
+        if(wm && wm.evaluated && wm.actH!=null){
+          res = `<div class="ws-res"><span class="sp-dact">实际 ${wm.actH}:${wm.actA}</span>`
+            + (hasPred ? `<span class="${wm.exactHit?"good":"bad"}">${wm.exactHit?"✓精确命中":"✗比分未中"}</span>`
+              + `<span class="${wm.outcomeHit?"good":"bad"}">${wm.outcomeHit?"方向✓":"方向✗"}</span>` : ``)
+            + `</div>`;
+        } else {
+          const stt = wsJcStatusText(j);
+          if(stt) res = `<div class="ws-res"><span class="sp-dact" style="color:var(--weak)">${stt}</span></div>`;
+        }
+        html += `<div class="sp-card ws-jc ${(wm&&wm.evaluated)?"sp-fin":""}">
+          <div class="sp-teams"><span class="sp-home">${j.home}</span><span class="sp-vs">vs</span><span class="sp-away">${j.away}</span>
+            <span class="ws-jcnum">竞彩 ${j.num}</span></div>
+          <div class="sp-enline">${j.league||""} · 开球 ${j.time||""}${nameMismatch?` · <span class="ws-namewarn">⚠️队名待核对：${zhH} vs ${zhA}</span>`:``}</div>
+          ${predBlock}
           ${res}
         </div>`;
       });
       list.innerHTML = html;
     }
   }
-  /* 赛后回溯 */
+  /* 赛后回溯：只显示对应竞彩的场次（编号由服务端持久档案补挂，赛后自动纳入） */
   const hb = $("#wsHistBar"), hl = $("#wsHistList");
   if(hb && hl){
-    const hdl = ws.historyDateList || [];
-    const hist = ws.history || [];
-    if(!hdl.length){
-      hb.innerHTML = `<div class="empty">暂无完赛回溯（开球约 2 小时后自动回填赛果）</div>`;
+    const histJc = (ws.history || []).filter(r=>r.jcNum);
+    if(!histJc.length){
+      hb.innerHTML = `<div class="empty">暂无对应竞彩的赛后回溯（比赛完赛后自动补挂编号并纳入，约开球 2 小时后）</div>`;
       hl.innerHTML = "";
     } else {
+      const hdl = Array.from(new Set(histJc.map(r=>r.date))).sort().reverse();
       if(!state.wsHistDate || hdl.indexOf(state.wsHistDate)<0) state.wsHistDate = hdl[0];
       let hh = "";
-      hdl.slice(0,14).forEach(d=>{ hh += `<button class="sp-chip ${state.wsHistDate===d?"on":""}" data-dt="${d}">${d}</button>`; });
+      hdl.slice(0,14).forEach(d=>{ hh += `<button class="sp-chip ${state.wsHistDate===d?"on":""}" data-dt="${d}">${d.slice(5).replace("-","/")}</button>`; });
       hb.innerHTML = hh;
       hb.querySelectorAll(".sp-chip").forEach(b=>{ b.onclick=()=>{ state.wsHistDate=b.dataset.dt; renderScorePred(); }; });
-      const rows = hist.filter(r=>r.date===state.wsHistDate);
+      const rows = histJc.filter(r=>r.date===state.wsHistDate);
       if(!rows.length){ hl.innerHTML = `<div class="empty">该日期无记录</div>`; }
       else {
         let he=0, ho=0;
         rows.forEach(r=>{ if(r.exactHit) he++; if(r.outcomeHit) ho++; });
-        let x = `<div class="sp-date-sum">${state.wsHistDate} · 共 <b>${rows.length}</b> 场完赛 · 精确命中 <b>${he}</b>（${(he/rows.length*100).toFixed(0)}%）· 方向命中 <b>${ho}</b>（${(ho/rows.length*100).toFixed(0)}%）</div><div class="sp-date-grid">`;
+        let x = `<div class="sp-date-sum">${state.wsHistDate} · 对应竞彩 <b>${rows.length}</b> 场完赛 · 精确命中 <b>${he}</b>（${(he/rows.length*100).toFixed(0)}%）· 方向命中 <b>${ho}</b>（${(ho/rows.length*100).toFixed(0)}%）</div><div class="sp-date-grid">`;
         rows.forEach(r=>{
-          const jc = spJcNum(r);
           const zhH = spZh(r.home), zhA = spZh(r.away);
-          x += `<div class="sp-dcard ${jc?"ws-jc":""}">
-            <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}${jc?`<span class="ws-jcnum sm">竞彩 ${jc}</span>`:``}</div>
+          x += `<div class="sp-dcard ws-jc">
+            <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}<span class="ws-jcnum sm">竞彩 ${r.jcNum}</span></div>
             <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
             <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span><span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span><span class="sp-dlg">${r.league||""}</span></div>
           </div>`;
@@ -4184,54 +4420,77 @@ function wsConfHtml(m){
   </div>`;
 }
 
-/* UTC → 北京时间日期（竞彩赛程按北京日期编排；UTC 晚场属于次日，必须 +8h 归一） */
-function spBjDate(utc){
-  if(!utc) return "";
-  let s = utc;
-  if(!/Z$|[+-]\d{2}:?\d{2}$/.test(s)) s += "Z";
-  const t = Date.parse(s);
-  if(isNaN(t)) return (utc||"").slice(0,10);
-  return new Date(t + 8*3600*1000).toISOString().slice(0,10);
+/* 自建 Poisson 模型区的竞彩过滤：只保留与竞彩赛程（当天 + 历史档案）队名组合一致的场次。
+   主客顺序不敏感；翻译失败（spZh 返回英文）时保守隐藏——该区仅作交叉参考，
+   宁可少显也不错配（错配正是用户投诉「对应不上竞彩赛程」的痛点）。 */
+function spJcPairs(){
+  if(spJcPairs._cache) return spJcPairs._cache;
+  const s = new Set();
+  const add = (h, a)=>{ if(h && a){ s.add(h+"|"+a); s.add(a+"|"+h); } };
+  try{
+    ((typeof BUILT_DATA!=="undefined" && BUILT_DATA.matches) ? BUILT_DATA.matches : [])
+      .forEach(m=>add(m.home, m.away));
+    ((typeof BUILT_HISTORY!=="undefined" && BUILT_HISTORY.records) ? BUILT_HISTORY.records : [])
+      .forEach(r=>add(r.home, r.away));
+  }catch(e){}
+  spJcPairs._cache = s;
+  return s;
+}
+function spJcFilter(list){
+  const pairs = spJcPairs();
+  if(!pairs.size) return list || [];
+  return (list||[]).filter(m=>{
+    const h = spZh(m.home), a = spZh(m.away);
+    // 翻译成功（中文）才参与匹配；仍是英文说明映射缺失，无法可靠判定 → 隐藏
+    if(!h || !a || /[A-Za-z]/.test(h) || /[A-Za-z]/.test(a)) return false;
+    return pairs.has(h+"|"+a) || pairs.has(a+"|"+h);
+  });
 }
 
-/* 竞彩赛程编号对照：按「北京日期 + 中文队名」匹配竞彩赛程(BUILT_DATA)，仅作标签对照，不参与本 Tab 任何模型计算 */
-function spJcNum(m){
+/* 按队名组合反查竞彩编号（供自建模型区徽章用）：当天赛程优先 → 档案同日 → 档案最近。
+   date 可选（Poisson 回溯行带日期）；主客顺序不敏感。 */
+function spJcNumOf(m, date){
+  const h = spZh(m.home), a = spZh(m.away);
+  if(!h || !a || /[A-Za-z]/.test(h) || /[A-Za-z]/.test(a)) return null;
+  const same = (x, y)=> (x===h && y===a) || (x===a && y===h);
   try{
-    const bd = (typeof BUILT_DATA!=="undefined" && BUILT_DATA && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
-    if(!bd.length || !m) return null;
-    // 竞彩按"销售日"编排：凌晨开踢的比赛常挂在【前一天】场次号下（如周六03:30标"周五001"）
-    // 故同时用北京日期与前一天做容差匹配
-    const base = m.utcDate ? spBjDate(m.utcDate) : (m.date || "");
-    const cands = [base];
-    if(base){
-      const t = Date.parse(base + "T00:00:00Z");
-      if(!isNaN(t)) cands.push(new Date(t - 24*3600*1000).toISOString().slice(0,10));
+    const bd = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
+    for(const j of bd){ if(same(j.home, j.away)) return j.num || null; }
+    const hr = (typeof BUILT_HISTORY!=="undefined" && BUILT_HISTORY.records) ? BUILT_HISTORY.records : [];
+    if(date){
+      for(const r of hr){ if(r.date===date && same(r.home, r.away)) return r.num || null; }
+      // 同日无 → ±1 天容差（销售日与开球日可能差一天）
+      try{
+        const t = Date.parse(date+"T00:00:00Z");
+        for(const off of (-1, 1)){
+          const d = new Date(t + off*86400000).toISOString().slice(0,10);
+          for(const r of hr){ if(r.date===d && same(r.home, r.away)) return r.num || null; }
+        }
+      }catch(e){}
     }
-    const zhH = spZh(m.home), zhA = spZh(m.away);
-    for(const d of cands){
-      if(!d) continue;
-      for(const j of bd){
-        if(!j || (j.date||"")!==d) continue;
-        if(j.home===zhH && j.away===zhA) return j.num || null;
-        if(j.home===m.home && j.away===m.away) return j.num || null;
-      }
-    }
-  }catch(e){}
-  return null;
+    let best = null;
+    for(const r of hr){ if(same(r.home, r.away) && (!best || (r.date||"") > (best.date||""))) best = r; }
+    return best ? (best.num || null) : null;
+  }catch(e){ return null; }
 }
 
 function renderScorePred(){
   try{ renderWhoScored(); }catch(e){}
   const sp = BUILT_SCOREPRED || {matches:[], reliable:{}};
-  const ms = sp.matches || [];
+  const msAll = sp.matches || [];
   const rel = sp.reliable || {};
   const bdg = $("#spBdg");
   const wsAll = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? (BUILT_WHOSCORED.matches||[]) : [];
-  if(bdg){ bdg.textContent = wsAll.length || ms.length; }
+  if(bdg){ bdg.textContent = wsAll.length || msAll.length; }
+  /* 只显示竞彩开出的比赛（用户要求）：按「竞彩队名组合」过滤——
+     队名集合取自当天赛程 + 竞彩历史档案（BUILT_HISTORY），翻译用 spZh，
+     主客顺序不敏感（home|away 与 away|home 都命中） */
+  const ms = spJcFilter(msAll);
   const summary = $("#spSummary");
   if(summary){
     const acc = sp.accuracy || {};
-    summary.innerHTML = `共 <b style="color:var(--text)">${ms.length}</b> 场待预测/赛果 · 大模型回溯 <b style="color:var(--text)">${acc.n||0}</b> 场`
+    summary.innerHTML = `仅显示对应竞彩的比赛：<b style="color:var(--text)">${ms.length}</b> 场（全源 ${msAll.length} 场，非竞彩场次已隐藏）`
+      + ` · 大模型回溯 <b style="color:var(--text)">${acc.n||0}</b> 场`
       + `（精确比分命中 <b style="color:var(--text)">${acc.exactHit!=null?acc.exactHit+"%":"-"}</b>，方向命中 <b style="color:var(--text)">${acc.outcomeHit!=null?acc.outcomeHit+"%":"-"}</b>，平均误差 <b style="color:var(--text)">${acc.mae!=null?acc.mae:"-"}</b> 球）`
       + ` · 独立源：${sp.source||"-"} · 更新 ${sp.updatedAt||"-"}`;
   }
@@ -4287,7 +4546,7 @@ function renderScorePred(){
   const list = $("#spList");
   if(!list) return;
   if(!ms.length){
-    list.innerHTML = `<div class="empty">当前窗口暂无赛事数据${sp.note?("（"+sp.note+"）"):""}</div>`;
+    list.innerHTML = `<div class="empty">当日竞彩赛程中暂无自建 Poisson 模型覆盖的比赛${sp.note?("（"+sp.note+"）"):""}；非竞彩场次已按要求隐藏</div>`;
     return;
   }
   const filt = state.spFilter || "all";
@@ -4325,7 +4584,7 @@ function renderScorePred(){
       }
       const statusCls = finished ? "sp-fin" : (live ? "sp-live" : "sp-sched");
       const zhH = spZh(m.home), zhA = spZh(m.away);
-      const jcNum = spJcNum(m);
+      const jcNum = spJcNumOf(m, m.date);
       html += `<div class="sp-card ${statusCls}">
         <div class="sp-teams"><span class="sp-home">${zhH}</span><span class="sp-vs">vs</span><span class="sp-away">${zhA}</span>${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
         ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
@@ -4360,9 +4619,9 @@ function renderScorePred(){
     dateBar.querySelectorAll(".sp-chip").forEach(b=>{
       b.onclick=()=>{ state.spDate=b.dataset.dt; renderScorePred(); };
     });
-    const rows = (sp.dateIndex||{})[state.spDate] || [];
+    const rows = spJcFilter((sp.dateIndex||{})[state.spDate] || []);
     if(!rows.length){
-      dateListBox.innerHTML = `<div class="empty">该日期无记录</div>`;
+      dateListBox.innerHTML = `<div class="empty">该日期无对应竞彩的记录（非竞彩场次已隐藏）</div>`;
       return;
     }
     let hitE=0, hitO=0;
@@ -4371,8 +4630,9 @@ function renderScorePred(){
       + ` · 方向命中 <b>${hitO}</b> 场（${(hitO/rows.length*100).toFixed(1)}%）</div><div class="sp-date-grid">`;
     rows.forEach(r=>{
       const zhH = spZh(r.home), zhA = spZh(r.away);
-      lh += `<div class="sp-dcard">
-        <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}</div>
+      const jcN = spJcNumOf(r, state.spDate);
+      lh += `<div class="sp-dcard${jcN?" ws-jc":""}">
+        <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}${jcN?`<span class="ws-jcnum sm">竞彩 ${jcN}</span>`:``}</div>
         <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
         <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span>`
         + `<span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span>`

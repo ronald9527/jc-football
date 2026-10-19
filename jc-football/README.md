@@ -1,5 +1,7 @@
 # 竞彩足球数据分析台 - 源码包
 
+> ⚠️ **用户偏好（最高优先级）**：凡需用户操作的步骤，一律给**直达链接**（URL 直达目标动作），不给选项列表、不让用户做选择——用户只操作最后一步。详见《竞彩足球数据分析台-接管文档.md》开头「用户偏好」章节。
+
 纯静态 HTML 数据看板：Python 抓取竞彩官方 + 500彩票网 + 92玩球数据 → 注入模板生成 index.html → 部署到 Cloudflare Pages。
 
 线上地址：https://jc-football-1eo.pages.dev/
@@ -36,6 +38,10 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 | `fetch_daily.py` | 主抓取：竞彩赛程/赔率/支持率、12组规则引擎、球队近况、H2H、港澳赔率、稳胆串关、赛果回填 |
 | `fetch_expert.py` | 高手推荐抓取（92玩球，仅 16:00–21:00 运行） |
 | `fetch_hkmo.py` | 港澳赔率抓取（500彩票网：香港马会 + 澳门彩票） |
+| `fetch_scores.py` | 比分预测（数据驱动）：泊松/ELO 模型输出每场预测比分与胜平负概率 |
+| `fetch_whoscored.py` | 比分预测（WhoScored 人工预测）：抓 whoscored.com/previews 官方人工预测比分，带永久缓存 + 赛果回填 + 历史累积（按比赛 id 去重）；竞彩编号双源匹配（matches.json 当前销售日 + history.json 持久档案） |
+| `team_map.py` | 英中队名权威映射（单一真相源），供 WhoScored 预测匹配竞彩编号（en_to_zh 三级查链 + norm_team 归一化 + _ZH_ALIAS 中文异写归一） |
+| `ensure_history.py` | 历史库防丢守卫：本地历史缺失/过少时从 Pages 云端副本拉回 |
 | `build_panel.py` | 读取各 JSON → 注入 `template.html` 占位符 → 生成 `index.html` |
 | `deploy_cf.py` | 用 Wrangler CLI 部署 `dist/` 到 Cloudflare Pages（缺凭据时降级为生成离线包，退出码仍为 0） |
 | `check_and_fix.py` | 6 维度全站检查与自动修复 |
@@ -64,11 +70,23 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 
 > 🕷️ **抓取防反爬节流（重要）**：每天 30 次运行对 sporttery.cn / 500.com 的慢变抓取（赔率历史、球队近况、港澳赔率、竞彩页）原来约 **1470 次/天**，易触发限频/封 IP 导致数据退化。已加统一 `webcache.py` TTL 缓存层：赔率历史/港澳赔率 3 小时、球队近况/竞彩页 6 小时刷新一次，压到约 **250–300 次/天（省 ~80%）**。冷/热两次压测验证：冷缓存 49 MISS、热缓存 49 HIT / 0 MISS。沙箱重置丢失缓存时自动降级为全抓（与改造前一致），不报错、不影响核心数据。
 
+> 🛡️ **竞彩 WAF 概率性拦截与重试（2026-10-15 修复，改抓取代码前必读）**：`webapi.sporttery.cn` 启用了腾讯云 WAF，对单次请求**概率性**返回 403 拦截页、567 竞彩反爬页、或 `200` 但空数据（`success:true` 却无 `matchInfoList`）——10 连采仅 3 次通过，**重试即可通过**（8 次内几乎必过，被拦响应本身 <1s，重试成本低）。此前 `fetch()` 无重试，一次被拦就抛异常 → `run_daily.sh` 按容错设计恢复旧数据、跳过更新（exit 0）→ **定时任务每天"成功"但数据永远停在旧批次**（页面提示「数据已过期」）。现 `fetch()`/`fetch_html()` 统一带退避重试（403/567/网络异常/空响应都重试，`must_contain` 参数识别空响应）；`fetch_odds_history` 失败时改抛异常，避免空结果被 TTL 缓存毒化 3 小时。**教训：对竞彩接口，「一次失败即跳过」的容错设计会把概率性拦截放大成永久停更——关键接口必须重试。**
+
+> 🔐 **自举包凭据泄露事故（2026-10-15 修复，改打包规则前必读）**：`deploy_cf.py` 每次部署会把整套代码打包成 `code-bundle.tar.gz` 上传到**公开** Pages 供定时任务沙箱自举下载。原排除规则只挡 `.last_` 前缀和持久数据，**漏了 `cf_config.json`**——定时任务 prompt 第 2 步会在沙箱重写该文件（真实 Cloudflare token），随后部署打包 → **token 随公开包泄露约 17 分钟**（12:04–12:21）。修复：打包新增 `_is_secret()` 排除所有 `*_config.json`（`.example` 除外），已重新部署覆盖线上包并验证无敏感文件。**✅ 轮换已完成（2026-10-19 14:15 用户 Dashboard Roll；2026-10-20 复查补漏）**：旧 token 已作废，新 token 同步三处——① 本地 `cf_config.json`；② 定时任务「竞彩数据自动更新」（id 11572893）与「验证自动部署-一次性」（id 11826523）prompt 内的兜底凭证 heredoc；③ 新 token 实测部署成功（DEPLOY_OK）。⚠️ 2026-10-20 复查发现 11572893 的 heredoc **实际仍写着旧 token**（此前「已同步」的操作未真正落库——活动任务会用它覆盖代码包新凭证，下次定时部署必失败），已重新更新并用 get 接口验证持久化。新 token 请勿再写入任何会进公开包的文件。**教训：token/配置同步后必须重新读取验证落库，不能凭操作记录认为已完成。****教训：凡上传到公开域的自举/交付包，排除规则必须按「默认拒绝、显式白名单」思维设计——新增任何配置文件时先问「它能公开吗」。**
+
+> 🔁 **自举包指纹排除导致版本无限膨胀（2026-10-15 修复，改打包规则前必读）**：自举包原先把 `.last_template.sha`（模板指纹）也当 `.last_` 前缀一律排除，而定时沙箱可能残留上一轮的旧指纹文件 → 新包的 template.html 与残留旧指纹**必然不匹配** → `template_autobump` 每轮都误判「模板变了但 VERSION 未手升」→ **版本号每 30 分钟自动 +1 无限膨胀**（实测 13:00 轮 v1.7.14→v1.7.15，页面内容其实毫无变化，只是 VERSION 字符串）。修复：打包规则精细化——`.last_deploy.ts`/`.last_deploy.sha`（部署节流状态）仍然排除（跨环境共享会让沙箱误判「刚部署过」而跳过更新），但 **`.last_template.sha` 必须随包传播**，保证模板与指纹同源、比对可信。修复后实测：连续两轮部署版本稳定不跳。**教训：指纹类文件要与被指纹化的对象同包传播；「按前缀一刀切排除」会把一致性保障文件当成垃圾扫掉——排除规则要逐文件论证「它在新环境里应该是旧值还是不存在」。**
+
+> 🌙 **凌晨误报「数据已过期」（2026-10-18 修复，v1.7.16）**：定时批次为每日 09:00–21:00 每 30 分钟，凌晨 0–9 点本就不跑。但页面新鲜度判定只按「数据日期 == 今天」，导致凌晨打开时昨晚 23:01 的晚间批次被误报为红色「数据已过期（非今日批次），说明云端抓取任务未执行」——数据其实是最新的，纯属误报。修复：`renderUpdateBar` 与 `renderDataFreshness` 增加夜间宽容规则——凌晨 0–9 点打开且数据为昨晚 20:00 后批次时，降级为 warn「夜间无新赛事批次（昨晚 HH:MM 仍为最新），09:00 首轮自动更新」。**教训： staleness 判定要考虑业务批次的运行窗口，不能只做日期比对。**
+
+> 📦 **定时部署丢失 APK（2026-10-18 修复，v1.7.17）**：`deploy_cf.py` 从 `/workspace/竞彩足球数据分析台-v{版本}.apk` 找安装包上线，但定时任务沙箱解包 `code-bundle.tar.gz` 后只有 `jc-football/` 代码目录，**`/workspace` 顶层没有 APK** → 每轮定时部署都「未找到 APK，跳过」→ Pages 全量替换后线上 `.apk` 全部退化成 HTML fallback。且 `_headers` 给 `/jc-football*.apk` 强制了 `Content-Type: application/vnd.android.package-archive`，fallback 的 HTML 也被伪装成 APK  content-type，形成**「假 200」**：下载得到 3.9MB HTML，手机装不了。修复：APK 显式加入自举包（arc 为顶层文件名，解包后正好落在 `deploy_cf.py` 寻找位置），每轮定时部署都带着 APK 上线。**教训：①「本地有但目标环境没有」的部署输入，必须随自举包传播；② 对不存在的资源强制 content-type 会把 404 fallback 伪装成正常响应，排查时不能只信状态码和 content-type，要校验文件签名（APK/ZIP 应为 `PK\x03\x04`）。**
+
 > **数据源隔离原则（接管规范）**：`fetch_odds_bsd.py`（The Odds API）、`fetch_football_data.py`（football-data.org）、
 > `fetch_bsd.py`（API-Football）、`fetch_expert.py`（92玩球/懂球帝高手荐单）均为**独立展示/核对源**。它们只产出各自的 JSON
 > （`odds_bsd.json` / `fd_data.json` / `bsd_data.json` / `expert_recommendations.json`），**绝不写回核心 `matches.json`、
 > 绝不写入 `history.json`（模型训练数据）、绝不改动 `smart_model.json`**。模型只读取竞彩官方 `history.json`，
 > 与上述独立源零耦合。`selftest.py` 第 7 类专门校验此隔离（已确认 `matches.json` 不含 `odds_bsd`/`bsd` 字段）。
+
+> 🧩 **改了 template.html 忘了重跑 build_panel.py（2026-10-19 修复，v1.7.20）**：改完 `template.html` 后直接跑 `deploy_cf.py`——部署的 `index.html` 是上一次 `build_panel.py` 的产物，`template_autobump` 只对 `template.html` 算指纹并升 `version.json` 的 pageVersion，**页面内容还是旧的**：线上 version.json 显示 v1.7.20 但新文案根本没上线（名实不符，还误判了一次「APK 版本回退」）。修复：重跑 `python3 build_panel.py` 生成 index.html 后再部署，线上 grep 验证文案存在 + playwright 渲染验证。**教训：部署链路的真相源是 `index.html`（由 build_panel 从 template.html 生成），自动升版机制只保护版本号不保护内容——改模板后必须「build_panel → deploy」两步走，部署后必须校验页面内容而非只看 version.json。**
 
 ### 配置与模板
 - `template.html` — 页面模板（CSS/JS 全内联，无外部 CDN；已内置 PWA manifest）
@@ -79,7 +97,8 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 
 ### 数据文件（自动生成）
 `matches.json`（当日比赛，**核心数据集，不含任何独立源字段**）、`history.json`（历史战绩，永久累计，**模型训练数据**）、`parlay_history.json`（串关）、`hkmo_history.json` / `hkmo_cache.json`（港澳赔率）、`strongweak_history.json`、`web_cache.json`（本地 TTL 抓取缓存，**不上传**、不上库）、`check_report.json`；
-独立源文件：`odds_bsd.json`（The Odds API 国际赔率）、`fd_data.json`（football-data.org 官方赛果）、`expert_recommendations.json` / `expert_stats.json` / `expert_history.json`（高手荐单）
+独立源文件：`odds_bsd.json`（The Odds API 国际赔率）、`fd_data.json`（football-data.org 官方赛果）、`expert_recommendations.json` / `expert_stats.json` / `expert_history.json`（高手荐单）、`whoscored_data.json`（WhoScored 人工预测，页面「比分预测」Tab 的 WhoScored 区块数据源）；
+WhoScored 累积三件套（**部署到 Pages 防沙箱重置丢失**）：`whoscored_history.json`（预测×赛果配对的回测记录，按比赛 id 去重）、`whoscored_preview_cache.json`（预测比分永久缓存——预测必须在开球前抓，已开球的 preview 页只返回硬封锁）、`whoscored_recent.json`（近期比赛元数据，补回已滚出 /previews 列表的当天场次）
 
 ## 数据自检
 
@@ -118,6 +137,38 @@ python3 version_sync.py --check    # 不一致退出码非 0（CI 调用）
 
 > 竞彩实测单场抽水 11.4%，串关按场数放大：2串1 21.6%、3串1 30.6%、4串1 38.5%。
 > 因此多数时候三档 EV 均为负、建议仓位 0%——这是市场的真实数学期望，不是模型看不看好。
+> 展示策略（少而精）：有正期望档时只展正期望档；三档全负时只出一张「今日无正期望串关机会」
+> 总结卡，负期望详情折叠可展开——不推一堆负期望组合让人亏钱。
+
+## 比分预测（Tab）
+
+两个独立预测源，共用「比分预测」Tab；**均只显示竞彩每天开出的比赛**（v1.7.23 起，非竞彩场次隐藏）：
+
+1. **数据驱动**（`fetch_scores.py`）：泊松/ELO 模型，输出每场预测比分与胜平负概率；
+2. **WhoScored 人工预测**（`fetch_whoscored.py`）：抓取 whoscored.com/previews 的官方人工
+   预测比分，含历史日期回溯（按比赛 id 去重累积「预测×赛果」回测记录）。
+
+**竞彩主干化口径（v1.7.23，改代码前必读）**：
+
+- 列表主干 = `matches.json` 当天竞彩开售赛程的全部场次；每场按「**竞彩编号 + 日期±2天**」关联
+  WhoScored 预测（`wsJcCandidate`）。⚠️ **竞彩编号每周循环**（每周一都有「周一002」），
+  只按编号直查会把上周同号比赛误配到本周——日期±2 天过滤后编号在窗口内不可能重复，匹配才唯一；
+- 服务端 `attach_jc_numbers` 双数据源匹配：`matches.json`（当前销售日）+ `history.json`
+  （持久档案 549 条，比赛滚出销售窗口后仍能补挂编号）；历史累积记录带 `jcNum`，
+  赛后回溯区只显示对应竞彩的场次；
+- 无预测的场次标「未推荐」并三分类原因：同联赛有推荐（疑似漏匹配，⚠️ 待人工核对）/
+  该联赛 N 场 0 推荐 / 数据源未覆盖；
+- 自建 Poisson 模型区同样按竞彩队名组合过滤（`spJcPairs`/`spJcFilter`/`spJcNumOf`），
+  主客顺序不敏感，翻译失败保守隐藏。
+
+WhoScored 反爬对策（实测结论，改代码前必读）：
+
+- **软挑战 ≠ 封锁**：真实完整页（100–600KB）顶部注入 verify-client.js，**数据完整可直接解析**，
+  曾因误判为挑战页拒绝，导致全链路解析失败（历史 records 为空、回溯按钮 0 个）；
+- **硬封锁**：几百字节质询页 / Cloudflare 403「Attention Required」页，无数据；
+- **IP 级限流持续数小时**：秒级退避等不来解封 → 改为快速失败（2 次尝试），下轮调度自然重试；
+- **预测必须在开球前抓**：已开球/完赛的 preview 页只返回硬封锁 → 抓取阶段按「今天/明天优先」
+  排序 + 跳过已开球超 10 分钟的场次，预测进永久缓存，赛果走 livescores / live 页 title 回填。
 
 ## App（PWA）
 
@@ -160,6 +211,25 @@ cd /root/.codebuddy/skills/automation-task-manager
 > **App 自动同步（原 v1.4，现统一编号 v1.6.0）**：网页与数据改动会自动同步到 App，无需重装、无需任何操作；
 > 只有 Android 原生代码（`MainActivity.java`）改动才需要重新打 APK：
 > `cd /workspace/apk-build && ./build_apk.sh`
+
+### App 整页同步原理与 308 修复（v1.7.11）
+
+同步链路：App 启动/前台/每 3 分钟拉 `version.json` → `pageVersion` 变大（verNewer）或
+`version.json` 的 `updateTime` 比本地 `matches.json` 新（dataNewer）→ 下载线上整页覆盖缓存。
+
+> **历史 bug（v1.7.11 修复）**：Cloudflare Pages 对 `/index.html` 返回 **308 永久重定向**到 `/`，
+> 而 Java `HttpURLConnection` 默认只跟随 301/302、**不跟随 307/308** → 整页同步自 App 安装起
+> 就永远失败（`version.json`/`matches.json` 无后缀名不跳转，所以只有数据同步是好的、
+> 页面结构同步是坏的，用户侧症状：「网页版有的，App 版没有」）。
+> 修复：`httpGet`/`httpGetRange` 改为手动跟随 301/302/303/307/308（最多 4 跳，相对地址自动解析），
+> 页面 URL 同时改用根路径 `/`（少一跳）。**旧 APK 用户需重装一次修复版，之后永久自动同步。**
+
+### 部署侧版本自动提升防护
+
+`deploy_cf.py` 以 `template.html` 的 SHA256 为指纹（`.last_template.sha` 跟踪，已被代码包
+排除规则挡在自举包外）：模板变了但 `const VERSION` 忘了手升时，自动升 patch 位并写回
+`template.html`（唯一真相源）+ 本次部署的 index.html；`version.json` 同时输出 `pageBuild`
+指纹字段，便于核对线上到底是哪个构建。
 
 ## 注意
 

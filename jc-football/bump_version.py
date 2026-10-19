@@ -186,6 +186,19 @@ def main():
     write_text(TEMPLATE, text)
     print("✓ 已写入 template.html：VERSION=%s，更新日志新增 1 条" % new)
 
+    # 刷新模板哈希跟踪：本次已手动升版，deploy_cf.py 的自动升版防护
+    # （模板 SHA 与 .last_template.sha 不同就补升 patch）不应重复触发，
+    # 否则会出现「note 升一次、部署再自动升一次」的双跳。
+    try:
+        import hashlib
+        with open(TEMPLATE, "rb") as f:
+            tpl_hash = hashlib.sha256(f.read()).hexdigest()
+        with open(os.path.join(HERE, ".last_template.sha"), "w", encoding="utf-8") as f:
+            f.write(tpl_hash)
+        print("✓ 已刷新 .last_template.sha（部署时不会重复自动升版）")
+    except Exception as e:
+        print("! 刷新 .last_template.sha 失败（不影响本次升版）：%s" % e)
+
     # 版本同步：网页版本是唯一真相源，APK 版本号必须跟随，
     # 否则会出现「网页 v1.2.2 / App v1.5」这种用户无法判断新旧的分叉。
     try:

@@ -439,11 +439,11 @@
      "胜平": 4.5,
      "负胜": 2.2
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 3,
-     "away": 1
+     "home": 1,
+     "away": 2
     }
    },
    {
@@ -1175,8 +1175,8 @@
  },
  "2026-10-11": {
   "date": "2026-10-11",
-  "generatedAt": "2026-10-11 12:24:30",
-  "count": 28,
+  "generatedAt": "2026-10-11 14:40:40",
+  "count": 26,
   "matches": [
    {
     "num": "周日004",
@@ -1200,11 +1200,40 @@
      "负胜": 4.9,
      "胜负": 2.1
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 2,
-     "away": 0
+     "home": 3,
+     "away": 1
+    }
+   },
+   {
+    "num": "周日028",
+    "home": "圣路易斯城",
+    "away": "洛杉矶银河",
+    "league": "美职",
+    "kickoff": "2026-10-12 07:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 32.9,
+    "recommend2": "负负",
+    "confidence2": 19.3,
+    "probDist": {
+     "胜胜": 32.9,
+     "负负": 19.3,
+     "平胜": 13.0,
+     "平平": 9.0,
+     "胜平": 7.5,
+     "平负": 6.0,
+     "负平": 5.3,
+     "负胜": 4.9,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 6,
+     "away": 2
     }
    },
    {
@@ -1229,69 +1258,11 @@
      "负胜": 4.7,
      "胜负": 2.1
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
     "fullScore": {
-     "home": 0,
-     "away": 0
-    }
-   },
-   {
-    "num": "周日001",
-    "home": "光州FC",
-    "away": "蔚山现代",
-    "league": "韩职",
-    "kickoff": "2026-10-11 13:00",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 32.4,
-    "recommend2": "胜胜",
-    "confidence2": 18.6,
-    "probDist": {
-     "负负": 32.4,
-     "胜胜": 18.6,
-     "平负": 10.3,
-     "平胜": 9.9,
-     "平平": 9.5,
-     "负平": 7.4,
-     "胜平": 5.1,
-     "胜负": 4.8,
-     "负胜": 2.1
-    },
-    "actualHalfFull": "?d",
-    "hit": null,
-    "fullScore": {
-     "home": 0,
-     "away": 0
-    }
-   },
-   {
-    "num": "周日028",
-    "home": "圣路易斯城",
-    "away": "洛杉矶银河",
-    "league": "美职",
-    "kickoff": "2026-10-12 07:00",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 32.3,
-    "recommend2": "负负",
-    "confidence2": 19.7,
-    "probDist": {
-     "胜胜": 32.3,
-     "负负": 19.7,
-     "平胜": 13.1,
-     "平平": 9.1,
-     "胜平": 7.4,
-     "平负": 6.2,
-     "负平": 5.4,
-     "负胜": 4.8,
-     "胜负": 2.1
-    },
-    "actualHalfFull": "?a",
-    "hit": null,
-    "fullScore": {
-     "home": 2,
-     "away": 3
+     "home": 5,
+     "away": 2
     }
    },
    {
@@ -1316,11 +1287,11 @@
      "负胜": 4.7,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
     "fullScore": {
-     "home": 3,
-     "away": 1
+     "home": 1,
+     "away": 0
     }
    },
    {
@@ -1345,8 +1316,8 @@
      "负胜": 4.7,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
      "home": 2,
      "away": 1
@@ -1374,8 +1345,8 @@
      "胜负": 4.6,
      "负胜": 2.0
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "胜平",
+    "hit": false,
     "fullScore": {
      "home": 1,
      "away": 1
@@ -1403,11 +1374,11 @@
      "负胜": 4.6,
      "胜负": 2.0
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
     "fullScore": {
-     "home": 0,
-     "away": 3
+     "home": 3,
+     "away": 2
     }
    },
    {
@@ -1432,10 +1403,10 @@
      "负胜": 4.5,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
     "fullScore": {
-     "home": 2,
+     "home": 3,
      "away": 1
     }
    },
@@ -1447,25 +1418,25 @@
     "kickoff": "2026-10-11 15:00",
     "recommend": "胜胜",
     "recommendKey": "hh",
-    "confidence": 30.7,
+    "confidence": 30.4,
     "recommend2": "负负",
-    "confidence2": 20.0,
+    "confidence2": 20.1,
     "probDist": {
-     "胜胜": 30.7,
-     "负负": 20.0,
-     "平胜": 13.7,
-     "平平": 9.6,
+     "胜胜": 30.4,
+     "负负": 20.1,
+     "平胜": 13.8,
+     "平平": 9.8,
      "胜平": 7.1,
-     "平负": 6.8,
+     "平负": 6.9,
      "负平": 5.4,
      "负胜": 4.6,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
      "home": 1,
-     "away": 0
+     "away": 2
     }
    },
    {
@@ -1476,53 +1447,24 @@
     "kickoff": "2026-10-12 00:00",
     "recommend": "负负",
     "recommendKey": "aa",
-    "confidence": 29.7,
+    "confidence": 29.3,
     "recommend2": "胜胜",
-    "confidence2": 19.9,
+    "confidence2": 20.2,
     "probDist": {
-     "负负": 29.7,
-     "胜胜": 19.9,
-     "平胜": 11.1,
-     "平负": 10.5,
+     "负负": 29.3,
+     "胜胜": 20.2,
+     "平胜": 11.2,
+     "平负": 10.4,
      "平平": 10.1,
      "负平": 6.9,
      "胜平": 5.4,
      "胜负": 4.5,
-     "负胜": 1.9
+     "负胜": 2.0
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
      "home": 1,
-     "away": 1
-    }
-   },
-   {
-    "num": "周日009",
-    "home": "兹沃勒",
-    "away": "坎布尔",
-    "league": "荷甲",
-    "kickoff": "2026-10-11 20:30",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 29.1,
-    "recommend2": "负负",
-    "confidence2": 21.7,
-    "probDist": {
-     "胜胜": 29.1,
-     "负负": 21.7,
-     "平胜": 13.1,
-     "平平": 9.5,
-     "平负": 7.1,
-     "胜平": 6.9,
-     "负平": 5.8,
-     "负胜": 4.5,
-     "胜负": 2.3
-    },
-    "actualHalfFull": "?h",
-    "hit": null,
-    "fullScore": {
-     "home": 2,
      "away": 1
     }
    },
@@ -1534,25 +1476,25 @@
     "kickoff": "2026-10-12 02:45",
     "recommend": "负负",
     "recommendKey": "aa",
-    "confidence": 28.0,
+    "confidence": 28.4,
     "recommend2": "胜胜",
     "confidence2": 21.6,
     "probDist": {
-     "负负": 28.0,
+     "负负": 28.4,
      "胜胜": 21.6,
-     "平胜": 11.4,
-     "平平": 10.0,
+     "平胜": 11.2,
+     "平平": 9.9,
      "平负": 9.9,
      "负平": 6.7,
      "胜平": 5.7,
      "胜负": 4.4,
      "负胜": 2.3
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 3,
-     "away": 1
+     "home": 0,
+     "away": 2
     }
    },
    {
@@ -1577,11 +1519,40 @@
      "负胜": 3.8,
      "胜负": 2.9
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": false,
     "fullScore": {
      "home": 2,
      "away": 0
+    }
+   },
+   {
+    "num": "周日009",
+    "home": "兹沃勒",
+    "away": "坎布尔",
+    "league": "荷甲",
+    "kickoff": "2026-10-11 20:30",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 27.5,
+    "recommend2": "负负",
+    "confidence2": 22.9,
+    "probDist": {
+     "胜胜": 27.5,
+     "负负": 22.9,
+     "平胜": 13.0,
+     "平平": 9.7,
+     "平负": 7.6,
+     "胜平": 6.6,
+     "负平": 6.0,
+     "负胜": 4.3,
+     "胜负": 2.6
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 1
     }
    },
    {
@@ -1606,8 +1577,8 @@
      "负胜": 4.3,
      "胜负": 2.6
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
      "home": 2,
      "away": 1
@@ -1635,40 +1606,11 @@
      "胜负": 4.1,
      "负胜": 2.2
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "负负",
+    "hit": true,
     "fullScore": {
-     "home": 2,
-     "away": 0
-    }
-   },
-   {
-    "num": "周日011",
-    "home": "赫尔城",
-    "away": "埃弗顿",
-    "league": "英超",
-    "kickoff": "2026-10-11 21:00",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 26.2,
-    "recommend2": "胜胜",
-    "confidence2": 20.9,
-    "probDist": {
-     "负负": 26.2,
-     "胜胜": 20.9,
-     "平胜": 12.7,
-     "平平": 11.1,
-     "平负": 10.9,
-     "负平": 6.3,
-     "胜平": 5.5,
-     "胜负": 4.1,
-     "负胜": 2.3
-    },
-    "actualHalfFull": "?a",
-    "hit": null,
-    "fullScore": {
-     "home": 0,
-     "away": 1
+     "home": 1,
+     "away": 2
     }
    },
    {
@@ -1679,54 +1621,54 @@
     "kickoff": "2026-10-12 01:15",
     "recommend": "负负",
     "recommendKey": "aa",
-    "confidence": 25.7,
+    "confidence": 26.1,
     "recommend2": "胜胜",
-    "confidence2": 25.3,
+    "confidence2": 24.9,
     "probDist": {
-     "负负": 25.7,
-     "胜胜": 25.3,
-     "平胜": 11.3,
+     "负负": 26.1,
+     "胜胜": 24.9,
+     "平胜": 11.2,
      "平平": 9.3,
      "平负": 8.6,
-     "胜平": 6.5,
-     "负平": 6.3,
+     "胜平": 6.4,
+     "负平": 6.4,
      "胜负": 4.1,
      "负胜": 3.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "负平",
+    "hit": false,
     "fullScore": {
-     "home": 3,
-     "away": 1
+     "home": 2,
+     "away": 2
     }
    },
    {
-    "num": "周日012",
-    "home": "水晶宫",
-    "away": "诺丁汉森林",
+    "num": "周日011",
+    "home": "赫尔城",
+    "away": "埃弗顿",
     "league": "英超",
     "kickoff": "2026-10-11 21:00",
     "recommend": "负负",
     "recommendKey": "aa",
     "confidence": 25.5,
     "recommend2": "胜胜",
-    "confidence2": 22.0,
+    "confidence2": 21.4,
     "probDist": {
      "负负": 25.5,
-     "胜胜": 22.0,
-     "平胜": 13.7,
-     "平平": 10.9,
-     "平负": 9.6,
-     "负平": 6.4,
-     "胜平": 5.5,
-     "负胜": 3.5,
-     "胜负": 3.0
+     "胜胜": 21.4,
+     "平胜": 13.0,
+     "平平": 11.2,
+     "平负": 10.9,
+     "负平": 6.1,
+     "胜平": 5.6,
+     "胜负": 4.0,
+     "负胜": 2.4
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
-     "home": 5,
-     "away": 3
+     "home": 2,
+     "away": 2
     }
    },
    {
@@ -1751,11 +1693,11 @@
      "胜负": 4.1,
      "负胜": 2.8
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 3,
-     "away": 0
+     "home": 0,
+     "away": 3
     }
    },
    {
@@ -1780,11 +1722,11 @@
      "负胜": 4.0,
      "胜负": 2.4
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 1,
-     "away": 2
+     "home": 2,
+     "away": 1
     }
    },
    {
@@ -1809,11 +1751,11 @@
      "负胜": 3.7,
      "胜负": 3.0
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
-     "home": 1,
-     "away": 2
+     "home": 0,
+     "away": 0
     }
    },
    {
@@ -1838,11 +1780,40 @@
      "负胜": 4.0,
      "胜负": 2.7
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 2
+    }
+   },
+   {
+    "num": "周日012",
+    "home": "水晶宫",
+    "away": "诺丁汉森林",
+    "league": "英超",
+    "kickoff": "2026-10-11 21:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.1,
+    "recommend2": "胜胜",
+    "confidence2": 22.0,
+    "probDist": {
+     "负负": 25.1,
+     "胜胜": 22.0,
+     "平胜": 13.9,
+     "平平": 11.1,
+     "平负": 9.6,
+     "负平": 6.3,
+     "胜平": 5.5,
+     "负胜": 3.5,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
     "fullScore": {
      "home": 3,
-     "away": 0
+     "away": 1
     }
    },
    {
@@ -1867,11 +1838,11 @@
      "负胜": 4.0,
      "胜负": 2.8
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
      "home": 2,
-     "away": 0
+     "away": 1
     }
    },
    {
@@ -1896,11 +1867,11 @@
      "胜负": 3.8,
      "负胜": 2.9
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "负平",
+    "hit": false,
     "fullScore": {
-     "home": 0,
-     "away": 0
+     "home": 1,
+     "away": 1
     }
    },
    {
@@ -1925,11 +1896,11 @@
      "负胜": 3.9,
      "胜负": 2.4
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
      "home": 1,
-     "away": 2
+     "away": 0
     }
    },
    {
@@ -1940,54 +1911,2075 @@
     "kickoff": "2026-10-11 20:00",
     "recommend": "胜胜",
     "recommendKey": "hh",
-    "confidence": 24.1,
+    "confidence": 23.7,
+    "recommend2": "负负",
+    "confidence2": 22.8,
+    "probDist": {
+     "胜胜": 23.7,
+     "负负": 22.8,
+     "平胜": 13.8,
+     "平平": 11.4,
+     "平负": 10.3,
+     "胜平": 6.0,
+     "负平": 5.6,
+     "胜负": 3.7,
+     "负胜": 2.8
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 0
+    }
+   }
+  ]
+ },
+ "2026-10-12": {
+  "date": "2026-10-12",
+  "generatedAt": "2026-10-12 23:30:40",
+  "count": 10,
+  "matches": [
+   {
+    "num": "周一002",
+    "home": "亚特兰大",
+    "away": "威尼斯",
+    "league": "意甲",
+    "kickoff": "2026-10-13 00:30",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 33.7,
+    "recommend2": "负负",
+    "confidence2": 17.5,
+    "probDist": {
+     "胜胜": 33.7,
+     "负负": 17.5,
+     "平胜": 14.0,
+     "平平": 9.4,
+     "胜平": 7.6,
+     "平负": 5.9,
+     "负平": 4.9,
+     "负胜": 4.9,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 3,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一003",
+    "home": "马尔默",
+    "away": "卡尔马",
+    "league": "瑞超",
+    "kickoff": "2026-10-13 01:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 31.7,
+    "recommend2": "负负",
+    "confidence2": 18.7,
+    "probDist": {
+     "胜胜": 31.7,
+     "负负": 18.7,
+     "平胜": 14.2,
+     "平平": 9.8,
+     "胜平": 7.3,
+     "平负": 6.6,
+     "负平": 5.1,
+     "负胜": 4.7,
+     "胜负": 2.0
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周一001",
+    "home": "迪拜连接",
+    "away": "吉达国民",
+    "league": "亚冠精英",
+    "kickoff": "2026-10-13 00:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 29.2,
+    "recommend2": "胜胜",
+    "confidence2": 21.2,
+    "probDist": {
+     "负负": 29.2,
+     "胜胜": 21.2,
+     "平胜": 10.9,
+     "平负": 9.9,
+     "平平": 9.8,
+     "负平": 6.9,
+     "胜平": 5.6,
+     "胜负": 4.5,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一010",
+    "home": "法马利康",
+    "away": "阿尔维卡",
+    "league": "葡超",
+    "kickoff": "2026-10-13 03:15",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.6,
+    "recommend2": "负负",
+    "confidence2": 18.8,
+    "probDist": {
+     "胜胜": 28.6,
+     "负负": 18.8,
+     "平胜": 15.7,
+     "平平": 11.1,
+     "平负": 7.9,
+     "胜平": 6.7,
+     "负平": 5.1,
+     "负胜": 4.3,
+     "胜负": 1.9
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 4
+    }
+   },
+   {
+    "num": "周一007",
+    "home": "考文垂",
+    "away": "纽卡斯尔联",
+    "league": "英超",
+    "kickoff": "2026-10-13 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 26.8,
+    "recommend2": "胜胜",
+    "confidence2": 22.7,
+    "probDist": {
+     "负负": 26.8,
+     "胜胜": 22.7,
+     "平胜": 11.6,
+     "平平": 10.0,
+     "平负": 9.7,
+     "负平": 6.4,
+     "胜平": 5.9,
+     "胜负": 4.2,
+     "负胜": 2.6
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 4,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一008",
+    "home": "莱万特",
+    "away": "塞维利亚",
+    "league": "西甲",
+    "kickoff": "2026-10-13 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 24.9,
+    "recommend2": "负负",
+    "confidence2": 21.3,
+    "probDist": {
+     "胜胜": 24.9,
+     "负负": 21.3,
+     "平胜": 14.4,
+     "平平": 11.5,
+     "平负": 10.0,
+     "胜平": 6.2,
+     "负平": 5.3,
+     "胜负": 3.5,
+     "负胜": 3.0
+    },
+    "actualHalfFull": "负平",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一004",
+    "home": "奥斯陆KFUM",
+    "away": "瓦勒伦加",
+    "league": "挪超",
+    "kickoff": "2026-10-13 01:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.8,
+    "recommend2": "胜胜",
+    "confidence2": 24.6,
+    "probDist": {
+     "负负": 24.8,
+     "胜胜": 24.6,
+     "平胜": 12.1,
+     "平平": 10.1,
+     "平负": 9.2,
+     "胜平": 6.3,
+     "负平": 6.1,
+     "胜负": 3.9,
+     "负胜": 2.9
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一009",
+    "home": "科里蒂巴",
+    "away": "博塔弗戈",
+    "league": "巴甲",
+    "kickoff": "2026-10-13 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 24.4,
     "recommend2": "负负",
     "confidence2": 22.4,
     "probDist": {
-     "胜胜": 24.1,
+     "胜胜": 24.4,
      "负负": 22.4,
-     "平胜": 13.9,
-     "平平": 11.4,
-     "平负": 10.2,
+     "平胜": 13.8,
+     "平平": 11.2,
+     "平负": 10.0,
      "胜平": 6.1,
-     "负平": 5.5,
+     "负平": 5.6,
      "胜负": 3.6,
+     "负胜": 2.9
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一006",
+    "home": "第戎",
+    "away": "梅斯",
+    "league": "法乙",
+    "kickoff": "2026-10-13 02:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 23.9,
+    "recommend2": "负负",
+    "confidence2": 23.5,
+    "probDist": {
+     "胜胜": 23.9,
+     "负负": 23.5,
+     "平胜": 13.2,
+     "平平": 10.9,
+     "平负": 10.0,
+     "胜平": 6.1,
+     "负平": 5.8,
+     "胜负": 3.8,
      "负胜": 2.8
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 4,
+     "away": 2
+    }
+   },
+   {
+    "num": "周一005",
+    "home": "都灵",
+    "away": "乌迪内斯",
+    "league": "意甲",
+    "kickoff": "2026-10-13 02:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 23.0,
+    "recommend2": "负负",
+    "confidence2": 21.3,
+    "probDist": {
+     "胜胜": 23.0,
+     "负负": 21.3,
+     "平胜": 16.2,
+     "平平": 12.3,
+     "平负": 10.0,
+     "胜平": 5.6,
+     "负平": 5.5,
+     "负胜": 3.7,
+     "胜负": 2.4
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   }
+  ]
+ },
+ "2026-10-13": {
+  "date": "2026-10-13",
+  "generatedAt": "2026-10-13 23:30:43",
+  "count": 9,
+  "matches": [
+   {
+    "num": "周二005",
+    "home": "国际米兰",
+    "away": "布鲁日",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 37.7,
+    "recommend2": "负负",
+    "confidence2": 17.0,
+    "probDist": {
+     "胜胜": 37.7,
+     "负负": 17.0,
+     "平胜": 12.2,
+     "胜平": 8.2,
+     "平平": 7.7,
+     "负胜": 5.8,
+     "负平": 5.0,
+     "平负": 4.1,
+     "胜负": 2.3
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 4
+    }
+   },
+   {
+    "num": "周二006",
+    "home": "阿森纳",
+    "away": "里尔",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 37.5,
+    "recommend2": "负负",
+    "confidence2": 16.3,
+    "probDist": {
+     "胜胜": 37.5,
+     "负负": 16.3,
+     "平胜": 13.0,
+     "胜平": 8.1,
+     "平平": 8.1,
+     "负胜": 5.7,
+     "负平": 4.8,
+     "平负": 4.2,
+     "胜负": 2.3
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 0
+    }
+   },
+   {
+    "num": "周二010",
+    "home": "加拉塔萨雷",
+    "away": "巴塞罗那",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 37.1,
+    "recommend2": "胜胜",
+    "confidence2": 18.5,
+    "probDist": {
+     "负负": 37.1,
+     "胜胜": 18.5,
+     "平负": 8.6,
+     "负平": 8.2,
+     "平平": 7.3,
+     "平胜": 6.9,
+     "胜负": 5.9,
+     "胜平": 5.4,
+     "负胜": 2.3
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 4
+    }
+   },
+   {
+    "num": "周二009",
+    "home": "莱比锡红牛",
+    "away": "PSV埃因霍温",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 34.1,
+    "recommend2": "负负",
+    "confidence2": 19.5,
+    "probDist": {
+     "胜胜": 34.1,
+     "负负": 19.5,
+     "平胜": 12.2,
+     "平平": 8.3,
+     "胜平": 7.8,
+     "平负": 5.5,
+     "负平": 5.4,
+     "负胜": 5.1,
+     "胜负": 2.2
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周二008",
+    "home": "维京",
+    "away": "拜仁慕尼黑",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 29.5,
+    "recommend2": "负负",
+    "confidence2": 21.6,
+    "probDist": {
+     "胜胜": 29.5,
+     "负负": 21.6,
+     "平胜": 11.6,
+     "平平": 9.3,
+     "平负": 8.2,
+     "胜平": 7.4,
+     "负平": 5.4,
+     "胜负": 4.2,
+     "负胜": 2.9
+    },
+    "actualHalfFull": "胜平",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 3
+    }
+   },
+   {
+    "num": "周二011",
+    "home": "马德里竞技",
+    "away": "曼彻斯特联",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.5,
+    "recommend2": "负负",
+    "confidence2": 21.0,
+    "probDist": {
+     "胜胜": 28.5,
+     "负负": 21.0,
+     "平胜": 14.0,
+     "平平": 10.1,
+     "平负": 7.5,
+     "胜平": 6.7,
+     "负平": 5.6,
+     "负胜": 4.4,
+     "胜负": 2.2
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 2,
+     "away": 0
+    }
+   },
+   {
+    "num": "周二004",
+    "home": "朗斯",
+    "away": "里斯本竞技",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 26.7,
+    "recommend2": "胜胜",
+    "confidence2": 22.2,
+    "probDist": {
+     "负负": 26.7,
+     "胜胜": 22.2,
+     "平胜": 12.7,
+     "平平": 10.3,
+     "平负": 9.1,
+     "负平": 6.6,
+     "胜平": 5.6,
+     "负胜": 3.5,
+     "胜负": 3.2
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 0,
+     "away": 2
+    }
+   },
+   {
+    "num": "周二007",
+    "home": "比利亚雷亚尔",
+    "away": "那不勒斯",
+    "league": "欧冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 26.2,
+    "recommend2": "负负",
+    "confidence2": 21.9,
+    "probDist": {
+     "胜胜": 26.2,
+     "负负": 21.9,
+     "平胜": 14.3,
+     "平平": 10.7,
+     "平负": 8.3,
+     "胜平": 6.3,
+     "负平": 5.7,
+     "负胜": 4.1,
+     "胜负": 2.4
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 3,
+     "away": 1
+    }
+   },
+   {
+    "num": "周二012",
+    "home": "斯托克城",
+    "away": "米德尔斯堡",
+    "league": "英冠",
+    "kickoff": "2026-10-14 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 26.2,
+    "recommend2": "胜胜",
+    "confidence2": 21.9,
+    "probDist": {
+     "负负": 26.2,
+     "胜胜": 21.9,
+     "平胜": 12.3,
+     "平平": 10.7,
+     "平负": 10.3,
+     "负平": 6.3,
+     "胜平": 5.7,
+     "胜负": 4.1,
+     "负胜": 2.4
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 3
+    }
+   }
+  ]
+ },
+ "2026-10-14": {
+  "date": "2026-10-14",
+  "generatedAt": "2026-10-14 23:30:41",
+  "count": 10,
+  "matches": [
+   {
+    "num": "周三006",
+    "home": "LASK林茨",
+    "away": "利物浦",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 36.3,
+    "recommend2": "胜胜",
+    "confidence2": 16.5,
+    "probDist": {
+     "负负": 36.3,
+     "胜胜": 16.5,
+     "平负": 10.1,
+     "平平": 8.6,
+     "平胜": 8.3,
+     "负平": 8.0,
+     "胜负": 5.1,
+     "胜平": 4.7,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 3,
+     "away": 6
+    }
+   },
+   {
+    "num": "周三012",
+    "home": "阿斯顿维拉",
+    "away": "费内巴切",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 32.0,
+    "recommend2": "负负",
+    "confidence2": 18.6,
+    "probDist": {
+     "胜胜": 32.0,
+     "负负": 18.6,
+     "平胜": 14.0,
+     "平平": 9.6,
+     "胜平": 7.3,
+     "平负": 6.4,
+     "负平": 5.1,
+     "负胜": 4.7,
+     "胜负": 2.0
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 6,
+     "away": 0
+    }
+   },
+   {
+    "num": "周三008",
+    "home": "罗马",
+    "away": "皇家马德里",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 29.3,
+    "recommend2": "胜胜",
+    "confidence2": 21.9,
+    "probDist": {
+     "负负": 29.3,
+     "胜胜": 21.9,
+     "平胜": 10.5,
+     "平负": 9.3,
+     "平平": 9.3,
+     "负平": 6.9,
+     "胜平": 5.8,
+     "胜负": 4.5,
+     "负胜": 2.3
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 4
+    }
+   },
+   {
+    "num": "周三010",
+    "home": "皇家贝蒂斯",
+    "away": "波尔图",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.1,
+    "recommend2": "负负",
+    "confidence2": 21.0,
+    "probDist": {
+     "胜胜": 28.1,
+     "负负": 21.0,
+     "平胜": 14.1,
+     "平平": 10.3,
+     "平负": 7.7,
+     "胜平": 6.7,
+     "负平": 5.6,
+     "负胜": 4.3,
+     "胜负": 2.2
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 2
+    }
+   },
+   {
+    "num": "周三011",
+    "home": "曼彻斯特城",
+    "away": "巴黎圣日尔曼",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.1,
+    "recommend2": "负负",
+    "confidence2": 22.7,
+    "probDist": {
+     "胜胜": 28.1,
+     "负负": 22.7,
+     "平胜": 12.8,
+     "平平": 9.5,
+     "平负": 7.3,
+     "胜平": 6.7,
+     "负平": 5.9,
+     "负胜": 4.4,
+     "胜负": 2.5
+    },
+    "actualHalfFull": "负负",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 4
+    }
+   },
+   {
+    "num": "周三009",
+    "home": "博德闪耀",
+    "away": "多特蒙德",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 27.1,
+    "recommend2": "胜胜",
+    "confidence2": 24.3,
+    "probDist": {
+     "负负": 27.1,
+     "胜胜": 24.3,
+     "平胜": 10.8,
+     "平平": 9.1,
+     "平负": 8.6,
+     "负平": 6.6,
+     "胜平": 6.3,
+     "胜负": 4.3,
+     "负胜": 2.8
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周三005",
+    "home": "费耶诺德",
+    "away": "科莫",
+    "league": "欧冠",
+    "kickoff": "2026-10-15 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 27.0,
+    "recommend2": "胜胜",
+    "confidence2": 23.3,
+    "probDist": {
+     "负负": 27.0,
+     "胜胜": 23.3,
+     "平胜": 11.3,
+     "平平": 9.7,
+     "平负": 9.3,
+     "负平": 6.5,
+     "胜平": 6.0,
+     "胜负": 4.3,
+     "负胜": 2.6
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 2
+    }
+   },
+   {
+    "num": "周三014",
+    "home": "圣路易斯城",
+    "away": "温哥华白帽",
+    "league": "美职",
+    "kickoff": "2026-10-15 08:30",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 26.2,
+    "recommend2": "负负",
+    "confidence2": 24.0,
+    "probDist": {
+     "胜胜": 26.2,
+     "负负": 24.0,
+     "平胜": 12.7,
+     "平平": 9.7,
+     "平负": 7.8,
+     "胜平": 6.4,
+     "负平": 6.2,
+     "负胜": 4.2,
+     "胜负": 2.8
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 0
+    }
+   },
+   {
+    "num": "周三007",
+    "home": "诺维奇",
+    "away": "南安普敦",
+    "league": "英冠",
+    "kickoff": "2026-10-15 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.1,
+    "recommend2": "胜胜",
+    "confidence2": 23.7,
+    "probDist": {
+     "负负": 25.1,
+     "胜胜": 23.7,
+     "平胜": 13.1,
+     "平平": 10.3,
+     "平负": 8.8,
+     "负平": 6.3,
+     "胜平": 5.9,
+     "负胜": 3.8,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
      "home": 0,
      "away": 1
     }
    },
    {
-    "num": "周日002",
-    "home": "磐城FC",
-    "away": "秋田蓝色闪电",
-    "league": "日乙",
-    "kickoff": "2026-10-11 14:00",
+    "num": "周三013",
+    "home": "弗鲁米嫩塞",
+    "away": "帕尔梅拉斯",
+    "league": "解放者杯",
+    "kickoff": "2026-10-15 08:30",
     "recommend": "胜胜",
     "recommendKey": "hh",
-    "confidence": 23.5,
+    "confidence": 23.3,
     "recommend2": "负负",
+    "confidence2": 19.6,
+    "probDist": {
+     "胜胜": 23.3,
+     "负负": 19.6,
+     "平胜": 16.2,
+     "平平": 12.9,
+     "平负": 11.3,
+     "胜平": 5.8,
+     "负平": 4.9,
+     "胜负": 3.2,
+     "负胜": 2.7
+    },
+    "actualHalfFull": "负负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 2
+    }
+   }
+  ]
+ },
+ "2026-10-15": {
+  "date": "2026-10-15",
+  "generatedAt": "2026-10-15 23:31:13",
+  "count": 13,
+  "matches": [
+   {
+    "num": "周四012",
+    "home": "本菲卡",
+    "away": "凯尔特人",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 38.4,
+    "recommend2": "负负",
+    "confidence2": 16.7,
+    "probDist": {
+     "胜胜": 38.4,
+     "负负": 16.7,
+     "平胜": 12.1,
+     "胜平": 8.3,
+     "平平": 7.5,
+     "负胜": 5.8,
+     "负平": 4.9,
+     "平负": 4.0,
+     "胜负": 2.3
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 4,
+     "away": 1
+    }
+   },
+   {
+    "num": "周四002",
+    "home": "托林斯",
+    "away": "桑德兰",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 36.2,
+    "recommend2": "胜胜",
+    "confidence2": 17.1,
+    "probDist": {
+     "负负": 36.2,
+     "胜胜": 17.1,
+     "平负": 10.0,
+     "平平": 8.3,
+     "负平": 7.9,
+     "平胜": 7.7,
+     "胜负": 5.6,
+     "胜平": 5.0,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "胜负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 2
+    }
+   },
+   {
+    "num": "周四003",
+    "home": "波兹南莱赫",
+    "away": "勒沃库森",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 34.5,
+    "recommend2": "胜胜",
+    "confidence2": 18.6,
+    "probDist": {
+     "负负": 34.5,
+     "胜胜": 18.6,
+     "平负": 9.4,
+     "平胜": 8.6,
+     "平平": 8.5,
+     "负平": 7.8,
+     "胜平": 5.2,
+     "胜负": 5.1,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 0,
+     "away": 4
+    }
+   },
+   {
+    "num": "周四005",
+    "home": "萨尔茨堡",
+    "away": "AC米兰",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 29.2,
+    "recommend2": "胜胜",
+    "confidence2": 20.8,
+    "probDist": {
+     "负负": 29.2,
+     "胜胜": 20.8,
+     "平胜": 11.0,
+     "平负": 10.1,
+     "平平": 9.9,
+     "负平": 6.9,
+     "胜平": 5.6,
+     "胜负": 4.5,
+     "负胜": 2.1
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 0,
+     "away": 4
+    }
+   },
+   {
+    "num": "周四009",
+    "home": "霍芬海姆",
+    "away": "贝西克塔斯",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.6,
+    "recommend2": "负负",
+    "confidence2": 22.1,
+    "probDist": {
+     "胜胜": 28.6,
+     "负负": 22.1,
+     "平胜": 13.0,
+     "平平": 9.5,
+     "平负": 7.2,
+     "胜平": 6.8,
+     "负平": 5.8,
+     "负胜": 4.5,
+     "胜负": 2.4
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 3
+    }
+   },
+   {
+    "num": "周四011",
+    "home": "伯恩茅斯",
+    "away": "格拉茨风暴",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 27.9,
+    "recommend2": "胜胜",
+    "confidence2": 21.4,
+    "probDist": {
+     "负负": 27.9,
+     "胜胜": 21.4,
+     "平胜": 12.6,
+     "平平": 10.1,
+     "平负": 8.9,
+     "负平": 7.0,
+     "胜平": 5.4,
+     "负胜": 3.8,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 0
+    }
+   },
+   {
+    "num": "周四004",
+    "home": "圣吉尔联合",
+    "away": "皇家社会",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 26.3,
+    "recommend2": "胜胜",
     "confidence2": 22.9,
     "probDist": {
-     "胜胜": 23.5,
-     "负负": 22.9,
-     "平胜": 14.8,
-     "平平": 11.4,
-     "平负": 9.3,
-     "负平": 5.9,
-     "胜平": 5.8,
-     "负胜": 3.8,
+     "负负": 26.3,
+     "胜胜": 22.9,
+     "平胜": 12.7,
+     "平平": 10.2,
+     "平负": 8.9,
+     "负平": 6.6,
+     "胜平": 5.7,
+     "负胜": 3.6,
+     "胜负": 3.2
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 1
+    }
+   },
+   {
+    "num": "周四001",
+    "home": "里昂",
+    "away": "水晶宫",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.9,
+    "recommend2": "胜胜",
+    "confidence2": 22.9,
+    "probDist": {
+     "负负": 25.9,
+     "胜胜": 22.9,
+     "平胜": 12.9,
+     "平平": 10.3,
+     "平负": 8.9,
+     "负平": 6.5,
+     "胜平": 5.7,
+     "负胜": 3.7,
+     "胜负": 3.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 2
+    }
+   },
+   {
+    "num": "周四008",
+    "home": "维戈塞尔塔",
+    "away": "尤文图斯",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.5,
+    "recommend2": "胜胜",
+    "confidence2": 21.4,
+    "probDist": {
+     "负负": 25.5,
+     "胜胜": 21.4,
+     "平胜": 13.0,
+     "平平": 11.2,
+     "平负": 10.9,
+     "负平": 6.1,
+     "胜平": 5.6,
+     "胜负": 4.0,
+     "负胜": 2.4
+    },
+    "actualHalfFull": "胜负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 2
+    }
+   },
+   {
+    "num": "周四010",
+    "home": "马赛",
+    "away": "奥林匹亚科斯",
+    "league": "欧罗巴",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 25.3,
+    "recommend2": "负负",
+    "confidence2": 23.3,
+    "probDist": {
+     "胜胜": 25.3,
+     "负负": 23.3,
+     "平胜": 13.7,
+     "平平": 10.4,
+     "平负": 8.4,
+     "胜平": 6.2,
+     "负平": 6.0,
+     "负胜": 4.0,
      "胜负": 2.7
+    },
+    "actualHalfFull": "负负",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 1
+    }
+   },
+   {
+    "num": "周四014",
+    "home": "拉普拉塔大学生",
+    "away": "弗拉门戈",
+    "league": "解放者杯",
+    "kickoff": "2026-10-16 08:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.8,
+    "recommend2": "胜胜",
+    "confidence2": 19.4,
+    "probDist": {
+     "负负": 24.8,
+     "胜胜": 19.4,
+     "平胜": 14.1,
+     "平平": 12.4,
+     "平负": 12.3,
+     "负平": 5.9,
+     "胜平": 5.1,
+     "胜负": 3.9,
+     "负胜": 2.1
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 0
+    }
+   },
+   {
+    "num": "周四006",
+    "home": "克拉约瓦大学",
+    "away": "赫塔费",
+    "league": "欧协联",
+    "kickoff": "2026-10-16 00:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 24.2,
+    "recommend2": "负负",
+    "confidence2": 20.9,
+    "probDist": {
+     "胜胜": 24.2,
+     "负负": 20.9,
+     "平胜": 14.9,
+     "平平": 11.9,
+     "平负": 10.5,
+     "胜平": 6.1,
+     "负平": 5.2,
+     "胜负": 3.4,
+     "负胜": 2.9
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 1
+    }
+   },
+   {
+    "num": "周四013",
+    "home": "哥本哈根",
+    "away": "布拉加",
+    "league": "欧协联",
+    "kickoff": "2026-10-16 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 23.3,
+    "recommend2": "胜胜",
+    "confidence2": 22.8,
+    "probDist": {
+     "负负": 23.3,
+     "胜胜": 22.8,
+     "平胜": 14.8,
+     "平平": 11.5,
+     "平负": 9.6,
+     "负平": 5.9,
+     "胜平": 5.6,
+     "负胜": 3.7,
+     "胜负": 2.7
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 3,
+     "away": 0
+    }
+   }
+  ]
+ },
+ "2026-10-16": {
+  "date": "2026-10-16",
+  "generatedAt": "2026-10-16 23:31:05",
+  "count": 10,
+  "matches": [
+   {
+    "num": "周五003",
+    "home": "布鲁马波卡纳",
+    "away": "佐加顿斯",
+    "league": "瑞超",
+    "kickoff": "2026-10-17 01:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 34.7,
+    "recommend2": "胜胜",
+    "confidence2": 17.6,
+    "probDist": {
+     "负负": 34.7,
+     "胜胜": 17.6,
+     "平负": 10.0,
+     "平平": 8.9,
+     "平胜": 8.9,
+     "负平": 7.8,
+     "胜负": 5.0,
+     "胜平": 5.0,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 0,
+     "away": 2
+    }
+   },
+   {
+    "num": "周五004",
+    "home": "海伦芬",
+    "away": "SBV精英",
+    "league": "荷甲",
+    "kickoff": "2026-10-17 02:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 33.6,
+    "recommend2": "负负",
+    "confidence2": 18.9,
+    "probDist": {
+     "胜胜": 33.6,
+     "负负": 18.9,
+     "平胜": 13.0,
+     "平平": 8.8,
+     "胜平": 7.7,
+     "平负": 5.8,
+     "负平": 5.2,
+     "负胜": 5.0,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 4,
+     "away": 0
+    }
+   },
+   {
+    "num": "周五005",
+    "home": "登博思",
+    "away": "奥斯",
+    "league": "荷乙",
+    "kickoff": "2026-10-17 02:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 32.9,
+    "recommend2": "负负",
+    "confidence2": 19.3,
+    "probDist": {
+     "胜胜": 32.9,
+     "负负": 19.3,
+     "平胜": 13.0,
+     "平平": 9.0,
+     "胜平": 7.5,
+     "平负": 6.0,
+     "负平": 5.3,
+     "负胜": 4.9,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": true,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周五002",
+    "home": "科特布斯",
+    "away": "纽伦堡",
+    "league": "德乙",
+    "kickoff": "2026-10-17 00:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 31.5,
+    "recommend2": "胜胜",
+    "confidence2": 21.2,
+    "probDist": {
+     "负负": 31.5,
+     "胜胜": 21.2,
+     "平胜": 9.6,
+     "平负": 9.1,
+     "平平": 8.8,
+     "负平": 7.4,
+     "胜平": 5.7,
+     "胜负": 4.8,
+     "负胜": 2.0
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 1
+    }
+   },
+   {
+    "num": "周五006",
+    "home": "法兰克福",
+    "away": "科隆",
+    "league": "德甲",
+    "kickoff": "2026-10-17 02:30",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 30.4,
+    "recommend2": "负负",
+    "confidence2": 21.4,
+    "probDist": {
+     "胜胜": 30.4,
+     "负负": 21.4,
+     "平胜": 12.8,
+     "平平": 9.1,
+     "胜平": 7.2,
+     "平负": 6.7,
+     "负平": 5.7,
+     "负胜": 4.6,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周五008",
+    "home": "勒芒",
+    "away": "图卢兹",
+    "league": "法甲",
+    "kickoff": "2026-10-17 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 26.0,
+    "recommend2": "胜胜",
+    "confidence2": 23.2,
+    "probDist": {
+     "负负": 26.0,
+     "胜胜": 23.2,
+     "平胜": 11.9,
+     "平平": 10.2,
+     "平负": 9.6,
+     "负平": 6.3,
+     "胜平": 6.0,
+     "胜负": 4.1,
+     "负胜": 2.7
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 3
+    }
+   },
+   {
+    "num": "周五007",
+    "home": "弗洛西诺内",
+    "away": "萨索洛",
+    "league": "意甲",
+    "kickoff": "2026-10-17 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.1,
+    "recommend2": "胜胜",
+    "confidence2": 25.0,
+    "probDist": {
+     "负负": 25.1,
+     "胜胜": 25.0,
+     "平胜": 12.5,
+     "平平": 9.7,
+     "平负": 8.1,
+     "负平": 6.4,
+     "胜平": 6.2,
+     "负胜": 4.0,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 4,
+     "away": 2
+    }
+   },
+   {
+    "num": "周五009",
+    "home": "伯恩利",
+    "away": "伍尔弗汉普顿",
+    "league": "英冠",
+    "kickoff": "2026-10-17 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.8,
+    "recommend2": "胜胜",
+    "confidence2": 22.1,
+    "probDist": {
+     "负负": 24.8,
+     "胜胜": 22.1,
+     "平胜": 13.1,
+     "平平": 11.2,
+     "平负": 10.6,
+     "负平": 6.0,
+     "胜平": 5.7,
+     "胜负": 3.9,
+     "负胜": 2.5
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 2
+    }
+   },
+   {
+    "num": "周五011",
+    "home": "米拉索尔",
+    "away": "巴西国际",
+    "league": "巴甲",
+    "kickoff": "2026-10-17 07:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 24.8,
+    "recommend2": "负负",
+    "confidence2": 21.5,
+    "probDist": {
+     "胜胜": 24.8,
+     "负负": 21.5,
+     "平胜": 15.3,
+     "平平": 11.5,
+     "平负": 9.1,
+     "胜平": 6.0,
+     "负平": 5.6,
+     "负胜": 3.9,
+     "胜负": 2.4
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 0
+    }
+   },
+   {
+    "num": "周五010",
+    "home": "拉科鲁尼亚",
+    "away": "莱万特",
+    "league": "西甲",
+    "kickoff": "2026-10-17 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 24.7,
+    "recommend2": "负负",
+    "confidence2": 21.8,
+    "probDist": {
+     "胜胜": 24.7,
+     "负负": 21.8,
+     "平胜": 15.1,
+     "平平": 11.4,
+     "平负": 9.0,
+     "胜平": 6.0,
+     "负平": 5.6,
+     "负胜": 3.9,
+     "胜负": 2.5
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 1
+    }
+   }
+  ]
+ },
+ "2026-10-17": {
+  "date": "2026-10-17",
+  "generatedAt": "2026-10-17 23:01:51",
+  "count": 9,
+  "matches": [
+   {
+    "num": "周六027",
+    "home": "特尔斯达",
+    "away": "费耶诺德",
+    "league": "荷甲",
+    "kickoff": "2026-10-18 02:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 37.3,
+    "recommend2": "胜胜",
+    "confidence2": 16.3,
+    "probDist": {
+     "负负": 37.3,
+     "胜胜": 16.3,
+     "平负": 9.8,
+     "平平": 8.3,
+     "负平": 8.2,
+     "平胜": 7.9,
+     "胜负": 5.2,
+     "胜平": 4.7,
+     "负胜": 2.3
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 3,
+     "away": 4
+    }
+   },
+   {
+    "num": "周六022",
+    "home": "斯特拉斯堡",
+    "away": "巴黎圣日尔曼",
+    "league": "法甲",
+    "kickoff": "2026-10-17 23:15",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 36.2,
+    "recommend2": "胜胜",
+    "confidence2": 17.5,
+    "probDist": {
+     "负负": 36.2,
+     "胜胜": 17.5,
+     "平负": 9.5,
+     "平平": 8.2,
+     "负平": 8.1,
+     "平胜": 8.1,
+     "胜负": 5.2,
+     "胜平": 5.0,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "胜负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 3
+    }
+   },
+   {
+    "num": "周六026",
+    "home": "皇家贝蒂斯",
+    "away": "巴塞罗那",
+    "league": "西甲",
+    "kickoff": "2026-10-18 00:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 36.0,
+    "recommend2": "胜胜",
+    "confidence2": 18.5,
+    "probDist": {
+     "负负": 36.0,
+     "胜胜": 18.5,
+     "平负": 8.9,
+     "负平": 8.1,
+     "平平": 7.9,
+     "平胜": 7.9,
+     "胜负": 5.2,
+     "胜平": 5.2,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 2,
+     "away": 5
+    }
+   },
+   {
+    "num": "周六023",
+    "home": "博洛尼亚",
+    "away": "国际米兰",
+    "league": "意甲",
+    "kickoff": "2026-10-18 00:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 33.0,
+    "recommend2": "胜胜",
+    "confidence2": 17.9,
+    "probDist": {
+     "负负": 33.0,
+     "胜胜": 17.9,
+     "平负": 10.5,
+     "平胜": 9.7,
+     "平平": 9.5,
+     "负平": 7.5,
+     "胜平": 5.0,
+     "胜负": 4.8,
+     "负胜": 2.1
+    },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 3
+    }
+   },
+   {
+    "num": "周六028",
+    "home": "罗马",
+    "away": "热那亚",
+    "league": "意甲",
+    "kickoff": "2026-10-18 02:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 32.3,
+    "recommend2": "负负",
+    "confidence2": 17.1,
+    "probDist": {
+     "胜胜": 32.3,
+     "负负": 17.1,
+     "平胜": 15.1,
+     "平平": 10.2,
+     "胜平": 7.3,
+     "平负": 6.5,
+     "负平": 4.8,
+     "负胜": 4.6,
+     "胜负": 2.0
+    },
+    "actualHalfFull": "平胜",
+    "hit": false,
+    "fullScore": {
+     "home": 2,
+     "away": 0
+    }
+   },
+   {
+    "num": "周六025",
+    "home": "拜仁慕尼黑",
+    "away": "莱比锡红牛",
+    "league": "德甲",
+    "kickoff": "2026-10-18 00:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 28.3,
+    "recommend2": "胜胜",
+    "confidence2": 22.2,
+    "probDist": {
+     "负负": 28.3,
+     "胜胜": 22.2,
+     "平胜": 11.9,
+     "平平": 9.6,
+     "平负": 8.4,
+     "负平": 7.1,
+     "胜平": 5.6,
+     "负胜": 3.9,
+     "胜负": 3.1
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 6,
+     "away": 1
+    }
+   },
+   {
+    "num": "周六030",
+    "home": "新英格兰革命",
+    "away": "芝加哥火焰",
+    "league": "美职",
+    "kickoff": "2026-10-18 07:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.0,
+    "recommend2": "胜胜",
+    "confidence2": 24.4,
+    "probDist": {
+     "负负": 25.0,
+     "胜胜": 24.4,
+     "平胜": 12.9,
+     "平平": 10.1,
+     "平负": 8.5,
+     "负平": 6.3,
+     "胜平": 6.0,
+     "负胜": 3.9,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "胜胜",
+    "hit": false,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周六024",
+    "home": "纽卡斯尔联",
+    "away": "阿斯顿维拉",
+    "league": "英超",
+    "kickoff": "2026-10-18 00:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.7,
+    "recommend2": "胜胜",
+    "confidence2": 24.1,
+    "probDist": {
+     "负负": 24.7,
+     "胜胜": 24.1,
+     "平胜": 13.2,
+     "平平": 10.3,
+     "平负": 8.7,
+     "负平": 6.3,
+     "胜平": 5.9,
+     "负胜": 3.9,
+     "胜负": 3.0
+    },
+    "actualHalfFull": "负负",
+    "hit": true,
+    "fullScore": {
+     "home": 0,
+     "away": 1
+    }
+   },
+   {
+    "num": "周六029",
+    "home": "巴伦西亚",
+    "away": "毕尔巴鄂竞技",
+    "league": "西甲",
+    "kickoff": "2026-10-18 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.1,
+    "recommend2": "胜胜",
+    "confidence2": 21.5,
+    "probDist": {
+     "负负": 24.1,
+     "胜胜": 21.5,
+     "平胜": 13.8,
+     "平平": 11.7,
+     "平负": 11.2,
+     "负平": 5.8,
+     "胜平": 5.6,
+     "胜负": 3.8,
+     "负胜": 2.5
+    },
+    "actualHalfFull": "平平",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 0
+    }
+   }
+  ]
+ },
+ "2026-10-19": {
+  "date": "2026-10-19",
+  "generatedAt": "2026-10-19 11:58:25",
+  "count": 8,
+  "matches": [
+   {
+    "num": "周一005",
+    "home": "托特纳姆热刺",
+    "away": "考文垂",
+    "league": "英超",
+    "kickoff": "2026-10-20 03:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 34.0,
+    "recommend2": "负负",
+    "confidence2": 17.2,
+    "probDist": {
+     "胜胜": 34.0,
+     "负负": 17.2,
+     "平胜": 14.1,
+     "平平": 9.4,
+     "胜平": 7.6,
+     "平负": 5.8,
+     "负胜": 4.9,
+     "负平": 4.8,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一007",
+    "home": "布拉加",
+    "away": "吉维森特",
+    "league": "葡超",
+    "kickoff": "2026-10-20 03:15",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 31.9,
+    "recommend2": "负负",
+    "confidence2": 16.6,
+    "probDist": {
+     "胜胜": 31.9,
+     "负负": 16.6,
+     "平胜": 15.8,
+     "平平": 10.6,
+     "胜平": 7.2,
+     "平负": 6.7,
+     "负平": 4.6,
+     "负胜": 4.5,
+     "胜负": 2.0
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 4,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一008",
+    "home": "科林蒂安",
+    "away": "维多利亚",
+    "league": "巴甲",
+    "kickoff": "2026-10-20 07:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 30.3,
+    "recommend2": "负负",
+    "confidence2": 17.7,
+    "probDist": {
+     "胜胜": 30.3,
+     "负负": 17.7,
+     "平胜": 15.7,
+     "平平": 10.8,
+     "平负": 7.3,
+     "胜平": 6.9,
+     "负平": 4.9,
+     "负胜": 4.4,
+     "胜负": 1.9
+    },
+    "actualHalfFull": "?d",
+    "hit": null,
+    "fullScore": {
+     "home": 3,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一004",
+    "home": "罗德兹",
+    "away": "蒙彼利埃",
+    "league": "法乙",
+    "kickoff": "2026-10-20 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.0,
+    "recommend2": "胜胜",
+    "confidence2": 23.3,
+    "probDist": {
+     "负负": 25.0,
+     "胜胜": 23.3,
+     "平胜": 12.5,
+     "平平": 10.5,
+     "平负": 9.9,
+     "负平": 6.1,
+     "胜平": 6.0,
+     "胜负": 4.0,
+     "负胜": 2.7
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一006",
+    "home": "赫塔费",
+    "away": "巴列卡诺",
+    "league": "西甲",
+    "kickoff": "2026-10-20 03:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 24.0,
+    "recommend2": "胜胜",
+    "confidence2": 19.5,
+    "probDist": {
+     "负负": 24.0,
+     "胜胜": 19.5,
+     "平胜": 15.7,
+     "平平": 12.7,
+     "平负": 11.2,
+     "负平": 6.0,
+     "胜平": 4.9,
+     "负胜": 3.2,
+     "胜负": 2.8
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 4,
+     "away": 2
+    }
+   },
+   {
+    "num": "周一002",
+    "home": "代格福什",
+    "away": "卡尔马",
+    "league": "瑞超",
+    "kickoff": "2026-10-20 01:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 23.9,
+    "recommend2": "负负",
+    "confidence2": 23.5,
+    "probDist": {
+     "胜胜": 23.9,
+     "负负": 23.5,
+     "平胜": 13.2,
+     "平平": 10.9,
+     "平负": 10.0,
+     "胜平": 6.1,
+     "负平": 5.8,
+     "胜负": 3.8,
+     "负胜": 2.8
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 3,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一001",
+    "home": "蒙扎",
+    "away": "卡利亚里",
+    "league": "意甲",
+    "kickoff": "2026-10-20 00:30",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 23.8,
+    "recommend2": "胜胜",
+    "confidence2": 21.6,
+    "probDist": {
+     "负负": 23.8,
+     "胜胜": 21.6,
+     "平胜": 15.0,
+     "平平": 11.8,
+     "平负": 10.1,
+     "负平": 6.0,
+     "胜平": 5.4,
+     "负胜": 3.5,
+     "胜负": 2.8
     },
     "actualHalfFull": "?a",
     "hit": null,
     "fullScore": {
-     "home": 0,
+     "home": 1,
      "away": 3
+    }
+   },
+   {
+    "num": "周一003",
+    "home": "帕尔马",
+    "away": "都灵",
+    "league": "意甲",
+    "kickoff": "2026-10-20 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 23.6,
+    "recommend2": "胜胜",
+    "confidence2": 21.6,
+    "probDist": {
+     "负负": 23.6,
+     "胜胜": 21.6,
+     "平胜": 14.1,
+     "平平": 11.9,
+     "平负": 11.3,
+     "负平": 5.7,
+     "胜平": 5.6,
+     "胜负": 3.8,
+     "负胜": 2.5
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 1,
+     "away": 0
     }
    }
   ]

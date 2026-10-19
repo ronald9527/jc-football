@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends Activity {
 
     private static final String REMOTE_BASE = "https://jc-football-1eo.pages.dev/";
-    private static final int TIMEOUT_MS = 10000;
+    private static final int TIMEOUT_MS = 30000;
     private static final long SYNC_INTERVAL_MS = 3 * 60 * 1000L;
 
     private WebView web;
@@ -115,22 +115,42 @@ public class MainActivity extends Activity {
 
     // ---------------- 页面加载 ----------------
 
-    /** 首次安装时，把 assets 内的快照复制到可写缓存目录 */
+    /** 首次安装/覆盖安装时，把 assets 内的快照复制到可写缓存目录。
+     *  关键修复：不能只看文件是否存在。覆盖安装时旧缓存目录可能保留，
+     *  若 assets 里的快照比本地缓存新，必须强制覆盖，否则用户永远看到旧数据。 */
     private void ensureCache() {
         File idx = new File(cacheDir, "index.html");
-        if (idx.exists() && idx.length() > 0) return;
-        try {
-            copyAsset("index.html", idx);
-        } catch (Exception e) {
-            // 复制失败则直接使用 assets 快照（只读，数据无法增量更新）
+        File mj = new File(cacheDir, "matches.json");
+
+        String assetVer = assetPageVersion();
+        String assetTime = assetUpdateTime();
+        String localVer = scanVersion(idx);
+        String localTime = match(readHead(mj, 8192), "\"updateTime\"\\s*:\\s*\"([^\"]+)\"");
+
+        boolean needCopy = !idx.exists() || idx.length() == 0;
+        if (!needCopy && assetVer != null && localVer != null
+                && verCode(assetVer) > verCode(localVer)) {
+            needCopy = true;
         }
-        try {
-            copyAsset("matches.json", new File(cacheDir, "matches.json"));
-        } catch (Exception ignored) {
+        if (!needCopy && assetTime != null && localTime != null
+                && assetTime.compareTo(localTime) > 0) {
+            needCopy = true;
         }
-        writeFile(new File(cacheDir, "version.json"),
-                "{\"updateTime\":\"" + localUpdateTime() + "\",\"deployTime\":\"" + localUpdateTime()
-                        + "\",\"pageVersion\":\"" + localPageVersion() + "\"}");
+
+        if (needCopy) {
+            try {
+                copyAsset("index.html", idx);
+            } catch (Exception e) {
+                // 复制失败则直接使用 assets 快照（只读，数据无法增量更新）
+            }
+            try {
+                copyAsset("matches.json", mj);
+            } catch (Exception ignored) {
+            }
+            writeFile(new File(cacheDir, "version.json"),
+                    "{\"updateTime\":\"" + localUpdateTime() + "\",\"deployTime\":\"" + localUpdateTime()
+                            + "\",\"pageVersion\":\"" + localPageVersion() + "\"}");
+        }
     }
 
     private void copyAsset(String name, File out) throws Exception {
@@ -146,9 +166,12 @@ public class MainActivity extends Activity {
     private void loadPage() {
         File idx = new File(cacheDir, "index.html");
         if (idx.exists() && idx.length() > 0) {
-            web.loadUrl("file://" + idx.getAbsolutePath());
+            // 关键修复：同一个 file:// URL WebView 会用页面缓存，导致文件更新了仍显示旧页。
+            // 每次 load 都加随机时间戳，强制 WebView 重新读文件。
+            web.clearCache(true);
+            web.loadUrl("file://" + idx.getAbsolutePath() + "?t=" + System.currentTimeMillis());
         } else {
-            web.loadUrl("file:///android_asset/index.html");
+            web.loadUrl("file:///android_asset/index.html?t=" + System.currentTimeMillis());
         }
     }
 
@@ -186,7 +209,8 @@ public class MainActivity extends Activity {
             if (pv != null) return pv;
         }
         // 兜底：Range 请求线上页面前 256KB，直接解析 const VERSION
-        byte[] head = httpGetRange(REMOTE_BASE + "index.html", 0, 262143);
+        // （用根路径 /：Pages 对 /index.html 是 308 跳 /，根路径直返 200 少一跳）
+        byte[] head = httpGetRange(REMOTE_BASE, 0, 262143);
         if (head != null) {
             String pv = match(new String(head, java.nio.charset.StandardCharsets.UTF_8),
                     "const\\s+VERSION\\s*=\\s*\"([^\"]+)\"");
@@ -207,10 +231,18 @@ public class MainActivity extends Activity {
             if (remoteUpd == null) remoteUpd = match(v, "\"deployTime\"\\s*:\\s*\"([^\"]+)\"");
         }
 
-        // 2) 页面版本变了 → 下载整页（只发生一次）
-        //    注意：必须是「线上比本地新」才下载，否则线上若还是旧版本会把用户的页面回退掉
-        if (remoteVer != null && verCode(remoteVer) > verCode(localPageVersion())) {
-            byte[] html = httpGet(REMOTE_BASE + "index.html");
+        // 2) 页面版本变了，或线上「数据时间」比本地新 → 下载整页
+        //    关键修复：数据每天刷新但版本号常不变，旧逻辑只在版本号变大时才重下整页，
+        //    导致 App 一旦拉到过某版页面就死守其内嵌的旧数据。这里改为：
+        //    只要线上数据时间比本地更新，也重拉整页，保证「数据已过期」不会再卡住。
+        boolean verNewer = remoteVer != null && verCode(remoteVer) > verCode(localPageVersion());
+        long remoteMs = parseTime(remoteUpd);
+        long localMs = parseTime(localUpdateTime());
+        boolean dataNewer = remoteMs > 0 && localMs > 0 && remoteMs > localMs;
+        if (verNewer || dataNewer) {
+            // 根路径 / 直返页面（/index.html 在 Pages 上是 308 跳 /，已由 httpGetFollow 兼容；
+            // 这里直接用根路径少一跳）
+            byte[] html = httpGet(REMOTE_BASE);
             if (html != null && html.length > 100000) {
                 File idx = new File(cacheDir, "index.html");
                 writeBytes(idx, html);
@@ -274,6 +306,30 @@ public class MainActivity extends Activity {
         } catch (Exception ignored) {
         }
         return v != null ? v : "v0.0.0";
+    }
+
+    /** APK 自带 assets/index.html 的版本号，用于覆盖安装时判断是否需要刷新本地缓存 */
+    private String assetPageVersion() {
+        try {
+            InputStream is = getAssets().open("index.html");
+            String v = scanVersion(is);
+            is.close();
+            return v;
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    /** APK 自带 assets/matches.json 的数据时间 */
+    private String assetUpdateTime() {
+        try {
+            InputStream is = getAssets().open("matches.json");
+            String s = readHead(is, 8192);
+            is.close();
+            return match(s, "\"updateTime\"\\s*:\\s*\"([^\"]+)\"");
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     private static final Pattern VER_PATTERN =
@@ -371,59 +427,73 @@ public class MainActivity extends Activity {
     // ---------------- 工具 ----------------
 
     private byte[] httpGet(String urlStr) {
-        HttpURLConnection conn = null;
-        try {
-            URL url = new URL(urlStr);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(TIMEOUT_MS);
-            conn.setReadTimeout(TIMEOUT_MS);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("User-Agent", "jc-football-android/1.4");
-            int code = conn.getResponseCode();
-            if (code != 200) return null;
-            InputStream is = conn.getInputStream();
-            java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-            byte[] buf = new byte[8192];
-            int n;
-            while ((n = is.read(buf)) > 0) bos.write(buf, 0, n);
-            is.close();
-            return bos.toByteArray();
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if (conn != null) conn.disconnect();
-        }
+        return httpGetFollow(urlStr, -1, 0);
     }
 
     /** 只取前 maxBytes 字节（用于读页面头部版本号，避免下载整页） */
     private byte[] httpGetRange(String urlStr, long from, int maxBytes) {
-        HttpURLConnection conn = null;
-        try {
-            URL url = new URL(urlStr);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(TIMEOUT_MS);
-            conn.setReadTimeout(TIMEOUT_MS);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("User-Agent", "jc-football-android/1.4");
-            conn.setRequestProperty("Range", "bytes=" + from + "-" + (from + maxBytes - 1));
-            int code = conn.getResponseCode();
-            if (code != 200 && code != 206) return null;
-            InputStream is = conn.getInputStream();
-            java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-            byte[] buf = new byte[8192];
-            int n, total = 0;
-            while (total < maxBytes && (n = is.read(buf)) > 0) {
-                int take = Math.min(n, maxBytes - total);
-                bos.write(buf, 0, take);
-                total += take;
+        return httpGetFollow(urlStr, from, maxBytes);
+    }
+
+    /**
+     * 带手动重定向跟随的 GET。rangeBytes > 0 时附加 Range 头只读前 rangeBytes 字节。
+     *
+     * 为什么必须手动跟随：Cloudflare Pages 对 /index.html 返回 308 永久重定向到 /，
+     * 而 Java HttpURLConnection 默认只跟随 301/302，**不跟随 307/308**——这导致
+     * 整页同步自 App 安装起就永远失败（version.json / matches.json 无后缀名、
+     * 不跳转，所以只有数据同步是好的、页面结构同步是坏的，表现为
+     * 「网页版有的新版界面，App 里永远看不到」）。
+     * 这里关闭自动跟随，对 301/302/303/307/308 统一手动跳转（最多 4 跳，
+     * 相对 Location 自动解析为绝对地址）；本应用所有请求均为无 body 的 GET，
+     * 307/308 保持 GET 语义跟随是安全的。
+     */
+    private byte[] httpGetFollow(String urlStr, long rangeFrom, int rangeBytes) {
+        String cur = urlStr;
+        for (int hop = 0; hop < 4; hop++) {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(cur);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setInstanceFollowRedirects(false);   // 全部手动处理，行为确定
+                conn.setConnectTimeout(TIMEOUT_MS);
+                conn.setReadTimeout(TIMEOUT_MS);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", "jc-football-android/1.4");
+                if (rangeBytes > 0) {
+                    conn.setRequestProperty("Range",
+                            "bytes=" + rangeFrom + "-" + (rangeFrom + rangeBytes - 1));
+                }
+                int code = conn.getResponseCode();
+                if (code == 301 || code == 302 || code == 303 || code == 307 || code == 308) {
+                    String loc = conn.getHeaderField("Location");
+                    if (loc == null || loc.isEmpty()) return null;
+                    cur = new URL(new URL(cur), loc).toExternalForm();
+                    continue;
+                }
+                if (code != 200 && code != 206) return null;
+                InputStream is = conn.getInputStream();
+                java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+                byte[] buf = new byte[8192];
+                int n, total = 0;
+                while ((n = is.read(buf)) > 0) {
+                    if (rangeBytes > 0) {
+                        if (total >= rangeBytes) break;
+                        int take = Math.min(n, rangeBytes - total);
+                        bos.write(buf, 0, take);
+                        total += take;
+                    } else {
+                        bos.write(buf, 0, n);
+                    }
+                }
+                is.close();
+                return bos.toByteArray();
+            } catch (Exception e) {
+                return null;
+            } finally {
+                if (conn != null) conn.disconnect();
             }
-            is.close();
-            return bos.toByteArray();
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if (conn != null) conn.disconnect();
         }
+        return null;   // 跳转过多，放弃
     }
 
     private String match(String text, String regex) {
@@ -442,6 +512,18 @@ public class MainActivity extends Activity {
             int b = p.length > 1 ? Integer.parseInt(p[1]) : 0;
             int c = p.length > 2 ? Integer.parseInt(p[2]) : 0;
             return a * 10000 + b * 100 + c;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /** "yyyy-MM-dd HH:mm:ss" -> 毫秒时间戳，解析失败返回 0 */
+    private long parseTime(String s) {
+        if (s == null) return 0;
+        try {
+            java.text.SimpleDateFormat f = new java.text.SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss", java.util.Locale.US);
+            return f.parse(s).getTime();
         } catch (Exception e) {
             return 0;
         }

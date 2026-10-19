@@ -8,6 +8,8 @@ selftest.py —— 数据自检（每日自动跑，发现问题退出码非 0�
   2. 赔率合理性：范围 1.05~25、返奖率落在 85%~92%（异常说明接口数据错乱）
   3. 概率一致性：胜平负三者概率之和接近 100%（±3pt）
   4. 串关合理性：拒绝蚊子肉（单场 >= 1.45）、总赔 >= 2.2、EV/命中率字段存在
+  4.5 串关历史完整性：防截断（页面注入量≥源文件）、防消失（昨天组数完整可见）、
+      防快照丢失（最新记录带 snapshot）——2026-10-13「昨天推荐翻不到」事故加固
   5. 历史库：条数、日期连续、命中判定字段完整
   6. 页面产物：占位符是否已全部替换、无未替换标记
   7. 数据源隔离：独立源（The Odds API / football-data.org / 高手荐单）不得写回核心
@@ -140,6 +142,64 @@ def check_parlay(data):
         add("WARN", "串关", "今日无串关推荐（候选不满足档位门槛）")
 
 
+def check_parlay_history(data):
+    """串关历史「防截断 / 防消失」专项检查（2026-10-13 事故加固）。
+
+    事故回顾：check_parlay_history() 曾只返回最近 20 条注入页面，
+    昨天 14 组只露出 6 组；今天组数继续涨，直接把昨天的推荐全部挤出页面，
+    用户翻查时「昨天的推荐不见了」，被误认为数据作假。
+    这类 bug 静默且直接伤害信任，必须每轮跑批自动盯防：
+      防线1 页面注入量不得少于源文件记录数（任何截断都是事故）
+      防线2 最近一个已过去日期（昨天）的组数必须完整可见
+      防线3 最新一条记录必须带 snapshot 快照（保存逻辑被改回旧版会丢失回放字段）
+    """
+    print("· 检查 4.5/6 串关历史完整性（防截断/防消失）")
+    src = load("parlay_history.json")
+    if not isinstance(src, dict) or not src.get("records"):
+        return  # 全新部署无历史文件，不报错
+    src_recs = src["records"]
+    ph = (data or {}).get("parlayHistory") or {}
+    inj = ph.get("records") or []
+    if not inj:
+        add("ERROR", "串关历史", "matches.json 未注入串关历史（页面历史区将空白）")
+        return
+
+    # 防线1：页面注入量不得少于源文件（源文件是唯一真相，少显示=截断复发）
+    if len(inj) < len(src_recs):
+        add("ERROR", "串关历史",
+            "页面只注入 %d/%d 组，存在截断——历史推荐会残缺，昨天的组可能翻不到"
+            % (len(inj), len(src_recs)))
+
+    # 防线2：最近一个已过去日期（昨天）的组数必须完整可见
+    src_cnt, inj_cnt = {}, {}
+    for r in src_recs:
+        d = r.get("date")
+        if d:
+            src_cnt[d] = src_cnt.get(d, 0) + 1
+    for r in inj:
+        d = r.get("date")
+        if d:
+            inj_cnt[d] = inj_cnt.get(d, 0) + 1
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    past = sorted(d for d in src_cnt if d < today)
+    if past:
+        y = past[-1]
+        if inj_cnt.get(y, 0) < src_cnt[y]:
+            add("ERROR", "串关历史",
+                "%s 的推荐页面只显示 %d/%d 组——昨日的组被挤出，用户无法翻查对账"
+                % (y, inj_cnt.get(y, 0), src_cnt[y]))
+        else:
+            print("  %s 推荐 %d 组完整可见（防消失 ✓）" % (y, src_cnt[y]))
+
+    # 防线3：最新一条记录必须带 snapshot（保存逻辑若被改回旧版，回放丢字段）
+    newest = max(src_recs, key=lambda r: r.get("savedAt") or "")
+    if newest.get("date") == today and "snapshot" not in newest:
+        add("WARN", "串关历史",
+            "今日最新记录（%s）无 snapshot 快照，锁定回放将丢失卡片字段，"
+            "检查 save_parlay_history 是否被改动" % newest.get("savedAt"))
+    print("  串关历史：源文件 %d 组 / 页面注入 %d 组" % (len(src_recs), len(inj)))
+
+
 def check_history(hist):
     print("· 检查 5/6 历史库")
     recs = (hist or {}).get("records", [])
@@ -227,6 +287,7 @@ def main():
     check_odds(data)
     check_prob(data)
     check_parlay(data)
+    check_parlay_history(data)
     check_history(hist)
     check_page()
     check_isolation()

@@ -31,7 +31,22 @@ HIST_FILES = [
     "strongweak_history.json",  # 强弱队历史
     "half_full_history.json",   # 半全场历史
     "smart_model.json",         # 智能引擎自动调参结果
+    "whoscored_history.json",       # WhoScored 比分预测评估历史（records 为 dict）
+    "whoscored_preview_cache.json", # WhoScored 预测比分缓存（平铺 dict）
+    "whoscored_recent.json",        # WhoScored 近期比赛元数据（平铺 dict）
 ]
+
+# 各文件的真实记录数提取方式（默认 records_count 按 list/records-list 处理，
+# 但 whoscored 三件套是 dict 结构，必须专门计数，否则永远比对不出丢失）
+def _count_whoscored_history(obj):
+    if isinstance(obj, dict):
+        recs = obj.get("records")
+        return len(recs) if isinstance(recs, (dict, list)) else 0
+    return 0
+
+COUNT_FN = {
+    "whoscored_history.json": _count_whoscored_history,
+}
 
 TIMEOUT = 40
 
@@ -55,7 +70,9 @@ def count(path):
     try:
         with io.open(path, encoding="utf-8") as f:
             d = json.load(f)
-        return records_count(d)
+        name = os.path.basename(path)
+        fn = COUNT_FN.get(name)
+        return fn(d) if fn else records_count(d)
     except Exception:
         return None
 
@@ -93,7 +110,8 @@ def main():
 
         try:
             remote_d = json.loads(remote_bytes.decode("utf-8"))
-            remote_n = records_count(remote_d)
+            fn = COUNT_FN.get(name)
+            remote_n = fn(remote_d) if fn else records_count(remote_d)
         except Exception:
             missing_remote.append(name)
             print("  %-26s 线上内容无法解析，跳过" % name)

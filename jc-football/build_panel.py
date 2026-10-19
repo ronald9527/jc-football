@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """构建看板：读取 matches.json + history.json + rules_config.json -> 注入 template.html -> 生成 index.html"""
-import json, os
+import json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -149,6 +149,17 @@ def main():
         except Exception:
             pass
     js_ws = json.dumps(ws_data, ensure_ascii=False).replace("</", "<\\/")
+    # SP_TEAM_ZH：英文队名 → 竞彩中文名，由 team_map.py 单一真相源生成
+    # （原为 template.html 内手写硬编码字典，key 格式与 WhoScored 实际输出
+    #  不一致导致大量汉化失败，v1.7.22 改为自动注入，杜绝双字典漂移）
+    sp_team_zh = {}
+    try:
+        sys.path.insert(0, HERE)
+        from team_map import TEAM_EN2ZH
+        sp_team_zh = {k: v for k, v in TEAM_EN2ZH.items()}
+    except Exception as e:
+        print("! team_map 导入失败，SP_TEAM_ZH 为空：%s" % e)
+    js_sp_team_zh = json.dumps(sp_team_zh, ensure_ascii=False).replace("</", "<\\/")
     out = (tpl.replace("__DATA_PLACEHOLDER__", js_data)
               .replace("__HISTORY_PLACEHOLDER__", js_hist)
               .replace("__CONFIG_PLACEHOLDER__", js_cfg)
@@ -163,6 +174,7 @@ def main():
               .replace("__FD_PLACEHOLDER__", js_fd)
               .replace("__BSD_PLACEHOLDER__", js_bsd)
               .replace("__SCORE_PREDICT_PLACEHOLDER__", js_scorepred)
+              .replace("__SP_TEAM_ZH_PLACEHOLDER__", js_sp_team_zh)
               .replace("__WHOSCORED_PLACEHOLDER__", js_ws))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
@@ -170,7 +182,8 @@ def main():
                "__STRONGWEAK_HISTORY_PLACEHOLDER__",
                "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__",
                "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__",
-               "__SCORE_PREDICT_PLACEHOLDER__", "__WHOSCORED_PLACEHOLDER__"):
+               "__SCORE_PREDICT_PLACEHOLDER__", "__SP_TEAM_ZH_PLACEHOLDER__",
+               "__WHOSCORED_PLACEHOLDER__"):
         assert ph not in out, f"占位符未替换: {ph}"
     out_path = os.path.join(HERE, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:

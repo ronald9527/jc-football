@@ -492,27 +492,9 @@
  },
  "2026-10-11": {
   "date": "2026-10-11",
-  "generatedAt": "2026-10-11 12:24:30",
-  "count": 5,
+  "generatedAt": "2026-10-11 14:40:40",
+  "count": 4,
   "matches": [
-   {
-    "num": "周日001",
-    "home": "光州FC",
-    "away": "蔚山现代",
-    "strongTeam": "蔚山现代",
-    "weakTeam": "光州FC",
-    "recommendation": "客胜",
-    "recommendOdds": 1.43,
-    "hhadRecommendation": "让负",
-    "goal": 1,
-    "gapLevel": "悬殊",
-    "gapScore": 10,
-    "topScorer": "",
-    "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
-   },
    {
     "num": "周日019",
     "home": "弗赖堡",
@@ -527,9 +509,11 @@
     "gapScore": 10,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 2:1",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "2:1"
    },
    {
     "num": "周日017",
@@ -545,9 +529,11 @@
     "gapScore": 9,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 3:2",
+    "hit": true,
+    "hhadHit": true,
+    "resultDir": "主胜",
+    "actualScore": "3:2"
    },
    {
     "num": "周日025",
@@ -556,16 +542,18 @@
     "strongTeam": "马赛",
     "weakTeam": "特鲁瓦",
     "recommendation": "客胜",
-    "recommendOdds": 1.76,
+    "recommendOdds": 1.73,
     "hhadRecommendation": "让负",
     "goal": 1,
     "gapLevel": "悬殊",
     "gapScore": 9,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "客胜 0:2",
+    "hit": true,
+    "hhadHit": true,
+    "resultDir": "客胜",
+    "actualScore": "0:2"
    },
    {
     "num": "周日023",
@@ -574,11 +562,136 @@
     "strongTeam": "莫尔德",
     "weakTeam": "利勒斯特罗姆",
     "recommendation": "客胜",
-    "recommendOdds": 2.06,
+    "recommendOdds": 2.02,
     "hhadRecommendation": "让负",
     "goal": 1,
     "gapLevel": "较大",
     "gapScore": 6,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "平局 2:2",
+    "hit": false,
+    "hhadHit": false,
+    "resultDir": "平局",
+    "actualScore": "2:2"
+   }
+  ]
+ },
+ "2026-10-12": {
+  "date": "2026-10-12",
+  "generatedAt": "2026-10-12 23:30:40",
+  "count": 0,
+  "matches": []
+ },
+ "2026-10-13": {
+  "date": "2026-10-13",
+  "generatedAt": "2026-10-13 23:30:43",
+  "count": 0,
+  "matches": []
+ },
+ "2026-10-14": {
+  "date": "2026-10-14",
+  "generatedAt": "2026-10-14 23:30:41",
+  "count": 1,
+  "matches": [
+   {
+    "num": "周三008",
+    "home": "罗马",
+    "away": "皇家马德里",
+    "strongTeam": "皇家马德里",
+    "weakTeam": "罗马",
+    "recommendation": "客胜",
+    "recommendOdds": 1.69,
+    "hhadRecommendation": "让负",
+    "goal": 1,
+    "gapLevel": "明显",
+    "gapScore": 8,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "客胜 3:4",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "客胜",
+    "actualScore": "3:4"
+   }
+  ]
+ },
+ "2026-10-15": {
+  "date": "2026-10-15",
+  "generatedAt": "2026-10-15 23:31:13",
+  "count": 0,
+  "matches": []
+ },
+ "2026-10-16": {
+  "date": "2026-10-16",
+  "generatedAt": "2026-10-16 23:31:05",
+  "count": 2,
+  "matches": [
+   {
+    "num": "周五004",
+    "home": "海伦芬",
+    "away": "SBV精英",
+    "strongTeam": "海伦芬",
+    "weakTeam": "SBV精英",
+    "recommendation": "主胜",
+    "recommendOdds": 1.38,
+    "hhadRecommendation": "让平",
+    "goal": -1,
+    "gapLevel": "明显",
+    "gapScore": 8,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "主胜 4:0",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "4:0"
+   },
+   {
+    "num": "周五009",
+    "home": "伯恩利",
+    "away": "伍尔弗汉普顿",
+    "strongTeam": "伍尔弗汉普顿",
+    "weakTeam": "伯恩利",
+    "recommendation": "客胜",
+    "recommendOdds": 2.05,
+    "hhadRecommendation": "让负",
+    "goal": 1,
+    "gapLevel": "明显",
+    "gapScore": 7,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "客胜 1:2",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "客胜",
+    "actualScore": "1:2"
+   }
+  ]
+ },
+ "2026-10-17": {
+  "date": "2026-10-17",
+  "generatedAt": "2026-10-17 23:01:51",
+  "count": 0,
+  "matches": []
+ },
+ "2026-10-19": {
+  "date": "2026-10-19",
+  "generatedAt": "2026-10-19 11:58:25",
+  "count": 1,
+  "matches": [
+   {
+    "num": "周一001",
+    "home": "蒙扎",
+    "away": "卡利亚里",
+    "strongTeam": "蒙扎",
+    "weakTeam": "卡利亚里",
+    "recommendation": "主胜",
+    "recommendOdds": 2.4,
+    "hhadRecommendation": "让胜",
+    "goal": -1,
+    "gapLevel": "明显",
+    "gapScore": 7,
     "topScorer": "",
     "isBrutal": false,
     "result": "",
