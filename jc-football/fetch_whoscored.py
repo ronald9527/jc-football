@@ -72,8 +72,13 @@ _page_cache = {}               # url -> (ts, status, text)
 PREVIEW_BUDGET_S = 70          # 预览抓取阶段预算（秒）：必须给赛果回填留时间，
                                # 否则「预测×赛果」的历史累积永远排不上队
 TOTAL_BUDGET_S = 110           # 整体预算（秒）：调度器 have_time 120 门槛内收工
-EVAL_RESERVE_S = 15            # 赛果回填预留（秒）：单笔 title 抓取可能耗时 10s+，
-                               # 不预留的话最后一笔会跨过 deadline 拖长整轮
+EVAL_RESERVE_S = 8             # 赛果回填预留（秒）：留给循环退出后的历史累积+写文件
+                               # （实测 <2s）。v1.7.28：15→8——收尾很快，预留过多
+                               # 会白扔回填窗口（每轮少回填 3+ 场）
+HTTP_TIMEOUT_S = 12            # 单次请求超时（秒）。v1.7.28：30→12——WhoScored 正常
+                               # 响应实测 1.6-2s；超过 12s 的请求基本都是 IP 软限流下的
+                               # 挣扎，快速失败把时间让给同批次其他场次更重要
+                               # （旧值 30s×2 次尝试最坏烧 60s+，一轮只回填 1-2 场）
 
 # 联赛中文名（竞彩习惯叫法；未收录的保留英文）
 LEAGUE_ZH = {
@@ -156,7 +161,7 @@ def _get(url, referer=BASE + "/"):
     last = (0, "")
     for imp in IMPS[:2]:   # chrome124 / safari184：实测可完整拿到数据
         try:
-            r = cr.get(url, impersonate=imp, timeout=30,
+            r = cr.get(url, impersonate=imp, timeout=HTTP_TIMEOUT_S,
                        headers={"Referer": referer,
                                 "Accept-Language": "en-US,en;q=0.9",
                                 "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8"})
@@ -624,30 +629,56 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
               % (len(jc_unmatched), "; ".join(jc_unmatched[:12])))
 
     # ---- 赛果回填 ----
+    # v1.7.28：回填候选「只留有预测且未回填」的场次，并按开球时间升序（等最久先服务）。
+    # 旧实现按 matches 原始顺序（/previews 未来场 → livescores 今日 → recent 回填）遍历，
+    # 且不检查有无预测——无预测的场次也占用单轮 60 场的 title 抓取配额（抓到了也不会
+    # 写 history，纯浪费），周末数百场无预测比赛把配额吃光后，排尾部的旧日期「饿死」
+    # 永远回填不上（用户实测：比分预测历史缺 10-18/10-19 两天，而 10-16/17 同样为 0）。
     results = fetch_results_today()
     eval_fetch = 0
+    eval_cands = []          # [(utc_datetime, match)] 需 title 抓取的候选（有预测+未回填+已开球）
     for x in matches:
         mid = x["id"]
+        if x.get("predH") is None:
+            continue                       # 无预测：回填了也不进 history，不浪费配额
+        rec = records.get(mid) or {}
+        if rec.get("evaluated") or rec.get("actH") is not None:
+            continue                       # 已回填（含一次性档案回填的有赛果无标记记录）
         r = results.get(mid)
-        if r is None and (mid not in records or not records[mid].get("evaluated")):
-            # 判断是否大概率已开赛（UTC 开球 + 2.2h）
-            try:
-                u = datetime.strptime(x["utcDate"][:19], "%Y-%m-%dT%H:%M:%S")
-                if ((now - u).total_seconds() > 2.2 * 3600 and eval_fetch < max_result
-                        and time.time() < deadline - EVAL_RESERVE_S):
-                    r = fetch_result_by_title(mid)
-                    eval_fetch += 1
-                    time.sleep(DELAY)
-            except Exception:
-                r = None
+        if r is not None:                  # livescores 当日列表直接带比分，不占配额
+            x["actH"], x["actA"], x["evaluated"] = r["homeScore"], r["awayScore"], True
+            x["exactHit"] = (x["predH"] == r["homeScore"] and x["predA"] == r["awayScore"])
+            x["outcomeHit"] = _outcome(x["predH"], x["predA"]) == _outcome(r["homeScore"], r["awayScore"])
+            continue
+        # 判断是否大概率已开赛（UTC 开球 + 2.2h）
+        try:
+            u = datetime.strptime((x.get("utcDate") or "")[:19], "%Y-%m-%dT%H:%M:%S")
+        except Exception:
+            continue
+        if (now - u).total_seconds() > 2.2 * 3600:
+            eval_cands.append((u, x))
+    eval_cands.sort(key=lambda t: t[0])    # 开球最早的先回填，杜绝旧日期饿死
+    if eval_cands:
+        print("  [赛果回填] 候选 %d 场（有预测+未回填+已开球，按开球时间升序）" % len(eval_cands))
+    for u, x in eval_cands:
+        if eval_fetch >= max_result:
+            print("  [赛果回填] 已达单轮上限 %d 场，剩余 %d 场下轮继续"
+                  % (max_result, len(eval_cands) - eval_fetch))
+            break
+        if eval_fetch and time.time() > deadline - EVAL_RESERVE_S:
+            print("  [赛果回填] 已达时间预算，剩余 %d 场下轮继续"
+                  % (len(eval_cands) - eval_fetch))
+            break
+        r = fetch_result_by_title(x["id"])
+        eval_fetch += 1
+        time.sleep(DELAY)
         if r:
             x["actH"], x["actA"], x["evaluated"] = r["homeScore"], r["awayScore"], True
-            x["exactHit"] = (x.get("predH") == r["homeScore"] and x.get("predA") == r["awayScore"])
-            x["outcomeHit"] = (x.get("predH") is not None and
-                               _outcome(x["predH"], x["predA"]) == _outcome(r["homeScore"], r["awayScore"]))
-        else:
-            x["actH"] = x.get("actH")
-            x["evaluated"] = bool(records.get(mid, {}).get("evaluated"))
+            x["exactHit"] = (x["predH"] == r["homeScore"] and x["predA"] == r["awayScore"])
+            x["outcomeHit"] = _outcome(x["predH"], x["predA"]) == _outcome(r["homeScore"], r["awayScore"])
+    for x in matches:                      # 未回填成功的保持 records 里的旧状态
+        if x.get("evaluated") is None:
+            x["evaluated"] = bool(records.get(x["id"], {}).get("evaluated"))
     print("  [赛果回填] 补抓 %d 场，累计已评估 %d 场，总耗时 %.0fs"
           % (eval_fetch, sum(1 for x in matches if x.get("evaluated")), time.time() - t_start))
 
