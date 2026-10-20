@@ -1437,8 +1437,20 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.26";
+const VERSION = "v1.7.27";
 const CHANGELOG = [
+  {
+    version: "v1.7.27",
+    date: "2026-10-20",
+    title: "EV 文案严谨化：单注二元结果与长期期望分开说",
+    features: [
+      "科普卡「EV 是什么」补充单注与长期的区别：任何一注只有全中（按总赔收钱）或不中（亏本金）两种结果，不存在「亏 12%」的中间态；EV 是同样打法重复多次的平均值，不排除单注全中",
+      "「今日无正期望串关机会」总结卡同步改为「EV 为负 = 同样打法长期平均每注亏损（单注仍可能全中，不排除运气）」",
+    ],
+    fixes: [
+      "回应用户质疑「ev负又怎么，串关讲求单场全中，怎么会是亏得多与亏得少，天天全部命中那怎么会亏」：原文案「只有亏得多与亏得少的区别」易被理解为单注也有亏损程度之分，改为明确区分单注二元结果与长期数学期望的表述",
+    ]
+  },
   {
     version: "v1.7.26",
     date: "2026-10-20",
@@ -3994,7 +4006,7 @@ function renderHighOdds(){
     html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（单场单意见：同一场比赛全天一个说法，三档只在意见池内组合，差异只在选不选它、拼几场；赔率单调：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
     <div style="margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
-      ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：这一注长期平均每花 100 元亏 12 元。<b style="color:var(--bad)">EV 为负 = 长期必亏，没有哪一档「更值得推荐」，只有亏得多与亏得少的区别。</b><br>
+      ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏，没有哪一档「更值得推荐」，区别只在长期平均亏得多与亏得少。</b><br>
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
       ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">提高命中的唯一办法是选概率更高的腿（赔率更低、回报更少）</b>——高命中与高回报不可兼得，这是串关的本质矛盾。低赔「蚊子肉」腿命中高但回报薄，高赔腿回报厚但拉低联合命中率，各档的赔率区间就是在这个矛盾上取平衡。
     </div>`;
@@ -4089,7 +4101,7 @@ function renderHighOdds(){
       const negDesc = _negTiers.map(([k,lb])=>`${lb} <b style="color:var(--bad)">EV ${sp[k].ev!=null?sp[k].ev+"%":"—"}</b>`).join(" · ");
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
         <div class="ho-head"><span class="ho-type" style="color:var(--warn)">🚫 今日无正期望串关机会</span></div>
-        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，<b>全部档位</b>最优组合期望值均为负（${negDesc}）。<b style="color:var(--text)">注意：EV 为负的档位长期玩都必亏——档位之间没有「哪档更值得推荐」，只有亏得多与亏得少的区别，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
+        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，<b>全部档位</b>最优组合期望值均为负（${negDesc}）。<b style="color:var(--text)">注意：EV 为负 = 同样打法长期平均每注亏损（单注仍可能全中，不排除运气）；长期玩必亏，档位之间没有「哪档更值得推荐」，只有长期平均亏得多与亏得少的区别，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
       </div>`;
       html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");
     }
