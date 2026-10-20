@@ -1,5 +1,5 @@
 {
- "updateTime": "2026-10-20 12:35:00",
+ "updateTime": "2026-10-20 13:31:58",
  "count": 10,
  "matches": [
   {
@@ -2856,30 +2856,52 @@
  ],
  "highOddsParlay": null,
  "safeParlay": {
-  "generatedAt": "2026-10-20 12:35:00",
-  "candidateCount": 7,
+  "generatedAt": "2026-10-20 13:31:58",
+  "candidateCount": 8,
   "candidatePool": [
-   {
-    "num": "周二001",
-    "home": "费内巴切",
-    "away": "布拉格斯拉维亚",
-    "play": "胜平负",
-    "label": "主胜",
-    "odds": 1.46,
-    "confidence": 73.2,
-    "sameOddsHit": 71.4,
-    "sameOddsN": 98
-   },
    {
     "num": "周二004",
     "home": "那不勒斯",
     "away": "博德闪耀",
     "play": "胜平负",
     "label": "主胜",
-    "odds": 1.48,
-    "confidence": 72.9,
-    "sameOddsHit": 72.4,
-    "sameOddsN": 105
+    "odds": 1.61,
+    "confidence": 78.4,
+    "sameOddsHit": 64.6,
+    "sameOddsN": 99
+   },
+   {
+    "num": "周二001",
+    "home": "费内巴切",
+    "away": "布拉格斯拉维亚",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.38,
+    "confidence": 77.9,
+    "sameOddsHit": 71.6,
+    "sameOddsN": 95
+   },
+   {
+    "num": "周二002",
+    "home": "萨巴赫",
+    "away": "多特蒙德",
+    "play": "胜平负",
+    "label": "客胜",
+    "odds": 1.18,
+    "confidence": 76.0,
+    "sameOddsHit": 94.7,
+    "sameOddsN": 19
+   },
+   {
+    "num": "周二003",
+    "home": "伍尔弗汉普顿",
+    "away": "朴次茅斯",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.44,
+    "confidence": 71.7,
+    "sameOddsHit": 72.2,
+    "sameOddsN": 97
    },
    {
     "num": "周二009",
@@ -2887,10 +2909,10 @@
     "away": "马德里竞技",
     "play": "胜平负",
     "label": "客胜",
-    "odds": 1.9,
-    "confidence": 71.7,
-    "sameOddsHit": 50.0,
-    "sameOddsN": 52
+    "odds": 1.76,
+    "confidence": 69.5,
+    "sameOddsHit": 47.9,
+    "sameOddsN": 48
    },
    {
     "num": "周二007",
@@ -2898,8 +2920,8 @@
     "away": "比利亚雷亚尔",
     "play": "让球-1",
     "label": "让胜",
-    "odds": 2.04,
-    "confidence": 62.8,
+    "odds": 1.93,
+    "confidence": 64.7,
     "sameOddsHit": 45.5,
     "sameOddsN": 11
    },
@@ -2909,21 +2931,10 @@
     "away": "PSV埃因霍温",
     "play": "胜平负",
     "label": "主胜",
-    "odds": 1.4,
-    "confidence": 59.4,
-    "sameOddsHit": 71.0,
-    "sameOddsN": 93
-   },
-   {
-    "num": "周二002",
-    "home": "萨巴赫",
-    "away": "多特蒙德",
-    "play": "胜平负",
-    "label": "平局",
-    "odds": 5.75,
-    "confidence": 55,
-    "sameOddsHit": 0.0,
-    "sameOddsN": 9
+    "odds": 1.36,
+    "confidence": 60.2,
+    "sameOddsHit": 73.6,
+    "sameOddsN": 91
    },
    {
     "num": "周二006",
@@ -2931,18 +2942,14 @@
     "away": "巴塞罗那",
     "play": "胜平负",
     "label": "客胜",
-    "odds": 2.2,
+    "odds": 2.13,
     "confidence": 55,
-    "sameOddsHit": 46.9,
-    "sameOddsN": 49
+    "sameOddsHit": 54.2,
+    "sameOddsN": 59
    }
   ],
-  "poolNotes": [
-   "今日候选池仅 7 场，串关选择面受限",
-   "均衡3串1 今日无达标组合（候选不足或赔率单调门槛未过），留空不硬凑",
-   "精锐4串1 今日无达标组合（候选不足或赔率单调门槛未过），留空不硬凑"
-  ],
-  "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
+  "poolNotes": [],
+  "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；引擎版本门（v1.7.25）——当日由旧引擎生成且尚未开球的推荐，在引擎升级后自动解锁并由新逻辑当日重生，已判定记录是历史战绩凭证绝不动；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
   "parlay2": {
    "type": "2串1",
    "tier": "稳健",
@@ -2958,20 +2965,21 @@
      "playKey": "spf",
      "dir": "h",
      "label": "主胜",
-     "odds": 1.48,
-     "confidence": 72.9,
-     "stableIndex": 58.6,
-     "score": 107.9,
+     "odds": 1.61,
+     "confidence": 78.4,
+     "stableIndex": 51.6,
+     "score": 126.2,
      "reasons": [
-      "市场概率60%",
-      "反指0★(推平局)",
-      "被低估11%"
+      "市场概率55%",
+      "反指4★(推平局)",
+      "升水8.8%",
+      "被低估9%"
      ],
      "techCount": 4,
-     "pTrue": 58.5,
-     "sameOddsHit": 72.4,
-     "sameOddsN": 105,
-     "fiveDim": 58.5
+     "pTrue": 52.62,
+     "sameOddsHit": 64.6,
+     "sameOddsN": 99,
+     "fiveDim": 43.5
     },
     {
      "num": "周二009",
@@ -2983,51 +2991,273 @@
      "playKey": "spf",
      "dir": "a",
      "label": "客胜",
-     "odds": 1.9,
-     "confidence": 71.7,
-     "stableIndex": 61.7,
-     "score": 136.3,
+     "odds": 1.76,
+     "confidence": 69.5,
+     "stableIndex": 54.5,
+     "score": 122.3,
      "reasons": [
-      "市场概率46%",
-      "泊松参考33%",
-      "反指2★(推主胜)",
-      "降水3.1%"
+      "市场概率50%",
+      "反指0★(推主胜)",
+      "降水10.2%"
      ],
      "techCount": 3,
-     "pTrue": 47.81,
-     "sameOddsHit": 50.0,
-     "sameOddsN": 52,
-     "fiveDim": 47.7
+     "pTrue": 47.21,
+     "sameOddsHit": 47.9,
+     "sameOddsN": 48,
+     "fiveDim": 43.6
     }
    ],
-   "totalOdds": 2.81,
+   "totalOdds": 2.83,
    "oddsGate": 2.2,
-   "avgConfidence": 72.3,
-   "minOdds": 1.48,
-   "maxOdds": 1.9,
+   "avgConfidence": 74.0,
+   "minOdds": 1.61,
+   "maxOdds": 1.76,
    "playTypes": [
     "胜平负"
    ],
    "isMixed": false,
-   "jointProb": 28.0,
-   "realHit": 36.2,
-   "ev": -21.4,
+   "jointProb": 26.0,
+   "realHit": 30.9,
+   "ev": -26.4,
    "suggestStake": 0.0,
    "rake": 21.5,
    "evNote": "明显负期望，仅作娱乐",
    "recommended": false
   },
-  "parlay3": null,
-  "parlay4": null,
+  "parlay3": {
+   "type": "3串1",
+   "tier": "均衡",
+   "tierDesc": "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔高于稳健档且 4.0-10 倍；EV<0 仍标不推荐",
+   "legs": [
+    {
+     "num": "周二004",
+     "league": "欧冠",
+     "home": "那不勒斯",
+     "away": "博德闪耀",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 1.61,
+     "confidence": 78.4,
+     "stableIndex": 51.6,
+     "score": 126.2,
+     "reasons": [
+      "市场概率55%",
+      "反指4★(推平局)",
+      "升水8.8%",
+      "被低估9%"
+     ],
+     "techCount": 4,
+     "pTrue": 52.62,
+     "sameOddsHit": 64.6,
+     "sameOddsN": 99,
+     "fiveDim": 43.5
+    },
+    {
+     "num": "周二009",
+     "league": "欧冠",
+     "home": "斯图加特",
+     "away": "马德里竞技",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "a",
+     "label": "客胜",
+     "odds": 1.76,
+     "confidence": 69.5,
+     "stableIndex": 54.5,
+     "score": 122.3,
+     "reasons": [
+      "市场概率50%",
+      "反指0★(推主胜)",
+      "降水10.2%"
+     ],
+     "techCount": 3,
+     "pTrue": 47.21,
+     "sameOddsHit": 47.9,
+     "sameOddsN": 48,
+     "fiveDim": 43.6
+    },
+    {
+     "num": "周二007",
+     "league": "欧冠",
+     "home": "利物浦",
+     "away": "比利亚雷亚尔",
+     "kickoff": "2026-10-21 03:00",
+     "play": "让球-1",
+     "playKey": "hhad",
+     "dir": "h",
+     "label": "让胜",
+     "odds": 1.93,
+     "confidence": 64.7,
+     "stableIndex": 70.4,
+     "score": 124.9,
+     "reasons": [
+      "让球概率46%",
+      "盘口-1",
+      "反指主胜→让胜",
+      "与核心方向一致"
+     ],
+     "techCount": 3,
+     "pTrue": null,
+     "sameOddsHit": 45.5,
+     "sameOddsN": 11,
+     "fiveDim": 54.3
+    }
+   ],
+   "totalOdds": 5.47,
+   "oddsGate": 4.0,
+   "avgConfidence": 70.9,
+   "minOdds": 1.61,
+   "maxOdds": 1.93,
+   "playTypes": [
+    "让球-1",
+    "胜平负"
+   ],
+   "isMixed": true,
+   "jointProb": 11.9,
+   "realHit": 14.1,
+   "ev": -34.8,
+   "suggestStake": 0.0,
+   "rake": 30.4,
+   "evNote": "明显负期望，仅作娱乐",
+   "recommended": false
+  },
+  "parlay4": {
+   "type": "4串1",
+   "tier": "精锐",
+   "tierDesc": "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐",
+   "legs": [
+    {
+     "num": "周二004",
+     "league": "欧冠",
+     "home": "那不勒斯",
+     "away": "博德闪耀",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 1.61,
+     "confidence": 78.4,
+     "stableIndex": 51.6,
+     "score": 126.2,
+     "reasons": [
+      "市场概率55%",
+      "反指4★(推平局)",
+      "升水8.8%",
+      "被低估9%"
+     ],
+     "techCount": 4,
+     "pTrue": 52.62,
+     "sameOddsHit": 64.6,
+     "sameOddsN": 99,
+     "fiveDim": 43.5
+    },
+    {
+     "num": "周二001",
+     "league": "欧冠",
+     "home": "费内巴切",
+     "away": "布拉格斯拉维亚",
+     "kickoff": "2026-10-21 00:45",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 1.38,
+     "confidence": 77.9,
+     "stableIndex": 54.0,
+     "score": 107.4,
+     "reasons": [
+      "市场概率64%",
+      "反指2★(推平局)",
+      "降水11.0%"
+     ],
+     "techCount": 4,
+     "pTrue": 59.51,
+     "sameOddsHit": 71.6,
+     "sameOddsN": 95,
+     "fiveDim": 42.1
+    },
+    {
+     "num": "周二003",
+     "league": "英冠",
+     "home": "伍尔弗汉普顿",
+     "away": "朴次茅斯",
+     "kickoff": "2026-10-21 02:45",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 1.44,
+     "confidence": 71.7,
+     "stableIndex": 45.1,
+     "score": 103.2,
+     "reasons": [
+      "市场概率62%",
+      "正路3★",
+      "主队状态83%"
+     ],
+     "techCount": 3,
+     "pTrue": 82.47,
+     "sameOddsHit": 72.2,
+     "sameOddsN": 97,
+     "fiveDim": 43.9
+    },
+    {
+     "num": "周二009",
+     "league": "欧冠",
+     "home": "斯图加特",
+     "away": "马德里竞技",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "a",
+     "label": "客胜",
+     "odds": 1.76,
+     "confidence": 69.5,
+     "stableIndex": 54.5,
+     "score": 122.3,
+     "reasons": [
+      "市场概率50%",
+      "反指0★(推主胜)",
+      "降水10.2%"
+     ],
+     "techCount": 3,
+     "pTrue": 47.21,
+     "sameOddsHit": 47.9,
+     "sameOddsN": 48,
+     "fiveDim": 43.6
+    }
+   ],
+   "totalOdds": 5.63,
+   "oddsGate": 5.48,
+   "avgConfidence": 74.4,
+   "minOdds": 1.38,
+   "maxOdds": 1.76,
+   "playTypes": [
+    "胜平负"
+   ],
+   "isMixed": false,
+   "jointProb": 11.8,
+   "realHit": 16.0,
+   "ev": -33.5,
+   "suggestStake": 0.0,
+   "rake": 38.4,
+   "evNote": "明显负期望，仅作娱乐",
+   "recommended": false
+  },
   "legNote": "串关抽水按场数放大：单场抽水11.4%，2串1约21.6%、3串1约30.6%、4串1约38.5%——串得越多，抽水越狠"
  },
  "parlayHistory": {
-  "total": 56,
+  "total": 58,
   "hit": 14,
-  "miss": 38,
-  "pending": 4,
-  "hitRate": 26.9,
-  "recent7Rate": 0,
+  "miss": 41,
+  "pending": 3,
+  "hitRate": 25.5,
+  "recent7Rate": 22.6,
   "records": [
    {
     "date": "2026-10-09",
@@ -8897,7 +9127,10 @@
       "pTrue": 78.47,
       "sameOddsHit": 73.3,
       "sameOddsN": 101,
-      "fiveDim": 46.0
+      "fiveDim": 46.0,
+      "actualScore": "1:1",
+      "legHit": false,
+      "hit": "miss"
      },
      {
       "num": "周一004",
@@ -8922,12 +9155,15 @@
       "pTrue": 43.33,
       "sameOddsHit": 46.9,
       "sameOddsN": 49,
-      "fiveDim": 58.5
+      "fiveDim": 58.5,
+      "actualScore": "0:3",
+      "legHit": true,
+      "hit": "hit"
      }
     ],
     "recommended": false,
     "ev": -0.4,
-    "result": "pending",
+    "result": "miss",
     "savedAt": "2026-10-19 03:35:03",
     "snapshot": {
      "type": "2串1",
@@ -8999,7 +9235,8 @@
      "rake": 21.5,
      "evNote": "边际，接近盈亏平衡",
      "recommended": false
-    }
+    },
+    "checkedAt": "2026-10-20 09:46:31"
    },
    {
     "date": "2026-10-19",
@@ -9030,7 +9267,11 @@
       "pTrue": null,
       "sameOddsHit": 46.7,
       "sameOddsN": 135,
-      "fiveDim": 64.6
+      "fiveDim": 64.6,
+      "actualScore": "0:3",
+      "legHit": false,
+      "hit": "miss",
+      "adjScore": " (让+1后1:3)"
      },
      {
       "num": "周一008",
@@ -9054,7 +9295,10 @@
       "pTrue": 78.47,
       "sameOddsHit": 73.3,
       "sameOddsN": 101,
-      "fiveDim": 46.0
+      "fiveDim": 46.0,
+      "actualScore": "1:1",
+      "legHit": false,
+      "hit": "miss"
      },
      {
       "num": "周一005",
@@ -9079,12 +9323,16 @@
       "pTrue": null,
       "sameOddsHit": 45.5,
       "sameOddsN": 11,
-      "fiveDim": 40.8
+      "fiveDim": 40.8,
+      "actualScore": "3:1",
+      "legHit": true,
+      "hit": "hit",
+      "adjScore": " (让-1后2:1)"
      }
     ],
     "recommended": false,
     "ev": -15.6,
-    "result": "pending",
+    "result": "miss",
     "savedAt": "2026-10-19 03:35:03",
     "snapshot": {
      "type": "3串1",
@@ -9183,7 +9431,8 @@
      "rake": 30.4,
      "evNote": "轻度负期望，靠命中率撑",
      "recommended": false
-    }
+    },
+    "checkedAt": "2026-10-20 09:46:31"
    },
    {
     "date": "2026-10-19",
@@ -9214,7 +9463,10 @@
       "pTrue": 84.47,
       "sameOddsHit": 72.0,
       "sameOddsN": 93,
-      "fiveDim": 44.7
+      "fiveDim": 44.7,
+      "actualScore": "1:2",
+      "legHit": false,
+      "hit": "miss"
      },
      {
       "num": "周一001",
@@ -9242,7 +9494,10 @@
       "pTrue": 40.99,
       "sameOddsHit": 36.6,
       "sameOddsN": 41,
-      "fiveDim": 36.0
+      "fiveDim": 36.0,
+      "actualScore": "4:0",
+      "legHit": true,
+      "hit": "hit"
      },
      {
       "num": "周一008",
@@ -9266,7 +9521,10 @@
       "pTrue": 79.47,
       "sameOddsHit": 72.2,
       "sameOddsN": 108,
-      "fiveDim": 32.9
+      "fiveDim": 32.9,
+      "actualScore": "1:1",
+      "legHit": false,
+      "hit": "miss"
      },
      {
       "num": "周一004",
@@ -9292,12 +9550,15 @@
       "pTrue": 41.72,
       "sameOddsHit": 56.0,
       "sameOddsN": 50,
-      "fiveDim": 50.9
+      "fiveDim": 50.9,
+      "actualScore": "0:3",
+      "legHit": true,
+      "hit": "hit"
      }
     ],
     "recommended": false,
     "ev": -7.6,
-    "result": "pending",
+    "result": "miss",
     "savedAt": "2026-10-19 11:58:25",
     "snapshot": {
      "type": "4串1",
@@ -9423,13 +9684,14 @@
      "rake": 38.4,
      "evNote": "轻度负期望，靠命中率撑",
      "recommended": false
-    }
+    },
+    "checkedAt": "2026-10-20 09:46:31"
    },
    {
     "date": "2026-10-20",
     "type": "稳健2串1",
-    "totalOdds": 2.81,
-    "avgConfidence": 72.3,
+    "totalOdds": 2.83,
+    "avgConfidence": 74.0,
     "legs": [
      {
       "num": "周二004",
@@ -9441,20 +9703,21 @@
       "playKey": "spf",
       "dir": "h",
       "label": "主胜",
-      "odds": 1.48,
-      "confidence": 72.9,
-      "stableIndex": 58.6,
-      "score": 107.9,
+      "odds": 1.61,
+      "confidence": 78.4,
+      "stableIndex": 51.6,
+      "score": 126.2,
       "reasons": [
-       "市场概率60%",
-       "反指0★(推平局)",
-       "被低估11%"
+       "市场概率55%",
+       "反指4★(推平局)",
+       "升水8.8%",
+       "被低估9%"
       ],
       "techCount": 4,
-      "pTrue": 58.5,
-      "sameOddsHit": 72.4,
-      "sameOddsN": 105,
-      "fiveDim": 58.5
+      "pTrue": 52.62,
+      "sameOddsHit": 64.6,
+      "sameOddsN": 99,
+      "fiveDim": 43.5
      },
      {
       "num": "周二009",
@@ -9466,27 +9729,27 @@
       "playKey": "spf",
       "dir": "a",
       "label": "客胜",
-      "odds": 1.9,
-      "confidence": 71.7,
-      "stableIndex": 61.7,
-      "score": 136.3,
+      "odds": 1.76,
+      "confidence": 69.5,
+      "stableIndex": 54.5,
+      "score": 122.3,
       "reasons": [
-       "市场概率46%",
-       "泊松参考33%",
-       "反指2★(推主胜)",
-       "降水3.1%"
+       "市场概率50%",
+       "反指0★(推主胜)",
+       "降水10.2%"
       ],
       "techCount": 3,
-      "pTrue": 47.81,
-      "sameOddsHit": 50.0,
-      "sameOddsN": 52,
-      "fiveDim": 47.7
+      "pTrue": 47.21,
+      "sameOddsHit": 47.9,
+      "sameOddsN": 48,
+      "fiveDim": 43.6
      }
     ],
     "recommended": false,
-    "ev": -21.4,
+    "ev": -26.4,
     "result": "pending",
-    "savedAt": "2026-10-20 12:35:00",
+    "savedAt": "2026-10-20 13:31:58",
+    "engineVer": "v1.7.25",
     "snapshot": {
      "type": "2串1",
      "tier": "稳健",
@@ -9502,20 +9765,21 @@
        "playKey": "spf",
        "dir": "h",
        "label": "主胜",
-       "odds": 1.48,
-       "confidence": 72.9,
-       "stableIndex": 58.6,
-       "score": 107.9,
+       "odds": 1.61,
+       "confidence": 78.4,
+       "stableIndex": 51.6,
+       "score": 126.2,
        "reasons": [
-        "市场概率60%",
-        "反指0★(推平局)",
-        "被低估11%"
+        "市场概率55%",
+        "反指4★(推平局)",
+        "升水8.8%",
+        "被低估9%"
        ],
        "techCount": 4,
-       "pTrue": 58.5,
-       "sameOddsHit": 72.4,
-       "sameOddsN": 105,
-       "fiveDim": 58.5
+       "pTrue": 52.62,
+       "sameOddsHit": 64.6,
+       "sameOddsN": 99,
+       "fiveDim": 43.5
       },
       {
        "num": "周二009",
@@ -9527,37 +9791,465 @@
        "playKey": "spf",
        "dir": "a",
        "label": "客胜",
-       "odds": 1.9,
-       "confidence": 71.7,
-       "stableIndex": 61.7,
-       "score": 136.3,
+       "odds": 1.76,
+       "confidence": 69.5,
+       "stableIndex": 54.5,
+       "score": 122.3,
        "reasons": [
-        "市场概率46%",
-        "泊松参考33%",
-        "反指2★(推主胜)",
-        "降水3.1%"
+        "市场概率50%",
+        "反指0★(推主胜)",
+        "降水10.2%"
        ],
        "techCount": 3,
-       "pTrue": 47.81,
-       "sameOddsHit": 50.0,
-       "sameOddsN": 52,
-       "fiveDim": 47.7
+       "pTrue": 47.21,
+       "sameOddsHit": 47.9,
+       "sameOddsN": 48,
+       "fiveDim": 43.6
       }
      ],
-     "totalOdds": 2.81,
+     "totalOdds": 2.83,
      "oddsGate": 2.2,
-     "avgConfidence": 72.3,
-     "minOdds": 1.48,
-     "maxOdds": 1.9,
+     "avgConfidence": 74.0,
+     "minOdds": 1.61,
+     "maxOdds": 1.76,
      "playTypes": [
       "胜平负"
      ],
      "isMixed": false,
-     "jointProb": 28.0,
-     "realHit": 36.2,
-     "ev": -21.4,
+     "jointProb": 26.0,
+     "realHit": 30.9,
+     "ev": -26.4,
      "suggestStake": 0.0,
      "rake": 21.5,
+     "evNote": "明显负期望，仅作娱乐",
+     "recommended": false
+    }
+   },
+   {
+    "date": "2026-10-20",
+    "type": "均衡3串1",
+    "totalOdds": 5.47,
+    "avgConfidence": 70.9,
+    "legs": [
+     {
+      "num": "周二004",
+      "league": "欧冠",
+      "home": "那不勒斯",
+      "away": "博德闪耀",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 1.61,
+      "confidence": 78.4,
+      "stableIndex": 51.6,
+      "score": 126.2,
+      "reasons": [
+       "市场概率55%",
+       "反指4★(推平局)",
+       "升水8.8%",
+       "被低估9%"
+      ],
+      "techCount": 4,
+      "pTrue": 52.62,
+      "sameOddsHit": 64.6,
+      "sameOddsN": 99,
+      "fiveDim": 43.5
+     },
+     {
+      "num": "周二009",
+      "league": "欧冠",
+      "home": "斯图加特",
+      "away": "马德里竞技",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "a",
+      "label": "客胜",
+      "odds": 1.76,
+      "confidence": 69.5,
+      "stableIndex": 54.5,
+      "score": 122.3,
+      "reasons": [
+       "市场概率50%",
+       "反指0★(推主胜)",
+       "降水10.2%"
+      ],
+      "techCount": 3,
+      "pTrue": 47.21,
+      "sameOddsHit": 47.9,
+      "sameOddsN": 48,
+      "fiveDim": 43.6
+     },
+     {
+      "num": "周二007",
+      "league": "欧冠",
+      "home": "利物浦",
+      "away": "比利亚雷亚尔",
+      "kickoff": "2026-10-21 03:00",
+      "play": "让球-1",
+      "playKey": "hhad",
+      "dir": "h",
+      "label": "让胜",
+      "odds": 1.93,
+      "confidence": 64.7,
+      "stableIndex": 70.4,
+      "score": 124.9,
+      "reasons": [
+       "让球概率46%",
+       "盘口-1",
+       "反指主胜→让胜",
+       "与核心方向一致"
+      ],
+      "techCount": 3,
+      "pTrue": null,
+      "sameOddsHit": 45.5,
+      "sameOddsN": 11,
+      "fiveDim": 54.3
+     }
+    ],
+    "recommended": false,
+    "ev": -34.8,
+    "result": "pending",
+    "savedAt": "2026-10-20 13:31:58",
+    "engineVer": "v1.7.25",
+    "snapshot": {
+     "type": "3串1",
+     "tier": "均衡",
+     "tierDesc": "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔高于稳健档且 4.0-10 倍；EV<0 仍标不推荐",
+     "legs": [
+      {
+       "num": "周二004",
+       "league": "欧冠",
+       "home": "那不勒斯",
+       "away": "博德闪耀",
+       "kickoff": "2026-10-21 03:00",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 1.61,
+       "confidence": 78.4,
+       "stableIndex": 51.6,
+       "score": 126.2,
+       "reasons": [
+        "市场概率55%",
+        "反指4★(推平局)",
+        "升水8.8%",
+        "被低估9%"
+       ],
+       "techCount": 4,
+       "pTrue": 52.62,
+       "sameOddsHit": 64.6,
+       "sameOddsN": 99,
+       "fiveDim": 43.5
+      },
+      {
+       "num": "周二009",
+       "league": "欧冠",
+       "home": "斯图加特",
+       "away": "马德里竞技",
+       "kickoff": "2026-10-21 03:00",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "a",
+       "label": "客胜",
+       "odds": 1.76,
+       "confidence": 69.5,
+       "stableIndex": 54.5,
+       "score": 122.3,
+       "reasons": [
+        "市场概率50%",
+        "反指0★(推主胜)",
+        "降水10.2%"
+       ],
+       "techCount": 3,
+       "pTrue": 47.21,
+       "sameOddsHit": 47.9,
+       "sameOddsN": 48,
+       "fiveDim": 43.6
+      },
+      {
+       "num": "周二007",
+       "league": "欧冠",
+       "home": "利物浦",
+       "away": "比利亚雷亚尔",
+       "kickoff": "2026-10-21 03:00",
+       "play": "让球-1",
+       "playKey": "hhad",
+       "dir": "h",
+       "label": "让胜",
+       "odds": 1.93,
+       "confidence": 64.7,
+       "stableIndex": 70.4,
+       "score": 124.9,
+       "reasons": [
+        "让球概率46%",
+        "盘口-1",
+        "反指主胜→让胜",
+        "与核心方向一致"
+       ],
+       "techCount": 3,
+       "pTrue": null,
+       "sameOddsHit": 45.5,
+       "sameOddsN": 11,
+       "fiveDim": 54.3
+      }
+     ],
+     "totalOdds": 5.47,
+     "oddsGate": 4.0,
+     "avgConfidence": 70.9,
+     "minOdds": 1.61,
+     "maxOdds": 1.93,
+     "playTypes": [
+      "让球-1",
+      "胜平负"
+     ],
+     "isMixed": true,
+     "jointProb": 11.9,
+     "realHit": 14.1,
+     "ev": -34.8,
+     "suggestStake": 0.0,
+     "rake": 30.4,
+     "evNote": "明显负期望，仅作娱乐",
+     "recommended": false
+    }
+   },
+   {
+    "date": "2026-10-20",
+    "type": "精锐4串1",
+    "totalOdds": 5.63,
+    "avgConfidence": 74.4,
+    "legs": [
+     {
+      "num": "周二004",
+      "league": "欧冠",
+      "home": "那不勒斯",
+      "away": "博德闪耀",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 1.61,
+      "confidence": 78.4,
+      "stableIndex": 51.6,
+      "score": 126.2,
+      "reasons": [
+       "市场概率55%",
+       "反指4★(推平局)",
+       "升水8.8%",
+       "被低估9%"
+      ],
+      "techCount": 4,
+      "pTrue": 52.62,
+      "sameOddsHit": 64.6,
+      "sameOddsN": 99,
+      "fiveDim": 43.5
+     },
+     {
+      "num": "周二001",
+      "league": "欧冠",
+      "home": "费内巴切",
+      "away": "布拉格斯拉维亚",
+      "kickoff": "2026-10-21 00:45",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 1.38,
+      "confidence": 77.9,
+      "stableIndex": 54.0,
+      "score": 107.4,
+      "reasons": [
+       "市场概率64%",
+       "反指2★(推平局)",
+       "降水11.0%"
+      ],
+      "techCount": 4,
+      "pTrue": 59.51,
+      "sameOddsHit": 71.6,
+      "sameOddsN": 95,
+      "fiveDim": 42.1
+     },
+     {
+      "num": "周二003",
+      "league": "英冠",
+      "home": "伍尔弗汉普顿",
+      "away": "朴次茅斯",
+      "kickoff": "2026-10-21 02:45",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 1.44,
+      "confidence": 71.7,
+      "stableIndex": 45.1,
+      "score": 103.2,
+      "reasons": [
+       "市场概率62%",
+       "正路3★",
+       "主队状态83%"
+      ],
+      "techCount": 3,
+      "pTrue": 82.47,
+      "sameOddsHit": 72.2,
+      "sameOddsN": 97,
+      "fiveDim": 43.9
+     },
+     {
+      "num": "周二009",
+      "league": "欧冠",
+      "home": "斯图加特",
+      "away": "马德里竞技",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "a",
+      "label": "客胜",
+      "odds": 1.76,
+      "confidence": 69.5,
+      "stableIndex": 54.5,
+      "score": 122.3,
+      "reasons": [
+       "市场概率50%",
+       "反指0★(推主胜)",
+       "降水10.2%"
+      ],
+      "techCount": 3,
+      "pTrue": 47.21,
+      "sameOddsHit": 47.9,
+      "sameOddsN": 48,
+      "fiveDim": 43.6
+     }
+    ],
+    "recommended": false,
+    "ev": -33.5,
+    "result": "pending",
+    "savedAt": "2026-10-20 13:31:58",
+    "engineVer": "v1.7.25",
+    "snapshot": {
+     "type": "4串1",
+     "tier": "精锐",
+     "tierDesc": "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐",
+     "legs": [
+      {
+       "num": "周二004",
+       "league": "欧冠",
+       "home": "那不勒斯",
+       "away": "博德闪耀",
+       "kickoff": "2026-10-21 03:00",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 1.61,
+       "confidence": 78.4,
+       "stableIndex": 51.6,
+       "score": 126.2,
+       "reasons": [
+        "市场概率55%",
+        "反指4★(推平局)",
+        "升水8.8%",
+        "被低估9%"
+       ],
+       "techCount": 4,
+       "pTrue": 52.62,
+       "sameOddsHit": 64.6,
+       "sameOddsN": 99,
+       "fiveDim": 43.5
+      },
+      {
+       "num": "周二001",
+       "league": "欧冠",
+       "home": "费内巴切",
+       "away": "布拉格斯拉维亚",
+       "kickoff": "2026-10-21 00:45",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 1.38,
+       "confidence": 77.9,
+       "stableIndex": 54.0,
+       "score": 107.4,
+       "reasons": [
+        "市场概率64%",
+        "反指2★(推平局)",
+        "降水11.0%"
+       ],
+       "techCount": 4,
+       "pTrue": 59.51,
+       "sameOddsHit": 71.6,
+       "sameOddsN": 95,
+       "fiveDim": 42.1
+      },
+      {
+       "num": "周二003",
+       "league": "英冠",
+       "home": "伍尔弗汉普顿",
+       "away": "朴次茅斯",
+       "kickoff": "2026-10-21 02:45",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 1.44,
+       "confidence": 71.7,
+       "stableIndex": 45.1,
+       "score": 103.2,
+       "reasons": [
+        "市场概率62%",
+        "正路3★",
+        "主队状态83%"
+       ],
+       "techCount": 3,
+       "pTrue": 82.47,
+       "sameOddsHit": 72.2,
+       "sameOddsN": 97,
+       "fiveDim": 43.9
+      },
+      {
+       "num": "周二009",
+       "league": "欧冠",
+       "home": "斯图加特",
+       "away": "马德里竞技",
+       "kickoff": "2026-10-21 03:00",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "a",
+       "label": "客胜",
+       "odds": 1.76,
+       "confidence": 69.5,
+       "stableIndex": 54.5,
+       "score": 122.3,
+       "reasons": [
+        "市场概率50%",
+        "反指0★(推主胜)",
+        "降水10.2%"
+       ],
+       "techCount": 3,
+       "pTrue": 47.21,
+       "sameOddsHit": 47.9,
+       "sameOddsN": 48,
+       "fiveDim": 43.6
+      }
+     ],
+     "totalOdds": 5.63,
+     "oddsGate": 5.48,
+     "avgConfidence": 74.4,
+     "minOdds": 1.38,
+     "maxOdds": 1.76,
+     "playTypes": [
+      "胜平负"
+     ],
+     "isMixed": false,
+     "jointProb": 11.8,
+     "realHit": 16.0,
+     "ev": -33.5,
+     "suggestStake": 0.0,
+     "rake": 38.4,
      "evNote": "明显负期望，仅作娱乐",
      "recommended": false
     }
