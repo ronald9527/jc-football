@@ -894,6 +894,7 @@ OFI克里特|OFI克里特
 布拉格斯拉维亚|Slavia Prague|Slavia
 布拉格斯巴达|Sparta Prague|Sparta
 比尔森胜利|Viktoria Plzen|Plzen
+布拉迪斯拉发|Slovan Bratislava|Slovan Bratislava
 亚布洛内茨|Jablonec
 奥洛穆茨|Sigma Olomouc
 布拉格波希米亚|Bohemians 1905|Bohemians
@@ -1535,7 +1536,7 @@ MTK布达佩斯|MTK布达佩斯
 普利茅斯|Plymouth|Plymouth Argyle
 牛津联|Oxford|Oxford United
 德比郡|Derby|Derby County|Rams
-朴茨茅斯|Portsmouth|Portsmouth FC
+朴次茅斯|Portsmouth|Portsmouth FC
 伊普斯维奇|Ipswich|Ipswich Town|Tractor Boys
 莱斯特城|Leicester|Leicester City|Foxes
 南安普顿|Southampton|Southampton FC|Saints
@@ -1637,7 +1638,9 @@ IFK哥德堡|IFK Goteborg|Goteborg|IFK Göteborg
 哥德堡|GAIS|GAIS Goteborg|Gais
 布鲁马波卡纳|Brommapojkarna|BP|Brommapojkarna IF
 # ---- 挪超（whoscored 部分覆盖） ----
-博德闪耀|Bodo/Glimt|Bodo Glimt|FK Bodo/Glimt|Bodø/Glimt
+# v1.7.26：补 WhoScored 实际拼写变体 Bodoe/Glimt（周二004 曾因此失配）；
+# 另注：博多格林特与博德闪耀为同一俱乐部两种译名，竞彩官方名为「博德闪耀」
+博德闪耀|Bodo/Glimt|Bodo Glimt|FK Bodo/Glimt|Bodø/Glimt|Bodoe/Glimt|Bodø Glimt
 莫尔德|Molde|Molde FK|Molde Fotball
 维京|Viking|Viking FK|Viking Stavanger
 布兰|Brann|SK Brann|Brann Bergen
@@ -2065,6 +2068,10 @@ YSCC横滨|YSCC Yokohama|YSCC
 摩尔多瓦|Moldova|MDA|Moldovan
 格鲁吉亚|Georgia|GEO|Georgian
 阿塞拜疆|Azerbaijan|AZE|Azerbaijani
+# 阿塞拜疆超俱乐部（v1.7.26 补：欧战常客；竞彩官方名「萨巴赫」。
+# 注意与马来西亚球队「沙巴」(Sabah FC, 马来西亚区) 是两支不同球队，
+# 这里只登记精确别名 Sabah FK，勿把沙巴改为萨巴赫）
+萨巴赫|Sabah FK
 以色列|Israel|ISR|Israeli
 塞浦路斯|Cyprus|CYP|Cypriot
 马耳他|Malta|MLT|Maltese
@@ -2243,6 +2250,12 @@ _ZH_ALIAS = {
     "国际米兰队": "国际米兰",
     "尤文图斯队": "尤文图斯",
     "基多体育大学": "基多体育大学",
+    # 竞彩官方译名兜底（数据源/民间常写异体字，v1.7.26 补：
+    # Portsmouth 竞彩官方名「朴次茅斯」，英系数据源常写「朴茨茅斯」，
+    # 曾因一字之差导致周二003 狼队vs朴次茅斯 的 WhoScored 预测挂不上竞彩编号）
+    "朴茨茅斯": "朴次茅斯",
+    # 博多闪耀两种译名归一（同一俱乐部，竞彩官方名「博德闪耀」）
+    "博多格林特": "博德闪耀",
 }
 
 
@@ -2260,6 +2273,7 @@ def zh_norm(name):
 
 # 构建 TEAM_EN2ZH：英文（原始/归一化）→ 竞彩中文名
 TEAM_EN2ZH = {}
+TEAM_EN2ZH_ALL = {}  # 英文（原始/归一化）→ 全部中文变体列表（v1.7.26，匹配兜底用）
 _ZH2EN = {}  # 竞彩中文名 -> 英文（用于反向校验/调试）
 for _line in _TEAM_SRC.strip().splitlines():
     _line = _line.strip()
@@ -2281,6 +2295,16 @@ for _line in _TEAM_SRC.strip().splitlines():
         if _n:
             TEAM_EN2ZH.setdefault(_n, _zh)
             TEAM_EN2ZH.setdefault(_n.title(), _zh)
+        # 同一英文别名的全部中文变体（v1.7.26）：表内不同分区可能给同一英文队名
+        # 写了不同中文译名（如 Portsmouth→朴次茅斯/朴茨茅斯），TEAM_EN2ZH 后者
+        # 覆盖前者。竞彩编号匹配（_match_jc_num）若只认单一译名，遇到覆盖后的
+        # 译名与竞彩官方名不一致就会失配。这里保留全集供匹配侧兜底。
+        for _k in (_en, _n, _n.title() if _n else ""):
+            if not _k:
+                continue
+            _lst = TEAM_EN2ZH_ALL.setdefault(_k, [])
+            if _zh not in _lst:
+                _lst.append(_zh)
 
 
 def en_to_zh(en_name):
@@ -2293,6 +2317,25 @@ def en_to_zh(en_name):
     if not _n:
         return en_name
     return TEAM_EN2ZH.get(_n) or TEAM_EN2ZH.get(_n.title()) or en_name
+
+
+def en_to_zh_all(en_name):
+    """WhoScored 英文队名 → 表内登记的全部中文变体（含未覆盖主键的归一化键）。
+
+    v1.7.26 新增：用于竞彩编号匹配兜底——主译名（TEAM_EN2ZH，后行覆盖前行）
+    与竞彩官方名不一致时（朴茨茅斯 vs 朴次茅斯），任一中文变体与竞彩队名
+    （zh_norm 后）相等即算命中，杜绝「一字之差整场丢预测」。
+    """
+    if not en_name:
+        return []
+    out = list(TEAM_EN2ZH_ALL.get(en_name) or [])
+    _n = norm_team(en_name)
+    if _n:
+        for k in (_n, _n.title()):
+            for z in (TEAM_EN2ZH_ALL.get(k) or []):
+                if z not in out:
+                    out.append(z)
+    return out
 
 
 def zh_to_en(zh_name):

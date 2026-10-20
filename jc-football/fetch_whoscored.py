@@ -20,10 +20,12 @@ import time
 from datetime import datetime, timedelta
 # 竞彩中文队名 ↔ 英文队名 权威映射（单一真相源），用于服务端精确匹配竞彩编号
 try:
-    from team_map import en_to_zh, zh_norm
+    from team_map import en_to_zh, en_to_zh_all, zh_norm
 except Exception:
     def en_to_zh(n):
         return n
+    def en_to_zh_all(n):
+        return [n] if n else []
     def zh_norm(n):
         return n or ""
 
@@ -379,11 +381,23 @@ def _jc_by_date(jc, archive):
 
 
 def _match_jc_num(home_en, away_en, wdate, by_date):
-    """英文队名 → 竞彩编号：翻译成中文后与竞彩比赛按「队名精确/归一化 + 日期±2天」匹配。"""
+    """英文队名 → 竞彩编号：翻译成中文后与竞彩比赛按「队名精确/归一化 + 日期±2天」匹配。
+
+    v1.7.26：新增中文变体集兜底。team_map 表内同一英文别名在不同分区可能登记了
+    不同中文译名（TEAM_EN2ZH 后行覆盖前行，如 Portsmouth→朴次茅斯/朴茨茅斯），
+    主译名与竞彩官方名一字之差即整场失配（周二003 曾因此丢预测）。主译名精确
+    匹配失败时，再用 en_to_zh_all 的全部中文变体（zh_norm 后）匹配一次。
+    """
     home_zh = en_to_zh(home_en or "")
     away_zh = en_to_zh(away_en or "")
     hz = zh_norm(home_zh)
     az = zh_norm(away_zh)
+    # 变体集兜底（v1.7.26）：主译名之外的登记译名也参与匹配
+    try:
+        hv = {zh_norm(z) for z in en_to_zh_all(home_en or "")}
+        av = {zh_norm(z) for z in en_to_zh_all(away_en or "")}
+    except Exception:
+        hv, av = set(), set()
     cands = {wdate}
     if wdate:
         try:
@@ -395,9 +409,10 @@ def _match_jc_num(home_en, away_en, wdate, by_date):
             pass
     for cd in cands:
         for (jh, ja, jnum) in by_date.get(cd, []):
-            # 先精确（中英文），再归一化兜底
+            # 先精确（中英文），再归一化兜底，最后中文变体集兜底（v1.7.26）
             if (jh == home_zh and ja == away_zh) or (jh == (home_en or "") and ja == (away_en or "")) \
-                    or (zh_norm(jh) == hz and zh_norm(ja) == az):
+                    or (zh_norm(jh) == hz and zh_norm(ja) == az) \
+                    or (bool(hv) and zh_norm(jh) in hv and bool(av) and zh_norm(ja) in av):
                 return jnum
     return None
 
