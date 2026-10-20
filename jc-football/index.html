@@ -418,7 +418,12 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .fd-winner{font-size:10px;color:var(--good);margin-left:4px;font-weight:700}
 /* ============ 竞彩篮球（独立源，v1.7.29） ============ */
 .bk-view{padding:4px 0}
+.bk-view.bk-in{animation:bkSlideIn .3s cubic-bezier(.2,.7,.3,1)}
+@keyframes bkSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .bk-head{background:linear-gradient(135deg,var(--panel) 0%,var(--panel3) 100%);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.bk-head-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bk-back{background:var(--panel3);border:1px solid var(--line);color:var(--sub);border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .15s,border-color .15s}
+.bk-back:hover{color:var(--accent);border-color:var(--accent)}
 .bk-head-title{font-size:20px;font-weight:800;letter-spacing:.5px}
 .bk-head-sub{font-size:11.5px;color:var(--sub);margin-top:4px}
 .bk-head-meta{font-size:10.5px;color:var(--weak);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap}
@@ -1248,9 +1253,12 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="bk-view" id="basketballView" style="display:none">
-    <!-- 专区头部（独立板块门户感：大标题 + 说明 + 数据状态） -->
+    <!-- 专区头部（独立板块门户感：返回按钮 + 大标题 + 说明 + 数据状态） -->
     <div class="bk-head">
-      <div class="bk-head-title">🏀 竞彩篮球</div>
+      <div class="bk-head-row">
+        <button class="bk-back" id="bkBackBtn" title="返回足球板块">← 返回足球</button>
+        <div class="bk-head-title">🏀 竞彩篮球</div>
+      </div>
       <div class="bk-head-sub">官方赛程 · 四玩法实时赔率 · 赛后自动回填 —— 独立数据板块，与足球数据/模型完全隔离</div>
       <div class="bk-head-meta" id="bkHeadMeta"></div>
     </div>
@@ -1517,8 +1525,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.30";
+const VERSION = "v1.7.32";
 const CHANGELOG = [
+  {
+    version: "v1.7.32",
+    date: "2026-10-21",
+    title: "「竞彩篮球」整页化：进入专区后足球 tab 栏整体隐藏，像翻到独立的一页",
+    features: [
+      "点「竞彩篮球」后，足球一级 tab 栏与头部统计条整体隐藏，篮球专区独占整个内容区（带翻页动效）——不再被足球导航遮挡，手机上也不用先往下拉才能看到篮球内容",
+      "专区头部新增「← 返回足球」按钮：回到进来前所在的足球 tab（如来的时候在「今日赛程」，返回就回今日赛程）",
+      "「最新数据/主题/安装App/导入/关于」等顶部功能在篮球专区仍可用（刷新对篮球数据同样生效）",
+    ],
+    fixes: []
+  },
   {
     version: "v1.7.30",
     date: "2026-10-21",
@@ -2187,6 +2206,7 @@ const state = {
   basketballHist: JSON.parse(JSON.stringify(BUILT_BASKETBALL_HISTORY || {records:{}})),
   bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
+  lastFbTab: "today",
   histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", parlayTier: "parlay2", parlayNegOpen: false,
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })()
 };
@@ -2922,6 +2942,7 @@ function renderStarBoard(){
 
 /* ---------- 总渲染 ---------- */
 function render(){
+  const wasBK = document.documentElement.dataset.activeTab === "basketball";  // 翻页动效只在真正切 tab 时播放
   document.documentElement.dataset.activeTab = state.tab;
   renderStats();
   renderFilters();
@@ -2955,6 +2976,13 @@ function render(){
   const isFD = state.tab==="fd";
   const isScorePred = state.tab==="scorepred";
   const isBK = state.tab==="basketball";
+  // 整页化（v1.7.32）：篮球专区激活时，隐藏足球 tab 栏与头部统计条，
+  // 专区独占内容区——像翻到独立的一页，不再被足球导航遮挡；返回时恢复
+  if(!isBK){ state.lastFbTab = state.tab; }
+  const maintabEl = document.querySelector(".maintab");
+  if(maintabEl) maintabEl.style.display = isBK ? "none" : "";
+  const statBarEl = $("#statBar");
+  if(statBarEl) statBarEl.style.display = isBK ? "none" : "";
   document.querySelectorAll(".maintab button").forEach(b=>b.classList.toggle("on", b.dataset.tab===state.tab));
   $("#todayToolbar").style.display = isToday ? "flex" : "none";
   $("#cardsView").style.display = isToday ? "block" : "none";
@@ -2970,7 +2998,10 @@ function render(){
   $("#fdView").style.display = isFD ? "block" : "none";
   $("#scorePredView").style.display = isScorePred ? "block" : "none";
   const bkViewEl = $("#basketballView");
-  if(bkViewEl) bkViewEl.style.display = isBK ? "block" : "none";
+  if(bkViewEl){
+    bkViewEl.style.display = isBK ? "block" : "none";
+    if(isBK && !wasBK){ bkViewEl.classList.remove("bk-in"); void bkViewEl.offsetWidth; bkViewEl.classList.add("bk-in"); }
+  }
   if (isSW){ renderStrongWeak(); return; }
   if (isHKMO){ renderHKMO(); return; }
   if (isHighOdds){ renderHighOdds(); return; }
@@ -3278,6 +3309,11 @@ if(bdStatsEl) bdStatsEl.addEventListener("click", e=>{
 document.addEventListener("click", e=>{
   const t = e.target.closest(".maintab button");
   if (t){ state.tab = t.dataset.tab; render(); }
+});
+/* 篮球专区：返回足球（回到进来前所在的足球 tab，整页化翻页，v1.7.32） */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("#bkBackBtn");
+  if (b){ state.tab = state.lastFbTab || "today"; render(); }
 });
 /* 串关历史：按日期查看（快捷胶囊） */
 document.addEventListener("click", e=>{
@@ -4854,7 +4890,7 @@ function renderScorePred(){
   }
 }
 
-/* ================= 竞彩篮球专区（独立源，v1.7.30 重构为专区+二级tab） =================
+/* ================= 竞彩篮球专区（独立源，v1.7.30 专区+二级tab，v1.7.32 整页化） =================
    数据：BUILT_BASKETBALL（在售赛程+四玩法赔率）
         BUILT_BASKETBALL_HISTORY（档案，含赛后回填的赛果/让分/大小分结果）
    与足球完全隔离：不读 BUILT_DATA / 不参与任何足球模型计算。
@@ -4878,6 +4914,13 @@ function renderBasketball(){
   Object.keys(histRecs).forEach(id => {
     const r = histRecs[id];
     if(!byId[id]) byId[id] = Object.assign({}, r);
+    // 在售件 + 档案已有赛果（回填已跑但比赛还没滚出在售列表的窗口期）：
+    // 保留在售件的最新盘口，把赛果/判定字段补齐，避免被在售件遮挡导致「赛后回看」漏场（v1.7.32）
+    else if(r.score){
+      ["score","evaluated","hdcResult","hiloResult","resultAt"].forEach(k => {
+        if(r[k] !== undefined) byId[id][k] = r[k];
+      });
+    }
   });
   const all = Object.keys(byId).map(k => byId[k]);
   const nDone = all.filter(m => m.score).length;

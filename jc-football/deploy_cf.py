@@ -103,6 +103,17 @@ def template_autobump(html):
                 print("! 自动升版写回 template.html 失败：%s" % e)
             html = re.sub(r'(const VERSION = ")[^"]+(")',
                           r'\g<1>' + bumped + r'\g<2>', html, count=1)
+    # 收尾：以磁盘上 template.html 的实际内容重算指纹与 pageBuild。
+    # 关键修复（2026-10-20）：自动升版会改写 template.html 的 VERSION 行，
+    # 文件哈希随之变化；若仍存改写前的哈希，下次部署（含每30分钟的定时部署）
+    # 会误判「模板又变了」再升一次，版本号无限膨胀。改写后必须重算。
+    if os.path.exists(template_src):
+        try:
+            with open(template_src, "rb") as f:
+                tpl_hash_now = hashlib.sha256(f.read()).hexdigest()
+            page_build = tpl_hash_now[:12]
+        except Exception as e:
+            print("! 重算模板哈希失败：%s" % e)
     if tpl_hash_now:
         try:
             with open(sha_file, "w", encoding="utf-8") as f:
@@ -287,7 +298,11 @@ def main():
     if os.path.exists(dist):
         shutil.rmtree(dist)
     os.makedirs(dist, exist_ok=True)
-    shutil.copy(index_src, os.path.join(dist, "index.html"))
+    # 关键修复（2026-10-20）：必须写「经自动升版改写后的 html」而不是直接拷贝
+    # index_src——否则线上页面 VERSION 与 version.json 的 pageVersion 不一致
+    # （症状：页面左下角 v1.7.31，version.json 却写 v1.7.32，App 同步判定混乱）。
+    with open(os.path.join(dist, "index.html"), "w", encoding="utf-8") as f:
+        f.write(html)
     meta = {"updateTime": upd, "deployTime": deploy_time, "count": count,
             "pageVersion": page_version, "pageBuild": page_build}
     with open(os.path.join(dist, "version.json"), "w", encoding="utf-8") as f:
