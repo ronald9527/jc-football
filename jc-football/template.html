@@ -1179,7 +1179,7 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="highodds-view" id="highOddsView" style="display:none">
-    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">拒绝蚊子肉也拒绝纯高倍：单腿赔率1.40-3.20、同指命中<45%的软腿直接过滤；每档在自身区间内选「联合命中率+EV」最优组合。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
+    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">单场单意见：每场比赛全天只出一个推荐说法，三档共用同一个意见池，差异只在「选不选它、拼几场」；赔率单调（v1.7.25）：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂，候选不足的档位留空不硬凑；拒绝蚊子肉也拒绝纯高倍：单腿赔率1.40-3.20、同指命中<45%的软腿直接过滤；每档在自身区间内选「联合命中率+EV」最优组合。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="highOddsSummary"></div>
     <div id="highOddsList"></div>
   </div>
@@ -1458,8 +1458,36 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.23";
+const VERSION = "v1.7.25";
 const CHANGELOG = [
+  {
+    version: "v1.7.25",
+    date: "2026-10-20",
+    title: "串关赔率单调+候选池透明化：杜绝4串比3串赔得少的倒挂",
+    features: [
+      "赔率单调承诺：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档（动态地板），根治精锐4串1(6.03倍)反而低于均衡3串1(6.27倍)的档位倒挂",
+      "候选池透明卡：当日每场比赛的系统意见+赔率+信心+历史同指命中率全部摊开，用户可自行核对推荐依据，历史记录每条腿也带同指%/信心内联证据",
+      "档位留空诚实提示：候选不足的档位不再硬凑，明确告知「哪档缺席、为什么」，并附候选池规模说明",
+    ],
+    fixes: [
+      "均衡档塞弱腿：单腿信心下限55→60，拒绝为填赔率带纳入信心仅55、同指47%的蹭线腿；静态总赔下限4.50→4.00让位给动态地板，消除与精锐档的赔率带重叠",
+    ]
+  },
+  {
+    version: "v1.7.24",
+    date: "2026-10-20",
+    title: "串关单场单意见：同一场比赛全天一个说法",
+    features: [
+      "三档按钮与完整赛程中，同一场比赛的玩法与方向全场唯一，可直接横向对比三档选场差异",
+    ],
+    fixes: [
+      "修复分层串关同场不同说法：旧逻辑每场保留最多3个选项、各档自行挑选，导致周一004在稳健档选「客胜」、均衡档选「让球+1让胜」，用户视角自相矛盾。现每场先用统一评分（历史同指命中率优先+EV+信心+技术信号）选出唯一「系统意见」，三档只在意见池内组合",
+      "修复兜底组合挤掉达标组合：旧实现中 EV 未达标的兜底组合与达标组合同池计分，高同指但深度负 EV 的组合可能胜出；现达标组合永远优先返回，兜底仅在无达标时出场",
+    ],
+    notes: [
+      "代价说明：意见池收窄后，若当日唯一意见凑不满某档的赔率区间/软腿约束，该档留空（前端如实展示），不再靠同场改玩法硬凑",
+    ]
+  },
   {
     version: "v1.7.23",
     date: "2026-10-20",
@@ -3935,7 +3963,12 @@ function renderHighOdds(){
         const lh = l.legHit;
         const lc = lh===true?"var(--good)":lh===false?"var(--bad)":"var(--sub)";
         const li = lh===true?"✓":lh===false?"✗":"·";
-        return `<span style="color:${lc};font-size:10.5px;">${li}${l.num||""}${l.label||""}</span>`;
+        // 内联证据（v1.7.25）：每条推荐腿都带「同指命中率+信心」，历史可逐条核对，杜绝「随便堆」观感
+        const so = l.sameOddsHit, son = l.sameOddsN || 0;
+        const soTxt = (so!=null && son>=5) ? `同指${so}%(n=${son})` : "";
+        const confTxt = (l.confidence!=null) ? `信心${l.confidence}%` : "";
+        const evTxt = [soTxt, confTxt].filter(Boolean).join(" · ");
+        return `<span style="color:${lc};font-size:10.5px;">${li}${l.num||""}${l.label||""}${evTxt?` <span style="color:var(--sub);font-size:9.5px;">(${evTxt})</span>`:""}</span>`;
       }).join(" ");
       html += `<div style="padding:8px;border-bottom:1px solid var(--border);">
         <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
@@ -3974,7 +4007,7 @@ function renderHighOdds(){
   if(sp){
     spCand = sp.candidateCount || 0;
     if(bdg) bdg.textContent = spCand > 99 ? "99+" : spCand;
-    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
+    html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（单场单意见：同一场比赛全天一个说法，三档只在意见池内组合，差异只在选不选它、拼几场；赔率单调：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
     <div style="margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
       ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：这一注长期平均每花 100 元亏 12 元。<b style="color:var(--bad)">EV 为负 = 长期必亏，没有哪一档「更值得推荐」，只有亏得多与亏得少的区别。</b><br>
@@ -3987,6 +4020,23 @@ function renderHighOdds(){
         <div class="ho-head"><span class="ho-type" style="color:var(--warn)">ℹ️ 今日无达标串关组合</span></div>
         <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但任意组合期望值 EV 均低于档位门槛（串关抽水按场数放大：2串1约21.6%、3串1约30.6%），数学上长期必亏，<b>不推荐下注</b>。可关注单场「稳胆」推荐。</div>
       </div>`;
+    }
+    // 部分档位留空（v1.7.25 赔率单调 + 单场单意见后，候选不足的档位不再硬凑）：
+    // 如实说明哪档缺席、为什么，避免用户误以为页面故障或「推荐不完整」
+    {
+      const _missing = [["parlay2","稳健2串1"],["parlay3","均衡3串1"],["parlay4","精锐4串1"]]
+        .filter(([k])=>!sp[k]).map(([,lb])=>lb);
+      const _present = [["parlay2","稳健2串1"],["parlay3","均衡3串1"],["parlay4","精锐4串1"]]
+        .filter(([k])=>sp[k]).map(([,lb])=>lb);
+      if(_missing.length && _present.length && sp.poolNotes && sp.poolNotes.length){
+        html += `<div class="ho-card" style="border-left:3px solid var(--warn);margin-bottom:10px;">
+          <div class="ho-head"><span class="ho-type" style="color:var(--warn)">ℹ️ 今日仅 ${_present.join(" / ")} 达标</span></div>
+          <div style="margin:8px 0 2px;font-size:12px;color:var(--sub);line-height:1.7;">
+            <b style="color:var(--text)">${_missing.join(" / ")} 今日无达标组合</b>，按「留空不硬凑」原则不出档——宁可少一档，也不为凑数塞入弱腿或制造倒挂。<br>
+            ${sp.poolNotes.map(n=>`· ${n}`).join("<br>")}
+          </div>
+        </div>`;
+      }
     }
     // ===== 分层串关展示策略（少而精，杜绝「推荐一大堆、什么方向都有」）=====
     // 只有「正期望」档位算推荐：串关抽水按场数放大（2串1约21.6%、3串1约30.6%），
@@ -4058,6 +4108,32 @@ function renderHighOdds(){
         <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，<b>全部档位</b>最优组合期望值均为负（${negDesc}）。<b style="color:var(--text)">注意：EV 为负的档位长期玩都必亏——档位之间没有「哪档更值得推荐」，只有亏得多与亏得少的区别，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
       </div>`;
       html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");
+    }
+    // ===== 候选池透明卡（v1.7.25）=====
+    // 把「今天系统从哪些比赛里挑」完整摊开：每场的唯一系统意见+赔率+信心+历史同指命中率。
+    // 用户可自行核对「是不是随便堆的」——一切用数据说话。
+    const _pool = sp.candidatePool || [];
+    if(_pool.length){
+      html += `<div class="ho-card" style="border-left:3px solid var(--accent);margin-top:10px;">
+        <div class="ho-head">
+          <span class="ho-type" style="color:var(--accent)">🧾 今日候选池（${_pool.length} 场）</span>
+          <span style="font-size:11px;color:var(--sub)">三档都只在这些比赛及其系统意见内组合</span>
+        </div>
+        <div style="font-size:11px;color:var(--sub);margin:6px 0 8px;line-height:1.6;">
+          每场比赛全天只有一个「系统意见」（历史同指命中率优先，叠加 EV/信心/技术信号评分选出）；同指命中率来自竞彩官方赛果库同赔率/同盘口条件的历史实战统计，样本 &lt;10 不作依据。
+        </div>
+        <div style="max-height:280px;overflow-y:auto;">` + _pool.map(c=>{
+          const so = c.sameOddsHit, son = c.sameOddsN || 0;
+          const soTxt = (so!=null && son>=10) ? `同指 <b style="color:${so>=60?"var(--good)":(so<45?"var(--bad)":"var(--warn)")}">${so}%</b>(n=${son})` : (son>0 ? `同指样本不足(n=${son})` : "无同指样本");
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dashed var(--border);font-size:11.5px;">
+            <span>${c.num||""} ${c.home||""} vs ${c.away||""}<br><span style="color:var(--sub);font-size:10.5px;">${c.play||""} · <b style="color:var(--good)">${c.label||""}</b></span></span>
+            <span style="text-align:right;">
+              <span style="color:var(--accent);font-weight:600;">@${(c.odds!=null?Number(c.odds).toFixed(2):"—")}</span><br>
+              <span style="color:var(--sub);font-size:10px;">信心${c.confidence!=null?c.confidence:"—"}% · ${soTxt}</span>
+            </span>
+          </div>`;
+        }).join("") + `</div>
+      </div>`;
     }
   }
 

@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-19 11:58:25",
+ "updatedAt": "2026-10-20 12:35:00",
  "records": [
   {
    "date": "2026-10-09",
@@ -6394,6 +6394,143 @@
     "suggestStake": 0.0,
     "rake": 38.4,
     "evNote": "轻度负期望，靠命中率撑",
+    "recommended": false
+   }
+  },
+  {
+   "date": "2026-10-20",
+   "type": "稳健2串1",
+   "totalOdds": 2.81,
+   "avgConfidence": 72.3,
+   "legs": [
+    {
+     "num": "周二004",
+     "league": "欧冠",
+     "home": "那不勒斯",
+     "away": "博德闪耀",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 1.48,
+     "confidence": 72.9,
+     "stableIndex": 58.6,
+     "score": 107.9,
+     "reasons": [
+      "市场概率60%",
+      "反指0★(推平局)",
+      "被低估11%"
+     ],
+     "techCount": 4,
+     "pTrue": 58.5,
+     "sameOddsHit": 72.4,
+     "sameOddsN": 105,
+     "fiveDim": 58.5
+    },
+    {
+     "num": "周二009",
+     "league": "欧冠",
+     "home": "斯图加特",
+     "away": "马德里竞技",
+     "kickoff": "2026-10-21 03:00",
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "a",
+     "label": "客胜",
+     "odds": 1.9,
+     "confidence": 71.7,
+     "stableIndex": 61.7,
+     "score": 136.3,
+     "reasons": [
+      "市场概率46%",
+      "泊松参考33%",
+      "反指2★(推主胜)",
+      "降水3.1%"
+     ],
+     "techCount": 3,
+     "pTrue": 47.81,
+     "sameOddsHit": 50.0,
+     "sameOddsN": 52,
+     "fiveDim": 47.7
+    }
+   ],
+   "recommended": false,
+   "ev": -21.4,
+   "result": "pending",
+   "savedAt": "2026-10-20 12:35:00",
+   "snapshot": {
+    "type": "2串1",
+    "tier": "稳健",
+    "tierDesc": "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐",
+    "legs": [
+     {
+      "num": "周二004",
+      "league": "欧冠",
+      "home": "那不勒斯",
+      "away": "博德闪耀",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 1.48,
+      "confidence": 72.9,
+      "stableIndex": 58.6,
+      "score": 107.9,
+      "reasons": [
+       "市场概率60%",
+       "反指0★(推平局)",
+       "被低估11%"
+      ],
+      "techCount": 4,
+      "pTrue": 58.5,
+      "sameOddsHit": 72.4,
+      "sameOddsN": 105,
+      "fiveDim": 58.5
+     },
+     {
+      "num": "周二009",
+      "league": "欧冠",
+      "home": "斯图加特",
+      "away": "马德里竞技",
+      "kickoff": "2026-10-21 03:00",
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "a",
+      "label": "客胜",
+      "odds": 1.9,
+      "confidence": 71.7,
+      "stableIndex": 61.7,
+      "score": 136.3,
+      "reasons": [
+       "市场概率46%",
+       "泊松参考33%",
+       "反指2★(推主胜)",
+       "降水3.1%"
+      ],
+      "techCount": 3,
+      "pTrue": 47.81,
+      "sameOddsHit": 50.0,
+      "sameOddsN": 52,
+      "fiveDim": 47.7
+     }
+    ],
+    "totalOdds": 2.81,
+    "oddsGate": 2.2,
+    "avgConfidence": 72.3,
+    "minOdds": 1.48,
+    "maxOdds": 1.9,
+    "playTypes": [
+     "胜平负"
+    ],
+    "isMixed": false,
+    "jointProb": 28.0,
+    "realHit": 36.2,
+    "ev": -21.4,
+    "suggestStake": 0.0,
+    "rake": 21.5,
+    "evNote": "明显负期望，仅作娱乐",
     "recommended": false
    }
   }

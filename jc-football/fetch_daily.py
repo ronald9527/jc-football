@@ -4282,42 +4282,70 @@ def gen_safe_parlay(matches):
                         "fiveDim": five_dim
                     })
 
-        # 每场保留最多3个最优选项。
-        # 原实现「每场只留信心最高的1个」，而排序键与赔率无关，导致中高赔被系统性挤掉，
-        # 候选池只剩 1.25-1.45 的蚊子肉。放宽到3个后，各档位才有挑选空间。
-        # 组合时按 num 去重，同一场不会被同时选中，安全。
+        # ===== 单场单意见（v1.7.24）：每场只保留唯一「系统意见」选项 =====
+        # 历史教训（用户实测反馈）：此前每场保留最多3个选项、各档位在组合时自行挑选，
+        # 导致同一场比赛在稳健档选「客胜@2.2」、均衡档选「让球+1让胜@1.51」——
+        # 同一场两套说法，用户视角自相矛盾（"一会客胜一会让胜，简直就是乱来"）。
+        # 现改为：每场先用统一评分选出唯一意见（历史同指命中率优先，叠加 EV/信心/技术信号），
+        # 三档只在这个「意见池」里做组合——同一场比赛全天一个说法，
+        # 档位差异只体现在「选不选它、拼几场」，不再有同场不同玩法。
+        # 若某档因意见池收窄而凑不出达标组合，该档留空（前端如实展示），不靠改说法硬凑。
         if match_options:
-            match_options.sort(key=lambda x: x["confidence"] + stable_index * 0.3, reverse=True)
-            for opt in match_options[:3]:
-                candidates.append({
-                    "num": m.get("num"), "league": m.get("league"),
-                    "home": m.get("home"), "away": m.get("away"),
-                    "kickoff": kickoff, "play": opt["play"], "playKey": opt["playKey"],
-                    "dir": opt["dir"], "label": opt["label"],
-                    "odds": opt["odds"], "confidence": opt["confidence"],
-                    "stableIndex": stable_index,
-                    "score": opt["score"], "reasons": opt["reasons"],
-                    "techCount": opt.get("techCount", 0),
-                    "pTrue": opt.get("pTrue"),
-                    "sameOddsHit": opt.get("sameOddsHit"),
-                    "sameOddsN": opt.get("sameOddsN"),
-                    "fiveDim": opt.get("fiveDim")
-                })
+            def _canon_score(opt):
+                # 地面真实优先：样本充足的同指命中率；否则校准概率 pTrue；再退信心度
+                so, n_ = opt.get("sameOddsHit"), opt.get("sameOddsN") or 0
+                if so is not None and n_ >= 10:
+                    base = so / 100.0
+                elif opt.get("pTrue"):
+                    base = opt["pTrue"] / 100.0
+                else:
+                    base = (opt.get("confidence") or 0) / 100.0
+                # 该选项自身的期望值（市场共识 + alpha 收缩，与 _leg_prob 同口径）
+                o = opt.get("odds") or 0
+                ev = 0.0
+                if o > 1:
+                    p_market = 0.886 / o
+                    pt = opt.get("pTrue")
+                    p = p_market + (pt / 100.0 - p_market) * 0.6 if pt else p_market
+                    ev = min(max(p, 0.01), 0.95) * o - 1.0
+                return (base
+                        + 0.15 * ev
+                        + 0.002 * (opt.get("confidence") or 0)
+                        + 0.01 * (opt.get("techCount") or 0)
+                        + 0.001 * (opt.get("fiveDim") or 0))
+            opt = max(match_options, key=_canon_score)
+            candidates.append({
+                "num": m.get("num"), "league": m.get("league"),
+                "home": m.get("home"), "away": m.get("away"),
+                "kickoff": kickoff, "play": opt["play"], "playKey": opt["playKey"],
+                "dir": opt["dir"], "label": opt["label"],
+                "odds": opt["odds"], "confidence": opt["confidence"],
+                "stableIndex": stable_index,
+                "score": opt["score"], "reasons": opt["reasons"],
+                "techCount": opt.get("techCount", 0),
+                "pTrue": opt.get("pTrue"),
+                "sameOddsHit": opt.get("sameOddsHit"),
+                "sameOddsN": opt.get("sameOddsN"),
+                "fiveDim": opt.get("fiveDim")
+            })
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
     # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选最优组合 =====
     # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明)
-    # 2026-10-19 改革：搏击档（10倍+高赔 EV 优先）历史 23 战 0 胜、腿部同指命中率
-    # 仅 22-54%（纯挑高倍无数据支撑），按用户要求永久移除；新增「精锐4串1」——
-    # 与稳健档同一套命中率哲学（强数据支撑优先），不刻意挑高倍。
+    # 2026-10-20 改革（v1.7.25）：赔率单调承诺——三档按 稳健→均衡→精锐 顺序构建，
+    # 每档总赔必须高于上一档实际总赔（动态地板），杜绝「精锐4串1(6.03) 反而低于
+    # 均衡3串1(6.27)」的档位倒挂（根因：三档独立构建 + 精锐 hit 模式偏爱便宜腿，
+    # 4 条便宜腿乘积极可能低于 3 条中价腿，档位语义被破坏）。
+    # 均衡档同步调整：静态总赔下限 4.50→4.00（让位给动态地板，避免带重叠）、
+    # 单腿信心下限 55→60（拒绝为填赔率带塞入信心仅 55 的弱腿）。
     TIERS = [
         ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08, "hit",
          "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐", 4.0),
-        ("parlay3", "均衡", (3,), 1.50, 4.50, 10.0, 55.0, 0.08, -0.15, "ev",
-         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔4.5-10倍；EV<0 仍标不推荐", 4.0),
+        ("parlay3", "均衡", (3,), 1.50, 4.00, 10.0, 60.0, 0.08, -0.15, "ev",
+         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔高于稳健档且 4.0-10 倍；EV<0 仍标不推荐", 4.0),
         ("parlay4", "精锐", (4,), 1.35, 5.0, 20.0, 66.0, 0.08, -0.08, "hit",
-         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐", 3.2),
+         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐", 3.2),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4343,11 +4371,18 @@ def gen_safe_parlay(matches):
             return min(max(p_market, 0.01), 0.95)
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
-    def build_tier(tier):
+    def build_tier(tier, floor_total=0.0):
         key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc, max_leg = tier
+        # v1.7.25 赔率单调：本档总赔不得低于上一档实际总赔（+0.01 保证严格大于）。
+        # 倒挂根因：三档独立构建时，精锐档 hit 模式天然偏爱便宜腿（赔率低=市场共识
+        # 概率高=同指命中率高），4 条便宜腿乘积极可能低于 3 条中价腿（6.03 vs 6.27），
+        # 用户视角「4 串比 3 串赔得少」= 档位语义崩坏。顺序构建+动态地板修复。
+        eff_min_total = max(min_total, floor_total + 0.01)
         from itertools import combinations
-        best = None
-        best_score = None
+        best_pass = None      # 通过 EV 护栏的达标组合（优先返回）
+        best_pass_score = None
+        best_fb = None        # 兜底组合：EV 未达标时取最接近的，仅在没有达标组合时返回
+        best_fb_score = None
         for n in ns:
             if len(candidates) < n:
                 continue
@@ -4384,7 +4419,7 @@ def gen_safe_parlay(matches):
                 for c in combo:
                     total_odds *= c["odds"]
                     joint_p *= _leg_prob(c)
-                if total_odds < min_total or total_odds > max_total:
+                if total_odds < eff_min_total or total_odds > max_total:
                     continue
                 # 联合概率下限：避免选出数学上几乎不可能中的组合
                 if joint_p < min_joint:
@@ -4400,11 +4435,13 @@ def gen_safe_parlay(matches):
                 # 不再用 EV下限硬卡：负期望日整层消失违背"分层串关"初衷。
                 # 始终取各档最优组合，靠 recommended(EV≥0) 与 evNote 如实标注。
                 if ev < min_ev:
-                    # 兜底记录：取该档 EV 最高（最接近达标）的组合，避免整层不显示
+                    # 兜底记录：取该档 EV 最高（最接近达标）的组合，避免整层不显示。
+                    # 注意：兜底与达标分开计分——达标组合永远优先返回，
+                    # 杜绝「高同指但深度负 EV」的组合挤掉达标组合（旧实现两者同池竞争的缺陷）。
                     fb_score = combo_hit * 100 + 0.01 * ev
-                    if best is None or fb_score > best_score:
-                        best_score = fb_score
-                        best = (list(combo), total_odds, joint_p, ev, n, combo_hit)
+                    if best_fb is None or fb_score > best_fb_score:
+                        best_fb_score = fb_score
+                        best_fb = (list(combo), total_odds, joint_p, ev, n, combo_hit)
                     continue
                 tech_sum = sum(c.get("techCount", 0) for c in combo)
                 stable_sum = sum(c.get("stableIndex", 0) for c in combo)
@@ -4425,9 +4462,10 @@ def gen_safe_parlay(matches):
                 else:
                     # 价值哲学：EV 主导（量级 0.1~1）；技术/稳胆/五维只在 EV 接近时做细微区分
                     score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
-                if best_score is None or score > best_score:
-                    best_score = score
-                    best = (list(combo), total_odds, joint_p, ev, n, combo_hit)
+                if best_pass is None or score > best_pass_score:
+                    best_pass_score = score
+                    best_pass = (list(combo), total_odds, joint_p, ev, n, combo_hit)
+        best = best_pass if best_pass is not None else best_fb
         if not best:
             return None
         selected, total_odds, joint_p, ev, n, real_hit = best
@@ -4449,6 +4487,7 @@ def gen_safe_parlay(matches):
             "type": f"{n}串1", "tier": name, "tierDesc": desc,
             "legs": selected,
             "totalOdds": round(total_odds, 2),
+            "oddsGate": round(eff_min_total, 2),
             "avgConfidence": round(avg_conf, 1),
             "minOdds": min(s["odds"] for s in selected),
             "maxOdds": max(s["odds"] for s in selected),
@@ -4464,15 +4503,40 @@ def gen_safe_parlay(matches):
             "recommended": ev >= 0,
         }
 
-    built = {t[0]: build_tier(t) for t in TIERS}
+    # v1.7.25 顺序构建：稳健→均衡→精锐，每档总赔必须高于上一档实际总赔（动态地板）。
+    # 若某档无达标组合（候选稀薄/门槛未过），该档留空不硬凑，且不抬高后续档的地板。
+    built = {}
+    prev_total = 0.0
+    for t in TIERS:
+        r = build_tier(t, floor_total=prev_total)
+        built[t[0]] = r
+        if r and r.get("totalOdds"):
+            prev_total = max(prev_total, r["totalOdds"])
     parlay2 = built.get("parlay2")
     parlay3 = built.get("parlay3")
     parlay4 = built.get("parlay4")
 
+    # 稀薄池诚实提示：候选不足或某档留空时，如实告知用户，不装作三档齐全
+    pool_notes = []
+    if len(candidates) < 8:
+        pool_notes.append(f"今日候选池仅 {len(candidates)} 场，串关选择面受限")
+    for t, r in zip(TIERS, [built.get(t[0]) for t in TIERS]):
+        if r is None:
+            pool_notes.append(f"{t[1]}{t[2][0]}串1 今日无达标组合（候选不足或赔率单调门槛未过），留空不硬凑")
+
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
+        "candidatePool": [
+            {
+                "num": c["num"], "home": c["home"], "away": c["away"],
+                "play": c["play"], "label": c["label"], "odds": c["odds"],
+                "confidence": c.get("confidence"),
+                "sameOddsHit": c.get("sameOddsHit"), "sameOddsN": c.get("sameOddsN"),
+            } for c in candidates
+        ],
+        "poolNotes": pool_notes,
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,
