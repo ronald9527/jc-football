@@ -274,6 +274,22 @@ def check_isolation():
     if exp is not None and not isinstance(exp.get("recommendations"), list):
         add("WARN", "隔离", "expert_recommendations.json 结构异常")
 
+    # 竞彩篮球（独立源，v1.7.29）：与足球编号空间不同（篮球 301 起 / 足球 001 起），
+    # 校验核心数据零混入 + 篮球文件结构合法
+    bk = load("basketball.json")
+    if bk is not None:
+        bms = bk.get("matches") if isinstance(bk, dict) else None
+        if not isinstance(bms, list):
+            add("ERROR", "隔离", "basketball.json 结构异常（matches 应为列表）")
+        else:
+            leak = [m.get("num") for m in ms
+                    if isinstance(m, dict) and ("mnl" in m or "hilo" in m or "wnm" in m)]
+            if leak:
+                add("ERROR", "隔离", "核心 matches.json 混入篮球字段（%d 场）：%s" % (len(leak), leak[:5]))
+            print("  独立源 basketball.json：%d 场（篮球编号 %s~%s）"
+                  % (len(bms), bms[0].get("num") if bms else "-",
+                     bms[-1].get("num") if bms else "-"))
+
 
 def main():
     strict = "--strict" in sys.argv

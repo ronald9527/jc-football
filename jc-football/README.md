@@ -56,6 +56,7 @@ python3 deploy_cf.py         # 输出 DEPLOY_OK 成功
 | `fetch_bsd.py` | 伤停/首发/教练/天气/裁判/AI预测 | https://dashboard.api-football.com/register（免费 100 次/天） | ⛔ **暂不启用**：免费额度严重不足（详见下） |
 | `fetch_odds_bsd.py` | Pinnacle/Bet365 等实时赔率与水位变动（**独立源**：只写 `odds_bsd.json`） | https://the-odds-api.com（免费 500 次/月） | ⛔ **暂不启用**：免费额度不足（详见下） |
 | `fetch_football_data.py` | football-data.org 官方赛果/赛程核对（**独立源**：只写 `fd_data.json`） | https://www.football-data.org/client/register（免费层） | ✅ 已启用（你提供的 key） |
+| `fetch_basketball.py` | 竞彩篮球：官方 basketball 接口赛程+四玩法赔率（胜负/让分/大小分/胜分差）+ 赛后赛果回填（**独立源**：只写 `basketball.json` / `basketball_history.json`，与足球零耦合） | 竞彩官方 webapi（同足球网关，免费） | ✅ 已启用（v1.7.29 新增板块） |
 
 > ⚠️ **免费额度实测结论（按自动任务 30 次/天、约 900 次/月）**：
 > - **API-Football（100/天）**：每次运行约 60–120 次调用（1 次索引 + 每场 3 次），**首跑即超额 18–36 倍**，完全不够。
@@ -225,6 +226,22 @@ WhoScored 反爬对策（实测结论，改代码前必读）：
 - **IP 级限流持续数小时**：秒级退避等不来解封 → 改为快速失败（2 次尝试），下轮调度自然重试；
 - **预测必须在开球前抓**：已开球/完赛的 preview 页只返回硬封锁 → 抓取阶段按「今天/明天优先」
   排序 + 跳过已开球超 10 分钟的场次，预测进永久缓存，赛果走 livescores / live 页 title 回填。
+
+## 竞彩篮球（Tab）
+
+v1.7.29 新增板块，与足球**完全隔离**（回应「新增副页会不会影响足球数据」：不会，见下方隔离设计）。
+
+- **数据源**：竞彩官方 webapi 的 basketball 路径（与足球同网关、免费、无需 Key）：
+  - 赛程+赔率：`basketball/getMatchCalculatorV1.qry`（在售比赛）
+  - 赛果回填：`basketball/getFixedBonusV1.qry?matchId=`（开奖后 `matchResult.poolStatus="Payout"`，`sectionsNo999` 形如 `"93:116"` = 主队:客队比分）
+- **玩法**（与足球不同，四玩法）：`mnl` 胜负 / `hdc` 让分胜负（goalLine 为代数值，主队实际分+盘口后比较）/ `hilo` 大小分 / `wnm` 胜分差（l1-l6 = 1-5/6-10/11-15/16-20/21-25/26+ 分）
+- **编号空间独立**：篮球周二301 起，与足球 001 起并行，互不冲突；页面底部 Tab 切换
+- **隔离设计（三层）**：
+  1. **文件层**：篮球只写 `basketball.json` / `basketball_history.json`，足球的 `matches.json` / `history.json` / `rules_config.json` 等零触碰；
+  2. **抓取层**：`fetch_basketball.py` 独立运行，失败只保留旧数据跳过篮球（exit 0），`run_daily.sh` 步骤1.89 与其他独立源同款 `have_time` 预算门槛，绝不拖垮足球抓取与部署；
+  3. **校验层**：`test_basketball_fetch.py` 回归测试实证跑篮球 main() 前后 5 个足球核心文件 sha256 全程不变；`selftest.py` 第 7 项新增校验（核心 `matches.json` 不得混入篮球字段 `mnl/hilo/wnm`）
+- **赛果回填节奏**：开赛 2.5 小时后定时任务自动查官方开奖接口，回填比分并判定让分（主队+盘口 vs 客队）与大小分（总分 vs 盘口）结果；单轮上限 30 场保护时间预算
+- **首版不含 AI 预测**：足球 Poisson 模型不适用于篮球，篮球预测模型作为二期（大小分期望/让分覆盖），需历史数据积累后再上
 
 ## App（PWA）
 

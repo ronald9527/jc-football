@@ -149,6 +149,25 @@ def main():
         except Exception:
             pass
     js_ws = json.dumps(ws_data, ensure_ascii=False).replace("</", "<\\/")
+    # 竞彩篮球（独立源：官方 basketball 接口，与足球数据/模型零耦合，v1.7.29）
+    bk_data = {"updatedAt": "", "matches": []}
+    bkp = os.path.join(HERE, "basketball.json")
+    if os.path.exists(bkp):
+        try:
+            with open(bkp, encoding="utf-8") as f:
+                bk_data = json.load(f)
+        except Exception:
+            pass
+    js_bk = json.dumps(bk_data, ensure_ascii=False).replace("</", "<\\/")
+    bkh_data = {"updatedAt": "", "records": {}}
+    bkhp = os.path.join(HERE, "basketball_history.json")
+    if os.path.exists(bkhp):
+        try:
+            with open(bkhp, encoding="utf-8") as f:
+                bkh_data = json.load(f)
+        except Exception:
+            pass
+    js_bkh = json.dumps(bkh_data, ensure_ascii=False).replace("</", "<\\/")
     # SP_TEAM_ZH：英文队名 → 竞彩中文名，由 team_map.py 单一真相源生成
     # （原为 template.html 内手写硬编码字典，key 格式与 WhoScored 实际输出
     #  不一致导致大量汉化失败，v1.7.22 改为自动注入，杜绝双字典漂移）
@@ -175,7 +194,9 @@ def main():
               .replace("__BSD_PLACEHOLDER__", js_bsd)
               .replace("__SCORE_PREDICT_PLACEHOLDER__", js_scorepred)
               .replace("__SP_TEAM_ZH_PLACEHOLDER__", js_sp_team_zh)
-              .replace("__WHOSCORED_PLACEHOLDER__", js_ws))
+              .replace("__WHOSCORED_PLACEHOLDER__", js_ws)
+              .replace("__BASKETBALL_PLACEHOLDER__", js_bk)
+              .replace("__BASKETBALL_HISTORY_PLACEHOLDER__", js_bkh))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
                "__BD_DATA_PLACEHOLDER__", "__BD_HISTORY_PLACEHOLDER__", "__HKMO_HISTORY_PLACEHOLDER__",
@@ -183,7 +204,8 @@ def main():
                "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__",
                "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__",
                "__SCORE_PREDICT_PLACEHOLDER__", "__SP_TEAM_ZH_PLACEHOLDER__",
-               "__WHOSCORED_PLACEHOLDER__"):
+               "__WHOSCORED_PLACEHOLDER__", "__BASKETBALL_PLACEHOLDER__",
+               "__BASKETBALL_HISTORY_PLACEHOLDER__"):
         assert ph not in out, f"占位符未替换: {ph}"
     out_path = os.path.join(HERE, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:
