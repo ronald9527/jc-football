@@ -4536,7 +4536,7 @@ def gen_safe_parlay(matches):
             } for c in candidates
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；引擎版本门（v1.7.25）——当日由旧引擎生成且尚未开球的推荐，在引擎升级后自动解锁并由新逻辑当日重生，已判定记录是历史战绩凭证绝不动；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,
@@ -4713,6 +4713,18 @@ def check_parlay_history():
     }
 
 
+def _parlay_engine_version():
+    """读取 template.html 的 const VERSION 作为引擎版本（版本门用，v1.7.25）"""
+    import re
+    try:
+        tpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template.html")
+        m = re.search(r'const\s+VERSION\s*=\s*"([^"]+)"',
+                      open(tpl, encoding="utf-8").read())
+        return m.group(1) if m else ""
+    except Exception:
+        return ""
+
+
 def load_locked_parlay():
     """从parlay_history.json加载今天已锁定的串关推荐，避免每批次变动。
     返回 (safe_parlay, high_odds_parlay) 或 (None, None) 表示今天尚未锁定。
@@ -4722,8 +4734,16 @@ def load_locked_parlay():
     —— 已发布的推荐必须是「不可篡改」的：用户拿着昨天的推荐来翻查对账，
        如果同一档位隔几小时就换一组，等于推荐可以被随时改写，专业性无从谈起。
     当天尚未发布过的档位，由主流程补生成（只增不改），不影响已发布档位。
+
+    引擎版本门（v1.7.25 新增）：
+    当日由**旧引擎**生成、且**尚未开球**的推荐（result=pending 且 engineVer
+    旧于当前版本），视为「缺陷版本产物」——删除并解锁，让新引擎当日重生。
+    背景：2026-10-20 三档倒挂推荐（v1.7.23 引擎）被当日锁定保护，v1.7.25 修复后
+    无法当日生效（定时任务用自己的旧历史覆盖部署）。已判定（hit/miss）的记录
+    是历史战绩凭证，绝不删除；已开球的 pending 记录同样保留。
     """
     import os
+    import re
     parlay_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "parlay_history.json")
     today = time.strftime("%Y-%m-%d")
     if not os.path.exists(parlay_file):
@@ -4735,6 +4755,46 @@ def load_locked_parlay():
     records = data.get("records", [])
     today_records = [r for r in records if r.get("date") == today]
     if not today_records:
+        return None, None
+
+    # ===== 引擎版本门（v1.7.25）=====
+    def _ver_tuple(v):
+        m = re.match(r'v?(\d+)\.(\d+)\.(\d+)', v or "")
+        return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
+
+    cur_ver = _parlay_engine_version()
+    cur_t = _ver_tuple(cur_ver)
+    stale_ids = set()
+    for r in today_records:
+        if r.get("result") != "pending":
+            continue  # 已判定：历史战绩凭证，绝不删
+        if _ver_tuple(r.get("engineVer", "")) >= cur_t:
+            continue  # 当前引擎产物：正常锁定
+        # 旧引擎产物：仅当全部腿未开球才解锁（开球后的推荐已进入投注窗口，不可篡改）
+        not_started = True
+        for l in (r.get("legs") or []):
+            ko = l.get("kickoff") or ""
+            try:
+                if len(ko) >= 10 and ko[4] == '-':
+                    kt = time.mktime(time.strptime(ko, "%Y-%m-%d %H:%M"))
+                else:
+                    kt = time.mktime(time.strptime(f"{r.get('date','')} {ko}", "%Y-%m-%d %H:%M"))
+                if kt <= time.time():
+                    not_started = False
+                    break
+            except Exception:
+                pass
+        if not_started:
+            stale_ids.add(id(r))
+    if stale_ids:
+        data["records"] = [r for r in records if id(r) not in stale_ids]
+        try:
+            json.dump(data, open(parlay_file, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+        except Exception:
+            pass
+        print(f"  引擎版本门：当日旧引擎未开球推荐 {len(stale_ids)} 条已解锁（{cur_ver} 当日重生）",
+              flush=True)
         return None, None
 
     def rebuild(tier_name):
@@ -4820,6 +4880,9 @@ def save_parlay_history(safe_parlay, high_parlay):
             "legs": p["legs"], "recommended": bool(p.get("recommended", False)),
             "ev": p.get("ev"), "result": "pending",
             "savedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
+            # 引擎版本门（v1.7.25）：记录生成时的引擎版本。当日未开球的推荐若为旧引擎
+            # 产物，下次跑批时 load_locked_parlay 会自动解锁并由新引擎当日重生。
+            "engineVer": _parlay_engine_version(),
             # 完整快照：把发布时该档的全部字段原样留存（EV/建议仓位/档位说明/
             # 命中率/抽水等）。锁定回放时按快照还原，用户翻看历史看到的
             # 必须和当初发布的卡片一模一样，不能是残缺重建。
