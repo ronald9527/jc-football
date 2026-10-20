@@ -418,6 +418,17 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .fd-winner{font-size:10px;color:var(--good);margin-left:4px;font-weight:700}
 /* ============ 竞彩篮球（独立源，v1.7.29） ============ */
 .bk-view{padding:4px 0}
+.bk-head{background:linear-gradient(135deg,var(--panel) 0%,var(--panel3) 100%);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.bk-head-title{font-size:20px;font-weight:800;letter-spacing:.5px}
+.bk-head-sub{font-size:11.5px;color:var(--sub);margin-top:4px}
+.bk-head-meta{font-size:10.5px;color:var(--weak);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap}
+.bk-subtabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:12px;flex-wrap:wrap}
+.bk-subtab{border:none;background:none;color:var(--sub);font-size:13px;font-weight:700;padding:8px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit}
+.bk-subtab:hover{color:var(--accent)}
+.bk-subtab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.bk-subtab .n{font-size:10px;color:var(--weak);margin-left:4px;font-weight:400}
+.bk-group{margin-bottom:14px}
+.bk-group-title{font-size:12px;font-weight:700;color:var(--accent);margin:6px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
 .bk-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-bottom:8px}
 .bk-card-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 .bk-num{font-size:10px;color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:4px;font-weight:700}
@@ -1237,10 +1248,26 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="bk-view" id="basketballView" style="display:none">
-    <div class="fb-title">🏀 竞彩篮球 · 官方赛程与实时赔率<span class="tip">竞彩官方数据源（与足球板块完全隔离，不共用任何数据/模型）；四种玩法：胜负 / 让分胜负 / 大小分 / 胜分差；开赛 2.5 小时后自动回填官方赛果，并判定让分与大小分结果。数据仅作信息展示，不构成任何投注建议</span></div>
-    <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkSummary"></div>
-    <div class="sp-filters" id="bkDateBar"></div>
-    <div id="bkList"></div>
+    <!-- 专区头部（独立板块门户感：大标题 + 说明 + 数据状态） -->
+    <div class="bk-head">
+      <div class="bk-head-title">🏀 竞彩篮球</div>
+      <div class="bk-head-sub">官方赛程 · 四玩法实时赔率 · 赛后自动回填 —— 独立数据板块，与足球数据/模型完全隔离</div>
+      <div class="bk-head-meta" id="bkHeadMeta"></div>
+    </div>
+    <!-- 二级 tab 栏（篮球专区专属导航：后续篮球功能都往这里加） -->
+    <div class="bk-subtabs" id="bkSubTabs"></div>
+    <!-- 赛程赔率 pane -->
+    <div id="bkSchedPane">
+      <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkSummary"></div>
+      <div class="sp-filters" id="bkDateBar"></div>
+      <div id="bkList"></div>
+    </div>
+    <!-- 赛后回看 pane -->
+    <div id="bkHistPane" style="display:none">
+      <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkHistSummary"></div>
+      <div class="sp-filters" id="bkHistDateBar"></div>
+      <div id="bkHistList"></div>
+    </div>
   </div>
 
   <div class="sp-view" id="scorePredView" style="display:none">
@@ -1490,8 +1517,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.29";
+const VERSION = "v1.7.30";
 const CHANGELOG = [
+  {
+    version: "v1.7.30",
+    date: "2026-10-21",
+    title: "「竞彩篮球」升级为独立专区：二级 tab 架构，后续功能往专区内加",
+    features: [
+      "篮球从「一级 tab 一屏列表」重构为「专区页」：进入后呈现独立板块门户（大标题 + 隔离说明 + 数据更新时间），一级 tab 栏不再随篮球功能增加而膨胀",
+      "专区二级 tab 栏（当前：赛程赔率 / 赛后回看）：后续篮球新功能（AI 预测、串关、历史统计等）都往二级 tab 里追加，一级导航保持稳定",
+      "赛程赔率 tab 只列未开赛/待回填比赛；已完赛的自动归入「赛后回看」tab（按日期倒序分组，展示比分 + 让分/大小分判定），两个 tab 内容互补不重叠",
+    ],
+    fixes: []
+  },
   {
     version: "v1.7.29",
     date: "2026-10-21",
@@ -2147,7 +2185,7 @@ const state = {
   // 竞彩篮球（独立源，v1.7.29）：赛程赔率 + 历史档案（含赛果回填）
   basketball: JSON.parse(JSON.stringify(BUILT_BASKETBALL || {matches:[]})),
   basketballHist: JSON.parse(JSON.stringify(BUILT_BASKETBALL_HISTORY || {records:{}})),
-  bkDate: "all",
+  bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", parlayTier: "parlay2", parlayNegOpen: false,
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })()
@@ -4816,10 +4854,13 @@ function renderScorePred(){
   }
 }
 
-/* ================= 竞彩篮球（独立源，v1.7.29） =================
+/* ================= 竞彩篮球专区（独立源，v1.7.30 重构为专区+二级tab） =================
    数据：BUILT_BASKETBALL（在售赛程+四玩法赔率）
         BUILT_BASKETBALL_HISTORY（档案，含赛后回填的赛果/让分/大小分结果）
-   与足球完全隔离：不读 BUILT_DATA / 不参与任何足球模型计算。 */
+   与足球完全隔离：不读 BUILT_DATA / 不参与任何足球模型计算。
+   结构：renderBasketball（专区框架+二级tab分派）
+        → renderBkSched（赛程赔率）/ renderBkHist（赛后回看）
+        后续篮球新功能（AI预测/串关等）在此加二级 tab + render 函数即可。 */
 const BK_PLAY_NAME = {mnl:"胜负", hdc:"让分胜负", hilo:"大小分", wnm:"胜分差"};
 const BK_WNM_NAME = {l1:"1-5分", l2:"6-10分", l3:"11-15分", l4:"16-20分", l5:"21-25分", l6:"26+分"};
 
@@ -4829,22 +4870,62 @@ function renderBasketball(){
   const msAll = bk.matches || [];
   const bdg = $("#bkBdg");
   if(bdg){ bdg.textContent = msAll.length; }
-  const sumBox = $("#bkSummary");
-  const dateBar = $("#bkDateBar");
-  const listBox = $("#bkList");
-  if(!listBox) return;
+  if(!state.bkSubTab) state.bkSubTab = "sched";
 
-  /* 档案合并：在售比赛 + 已滚出在售的近期比赛（有赛果的回看） */
+  /* 档案合并：在售比赛 + 已滚出在售的近期比赛（有赛果的进「赛后回看」） */
   const byId = {};
   msAll.forEach(m => { byId[m.id] = Object.assign({}, m); });
   Object.keys(histRecs).forEach(id => {
     const r = histRecs[id];
     if(!byId[id]) byId[id] = Object.assign({}, r);
   });
-  let all = Object.keys(byId).map(k => byId[k]);
+  const all = Object.keys(byId).map(k => byId[k]);
+  const nDone = all.filter(m => m.score).length;
+  const nPre = all.length - nDone;
+
+  /* 专区头部 meta（数据源与更新时间） */
+  const meta = $("#bkHeadMeta");
+  if(meta){
+    const parts = [];
+    if(bk.updatedAt) parts.push(`赛程赔率更新 ${bk.updatedAt}`);
+    if(state.basketballHist && state.basketballHist.updatedAt) parts.push(`赛果档案更新 ${state.basketballHist.updatedAt}`);
+    parts.push("每 30 分钟自动更新");
+    meta.innerHTML = parts.map(p => `<span>🕐 ${p}</span>`).join("");
+  }
+
+  /* 二级 tab 栏（篮球专区专属导航，后续功能往此处追加） */
+  const subTabs = $("#bkSubTabs");
+  if(subTabs){
+    const tabs = [
+      {k:"sched", label:"赛程赔率", n:nPre},
+      {k:"hist",  label:"赛后回看", n:nDone},
+      // ▼ 后续篮球功能在此追加二级 tab（如 {k:"ai", label:"AI预测"}）
+    ];
+    subTabs.innerHTML = tabs.map(t =>
+      `<button class="bk-subtab ${state.bkSubTab===t.k?"on":""}" data-bksub="${t.k}">${t.label}${t.n!=null?`<span class="n">${t.n}</span>`:""}</button>`
+    ).join("");
+    subTabs.querySelectorAll("button[data-bksub]").forEach(b => {
+      b.onclick = () => { state.bkSubTab = b.dataset.bksub; renderBasketball(); };
+    });
+  }
+
+  /* pane 切换 + 分派渲染 */
+  $("#bkSchedPane").style.display = state.bkSubTab === "sched" ? "block" : "none";
+  $("#bkHistPane").style.display = state.bkSubTab === "hist" ? "block" : "none";
+  if(state.bkSubTab === "hist"){ renderBkHist(all); return; }
+  renderBkSched(all);
+}
+
+/* 二级 tab：赛程赔率（日期筛选 + 四玩法赔率卡片） */
+function renderBkSched(all){
+  const sumBox = $("#bkSummary");
+  const dateBar = $("#bkDateBar");
+  const listBox = $("#bkList");
+  if(!listBox) return;
+  /* 已完赛的只在「赛后回看」出现，赛程列表只留未开赛/待回填 */
+  all = all.filter(m => !m.score);
   all.sort((a,b) => (a.kickoff||"").localeCompare(b.kickoff||""));
 
-  /* 日期筛选条（北京日期，取 kickoff 前 10 位 + 8 小时近似日切） */
   const dates = [...new Set(all.map(m => bkDateOf(m)))].sort();
   if(state.bkDate !== "all" && dates.indexOf(state.bkDate) < 0) state.bkDate = "all";
   if(dateBar){
@@ -4860,56 +4941,90 @@ function renderBasketball(){
   }
   const shown = state.bkDate === "all" ? all : all.filter(m => bkDateOf(m) === state.bkDate);
 
-  /* 汇总行 */
-  const nDone = shown.filter(m => m.score).length;
-  const nPre = shown.length - nDone;
   if(sumBox){
-    sumBox.innerHTML = `共 <b>${shown.length}</b> 场 · 已回填赛果 <b>${nDone}</b> 场 · 未开赛/待回填 <b>${nPre}</b> 场`
-      + (bk.updatedAt ? ` · 数据更新 ${bk.updatedAt}` : "")
-      + ` · 赔率更新时刻以各玩法为准`;
+    sumBox.innerHTML = `未开赛/待回填 <b>${shown.length}</b> 场（已完赛的请到「赛后回看」查看）`
+      + ` · 四种玩法：胜负 / 让分胜负 / 大小分 / 胜分差`;
   }
-
-  /* 渲染卡片 */
   let html = "";
-  shown.forEach(m => {
-    const done = !!m.score;
-    const hdc = m.hdc || {}, hilo = m.hilo || {}, mnl = m.mnl || {}, wnm = m.wnm || {};
-    const kickBJ = (m.kickoff || "").slice(5, 16);
-    html += `<div class="bk-card">`
-      + `<div class="bk-card-head">`
-      + `<span class="bk-num">${m.num || ""}</span>`
-      + `<span class="bk-league">${m.league || ""}</span>`
-      + `<span class="bk-time">${kickBJ}</span>`
-      + `<span class="bk-teams">${m.home || ""}<span class="bk-vs">vs</span>${m.away || ""}</span>`
-      + (done
-          ? `<span class="bk-status st-done">已完赛</span><span class="bk-score">${m.score[0]} : ${m.score[1]}</span>`
-          : `<span class="bk-status st-pre">未开赛</span>`)
-      + `</div>`;
-    /* 四玩法赔率（让分/大小分带盘口；赛后高亮命中） */
-    html += `<div class="bk-odds">`
-      + bkOdCell("胜负", "", mnl.h, mnl.a, done && m.score ? (m.score[0] > m.score[1] ? "h" : "a") : null)
-      + bkOdCell("让分胜负", hdc.goalLine ? "主队" + bkSign(hdc.goalLine) : "", hdc.h, hdc.a, done ? m.hdcResult : null)
-      + bkOdCell("大小分", hilo.goalLine ? "总分" + bkLine(hilo.goalLine) : "", hilo.h, hilo.l, done ? m.hiloResult : null)
-      + `<div class="bk-od"><div class="bk-od-k">胜分差</div><div class="bk-od-line">主胜区间赔率</div>`
-      + `<div class="bk-od-v" style="font-size:10px">${wnm.l1 ? "1-5分 " + wnm.l1 : "-"}${wnm.l3 ? " / 11-15分 " + wnm.l3 : ""}</div></div>`
-      + `</div>`;
-    /* 胜分差全量（紧凑行） */
-    const wnmKeys = Object.keys(wnm).filter(k => /^l\d+$/.test(k)).sort();
-    if(wnmKeys.length){
-      html += `<div class="bk-wnm">` + wnmKeys.map(k =>
-        `<span>${BK_WNM_NAME[k] || k} ${wnm[k]}</span>`).join("") + `</div>`;
-    }
-    /* 赛后结果说明 */
-    if(done){
-      const parts = [];
-      if(m.hdcResult) parts.push(`让分${m.hdcResult === "h" ? "主胜" : m.hdcResult === "a" ? "客胜" : "走水"}`);
-      if(m.hiloResult) parts.push(m.hiloResult === "h" ? "大分" : "小分");
-      if(parts.length) html += `<div class="bk-res">判定：${parts.join(" · ")}</div>`;
-    }
-    html += `</div>`;
-  });
+  shown.forEach(m => { html += bkCardHtml(m); });
   if(!shown.length) html = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球赛程数据（数据源每 30 分钟自动更新）</div>`;
   listBox.innerHTML = html;
+}
+
+/* 二级 tab：赛后回看（已回填赛果的比赛，按日期倒序分组） */
+function renderBkHist(all){
+  const sumBox = $("#bkHistSummary");
+  const dateBar = $("#bkHistDateBar");
+  const listBox = $("#bkHistList");
+  if(!listBox) return;
+  const done = all.filter(m => m.score);
+  done.sort((a,b) => (b.kickoff||"").localeCompare(a.kickoff||""));   // 最近比赛在前
+  if(!state.bkHistDate) state.bkHistDate = "all";
+  const dates = [...new Set(done.map(m => bkDateOf(m)))].sort().reverse();
+  if(state.bkHistDate !== "all" && dates.indexOf(state.bkHistDate) < 0) state.bkHistDate = "all";
+  if(dateBar){
+    let h = `<button class="chip ${state.bkHistDate==="all"?"on":""}" data-bkhdate="all">全部 ${done.length}</button>`;
+    dates.forEach(d => {
+      const n = done.filter(m => bkDateOf(m) === d).length;
+      h += `<button class="chip ${state.bkHistDate===d?"on":""}" data-bkhdate="${d}">${d.slice(5)} ${n}</button>`;
+    });
+    dateBar.innerHTML = h;
+    dateBar.querySelectorAll("button[data-bkhdate]").forEach(b => {
+      b.onclick = () => { state.bkHistDate = b.dataset.bkhdate; renderBasketball(); };
+    });
+  }
+  const shown = state.bkHistDate === "all" ? done : done.filter(m => bkDateOf(m) === state.bkHistDate);
+  if(sumBox){
+    sumBox.innerHTML = `共 <b>${shown.length}</b> 场已回填赛果 · 开赛 2.5 小时后由定时任务自动回填官方赛果，并判定让分/大小分结果`
+      + (shown.length ? ` · 最新一场：${shown[0].home} ${shown[0].score[0]}:${shown[0].score[1]} ${shown[0].away}` : "");
+  }
+  /* 按日期分组渲染 */
+  let html = "";
+  const groups = {};
+  shown.forEach(m => { const d = bkDateOf(m); (groups[d] = groups[d] || []).push(m); });
+  Object.keys(groups).sort().reverse().forEach(d => {
+    html += `<div class="bk-group"><div class="bk-group-title">${d}</div>`;
+    groups[d].forEach(m => { html += bkCardHtml(m, true); });
+    html += `</div>`;
+  });
+  if(!shown.length) html = `<div style="padding:24px;text-align:center;color:var(--sub)">暂无已回填赛果<br><span style="font-size:11px">今晚美职篮开赛、明早定时任务跑完后自动出现在这里</span></div>`;
+  listBox.innerHTML = html;
+}
+
+/* 篮球比赛卡片（赛程/回看共用） */
+function bkCardHtml(m){
+  const done = !!m.score;
+  const hdc = m.hdc || {}, hilo = m.hilo || {}, mnl = m.mnl || {}, wnm = m.wnm || {};
+  const kickBJ = (m.kickoff || "").slice(5, 16);
+  let html = `<div class="bk-card">`
+    + `<div class="bk-card-head">`
+    + `<span class="bk-num">${m.num || ""}</span>`
+    + `<span class="bk-league">${m.league || ""}</span>`
+    + `<span class="bk-time">${kickBJ}</span>`
+    + `<span class="bk-teams">${m.home || ""}<span class="bk-vs">vs</span>${m.away || ""}</span>`
+    + (done
+        ? `<span class="bk-status st-done">已完赛</span><span class="bk-score">${m.score[0]} : ${m.score[1]}</span>`
+        : `<span class="bk-status st-pre">未开赛</span>`)
+    + `</div>`;
+  html += `<div class="bk-odds">`
+    + bkOdCell("胜负", "", mnl.h, mnl.a, done ? (m.score[0] > m.score[1] ? "h" : "a") : null)
+    + bkOdCell("让分胜负", hdc.goalLine ? "主队" + bkSign(hdc.goalLine) : "", hdc.h, hdc.a, done ? m.hdcResult : null)
+    + bkOdCell("大小分", hilo.goalLine ? "总分" + bkLine(hilo.goalLine) : "", hilo.h, hilo.l, done ? m.hiloResult : null)
+    + `<div class="bk-od"><div class="bk-od-k">胜分差</div><div class="bk-od-line">主胜区间赔率</div>`
+    + `<div class="bk-od-v" style="font-size:10px">${wnm.l1 ? "1-5分 " + wnm.l1 : "-"}${wnm.l3 ? " / 11-15分 " + wnm.l3 : ""}</div></div>`
+    + `</div>`;
+  const wnmKeys = Object.keys(wnm).filter(k => /^l\d+$/.test(k)).sort();
+  if(wnmKeys.length){
+    html += `<div class="bk-wnm">` + wnmKeys.map(k =>
+      `<span>${BK_WNM_NAME[k] || k} ${wnm[k]}</span>`).join("") + `</div>`;
+  }
+  if(done){
+    const parts = [];
+    if(m.hdcResult) parts.push(`让分${m.hdcResult === "h" ? "主胜" : m.hdcResult === "a" ? "客胜" : "走水"}`);
+    if(m.hiloResult) parts.push(m.hiloResult === "h" ? "大分" : "小分");
+    if(parts.length) html += `<div class="bk-res">判定：${parts.join(" · ")}</div>`;
+  }
+  return html + `</div>`;
 }
 function bkDateOf(m){ return (m.kickoff || m.date || "").slice(0, 10); }
 function bkSign(s){ return String(s).indexOf("-") === 0 ? s : "+" + s; }
