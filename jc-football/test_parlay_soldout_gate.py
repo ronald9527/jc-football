@@ -3,7 +3,8 @@
 场景：
 A. pending + 当前引擎 + 腿停售        → 该档解锁（返回 None），记录删除
 B. pending + 当前引擎 + 全部在售      → 正常锁定回放
-C. 已判定(hit) + 腿停售               → 保留并回放（战绩凭证绝不删）
+C. 已判定(hit) + 腿停售               → 保留在历史，但不回放为当前推荐（v1.7.34 rebuild 只回放 pending）
+C2. 已判定 + pending 并存             → 只回放 pending，已判定组不占推荐位
 D. today_matches 为空/None            → 不删任何记录（防抓取异常误删）
 E. pending + 旧引擎 + 腿停售(已开球)  → 删除（修复版本门漏洞：旧逻辑因「已开球」保留）
 """
@@ -25,7 +26,11 @@ sys.modules["fd"] = fd
 spec.loader.exec_module(fd)
 
 CUR_VER = fd._parlay_engine_version()
-assert CUR_VER == "v1.7.33", f"引擎版本 {CUR_VER}（预期 v1.7.33，升版后再跑）"
+# 本测试覆盖 v1.7.33+ 的锁定语义；引擎升版后自动跟随当前版本
+def _ver_tuple(v):
+    m = __import__("re").match(r'v?(\d+)\.(\d+)\.(\d+)', v or "")
+    return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
+assert _ver_tuple(CUR_VER) >= (1, 7, 33), f"引擎版本 {CUR_VER} 过低（预期 ≥ v1.7.33）"
 
 PASS, FAIL = [], []
 def check(name, cond, detail=""):
@@ -89,13 +94,27 @@ safe, after = run_case("B", recs, SOLD)
 check("稳健档正常锁定回放", safe is not None and safe.get("parlay2") is not None)
 check("记录保留不动", len(after) == 1)
 
-# ===== C. 已判定 + 腿停售 → 保留+回放 =====
-print("\n[C] 已判定(hit) + 腿停售（战绩凭证）")
+# ===== C. 已判定 + 腿停售 → 保留在历史，不回放为当前推荐 =====
+print("\n[C] 已判定(hit) + 腿停售（战绩凭证保留，但不占推荐位）")
 recs = [_rec("稳健", "2串1", _legs("周三001", "周三002"), CUR_VER, result="hit",
              extra={"resultAt": f"{FAKE_TODAY} 20:30:00"})]
 safe, after = run_case("C", recs, SOLD)
 check("已判定记录保留", len(after) == 1)
-check("已判定档位照常回放", safe is not None and safe.get("parlay2") is not None)
+check("已判定档位不作为当前推荐回放（safe=None）", safe is None,
+      f"safe={safe}")
+
+# ===== C2. 已判定 + pending 并存 → 只回放 pending =====
+print("\n[C2] 已判定(miss) + pending 并存 —— 用户跟过的旧组不能占推荐位")
+recs = [_rec("稳健", "2串1", _legs("周三013", "周三003"), CUR_VER, result="miss",
+             extra={"resultAt": f"{FAKE_TODAY} 20:30:00"}),   # 含已停售的003，已判错
+        _rec("稳健", "2串1", _legs("周三012", "周三013"), CUR_VER)]  # 19:45 重生，pending
+safe, after = run_case("C2", recs, SOLD)
+check("已判定旧组保留在历史", any(r["result"] == "miss" for r in after))
+check("pending 新组保留在历史", any(r["result"] == "pending" for r in after))
+check("回放的是 pending 新组（012+013），非已判错旧组",
+      safe and safe.get("parlay2") and
+      [l["num"] for l in safe["parlay2"]["legs"]] == ["周三012", "周三013"],
+      f"safe={safe}")
 
 # ===== D. matches 为空 → 不删 =====
 print("\n[D] today_matches 为空/None（防抓取异常误删）")

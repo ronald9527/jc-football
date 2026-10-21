@@ -189,6 +189,24 @@ python3 version_sync.py --check    # 不一致退出码非 0（CI 调用）
   已开球的 pending 记录此前被「已开球不可篡改」保留，回放的却是停售推荐。
   测试 `test_parlay_soldout_gate.py`（5 场景：停售解锁/在售锁定/已判定保留/空清单防误删/
   旧引擎+停售删除）。
+- **先判定后门禁（v1.7.34 追加）**：主流程把 `check_parlay_history()` 前移到
+  `load_locked_parlay()` **之前**——官方赛果（backfill 已覆盖滚出在售清单的比赛，
+  按 history.json 自身记录回填）先把含已开奖腿的 pending 档判掉，门禁随后只删
+  「真的还没开赛又买不了」的档位。旧顺序（门禁先删、回查后判）会造成事故：
+  2026-10-21 20:32 批次拿到 003 赛果（0:3 主负）的同一秒，含 003 的三条 pending
+  已被停售腿门删除，用户跟过的推荐从历史里凭空消失、无法对账。
+  测试 `test_parlay_judge_before_gate.py`（修复后顺序保留+判 miss / 旧顺序反证丢记录 /
+  decided_miss 语义不回归）。
+- **一腿错即整组 miss（v1.7.34 追加，`check_parlay_history` 判定语义）**：串关只要有
+  一条腿已开奖且方向错误，无论其余腿是否开赛，整组立即判 miss——串关语义就是一腿死
+  全组死。旧逻辑「任一无赛果就整组 pending」会把已输掉的组挂成待开奖（003 已 0:3 主负，
+  却因其余腿是 10-22 比赛一直显示「待赛」）。同时 pending 组里已开奖腿的
+  actualScore/legHit 现在也落盘（result 未变也持久化，页面可见逐腿进度）。
+  测试 `test_parlay_decided_miss.py`（混合态判错/判对/全中/全错/全未开/幂等性）。
+- **rebuild 只回放 pending（v1.7.34）**：当日推荐位只呈现未开球的 pending 组；已判定
+  （hit/miss）记录的归宿是「串关历史战绩」区对账，绝不再被回放成可下单的「今日推荐」
+  （防止用户把已输掉的旧组当成当前推荐）。generatedAt 取 pending 首条；当日无 pending
+  且无在售候选（赛后场景）时 `safe_parlay = None`，不显示误导性「今日无达标」卡。
 
 ## 比分预测（Tab）
 

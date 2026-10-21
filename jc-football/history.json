@@ -1,7 +1,4324 @@
 {
- "updatedAt": "2026-10-19 11:58:25",
- "total": 549,
+ "updatedAt": "2026-10-21 11:01:52",
+ "total": 583,
  "records": [
+  {
+   "id": "2042129",
+   "num": "周四013",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 08:30",
+   "league": "解放者杯",
+   "home": "弗拉门戈",
+   "away": "拉普拉塔大学生",
+   "goal": "-1",
+   "odds": {
+    "h": 1.26,
+    "d": 4.28,
+    "a": 9.75
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "解放者杯1",
+   "ar": "解放者杯2",
+   "hrn": 1,
+   "arn": 2,
+   "goalsExp": 2.59,
+   "hhProb": 55.6,
+   "aaProb": 5.9,
+   "verdict": {
+    "t": "good",
+    "txt": "半全场主/主隐含概率55.6%≥51.0%，机构预期主队全场压制，强化主胜",
+    "dir": "h",
+    "stars": 2,
+    "score": 1.39,
+    "reasons": [
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率55.6%≥51.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率55.6%≥51.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.59球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.59≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 1.39,
+    "stars": 2,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.3,
+    "expAway": 1.6,
+    "totalGoals": 2.59,
+    "reasons": [
+     "预期总进球2.59球",
+     "主队预期进球1.3·客队预期进球1.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042124",
+   "num": "周四006",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧罗巴",
+   "home": "伯恩茅斯",
+   "away": "AC米兰",
+   "goal": "-1",
+   "odds": {
+    "h": 1.8,
+    "d": 3.55,
+    "a": 3.42
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴5",
+   "ar": "欧罗巴16",
+   "hrn": 5,
+   "arn": 16,
+   "goalsExp": 2.91,
+   "hhProb": 36.0,
+   "aaProb": 17.4,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧罗巴5]优于客队[欧罗巴16]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧罗巴5]优于客队[欧罗巴16]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差11位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.91球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.91≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 2.91,
+    "reasons": [
+     "预期总进球2.91球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042125",
+   "num": "周四007",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧罗巴",
+   "home": "凯尔特人",
+   "away": "维戈塞尔塔",
+   "goal": "+1",
+   "odds": {
+    "h": 2.48,
+    "d": 3.25,
+    "a": 2.39
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴34",
+   "ar": "欧罗巴29",
+   "hrn": 34,
+   "arn": 29,
+   "goalsExp": 2.82,
+   "hhProb": 25.6,
+   "aaProb": 26.3,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望2.82球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.82球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.82≥2.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.7,
+    "expAway": 1.4,
+    "totalGoals": 2.82,
+    "reasons": [
+     "预期总进球2.82球",
+     "主队预期进球1.7·客队预期进球1.4",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042126",
+   "num": "周四008",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧罗巴",
+   "home": "贝西克塔斯",
+   "away": "水晶宫",
+   "goal": "-1",
+   "odds": {
+    "h": 2.08,
+    "d": 3.43,
+    "a": 2.8
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴4",
+   "ar": "欧罗巴15",
+   "hrn": 4,
+   "arn": 15,
+   "goalsExp": 3.06,
+   "hhProb": 29.4,
+   "aaProb": 22.7,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧罗巴4]优于客队[欧罗巴15]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧罗巴4]优于客队[欧罗巴15]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差11位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.06球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.06≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 3.06,
+    "reasons": [
+     "预期总进球3.06球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042127",
+   "num": "周四009",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧罗巴",
+   "home": "霍芬海姆",
+   "away": "里昂",
+   "goal": "-1",
+   "odds": {
+    "h": 1.8,
+    "d": 3.9,
+    "a": 3.15
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴30",
+   "ar": "欧罗巴8",
+   "hrn": 30,
+   "arn": 8,
+   "goalsExp": 3.45,
+   "hhProb": 37.3,
+   "aaProb": 19.0,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.45球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.45球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.45≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.45,
+    "reasons": [
+     "预期总进球3.45球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042128",
+   "num": "周四010",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧罗巴",
+   "home": "利勒斯特罗姆",
+   "away": "皇家社会",
+   "goal": "+1",
+   "odds": {
+    "h": 4.95,
+    "d": 4.2,
+    "a": 1.45
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴22",
+   "ar": "欧罗巴23",
+   "hrn": 22,
+   "arn": 23,
+   "goalsExp": 3.16,
+   "hhProb": 12.1,
+   "aaProb": 48.1,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.16球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.16球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.16≥2.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.9,
+    "expAway": 1.6,
+    "totalGoals": 3.16,
+    "reasons": [
+     "预期总进球3.16球",
+     "主队预期进球1.9·客队预期进球1.6",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042119",
+   "num": "周四001",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 00:45",
+   "league": "欧罗巴",
+   "home": "格拉茨风暴",
+   "away": "马赛",
+   "goal": "+1",
+   "odds": {
+    "h": 3.3,
+    "d": 3.65,
+    "a": 1.81
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴26",
+   "ar": "欧罗巴31",
+   "hrn": 26,
+   "arn": 31,
+   "goalsExp": 3.21,
+   "hhProb": 19.0,
+   "aaProb": 35.1,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.21球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.21球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.21≥2.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.9,
+    "expAway": 1.6,
+    "totalGoals": 3.21,
+    "reasons": [
+     "预期总进球3.21球",
+     "主队预期进球1.9·客队预期进球1.6",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042120",
+   "num": "周四002",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 00:45",
+   "league": "欧罗巴",
+   "home": "波兹南莱赫",
+   "away": "桑德兰",
+   "goal": "+1",
+   "odds": {
+    "h": 4.35,
+    "d": 3.65,
+    "a": 1.6
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴36",
+   "ar": "欧罗巴9",
+   "hrn": 36,
+   "arn": 9,
+   "goalsExp": 2.89,
+   "hhProb": 13.8,
+   "aaProb": 41.7,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望2.89球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.89球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.89≥2.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.7,
+    "expAway": 1.4,
+    "totalGoals": 2.89,
+    "reasons": [
+     "预期总进球2.89球",
+     "主队预期进球1.7·客队预期进球1.4",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042121",
+   "num": "周四003",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 00:45",
+   "league": "欧罗巴",
+   "home": "萨格勒布迪纳摩",
+   "away": "奈梅亨",
+   "goal": "-1",
+   "odds": {
+    "h": 1.42,
+    "d": 4.22,
+    "a": 5.3
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴14",
+   "ar": "欧罗巴27",
+   "hrn": 14,
+   "arn": 27,
+   "goalsExp": 3.25,
+   "hhProb": 50.0,
+   "aaProb": 11.4,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧罗巴14]优于客队[欧罗巴27]达13位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧罗巴14]优于客队[欧罗巴27]达13位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差13位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.25球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.25≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.25,
+    "reasons": [
+     "预期总进球3.25球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042122",
+   "num": "周四004",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 00:45",
+   "league": "欧罗巴",
+   "home": "尤文图斯",
+   "away": "雷恩",
+   "goal": "-1",
+   "odds": {
+    "h": 1.45,
+    "d": 3.98,
+    "a": 5.3
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴1",
+   "ar": "欧罗巴13",
+   "hrn": 1,
+   "arn": 13,
+   "goalsExp": 2.91,
+   "hhProb": 47.2,
+   "aaProb": 11.6,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧罗巴1]优于客队[欧罗巴13]达12位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧罗巴1]优于客队[欧罗巴13]达12位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差12位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.91球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.91≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.27×1.27",
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 2.91,
+    "reasons": [
+     "预期总进球2.91球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042123",
+   "num": "周四005",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 00:45",
+   "league": "欧罗巴",
+   "home": "克里特",
+   "away": "勒沃库森",
+   "goal": "+2",
+   "odds": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧罗巴18",
+   "ar": "欧罗巴2",
+   "hrn": 18,
+   "arn": 2,
+   "goalsExp": 3.6,
+   "hhProb": 4.3,
+   "aaProb": 71.9,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.6球偏高，让球2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.6球偏高，让球2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.6≥2.0、让球2≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+2"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 2.4,
+    "expAway": 1.8,
+    "totalGoals": 3.6,
+    "reasons": [
+     "预期总进球3.6球",
+     "主队预期进球2.4·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球2球调整"
+    ]
+   },
+   "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042118",
+   "num": "周三013",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 08:30",
+   "league": "解放者杯",
+   "home": "帕尔梅拉斯",
+   "away": "弗鲁米嫩塞",
+   "goal": "-1",
+   "odds": {
+    "h": 1.67,
+    "d": 3.3,
+    "a": 4.4
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "解放者杯2",
+   "ar": "解放者杯2",
+   "hrn": 2,
+   "arn": 2,
+   "goalsExp": 2.52,
+   "hhProb": 40.0,
+   "aaProb": 13.3,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望2.52球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.52球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.52≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.3,
+    "expAway": 1.6,
+    "totalGoals": 2.52,
+    "reasons": [
+     "预期总进球2.52球",
+     "主队预期进球1.3·客队预期进球1.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042112",
+   "num": "周三007",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "皇家马德里",
+   "away": "莱比锡红牛",
+   "goal": "-2",
+   "odds": {
+    "h": 1.16,
+    "d": 6.5,
+    "a": 8.8
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠8",
+   "ar": "欧冠21",
+   "hrn": 8,
+   "arn": 21,
+   "goalsExp": 4.27,
+   "hhProb": 67.6,
+   "aaProb": 6.7,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧冠8]优于客队[欧冠21]达13位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.11,
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧冠8]优于客队[欧冠21]达13位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差13位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率67.6%≥51.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率67.6%≥51.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望4.27球偏高，让球-2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球4.27≥2.0、让球-2≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.11,
+    "stars": 1,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-2"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:3",
+    "alternatives": [
+     "1:2",
+     "1:3",
+     "1:4"
+    ],
+    "confidence": 40,
+    "expHome": 2.1,
+    "expAway": 2.7,
+    "totalGoals": 4.27,
+    "reasons": [
+     "预期总进球4.27球",
+     "主队预期进球2.1·客队预期进球2.7",
+     "热门方向主胜概率0%",
+     "竞彩让球-2球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042113",
+   "num": "周三008",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "阿斯顿维拉",
+   "away": "维京",
+   "goal": "-2",
+   "odds": {
+    "h": 1.15,
+    "d": 6.5,
+    "a": 9.4
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠3",
+   "ar": "欧冠27",
+   "hrn": 3,
+   "arn": 27,
+   "goalsExp": 3.91,
+   "hhProb": 66.7,
+   "aaProb": 6.2,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧冠3]优于客队[欧冠27]达24位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.11,
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧冠3]优于客队[欧冠27]达24位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差24位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率66.7%≥51.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率66.7%≥51.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.91球偏高，让球-2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.91≥2.0、让球-2≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.11,
+    "stars": 1,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:3",
+    "alternatives": [
+     "1:2",
+     "1:3",
+     "1:4"
+    ],
+    "confidence": 40,
+    "expHome": 2.0,
+    "expAway": 2.6,
+    "totalGoals": 3.91,
+    "reasons": [
+     "预期总进球3.91球",
+     "主队预期进球2.0·客队预期进球2.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-2球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042114",
+   "num": "周三009",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "皇家贝蒂斯",
+   "away": "费耶诺德",
+   "goal": "-1",
+   "odds": {
+    "h": 1.43,
+    "d": 4.5,
+    "a": 4.8
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠9",
+   "ar": "欧冠23",
+   "hrn": 9,
+   "arn": 23,
+   "goalsExp": 3.64,
+   "hhProb": 49.0,
+   "aaProb": 12.9,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧冠9]优于客队[欧冠23]达14位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧冠9]优于客队[欧冠23]达14位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差14位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.64球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.64≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.8,
+    "expAway": 2.1,
+    "totalGoals": 3.64,
+    "reasons": [
+     "预期总进球3.64球",
+     "主队预期进球1.8·客队预期进球2.1",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042115",
+   "num": "周三010",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "拜仁慕尼黑",
+   "away": "阿森纳",
+   "goal": "-1",
+   "odds": {
+    "h": 1.89,
+    "d": 3.55,
+    "a": 3.14
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠10",
+   "ar": "欧冠7",
+   "hrn": 10,
+   "arn": 7,
+   "goalsExp": 3.22,
+   "hhProb": 33.9,
+   "aaProb": 19.2,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.22球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.22球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.22≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.22,
+    "reasons": [
+     "预期总进球3.22球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042116",
+   "num": "周三011",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "里斯本竞技",
+   "away": "LASK林茨",
+   "goal": "-2",
+   "odds": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠6",
+   "ar": "欧冠33",
+   "hrn": 6,
+   "arn": 33,
+   "goalsExp": 3.9,
+   "hhProb": 69.4,
+   "aaProb": 5.3,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧冠6]优于客队[欧冠33]达27位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.11,
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧冠6]优于客队[欧冠33]达27位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差27位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率69.4%≥51.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率69.4%≥51.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.9球偏高，让球-2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.9≥2.0、让球-2≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.11,
+    "stars": 1,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.28×1.28",
+     "组12半场掌控·主胜+2.08×1.39",
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:3",
+    "alternatives": [
+     "1:2",
+     "1:3",
+     "1:4"
+    ],
+    "confidence": 40,
+    "expHome": 2.0,
+    "expAway": 2.6,
+    "totalGoals": 3.9,
+    "reasons": [
+     "预期总进球3.9球",
+     "主队预期进球2.0·客队预期进球2.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-2球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042117",
+   "num": "周三012",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 03:00",
+   "league": "欧冠",
+   "home": "布鲁日",
+   "away": "朗斯",
+   "goal": "-1",
+   "odds": {
+    "h": 1.9,
+    "d": 3.7,
+    "a": 3.0
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠16",
+   "ar": "欧冠19",
+   "hrn": 16,
+   "arn": 19,
+   "goalsExp": 3.43,
+   "hhProb": 33.9,
+   "aaProb": 20.4,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.43球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.43球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.43≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.43,
+    "reasons": [
+     "预期总进球3.43球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042111",
+   "num": "周三006",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 02:00",
+   "league": "西甲",
+   "home": "莱万特",
+   "away": "毕尔巴鄂竞技",
+   "goal": "+1",
+   "odds": {
+    "h": 3.32,
+    "d": 3.1,
+    "a": 1.98
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "",
+   "ar": "",
+   "hrn": null,
+   "arn": null,
+   "goalsExp": 2.63,
+   "hhProb": 17.9,
+   "aaProb": 31.2,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望2.63球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.63球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.63≥2.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.3,
+    "totalGoals": 2.63,
+    "reasons": [
+     "预期总进球2.63球",
+     "主队预期进球1.6·客队预期进球1.3",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042109",
+   "num": "周三004",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 00:45",
+   "league": "欧冠",
+   "home": "科莫",
+   "away": "曼彻斯特联",
+   "goal": "-1",
+   "odds": {
+    "h": 2.15,
+    "d": 3.45,
+    "a": 2.67
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠12",
+   "ar": "欧冠13",
+   "hrn": 12,
+   "arn": 13,
+   "goalsExp": 3.12,
+   "hhProb": 29.4,
+   "aaProb": 22.2,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.12球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.12球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.12≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.12,
+    "reasons": [
+     "预期总进球3.12球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042110",
+   "num": "周三005",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-22 00:45",
+   "league": "欧冠",
+   "home": "里尔",
+   "away": "加拉塔萨雷",
+   "goal": "-1",
+   "odds": {
+    "h": 1.9,
+    "d": 3.5,
+    "a": 3.15
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠34",
+   "ar": "欧冠35",
+   "hrn": 34,
+   "arn": 35,
+   "goalsExp": 3.18,
+   "hhProb": 33.9,
+   "aaProb": 18.9,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.18球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.18球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.18≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.18,
+    "reasons": [
+     "预期总进球3.18球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042106",
+   "num": "周三001",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-21 18:00",
+   "league": "日职",
+   "home": "东京FC",
+   "away": "柏太阳神",
+   "goal": "-1",
+   "odds": {
+    "h": 2.09,
+    "d": 3.45,
+    "a": 2.78
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "日职3",
+   "ar": "日职5",
+   "hrn": 3,
+   "arn": 5,
+   "goalsExp": 3.0,
+   "hhProb": 29.9,
+   "aaProb": 22.2,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.0球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.0球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.0≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 3.0,
+    "reasons": [
+     "预期总进球3.0球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": {
+    "score": "0:0",
+    "had": "d",
+    "home": 0,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-21 21:23",
+   "hhadResult": "a",
+   "scoreActual": "0:0"
+  },
+  {
+   "id": "2042107",
+   "num": "周三002",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-21 18:00",
+   "league": "日职",
+   "home": "川崎前锋",
+   "away": "神户胜利船",
+   "goal": "-1",
+   "odds": {
+    "h": 2.34,
+    "d": 3.4,
+    "a": 2.45
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "日职7",
+   "ar": "日职4",
+   "hrn": 7,
+   "arn": 4,
+   "goalsExp": 3.02,
+   "hhProb": 27.4,
+   "aaProb": 25.3,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.02球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.02球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.02≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 3.02,
+    "reasons": [
+     "预期总进球3.02球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-21 21:23",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
+  },
+  {
+   "id": "2042108",
+   "num": "周三003",
+   "date": "2026-10-21",
+   "kickoff": "2026-10-21 18:00",
+   "league": "日乙",
+   "home": "大宫松鼠RB",
+   "away": "富山胜利",
+   "goal": "-1",
+   "odds": {
+    "h": 2.15,
+    "d": 3.67,
+    "a": 2.55
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "日乙2",
+   "ar": "日乙4",
+   "hrn": 2,
+   "arn": 4,
+   "goalsExp": 3.33,
+   "hhProb": 28.2,
+   "aaProb": 23.3,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.33球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.33球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.33≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.33,
+    "reasons": [
+     "预期总进球3.33球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": {
+    "score": "0:3",
+    "had": "a",
+    "home": 0,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-21 21:23",
+   "hhadResult": "a",
+   "scoreActual": "0:3"
+  },
+  {
+   "id": "2042099",
+   "num": "周二004",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "那不勒斯",
+   "away": "博德闪耀",
+   "goal": "-1",
+   "odds": {
+    "h": 1.48,
+    "d": 4.23,
+    "a": 4.6
+   },
+   "prob": {
+    "h": 60.0,
+    "d": 21.0,
+    "a": 19.0
+   },
+   "sup": {
+    "h": 51.0,
+    "d": 9.0,
+    "a": 40.0
+   },
+   "hr": "欧冠32",
+   "ar": "欧冠24",
+   "hrn": 32,
+   "arn": 24,
+   "goalsExp": 3.47,
+   "hhProb": 47.6,
+   "aaProb": 12.9,
+   "verdict": {
+    "t": "bad",
+    "txt": "客胜支持率40.0%高于概率19.0%达21.0pt，投注过热，该方向危险",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组1热度深负·客胜-1.0",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准23%·EV-2%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组1热度深负",
+     "t": "bad",
+     "dir": "a",
+     "label": "客胜支持率40.0%高于概率19.0%达21.0pt，投注过热，该方向危险",
+     "cond": "客胜 支持率-概率=21.0pt(≥15)"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.47球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.47≥3.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.888,
+     "d": 0.888,
+     "a": 0.874
+    },
+    "kellyDiff": {
+     "h": 0.3,
+     "d": 0.3,
+     "a": -1.1
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组1热度深负·客胜-1.0",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准23%·EV-2%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分-1.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": -1.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 76,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.47,
+    "reasons": [
+     "预期总进球3.47球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率60.0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "4:3",
+    "had": "h",
+    "home": 4,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "d",
+   "scoreActual": "4:3"
+  },
+  {
+   "id": "2042100",
+   "num": "周二005",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "罗马",
+   "away": "布拉迪斯拉发",
+   "goal": "-2",
+   "odds": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠25",
+   "ar": "欧冠36",
+   "hrn": 25,
+   "arn": 36,
+   "goalsExp": 3.92,
+   "hhProb": 77.5,
+   "aaProb": 3.2,
+   "verdict": {
+    "t": "cold",
+    "txt": "主队排名[欧冠25]优于客队[欧冠36]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+    "dir": "h",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组10排名压制·主胜-1.0",
+     "组12半场掌控·主胜+1.5",
+     "组11进球预期·主胜-0.5"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组10排名压制",
+     "t": "cold",
+     "dir": "h",
+     "label": "主队排名[欧冠25]优于客队[欧冠36]达11位但主胜概率仅0%，排名优势未被市场定价，虚高预警",
+     "cond": "排名差11位(≥8)但主胜概率0%<45%"
+    },
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率77.5%≥52.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率77.5%≥52.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.92球偏高，让球-2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.92≥3.0、让球-2≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组10排名压制·主胜-1.0",
+     "组12半场掌控·主胜+1.5",
+     "组11进球预期·主胜-0.5"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:3",
+    "alternatives": [
+     "1:2",
+     "1:3",
+     "1:4"
+    ],
+    "confidence": 40,
+    "expHome": 2.0,
+    "expAway": 2.6,
+    "totalGoals": 3.92,
+    "reasons": [
+     "预期总进球3.92球",
+     "主队预期进球2.0·客队预期进球2.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-2球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "4:0",
+    "had": "h",
+    "home": 4,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "h",
+   "scoreActual": "4:0"
+  },
+  {
+   "id": "2042101",
+   "num": "周二006",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "巴黎圣日尔曼",
+   "away": "巴塞罗那",
+   "goal": "+1",
+   "odds": {
+    "h": 2.26,
+    "d": 4.22,
+    "a": 2.22
+   },
+   "prob": {
+    "h": 39.0,
+    "d": 21.0,
+    "a": 40.0
+   },
+   "sup": {
+    "h": 36.0,
+    "d": 16.0,
+    "a": 48.0
+   },
+   "hr": "欧冠1",
+   "ar": "欧冠2",
+   "hrn": 1,
+   "arn": 2,
+   "goalsExp": 4.33,
+   "hhProb": 28.2,
+   "aaProb": 29.4,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望4.33球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "h",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准34%·EV-24%·警示信号：不参与下注评估"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "a",
+     "label": "总进球期望4.33球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球4.33≥3.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.881,
+     "d": 0.886,
+     "a": 0.888
+    },
+    "kellyDiff": {
+     "h": -0.4,
+     "d": 0.1,
+     "a": 0.3
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准34%·EV-24%·警示信号：不参与下注评估"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 64,
+    "expHome": 2.5,
+    "expAway": 2.2,
+    "totalGoals": 4.33,
+    "reasons": [
+     "预期总进球4.33球",
+     "主队预期进球2.5·客队预期进球2.2",
+     "热门方向客胜概率40.0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "4:2",
+    "had": "h",
+    "home": 4,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": null,
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "h",
+   "scoreActual": "4:2"
+  },
+  {
+   "id": "2042102",
+   "num": "周二007",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "利物浦",
+   "away": "比利亚雷亚尔",
+   "goal": "-1",
+   "odds": {
+    "h": 1.39,
+    "d": 4.45,
+    "a": 5.4
+   },
+   "prob": {
+    "h": 64.0,
+    "d": 20.0,
+    "a": 16.0
+   },
+   "sup": {
+    "h": 89.0,
+    "d": 6.0,
+    "a": 5.0
+   },
+   "hr": "欧冠5",
+   "ar": "欧冠14",
+   "hrn": 5,
+   "arn": 14,
+   "goalsExp": 3.42,
+   "hhProb": 51.0,
+   "aaProb": 10.8,
+   "verdict": {
+    "t": "bad",
+    "txt": "主胜支持率89.0%高于概率64.0%达25.0pt，投注过热，该方向危险",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组10排名压制·主胜+1.5",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准24%·EV+9%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组1热度深负",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率89.0%高于概率64.0%达25.0pt，投注过热，该方向危险",
+     "cond": "主胜 支持率-概率=25.0pt(≥15)"
+    },
+    {
+     "g": "组6深度过热",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率远超概率25.0pt，深度过热，机构放任资金涌入",
+     "cond": "主胜 支持率-概率=25.0pt(≥22)"
+    },
+    {
+     "g": "组10排名压制",
+     "t": "good",
+     "dir": "h",
+     "label": "主队排名[欧冠5]优于客队[欧冠14]达9位且主胜概率64.0%，实力+市场双确认",
+     "cond": "排名差9位(≥8)，主胜概率64.0%≥45%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.42球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.42≥3.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.89,
+     "d": 0.89,
+     "a": 0.864
+    },
+    "kellyDiff": {
+     "h": 0.5,
+     "d": 0.5,
+     "a": -2.1
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组10排名压制·主胜+1.5",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准24%·EV+9%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 78,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.42,
+    "reasons": [
+     "预期总进球3.42球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率64.0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "4:3",
+    "had": "h",
+    "home": 4,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "d",
+   "scoreActual": "4:3"
+  },
+  {
+   "id": "2042103",
+   "num": "周二008",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "曼彻斯特城",
+   "away": "雅典AEK",
+   "goal": "-2",
+   "odds": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧冠17",
+   "ar": "欧冠20",
+   "hrn": 17,
+   "arn": 20,
+   "goalsExp": 3.96,
+   "hhProb": 82.6,
+   "aaProb": 2.4,
+   "verdict": {
+    "t": "good",
+    "txt": "半全场主/主隐含概率82.6%≥52.0%，机构预期主队全场压制，强化主胜",
+    "dir": "h",
+    "stars": 2,
+    "score": 1.0,
+    "reasons": [
+     "组12半场掌控·主胜+1.5",
+     "组11进球预期·主胜-0.5"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "h",
+     "label": "半全场主/主隐含概率82.6%≥52.0%，机构预期主队全场压制，强化主胜",
+     "cond": "主/主隐含概率82.6%≥52.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.96球偏高，让球-2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.96≥3.0、让球-2≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 1.0,
+    "stars": 2,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组12半场掌控·主胜+1.5",
+     "组11进球预期·主胜-0.5"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.5）",
+    "dir": "h",
+    "stars": 2,
+    "score": 0.5,
+    "reasons": [
+     "让球盘·让胜-1.0",
+     "让球盘·让胜+1.5",
+     "让球盘·让平-1.0",
+     "让球盘·让负-1.0"
+    ],
+    "goal": "-2"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:3",
+    "alternatives": [
+     "1:2",
+     "1:3",
+     "1:4"
+    ],
+    "confidence": 40,
+    "expHome": 2.0,
+    "expAway": 2.6,
+    "totalGoals": 3.96,
+    "reasons": [
+     "预期总进球3.96球",
+     "主队预期进球2.0·客队预期进球2.6",
+     "热门方向主胜概率0%",
+     "竞彩让球-2球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "5:1",
+    "had": "h",
+    "home": 5,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": null,
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "h",
+   "scoreActual": "5:1"
+  },
+  {
+   "id": "2042104",
+   "num": "周二009",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "斯图加特",
+   "away": "马德里竞技",
+   "goal": "+1",
+   "odds": {
+    "h": 2.9,
+    "d": 3.65,
+    "a": 1.96
+   },
+   "prob": {
+    "h": 31.0,
+    "d": 24.0,
+    "a": 45.0
+   },
+   "sup": {
+    "h": 8.0,
+    "d": 10.0,
+    "a": 82.0
+   },
+   "hr": "欧冠4",
+   "ar": "欧冠15",
+   "hrn": 4,
+   "arn": 15,
+   "goalsExp": 3.29,
+   "hhProb": 20.6,
+   "aaProb": 31.7,
+   "verdict": {
+    "t": "bad",
+    "txt": "客胜支持率82.0%高于概率45.0%达37.0pt，投注过热，该方向危险",
+    "dir": "h",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组1热度深负·客胜-1.0",
+     "组6深度过热·客胜-1.0",
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准25%·EV-27%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组1热度深负",
+     "t": "bad",
+     "dir": "a",
+     "label": "客胜支持率82.0%高于概率45.0%达37.0pt，投注过热，该方向危险",
+     "cond": "客胜 支持率-概率=37.0pt(≥15)"
+    },
+    {
+     "g": "组6深度过热",
+     "t": "bad",
+     "dir": "a",
+     "label": "客胜支持率远超概率37.0pt，深度过热，机构放任资金涌入",
+     "cond": "客胜 支持率-概率=37.0pt(≥22)"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "a",
+     "label": "总进球期望3.29球偏高，让球1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.29≥3.0、让球1≥1"
+    }
+   ],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.899,
+     "d": 0.876,
+     "a": 0.882
+    },
+    "kellyDiff": {
+     "h": 1.3,
+     "d": -1.0,
+     "a": -0.4
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组1热度深负·客胜-1.0",
+     "组6深度过热·客胜-1.0",
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准25%·EV-27%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让负-1.0"
+    ],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 67,
+    "expHome": 1.9,
+    "expAway": 1.6,
+    "totalGoals": 3.29,
+    "reasons": [
+     "预期总进球3.29球",
+     "主队预期进球1.9·客队预期进球1.6",
+     "热门方向客胜概率45.0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "partial",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "h",
+   "scoreActual": "1:1"
+  },
+  {
+   "id": "2042105",
+   "num": "周二010",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 03:00",
+   "league": "欧冠",
+   "home": "波尔图",
+   "away": "PSV埃因霍温",
+   "goal": "-1",
+   "odds": {
+    "h": 1.5,
+    "d": 4.15,
+    "a": 4.5
+   },
+   "prob": {
+    "h": 59.0,
+    "d": 21.0,
+    "a": 20.0
+   },
+   "sup": {
+    "h": 85.0,
+    "d": 6.0,
+    "a": 9.0
+   },
+   "hr": "欧冠30",
+   "ar": "欧冠26",
+   "hrn": 30,
+   "arn": 26,
+   "goalsExp": 3.35,
+   "hhProb": 46.5,
+   "aaProb": 12.9,
+   "verdict": {
+    "t": "bad",
+    "txt": "主胜支持率85.0%高于概率59.0%达26.0pt，投注过热，该方向危险",
+    "dir": "a",
+    "stars": 3,
+    "score": 2.0,
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组9凯利价值·客胜+1.5",
+     "组11进球预期·主胜-0.5",
+     "凯利价值客胜+0.5",
+     "智能引擎·校准23%·EV+5%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组1热度深负",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率85.0%高于概率59.0%达26.0pt，投注过热，该方向危险",
+     "cond": "主胜 支持率-概率=26.0pt(≥15)"
+    },
+    {
+     "g": "组6深度过热",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率远超概率26.0pt，深度过热，机构放任资金涌入",
+     "cond": "主胜 支持率-概率=26.0pt(≥22)"
+    },
+    {
+     "g": "组9凯利价值",
+     "t": "good",
+     "dir": "a",
+     "label": "客胜凯利指数0.9高于返还率88.5%，概率或被低估，具备价值",
+     "cond": "客胜 凯利-返还率=1.5pt(≥1.5)"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.35球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.35≥3.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "a",
+    "score": 2.0,
+    "stars": 3,
+    "kelly": {
+     "h": 0.885,
+     "d": 0.872,
+     "a": 0.9
+    },
+    "kellyDiff": {
+     "h": 0.0,
+     "d": -1.3,
+     "a": 1.5
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组9凯利价值·客胜+1.5",
+     "组11进球预期·主胜-0.5",
+     "凯利价值客胜+0.5",
+     "智能引擎·校准23%·EV+5%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 75,
+    "expHome": 1.7,
+    "expAway": 2.0,
+    "totalGoals": 3.35,
+    "reasons": [
+     "预期总进球3.35球",
+     "主队预期进球1.7·客队预期进球2.0",
+     "热门方向主胜概率59.0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "0:1",
+    "had": "a",
+    "home": 0,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "a",
+   "scoreActual": "0:1"
+  },
+  {
+   "id": "2042098",
+   "num": "周二003",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 02:45",
+   "league": "英冠",
+   "home": "伍尔弗汉普顿",
+   "away": "朴次茅斯",
+   "goal": "-1",
+   "odds": {
+    "h": 1.46,
+    "d": 3.85,
+    "a": 5.4
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "英冠8",
+   "ar": "英冠13",
+   "hrn": 8,
+   "arn": 13,
+   "goalsExp": 2.88,
+   "hhProb": 47.6,
+   "aaProb": 11.1,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望2.88球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望2.88球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球2.88≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.39"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.4,
+    "expAway": 1.7,
+    "totalGoals": 2.88,
+    "reasons": [
+     "预期总进球2.88球",
+     "主队预期进球1.4·客队预期进球1.7",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-20 11:01",
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
+  },
+  {
+   "id": "2042096",
+   "num": "周二001",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 00:45",
+   "league": "欧冠",
+   "home": "费内巴切",
+   "away": "布拉格斯拉维亚",
+   "goal": "-1",
+   "odds": {
+    "h": 1.55,
+    "d": 3.85,
+    "a": 4.45
+   },
+   "prob": {
+    "h": 57.0,
+    "d": 23.0,
+    "a": 20.0
+   },
+   "sup": {
+    "h": 90.0,
+    "d": 5.0,
+    "a": 5.0
+   },
+   "hr": "欧冠28",
+   "ar": "欧冠31",
+   "hrn": 28,
+   "arn": 31,
+   "goalsExp": 3.2,
+   "hhProb": 42.6,
+   "aaProb": 12.9,
+   "verdict": {
+    "t": "bad",
+    "txt": "主胜支持率90.0%高于概率57.0%达33.0pt，投注过热，该方向危险",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准25%·EV-4%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组1热度深负",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率90.0%高于概率57.0%达33.0pt，投注过热，该方向危险",
+     "cond": "主胜 支持率-概率=33.0pt(≥15)"
+    },
+    {
+     "g": "组6深度过热",
+     "t": "bad",
+     "dir": "h",
+     "label": "主胜支持率远超概率33.0pt，深度过热，机构放任资金涌入",
+     "cond": "主胜 支持率-概率=33.0pt(≥22)"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.2球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.2≥3.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.884,
+     "d": 0.885,
+     "a": 0.89
+    },
+    "kellyDiff": {
+     "h": -0.1,
+     "d": 0.0,
+     "a": 0.5
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组1热度深负·主胜-1.0",
+     "组6深度过热·主胜-1.0",
+     "组11进球预期·主胜-0.5",
+     "智能引擎·校准25%·EV-4%·反指信号：用于排除该方向，不可直接下注"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [
+     "让球盘·让胜-1.0"
+    ],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 74,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.2,
+    "reasons": [
+     "预期总进球3.2球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率57.0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "hit",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "a",
+   "scoreActual": "2:2"
+  },
+  {
+   "id": "2042097",
+   "num": "周二002",
+   "date": "2026-10-20",
+   "kickoff": "2026-10-21 00:45",
+   "league": "欧冠",
+   "home": "萨巴赫",
+   "away": "多特蒙德",
+   "goal": "+2",
+   "odds": {
+    "h": 8.05,
+    "d": 5.6,
+    "a": 1.21
+   },
+   "prob": {
+    "h": 11.0,
+    "d": 16.0,
+    "a": 73.0
+   },
+   "sup": {
+    "h": 10.0,
+    "d": 5.0,
+    "a": 85.0
+   },
+   "hr": "欧冠22",
+   "ar": "欧冠18",
+   "hrn": 22,
+   "arn": 18,
+   "goalsExp": 3.61,
+   "hhProb": 6.9,
+   "aaProb": 62.5,
+   "verdict": {
+    "t": "good",
+    "txt": "半全场客/客隐含概率62.5%≥52.0%，机构预期客队全场压制，强化客胜",
+    "dir": "a",
+    "stars": 2,
+    "score": 1.0,
+    "reasons": [
+     "组12半场掌控·客胜+1.5",
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准85%·EV+3%·边际，接近盈亏平衡"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组12半场掌控",
+     "t": "good",
+     "dir": "a",
+     "label": "半全场客/客隐含概率62.5%≥52.0%，机构预期客队全场压制，强化客胜",
+     "cond": "客/客隐含概率62.5%≥52.0%"
+    },
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "a",
+     "label": "总进球期望3.61球偏高，让球2的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.61≥3.0、让球2≥1"
+    }
+   ],
+   "score": {
+    "dir": "a",
+    "score": 1.0,
+    "stars": 2,
+    "kelly": {
+     "h": 0.886,
+     "d": 0.896,
+     "a": 0.883
+    },
+    "kellyDiff": {
+     "h": 0.0,
+     "d": 1.0,
+     "a": -0.3
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组12半场掌控·客胜+1.5",
+     "组11进球预期·客胜-0.5",
+     "智能引擎·校准85%·EV+3%·边际，接近盈亏平衡"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 83,
+    "expHome": 2.4,
+    "expAway": 1.8,
+    "totalGoals": 3.61,
+    "reasons": [
+     "预期总进球3.61球",
+     "主队预期进球2.4·客队预期进球1.8",
+     "热门方向客胜概率73.0%",
+     "竞彩让球2球调整"
+    ]
+   },
+   "predAt": "2026-10-19 15:32",
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "partial",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-21 09:19",
+   "hhadResult": "h",
+   "scoreActual": "1:2"
+  },
   {
    "id": "2042080",
    "num": "周一008",
@@ -116,11 +4433,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "resultAt": "2026-10-20 11:01",
+   "hhadResult": "a",
+   "scoreActual": "1:1",
+   "halfFullResult": "ad",
+   "halfFullDesc": "负平"
   },
   {
    "id": "2042079",
@@ -236,11 +4564,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "hit",
+   "halfFullResult": "ha",
+   "halfFullDesc": "胜负",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "a",
+   "scoreActual": "1:2"
   },
   {
    "id": "2042077",
@@ -356,11 +4695,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:1",
+    "had": "h",
+    "home": 3,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "h",
+   "scoreActual": "3:1"
   },
   {
    "id": "2042078",
@@ -476,11 +4826,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "hit",
+   "halfFullResult": "ad",
+   "halfFullDesc": "负平",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042075",
@@ -596,11 +4957,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:3",
+    "had": "a",
+    "home": 0,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "a",
+   "scoreActual": "0:3"
   },
   {
    "id": "2042076",
@@ -716,11 +5088,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:3",
+    "had": "a",
+    "home": 0,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "a",
+   "scoreActual": "0:3"
   },
   {
    "id": "2042074",
@@ -836,11 +5219,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "partial",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "d",
+   "scoreActual": "1:2"
   },
   {
    "id": "2042073",
@@ -956,11 +5350,22 @@
     ]
    },
    "predAt": "2026-10-17 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "4:0",
+    "had": "h",
+    "home": 4,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-20 09:06",
+   "hhadResult": "h",
+   "scoreActual": "4:0"
   },
   {
    "id": "2042071",
@@ -41960,7 +46365,7 @@
    "hhadHit": "hit",
    "asianHit": "miss",
    "scoreHit": "miss",
-   "resultAt": "2026-10-19 11:58",
+   "resultAt": "2026-10-21 21:23",
    "hhadResult": "a",
    "scoreActual": "3:0"
   },

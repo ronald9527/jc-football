@@ -1483,6 +1483,14 @@ def main():
     except Exception as e:
         print(f"  BSD多博彩赔率抓取失败: {e}", flush=True)
 
+    # 串关历史回查（v1.7.34：必须放在 load_locked_parlay 之前！）
+    # 先判定、后门禁：已开奖的腿（如已停售的周三003，20:32 已回填 0:3）先把
+    # 含它的 pending 档位判成 miss，停售腿门随后只删「真的还没开赛又买不了」
+    # 的档位。旧顺序（门禁先删、回查后判）会把用户实际跟过的推荐直接删掉——
+    # 2026-10-21 实测：20:32 批次拿到 003 赛果的同一秒，含 003 的三条 pending
+    # 已被停售腿门删除，历史里查无此组，用户无法对账。
+    parlay_history = check_parlay_history()
+
     # 串关推荐：当天首次成功生成即锁定发布，之后不再改动已发布档位；
     # 尚未发布过的档位允许补生成（只增不改）——推荐一旦发布就不可篡改，
     # 用户翻查历史时看到的必须和当初发布的完全一致。
@@ -1518,12 +1526,27 @@ def main():
         # 稳胆串关：低赔高信心，追求高命中率（高倍串关已按用户要求永久移除）
         safe_parlay = gen_safe_parlay(matches)
         high_odds_parlay = None
+        # v1.7.34：当日无未开球推荐且已无在售候选（赛后场景）时，不落空壳、
+        # 不显示「今日无达标」误导卡——今日推荐的归宿是历史战绩区对账
+        if safe_parlay and not any(safe_parlay.get(k) for k in ("parlay2", "parlay3", "parlay4")):
+            import os as _os
+            _pf = _os.path.join(HERE, "parlay_history.json")
+            _has_today = False
+            try:
+                _d = json.load(open(_pf, encoding="utf-8"))
+                _has_today = any(r.get("date") == time.strftime("%Y-%m-%d")
+                                 for r in _d.get("records", []))
+            except Exception:
+                pass
+            if _has_today:
+                safe_parlay = None
         # 保存当天串关推荐到历史记录（仅第一次生成时保存，锁定当天推荐）
         try:
             save_parlay_history(safe_parlay, high_odds_parlay)
         except Exception as e:
             print(f"  串关历史保存失败: {e}", flush=True)
-    # 串关历史战绩回查
+    # 串关历史战绩回查（最终统计：含上方新保存/补生成的当日记录，
+    # 判定本身已在 load_locked_parlay 之前做过，这里重算一次拿全量 stats）
     parlay_history = check_parlay_history()
 
     # 强弱对战分析：筛选实力差距大、得分射手多的比赛
@@ -4631,6 +4654,7 @@ def check_parlay_history():
         total += 1
         all_hit = True
         has_pending = False
+        decided_miss = False  # v1.7.34：任一腿已有赛果且判错 → 整组已必死
         rec_date = rec.get("date", "")
         for leg in legs:
             num = leg.get("num")
@@ -4683,13 +4707,22 @@ def check_parlay_history():
                     leg_hit = True
             if not leg_hit:
                 all_hit = False
+                decided_miss = True  # 该腿已有赛果且判错：整组串关已必死
             # 把赛果和单场命中状态附加到leg，方便页面展示追溯
             leg["actualScore"] = f"{hs}:{as_}"
             leg["legHit"] = leg_hit
             leg["hit"] = "hit" if leg_hit else "miss"
             if adj_info:
                 leg["adjScore"] = adj_info
-        if has_pending:
+        # v1.7.34：decided_miss 优先于 has_pending——串关只要有一条腿已开奖且错误，
+        # 无论其余腿是否开赛，整组都不可能再命中，应立即判 miss。
+        # 旧逻辑「任一无赛果就整组 pending」会把已输掉的组挂成待开奖：
+        # 2026-10-21 实测——12:31 含 003 的推荐 0:3 主负已死，却因其余腿是
+        # 10-22 比赛一直显示「待开奖」，用户以为还能中等荒谬结果。
+        if decided_miss:
+            miss += 1
+            new_result = "miss"
+        elif has_pending:
             pending += 1
             new_result = "pending"
         elif all_hit:
@@ -4701,11 +4734,12 @@ def check_parlay_history():
         # 写回结果到parlay_history.json
         if rec.get("result") != new_result:
             rec["result"] = new_result
-            rec["checkedAt"] = time.strftime("%Y-%m-%d %H:%M:%S")
+            rec["checkedAt"] = time.strftime("%Y-%m-%d %H:%M")
             modified = True
-        elif not has_pending:
-            # 即使result没变，也确保leg上的赛果和命中信息已写回文件
-            # （leg字段在上方循环中已重新计算，需持久化）
+        else:
+            # v1.7.34：result 未变也持久化腿上的赛果/命中信息——pending 组里
+            # 已开奖的腿（混合态：003 已中、其余 10-22 开赛）需要在页面展示
+            # 「该腿已中/已错」进度，只在内存算不落盘等于白算
             modified = True
 
     # 写回文件
@@ -4848,18 +4882,26 @@ def load_locked_parlay(today_matches=None):
             return None, None
 
     def rebuild(tier_name):
-        """按档位名（稳健/均衡/搏击）找回当天已发布的该档推荐。
-        历史 type 形如 稳健2串1/均衡3串1/搏击3串1（2026-10-13 修复：
-        旧代码找的是"稳胆2串1/稳胆3串1"旧档位名，档位改造后从未匹配上，
-        锁定机制实际是死代码，导致每轮跑批都重新生成、卡片推荐被反复改写）。
-        同一档位当天有多条记录时取第一条——发布顺序即锁定顺序，
+        """按档位名找回当天已发布的该档推荐（**只回放 pending（未判定）记录**）。
+        历史 type 形如 稳健2串1/均衡3串1/精锐4串1。
+        同一档位当天有多条 pending 时取第一条——发布顺序即锁定顺序，
         第一条就是当初对用户公布的那组，后续生成的绝不覆盖它。
         有 snapshot 字段的记录按快照完整还原发布时的卡片（EV/仓位/说明等）；
-        旧格式记录（无 snapshot）用顶层字段兜底还原。"""
-        rec = next((r for r in today_records
-                    if str(r.get("type", "")).startswith(tier_name)), None)
-        if not rec:
-            return None
+        旧格式记录（无 snapshot）用顶层字段兜底还原。
+
+        v1.7.34：已判定（hit/miss）的记录**不再作为当前推荐回放**——当日修订
+        （如剔除停售腿重生）会删旧存新，旧组已判错时若仍回放，用户会把一组
+        已经输掉/已完结的推荐当成可下单的「今日推荐」（2026-10-21 实测：
+        12:31 含 003 的推荐 0:3 主负全军覆没，绝不能再出现在推荐位）。
+        已判定记录的归宿是「串关历史战绩」区（战后对账），由 check_parlay_history
+        自动判定展示；当日推荐位只呈现仍未开球的 pending 组。
+        """
+        cands = [r for r in today_records
+                 if str(r.get("type", "")).startswith(tier_name)]
+        pending = [r for r in cands if r.get("result") == "pending"]
+        if not pending:
+            return None  # 无未开球推荐：不拿已判定旧组充当当前推荐
+        rec = pending[0]
         snap = rec.get("snapshot") or {}
         p = dict(snap) if snap else {}
         p.setdefault("tier", tier_name)
@@ -4878,8 +4920,10 @@ def load_locked_parlay(today_matches=None):
     safe_p3 = rebuild("均衡")   # parlay3 槽位：均衡档（3串1）
     safe_p4 = rebuild("精锐")   # parlay4 槽位：精锐档（4串1）
 
+    # 回放来源只可能是 pending 记录（rebuild 已保证）；取其中最早发布的一条作 generatedAt
+    _pend_all = [r for r in today_records if r.get("result") == "pending"]
     safe_parlay = {
-        "generatedAt": today_records[0].get("savedAt", ""),
+        "generatedAt": (_pend_all[0].get("savedAt", "") if _pend_all else ""),
         "candidateCount": 0,
         "strategy": "分层串关（今日已锁定，不再变动）",
         "parlay2": safe_p2, "parlay3": safe_p3,

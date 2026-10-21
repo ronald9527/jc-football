@@ -131,9 +131,12 @@ check("_pos 只认 recommended（不再看 ev）", bool(_pos_ok))
 print("\n[7] parlay_history 落盘一致性")
 hist = json.load(open(f"{BASE}/parlay_history.json", encoding="utf-8"))
 today_recs = [r for r in hist["records"] if r.get("date") == FAKE_TODAY]
-check("今日记录数 = 非空档位数",
-      len(today_recs) == sum(1 for k in ("parlay2", "parlay3", "parlay4") if safe.get(k)),
-      f"records={len(today_recs)}")
+# v1.7.34：当日推荐位只回放 pending；已判定（hit/miss）记录归宿是历史战绩区，
+# 不再计入「非空档位」比对（补判/补回的旧组同样只出现在历史区）
+today_pending = [r for r in today_recs if r.get("result") == "pending"]
+check("今日 pending 记录数 = 非空档位数",
+      len(today_pending) == sum(1 for k in ("parlay2", "parlay3", "parlay4") if safe.get(k)),
+      f"pending_records={len(today_pending)} / all={len(today_recs)}")
 for r in today_recs:
     snap = r.get("snapshot") or {}
     check(f"{r['type']} engineVer=v1.7.33", r.get("engineVer") == "v1.7.33")
