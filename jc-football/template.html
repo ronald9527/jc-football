@@ -1525,8 +1525,25 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.32";
+const VERSION = "v1.7.33";
 const CHANGELOG = [
+  {
+    version: "v1.7.33",
+    date: "2026-10-21",
+    title: "串关推荐标准改革：改按历史真实命中率判定，不再天天不推荐",
+    features: [
+      "串关推荐判定从「模型口径 EV≥0」改为「地面真实口径」：模型口径（校准概率推算）系统性偏保守，此前 58 期推荐里 50 期挂「不推荐」，功能形同虚设；新标准以「历史同条件命中率 × 总赔率 − 1」为真实期望，达标线 −2%（样本噪声容差）",
+      "每张档位卡主显示「历史同指命中率 vs 盈亏平衡线（100÷总赔率）」「真实期望」；模型期望降级为参考展示，推荐判定/档位排序/凯利仓位全部改用真实口径，凯利 = 真实期望÷（总赔率−1），仓位不再恒为 0",
+      "档位卡新增「本档历史战绩」：展示该档已结算的 N 战 M 中（命中率）与 ROI；全负总结卡同样展示各档历史战绩，未达标日也看得见战法长期表现",
+      "未达标标签从「不推荐」改为「观望」，文案如实说明「历史同条件命中率 X% vs 平衡线 Y%、真实期望 Z%、长期平均每注亏损」，不再一刀切喊打",
+    ],
+    fixes: [
+      "回应用户强烈反馈「每天的串关都是不推荐，哪我要你选那些串关有什么用」：根因是推荐判定用了系统性偏保守的模型口径——历史实证选出的腿优于同赔率桶均值（稳健档 14 战 9 中、均衡档 18 战 5 中，两档实际盈利）却因模型 EV 恒负被判「不推荐」；改革为真实口径后，今日（10-21）均衡档真实期望 +15.7% 达标推荐、稳健档如实观望、精锐档诚实留空",
+    ],
+    notes: [
+      "EV 双口径并存：模型口径（偏保守，仅参考）与历史同条件口径（地面真实，推荐判定以它为准）；科普卡①已补充双口径说明，用户看到两个 EV 数字不再困惑",
+    ]
+  },
   {
     version: "v1.7.32",
     date: "2026-10-21",
@@ -4180,7 +4197,7 @@ function renderHighOdds(){
     html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（单场单意见：同一场比赛全天一个说法，三档只在意见池内组合，差异只在选不选它、拼几场；赔率单调：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
     <div style="margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
-      ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏，没有哪一档「更值得推荐」，区别只在长期平均亏得多与亏得少。</b><br>
+      ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏。</b><b style="color:var(--text)">EV 有两个口径</b>：<b>模型口径</b>（用校准概率推算，系统性偏保守，仅作参考）与<b>历史同条件口径</b>（同样选法过去实际中了多少，地面真实）；<b style="color:var(--text)">推荐判定只看历史口径</b>：真实命中率 ≥ 盈亏平衡线（100 ÷ 总赔率）才算达标，不达标一律标「观望」。<br>
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
       ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">提高命中的唯一办法是选概率更高的腿（赔率更低、回报更少）</b>——高命中与高回报不可兼得，这是串关的本质矛盾。低赔「蚊子肉」腿命中高但回报薄，高赔腿回报厚但拉低联合命中率，各档的赔率区间就是在这个矛盾上取平衡。
     </div>`;
@@ -4188,7 +4205,7 @@ function renderHighOdds(){
     if(!(sp.parlay2 || sp.parlay3 || sp.parlay4)){
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
         <div class="ho-head"><span class="ho-type" style="color:var(--warn)">ℹ️ 今日无达标串关组合</span></div>
-        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但任意组合期望值 EV 均低于档位门槛（串关抽水按场数放大：2串1约21.6%、3串1约30.6%），数学上长期必亏，<b>不推荐下注</b>。可关注单场「稳胆」推荐。</div>
+        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但任意组合的历史同条件命中率均未达到盈亏平衡线（100 ÷ 总赔率；串关抽水按场数放大：2串1约21.6%、3串1约30.6%），数学上长期必亏，<b>不建议下注</b>。可关注单场「稳胆」推荐。</div>
       </div>`;
     }
     // 部分档位留空（v1.7.25 赔率单调 + 单场单意见后，候选不足的档位不再硬凑）：
@@ -4209,35 +4226,61 @@ function renderHighOdds(){
       }
     }
     // ===== 分层串关展示策略（少而精，杜绝「推荐一大堆、什么方向都有」）=====
-    // 只有「正期望」档位算推荐：串关抽水按场数放大（2串1约21.6%、3串1约30.6%），
-    // EV 为负的档位数学上长期必亏——默认只出一行说明，完整赛程折叠收起（仅供赛后核对）；
-    // 三档全负时出一张诚实总结卡，明确告知今日不建议玩串关。
+    // v1.7.33 起推荐判定改用「地面真实口径」（历史同条件命中率 vs 盈亏平衡线）：
+    // 旧标准用模型口径 EV≥0，而该口径系统性偏保守（选出的腿优于同赔率桶均值），
+    // 58 期推荐里 50 期挂「不推荐」，实际两档却均盈利（稳健 14 战 9 中 / 均衡 18 战 5 中）。
+    // 模型口径 EV 降级为「参考」展示，不再决定推荐与否。
     const _TIER_DEFS = [["parlay2","🛡️ 稳健"],["parlay3","⚖️ 均衡"],["parlay4","💎 精锐"]];
-    const _pos = (k)=>{ const p = sp[k]; return !!(p && p.recommended && (p.ev==null || p.ev>=0)); };
-    const _recTiers = _TIER_DEFS.filter(([k])=>sp[k] && _pos(k));
-    const _negTiers = _TIER_DEFS.filter(([k])=>sp[k] && !_pos(k));
+    const _pos = (k)=>{ const p = sp[k]; return !!(p && p.recommended); };
+    // 档位历史战绩（parlay_history 已随 matches.json 内置，赛后自动结算）
+    const _tierTrack = (()=>{
+      const recs = (state.parlayHistory && state.parlayHistory.records) || [];
+      const arr = Array.isArray(recs) ? recs : Object.values(recs);
+      const out = {};
+      arr.forEach(r=>{
+        const t = r.type||"";
+        const k = t.indexOf("稳健")>=0 ? "parlay2" : (t.indexOf("均衡")>=0 ? "parlay3" : (t.indexOf("精锐")>=0 ? "parlay4" : null));
+        if(!k || r.result!=="hit" && r.result!=="miss") return;
+        const s = out[k] = out[k] || {n:0, hit:0, ret:0};
+        s.n++;
+        if(r.result==="hit"){ s.hit++; s.ret += (r.totalOdds||0); }
+      });
+      return out;
+    })();
+    const _trackHtml = (p)=>{
+      const k = p.tier==="稳健" ? "parlay2" : (p.tier==="均衡" ? "parlay3" : "parlay4");
+      const t = _tierTrack[k];
+      if(!t || t.n < 1) return `<div style="margin-bottom:8px;font-size:11px;color:var(--weak)">📈 本档历史战绩：暂无已结算记录</div>`;
+      const rate = (t.hit / t.n * 100).toFixed(0);
+      const roi = (t.ret - t.n) / t.n * 100;
+      return `<div style="margin-bottom:8px;font-size:11px;color:var(--sub)">📈 本档历史战绩：<b style="color:var(--text)">${t.n} 战 ${t.hit} 中（${rate}%）</b> · 回报 <b style="color:${roi>=0?"var(--good)":"var(--bad)"}">${roi>=0?"+":""}${roi.toFixed(0)}%</b>${t.n<5?' <span style="color:var(--weak)">（样本较小，仅供参考）</span>':""}</div>`;
+    };
     const _tierCardHtml = (p)=>{
-      const ev = (p.ev==null? null : p.ev);
-      const jp = (p.jointProb==null? null : p.jointProb);
+      const ev = (p.ev==null? null : p.ev);            // 模型口径（参考）
+      const realEv = (p.realEv==null? null : p.realEv); // 地面真实口径（主判据）
       const rh = p.realHit;
+      const beHit = p.beHit;
       const avgConf = p.avgConfidence || 0;
       const tierColor = p.tier==="稳健"?"var(--good)":(p.tier==="均衡"?"var(--accent)":"var(--warn)");
-      const evColor = ev==null?"var(--sub)":(ev>=5?"var(--good)":(ev>=-10?"var(--warn)":"var(--bad)"));
+      const realEvColor = realEv==null?"var(--sub)":(realEv>=5?"var(--good)":(realEv>=-2?"var(--accent)":"var(--bad)"));
       const stake = p.suggestStake || 0;
-      const stakeTxt = stake>0 ? `建议仓位 ${stake}%` : "不建议下注（负期望）";
-      const negTag = (ev!=null && ev<0 && !p.recommended);
-      return `<div class="ho-card" style="border-left:3px solid ${negTag?"var(--bad)":tierColor};${negTag?"margin-bottom:10px;":""}">
+      const stakeTxt = stake>0 ? `建议仓位 ${stake}%（1/4 凯利）` : "不建议下注";
+      const negTag = !p.recommended;
+      const _tierIcon = p.tier==="稳健"?"🛡️":(p.tier==="均衡"?"⚖️":"💎");
+      return `<div class="ho-card" style="border-left:3px solid ${negTag?"var(--warn)":tierColor};${negTag?"margin-bottom:10px;":""}">
         <div class="ho-head">
-          <span class="ho-type" style="color:${negTag?"var(--bad)":tierColor}">${negTag?"⚠️":"🛡️"} ${p.tier||""} · ${p.type}${negTag?" · <b>不推荐</b>":""}</span>
-          <span class="ho-total" style="color:${negTag?"var(--bad)":tierColor}">${p.totalOdds.toFixed(2)} <small>倍总赔率</small></span>
+          <span class="ho-type" style="color:${negTag?"var(--warn)":tierColor}">${negTag?"⚠️":_tierIcon} ${p.tier||""} · ${p.type}${negTag?" · <b>观望</b>":""}</span>
+          <span class="ho-total" style="color:${negTag?"var(--warn)":tierColor}">${p.totalOdds.toFixed(2)} <small>倍总赔率</small></span>
         </div>
-        ${negTag?`<div style="margin:8px 0 4px;font-size:12px;color:var(--bad)">本档最优组合期望值 <b>EV ${ev}%</b> 为负（长期平均每注亏损约 ${Math.abs(ev)}%），<b>无正期望机会，不推荐下注</b>。串关抽水按场数放大（${p.rake!=null?p.rake+"%":"—"}）。</div>`:""}
+        ${negTag?`<div style="margin:8px 0 4px;font-size:12px;color:var(--warn)">本档最优组合历史同条件命中率 <b>${rh!=null?rh+"%":"—"}</b>，低于盈亏平衡线（需 ${beHit!=null?beHit+"%":"—"}），真实期望 <b>${realEv!=null?(realEv>0?"+":"")+realEv+"%":"—"}</b>，长期平均每注亏损约 ${realEv!=null?Math.abs(realEv)+"%":"—"}，<b>不建议下注</b>。串关抽水按腿数复合放大（${p.rake!=null?p.rake+"%":"—"}）。</div>`:""}
         <div style="margin-bottom:8px;font-size:11.5px;color:var(--sub)">${p.tierDesc||""}</div>
+        ${_trackHtml(p)}
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px">
-          <span>${rh!=null?`历史同指命中率 <b style="color:var(--text)">${rh}%</b>`:`预测胜率 <b style="color:var(--text)">${jp!=null?jp+"%":"—"}</b>`}</span>
-          <span>期望值EV <b style="color:${evColor}">${ev!=null?(ev>0?"+":"")+ev+"%":"—"}</b></span>
+          <span>历史同指命中率 <b style="color:var(--text)">${rh!=null?rh+"%":"—"}</b>${beHit!=null?` <small style="color:var(--weak)">（平衡线 ${beHit}%）</small>`:""}</span>
+          <span>真实期望 <b style="color:${realEvColor}">${realEv!=null?(realEv>0?"+":"")+realEv+"%":"—"}</b></span>
+          <span title="模型校准概率口径，偏保守，仅作参考" style="color:var(--weak)">模型期望 <b>${ev!=null?(ev>0?"+":"")+ev+"%":"—"}</b></span>
           <span>抽水 <b style="color:var(--sub)">${p.rake!=null?p.rake+"%":"—"}</b></span>
-          <span style="color:${stake>0?'var(--good)':'var(--bad)'}">${stakeTxt}</span>
+          <span style="color:${stake>0?'var(--good)':'var(--warn)'}">${stakeTxt}</span>
         </div>
         <div style="margin-bottom:10px;font-size:11px;color:var(--sub)">${p.evNote||""}${avgConf?" · 平均信心 "+avgConf+"%":""}</div>
         ${parlayLegsHtml(p.legs)}
@@ -4249,6 +4292,8 @@ function renderHighOdds(){
         </div>
       </div>`;
     };
+    const _recTiers = _TIER_DEFS.filter(([k])=>sp[k] && _pos(k));
+    const _negTiers = _TIER_DEFS.filter(([k])=>sp[k] && !_pos(k));
     const _tierBtnsHtml = (tiers, barId)=> tiers.length>1
       ? `<div id="${barId}" style="margin:8px 0 10px;display:flex;gap:8px;flex-wrap:wrap;">` + tiers.map(([k,lb])=>{
           const _lg = (sp[k].legs||[]).length;
@@ -4267,15 +4312,20 @@ function renderHighOdds(){
       html += _tierBtnsHtml(_recTiers, "parlayTierBar");
       html += _tierCardHtml(sp[state.parlayTier]);
       if(_negTiers.length){
-        const negDesc = _negTiers.map(([k,lb])=>`${lb} EV ${sp[k].ev!=null?sp[k].ev+"%":"—"}`).join(" · ");
-        html += _negDetailHtml(negDesc, `另有 ${_negTiers.length} 档期望值为负（${negDesc}），长期必亏已折叠，`);
+        const negDesc = _negTiers.map(([k,lb])=>`${lb}真实期望 ${sp[k].realEv!=null?(sp[k].realEv>0?"+":"")+sp[k].realEv+"%":"—"}`).join(" · ");
+        html += _negDetailHtml(negDesc, `另有 ${_negTiers.length} 档历史同条件命中率未达平衡线（真实期望为负，长期平均亏损）已折叠，`);
       }
     } else {
       // 四档全负 → 一张诚实总结卡，不铺开赛程
-      const negDesc = _negTiers.map(([k,lb])=>`${lb} <b style="color:var(--bad)">EV ${sp[k].ev!=null?sp[k].ev+"%":"—"}</b>`).join(" · ");
+      const negDesc = _negTiers.map(([k,lb])=>`${lb} 命中 ${sp[k].realHit!=null?sp[k].realHit+"%":"—"} vs 需 ${sp[k].beHit!=null?sp[k].beHit+"%":"—"}`).join(" · ");
+      const _allNegTrack = [["parlay2","稳健"],["parlay3","均衡"],["parlay4","精锐"]]
+        .filter(([k])=>sp[k] && _tierTrack[k] && _tierTrack[k].n>0)
+        .map(([k,lb])=>{ const t=_tierTrack[k]; const rate=(t.hit/t.n*100).toFixed(0); const roi=((t.ret-t.n)/t.n*100).toFixed(0);
+          return `${lb}档历史 ${t.n} 战 ${t.hit} 中（${rate}%）· 回报 ${roi>=0?"+":""}${roi}%`; });
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
-        <div class="ho-head"><span class="ho-type" style="color:var(--warn)">🚫 今日无正期望串关机会</span></div>
-        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，<b>全部档位</b>最优组合期望值均为负（${negDesc}）。<b style="color:var(--text)">注意：EV 为负 = 同样打法长期平均每注亏损（单注仍可能全中，不排除运气）；长期玩必亏，档位之间没有「哪档更值得推荐」，只有长期平均亏得多与亏得少的区别，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
+        <div class="ho-head"><span class="ho-type" style="color:var(--warn)">🚫 今日无达标串关机会</span></div>
+        <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但<b>全部档位</b>最优组合的历史同条件命中率均未达到盈亏平衡线（${negDesc}）。<b style="color:var(--text)">注意：未达标 = 同样打法长期平均每注亏损（单注仍可能全中，不排除运气）；档位之间没有「哪档更值得推荐」，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
+        ${_allNegTrack.length?`<div style="margin:6px 0 2px;font-size:11px;color:var(--weak)">📈 各档历史战绩：${_allNegTrack.join("；")}——今日候选不达标不代表战法失效，历史盈利档位可等达标日再出手。</div>`:""}
       </div>`;
       html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");
     }

@@ -3867,12 +3867,14 @@ def gen_safe_parlay(matches):
     """智能混合过关稳串（分层双哲学策略）：
     核心原则：
     1. 混合过关：胜平负+让球+总进球，每场选最优选项
-    2. 分层选择哲学：稳健档=命中率优先（EV 护栏内选联合命中率最高，尽量中奖）；
-       均衡/搏击档=期望值(EV)优先（选相对庄家有优势的组合）
+    2. 分层选择哲学：稳健档=命中率优先（历史同条件命中率护栏内选联合命中率最高，尽量中奖）；
+       均衡档=期望值优先（历史真实期望口径，选相对庄家有优势的组合）
     3. 赔率合理：单场≥1.45（拒绝蚊子肉），各档在自身总赔区间内挑选
     4. 数据驱动：每场至少多维度技术指标支撑，叠加历史同指命中率与五维雷达交叉验证
     5. 动态场数：比赛质量高时3串1，质量一般时2串1
-    返回 {parlay2, parlay3, parlayBoost, generatedAt, strategy}
+    EV 双口径（v1.7.33）：模型口径（pTrue，偏保守，仅参考）与地面真实口径
+    （同指命中率×总赔−1）——推荐判定/达标线/排序/仓位全部用真实口径。
+    返回 {parlay2, parlay3, parlay4, generatedAt, strategy}
     """
     today = time.strftime("%Y-%m-%d")
     matches = [m for m in matches if m.get("date") == today]
@@ -4339,13 +4341,16 @@ def gen_safe_parlay(matches):
     # 4 条便宜腿乘积极可能低于 3 条中价腿，档位语义被破坏）。
     # 均衡档同步调整：静态总赔下限 4.50→4.00（让位给动态地板，避免带重叠）、
     # 单腿信心下限 55→60（拒绝为填赔率带塞入信心仅 55 的弱腿）。
+    # v1.7.33 改革：EV 下限（min_ev）改为「地面真实口径」（同指命中率×总赔−1）。
+    # 旧模型口径（pTrue）系统性偏保守，每天都判全部档位负 EV → 86% 的日子挂「不推荐」，
+    # 而历史实证两档实际盈利（稳健 14 战 9 中 / 均衡 18 战 5 中），推荐标准必须换成真实口径。
     TIERS = [
         ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08, "hit",
-         "2串1 · 稳胆哲学：在 EV≥-8% 安全护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；EV<0 仍标不推荐", 4.0),
+         "2串1 · 稳胆哲学：在历史同条件命中率护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；历史命中率未达盈亏平衡线仍标观望", 4.0),
         ("parlay3", "均衡", (3,), 1.50, 4.00, 10.0, 60.0, 0.08, -0.15, "ev",
-         "3串1 · 价值哲学：命中率与赔率折中，取 EV 最优组合，总赔高于稳健档且 4.0-10 倍；EV<0 仍标不推荐", 4.0),
+         "3串1 · 价值哲学：命中率与赔率折中，取历史真实期望最优组合，总赔高于稳健档且 4.0-10 倍；历史命中率未达盈亏平衡线仍标观望", 4.0),
         ("parlay4", "精锐", (4,), 1.35, 5.0, 20.0, 66.0, 0.08, -0.08, "hit",
-         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；EV<0 仍标不推荐", 3.2),
+         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；历史命中率未达盈亏平衡线仍标观望", 3.2),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4430,18 +4435,25 @@ def gen_safe_parlay(matches):
                     so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
                     leg_p = (so / 100.0) if (so is not None and n_ >= 10) else _leg_prob(c)
                     combo_hit *= leg_p
-                # 期望值：EV = 联合概率 × 总赔率 − 1
+                # ===== 双口径 EV（v1.7.33 推荐标准改革）=====
+                # ev      = 模型口径（pTrue 校准概率 + alpha 0.6 收缩）。该口径系统性偏保守：
+                #          历史实证选出的腿明显优于「同赔率桶」均值（稳健2串1 实测 14 战 9 中、
+                #          均衡3串1 18 战 5 中，两档实际盈利），而模型口径几乎每天都判负 EV，
+                #          导致 86% 的日子全部档位挂「不推荐」——功能等于废掉，不能再当推荐标准。
+                # real_ev = 地面真实口径（同指命中率 × 总赔 − 1，竞彩官方赛果库实测）。
+                #          推荐判定、档位达标线、排序、凯利仓位全部改用 real_ev；
+                #          模型口径 ev 仅作参考展示（页面标注「模型期望·参考」）。
                 ev = joint_p * total_odds - 1.0
-                # 不再用 EV下限硬卡：负期望日整层消失违背"分层串关"初衷。
-                # 始终取各档最优组合，靠 recommended(EV≥0) 与 evNote 如实标注。
-                if ev < min_ev:
-                    # 兜底记录：取该档 EV 最高（最接近达标）的组合，避免整层不显示。
+                real_ev = combo_hit * total_odds - 1.0
+                # 达标线按地面真实口径卡：负期望日不再整层消失，兜底取真实期望最高的组合
+                if real_ev < min_ev:
+                    # 兜底记录：取该档真实期望最高（最接近达标）的组合，避免整层不显示。
                     # 注意：兜底与达标分开计分——达标组合永远优先返回，
-                    # 杜绝「高同指但深度负 EV」的组合挤掉达标组合（旧实现两者同池竞争的缺陷）。
-                    fb_score = combo_hit * 100 + 0.01 * ev
+                    # 杜绝「高同指但深度负期望」的组合挤掉达标组合（旧实现两者同池竞争的缺陷）。
+                    fb_score = combo_hit * 100 + 0.01 * real_ev
                     if best_fb is None or fb_score > best_fb_score:
                         best_fb_score = fb_score
-                        best_fb = (list(combo), total_odds, joint_p, ev, n, combo_hit)
+                        best_fb = (list(combo), total_odds, joint_p, ev, real_ev, n, combo_hit)
                     continue
                 tech_sum = sum(c.get("techCount", 0) for c in combo)
                 stable_sum = sum(c.get("stableIndex", 0) for c in combo)
@@ -4452,37 +4464,42 @@ def gen_safe_parlay(matches):
                     so = c.get("sameOddsHit")
                     if so is not None and c.get("sameOddsN", 0) >= 10 and so < 45:
                         so_penalty += 0.0006 * (45 - so)
-                # 组合真实历史命中率已在前述 EV 门槛前计算（combo_hit），此处直接用于排序。
-                # 选择哲学分支：
+                # 组合真实历史命中率已在前述门槛前计算（combo_hit），此处直接用于排序。
+                # 选择哲学分支（v1.7.33：排序分同步改用真实期望口径）：
                 if mode == "hit":
                     # 稳胆哲学（命中率优先）：以真实历史命中率主导排序，
                     # 选出「历史上同条件最稳」的组合，而非模型概率伪装命中率；
-                    # EV 下限由 min_ev 护栏保证，避免退化为大热负期望组合
-                    score = combo_hit * 100 + 0.01 * ev - so_penalty
+                    # 护栏由 min_ev（真实口径）保证，避免退化为大热负期望组合
+                    score = combo_hit * 100 + 0.01 * real_ev - so_penalty
                 else:
-                    # 价值哲学：EV 主导（量级 0.1~1）；技术/稳胆/五维只在 EV 接近时做细微区分
-                    score = ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
+                    # 价值哲学：真实期望主导（量级 0.1~1）；技术/稳胆/五维只在接近时做细微区分
+                    score = real_ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
                 if best_pass is None or score > best_pass_score:
                     best_pass_score = score
-                    best_pass = (list(combo), total_odds, joint_p, ev, n, combo_hit)
+                    best_pass = (list(combo), total_odds, joint_p, ev, real_ev, n, combo_hit)
         best = best_pass if best_pass is not None else best_fb
         if not best:
             return None
-        selected, total_odds, joint_p, ev, n, real_hit = best
+        selected, total_odds, joint_p, ev, real_ev, n, real_hit = best
         avg_conf = sum(s["confidence"] for s in selected) / len(selected)
         play_types = list(set(s["play"] for s in selected))
-        # 凯利仓位：四分之一凯利，上限 10%
-        kelly = ev / (total_odds - 1.0) if total_odds > 1 else 0.0
+        # 凯利仓位（v1.7.33 起按真实期望口径计算，模型口径恒负会导致仓位永远为 0）
+        kelly = real_ev / (total_odds - 1.0) if total_odds > 1 else 0.0
         stake = min(max(kelly * 0.25 * 100, 0.0), 10.0)
         rake = (1.0 - PAYBACK ** n) * 100
-        if ev >= 0.05:
-            ev_note = "正期望，模型认为值得下手"
-        elif ev >= -0.05:
-            ev_note = "边际，接近盈亏平衡"
-        elif ev >= -0.20:
-            ev_note = "轻度负期望，靠命中率撑"
+        be_hit = 100.0 / total_odds          # 盈亏平衡命中率（需命中多高才不亏）
+        if real_ev >= 0.10:
+            ev_note = (f"正期望：历史同条件命中率 {real_hit*100:.0f}%，高于盈亏平衡线"
+                       f"（需 {be_hit:.0f}%），长期为正回报，值得下手")
+        elif real_ev >= -0.02:
+            ev_note = (f"达标：历史同条件命中率 {real_hit*100:.0f}%，贴近盈亏平衡线"
+                       f"（需 {be_hit:.0f}%），可小注参与")
+        elif real_ev >= -0.10:
+            ev_note = (f"轻度负期望：历史同条件命中率 {real_hit*100:.0f}%，低于平衡线"
+                       f"（需 {be_hit:.0f}%），建议观望")
         else:
-            ev_note = "明显负期望，仅作娱乐"
+            ev_note = (f"明显负期望：历史同条件命中率仅 {real_hit*100:.0f}%"
+                       f"（需 {be_hit:.0f}%），不建议下注")
         return {
             "type": f"{n}串1", "tier": name, "tierDesc": desc,
             "legs": selected,
@@ -4496,11 +4513,16 @@ def gen_safe_parlay(matches):
             "jointProb": round(joint_p * 100, 1),
             "realHit": round(real_hit * 100, 1) if real_hit is not None else None,
             "ev": round(ev * 100, 1),
+            "realEv": round(real_ev * 100, 1),
+            "beHit": round(be_hit, 1),
             "suggestStake": round(stake, 1),
             "rake": round(rake, 1),
             "evNote": ev_note,
-            # 是否值得作为「推荐」展示：EV<0 的数学上长期必亏，不再以推荐组合形式展示
-            "recommended": ev >= 0,
+            # 是否值得作为「推荐」展示（v1.7.33）：地面真实口径 EV ≥ -2%（样本噪声容差）。
+            # 模型口径 ev 系统性偏保守（选出的腿优于同赔率桶均值），不再参与推荐判定，
+            # 仅在页面作为「模型期望·参考」展示。历史实证：旧标准下 58 期推荐里 50 期
+            # 挂「不推荐」，而稳健档实际 14 战 9 中、均衡档 18 战 5 中，两档均盈利。
+            "recommended": real_ev >= -0.02,
         }
 
     # v1.7.25 顺序构建：稳健→均衡→精锐，每档总赔必须高于上一档实际总赔（动态地板）。
@@ -4863,7 +4885,7 @@ def save_parlay_history(safe_parlay, high_parlay):
         return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir")) for l in (legs or [])))
     today_sigs = {_leg_sig(r.get("legs", [])) for r in records if r.get("date") == today}
 
-    # 保存各档串关（稳健/均衡/精锐）：即便 EV<0 标「不推荐」也照常落盘，
+    # 保存各档串关（稳健/均衡/精锐）：即便真实口径未达标标「观望」也照常落盘，
     # 方便赛后对照「不推荐」是否真的没中，反向验证 EV 模型是否成立。
     for key in ("parlay2", "parlay3", "parlay4"):
         p = (safe_parlay or {}).get(key)
