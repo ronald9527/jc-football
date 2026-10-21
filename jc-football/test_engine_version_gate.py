@@ -78,8 +78,10 @@ try:
     fd.save_parlay_history(safe, None)
     after2 = json.load(open(HIST, encoding="utf-8"))["records"]
     t = [r for r in after2 if r.get("date") == FAKE_TODAY]
+    cur_ver = fd._parlay_engine_version()
     print(f"重生后 10-20 记录：{[(r['type'], r['totalOdds'], r.get('engineVer')) for r in t]}")
-    assert len(t) == 1 and t[0]["type"] == "稳健2串1" and t[0].get("engineVer") == "v1.7.25"
+    assert len(t) == 1 and t[0]["type"] == "稳健2串1" and t[0].get("engineVer") == cur_ver, \
+        f"重生记录的 engineVer 应为当前引擎版本 {cur_ver}"
 
     # 3) 再次锁定：新引擎产物正常锁定
     sp2, _ = fd.load_locked_parlay()

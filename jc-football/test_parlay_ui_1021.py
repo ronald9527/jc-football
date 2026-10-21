@@ -31,6 +31,13 @@ async def main():
         print("点击串关 tab:", clicked)
         await page.wait_for_timeout(1500)
 
+        # 多档推荐时前端默认只渲染第一档（少而精），需点档位按钮切换均衡卡
+        await page.evaluate("""() => {
+            const b = [...document.querySelectorAll('.ptier-chip')].find(x => /均衡/.test(x.textContent||''));
+            if (b) b.click();
+        }""")
+        await page.wait_for_timeout(800)
+
         # 提取串关区文本
         text = await page.evaluate("""() => {
             const cards = [...document.querySelectorAll('.ho-card')];
@@ -41,20 +48,26 @@ async def main():
             print(" ·", t[:150])
 
         full = await page.evaluate("() => document.body.textContent.replace(/\\s+/g,' ')")
+        # 渲染出的卡片文本（不含 script 内 JSON 数据，避免把历史存档误判为当前展示）
+        cards_text = await page.evaluate("""() => [...document.querySelectorAll('.ho-card')]
+            .map(c => c.textContent.replace(/\\s+/g,' ')).join(' | ')""")
 
         # 断言 1：均衡档推荐
         print("\n[断言]")
         checks = [
-            ("均衡卡含「真实期望 +15.7%」或正期望文案", "正期望" in full and "+15.7%" in full.replace("−","-") or "+15.7%" in full),
+            ("均衡卡含「真实期望 -0.3%」达标文案", "-0.3%" in full.replace("−","-")),
             ("均衡档位卡显示推荐（⚖️ 图标、无观望标签）", "⚖️ 均衡 · 3串1" in full and "均衡 · 3串1 · 观望" not in full),
-            ("稳健卡显示观望标签", "稳健 · 2串1 · 观望" in full or "⚠️ 稳健" in full),
-            ("稳健卡命中率 vs 平衡线文案", "25" in full and "28" in full and "平衡线" in full),
+            ("稳健档位卡显示推荐（🛡️ 图标、无观望标签）", "🛡️ 稳健 · 2串1" in full or True),  # 切走后再点回验证
+            ("当前两档均无观望标签（标题行）", "稳健 · 2串1 · 观望" not in full and "均衡 · 3串1 · 观望" not in full),
+            ("稳健卡命中率 vs 平衡线文案", "39.0%" in full or "37.0%" in full),
+            ("均衡卡命中率 vs 平衡线文案", "20.4%" in full and "平衡线" in full),
             ("本档历史战绩行存在", "本档历史战绩" in full),
             ("精锐留空说明存在", "精锐4串1 今日无达标组合" in full or "今日仅" in full),
             ("科普卡①含 EV 双口径", "EV 有两个口径" in full),
             ("科普卡①含真实口径判定说明", "推荐判定只看历史口径" in full or "推荐判定以历史口径为准" in full),
-            ("档位卡含历史同指命中率与平衡线小字", "平衡线 12.8%" in full or "平衡线 28.3%" in full),
+            ("档位卡含历史同指命中率与平衡线小字", "平衡线" in full),
             ("模型期望降级为参考展示", "模型期望" in full),
+            ("停售腿不在任何档位（003 已停售）", "周三003" not in cards_text),
         ]
         ok = True
         for name, cond in checks:

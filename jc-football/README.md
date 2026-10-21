@@ -181,6 +181,14 @@ python3 version_sync.py --check    # 不一致退出码非 0（CI 调用）
 - 当日修订先例：`regen_1021.py`（时间补丁 + 删当日旧口径记录 + `save_parlay_history`
   重存 + `check_parlay_history` 重算 + 回写 matches.json），历史不留双轨；
   配套测试 `test_parlay_real_ev.py`（口径自洽/推荐边界/evNote 文案/前端契约）。
+- **停售腿门（v1.7.34）**：`load_locked_parlay(today_matches)` 校验当日 pending 推荐的腿
+  是否仍在竞彩在售清单——**任何一条腿停售即解锁该档**，由主流程用可下单的比赛当日重生
+  （推荐必须保持「可下单」，绝不让用户看到买不了的「今日推荐」）；解锁只删该档，
+  剩余在售档位照常锁定回放（只增不改，防双轨）；已判定（hit/miss）记录绝不删；
+  matches 抓取异常（空清单）时跳过校验防误删。同时修复版本门遗留漏洞：旧引擎生成且
+  已开球的 pending 记录此前被「已开球不可篡改」保留，回放的却是停售推荐。
+  测试 `test_parlay_soldout_gate.py`（5 场景：停售解锁/在售锁定/已判定保留/空清单防误删/
+  旧引擎+停售删除）。
 
 ## 比分预测（Tab）
 

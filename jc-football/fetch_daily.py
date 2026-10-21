@@ -1486,7 +1486,8 @@ def main():
     # 串关推荐：当天首次成功生成即锁定发布，之后不再改动已发布档位；
     # 尚未发布过的档位允许补生成（只增不改）——推荐一旦发布就不可篡改，
     # 用户翻查历史时看到的必须和当初发布的完全一致。
-    locked_safe, locked_high = load_locked_parlay()
+    # v1.7.34：传入当日 matches，腿已停售的 pending 档位自动解锁重生（推荐必须可下单）。
+    locked_safe, locked_high = load_locked_parlay(matches)
     if locked_safe or locked_high:
         # 只要今天发布过任何一档，该档即锁定，后续跑批无权改写
         safe_parlay = locked_safe if locked_safe else None
@@ -4747,7 +4748,7 @@ def _parlay_engine_version():
         return ""
 
 
-def load_locked_parlay():
+def load_locked_parlay(today_matches=None):
     """从parlay_history.json加载今天已锁定的串关推荐，避免每批次变动。
     返回 (safe_parlay, high_odds_parlay) 或 (None, None) 表示今天尚未锁定。
 
@@ -4763,6 +4764,15 @@ def load_locked_parlay():
     背景：2026-10-20 三档倒挂推荐（v1.7.23 引擎）被当日锁定保护，v1.7.25 修复后
     无法当日生效（定时任务用自己的旧历史覆盖部署）。已判定（hit/miss）的记录
     是历史战绩凭证，绝不删除；已开球的 pending 记录同样保留。
+
+    停售腿门（v1.7.34 新增）：
+    pending 记录的腿若已**停售**（不在当日竞彩在售清单 today_matches），
+    无论引擎版本，该档删除解锁，让主流程用**可下单**的比赛当日重生。
+    背景：2026-10-21 实测——12:31 生成的推荐含周三003（18:00 开球），
+    当晚用户看到的「今日推荐」实际已无法下单（003 停售后从 matches 滚出）。
+    推荐必须保持「可下单」：已停售的 pending 档位留着只会误导用户。
+    已判定（hit/miss）记录照旧绝不删；today_matches 为空/None 时跳过校验
+    （防抓取异常把全部档位误删）。
     """
     import os
     import re
@@ -4779,7 +4789,12 @@ def load_locked_parlay():
     if not today_records:
         return None, None
 
-    # ===== 引擎版本门（v1.7.25）=====
+    # 当日竞彩在售编号集合（matches 快照中在售=可下单）；空则不校验，防误删
+    sold_nums = set()
+    if today_matches:
+        sold_nums = {m.get("num") for m in today_matches if m.get("num")}
+
+    # ===== 引擎版本门（v1.7.25）+ 停售腿门（v1.7.34）=====
     def _ver_tuple(v):
         m = re.match(r'v?(\d+)\.(\d+)\.(\d+)', v or "")
         return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
@@ -4790,6 +4805,12 @@ def load_locked_parlay():
     for r in today_records:
         if r.get("result") != "pending":
             continue  # 已判定：历史战绩凭证，绝不删
+        # 停售腿门（v1.7.34，优先于版本门）：任何引擎版本，腿停售即解锁
+        if sold_nums:
+            legs = r.get("legs") or []
+            if legs and any((l.get("num") or "") not in sold_nums for l in legs):
+                stale_ids.add(id(r))
+                continue
         if _ver_tuple(r.get("engineVer", "")) >= cur_t:
             continue  # 当前引擎产物：正常锁定
         # 旧引擎产物：仅当全部腿未开球才解锁（开球后的推荐已进入投注窗口，不可篡改）
@@ -4815,9 +4836,16 @@ def load_locked_parlay():
                       ensure_ascii=False, indent=1)
         except Exception:
             pass
-        print(f"  引擎版本门：当日旧引擎未开球推荐 {len(stale_ids)} 条已解锁（{cur_ver} 当日重生）",
+        print(f"  串关门禁：当日 {len(stale_ids)} 条待开奖推荐已解锁"
+              f"（旧引擎未开球 / 腿已停售不可下单，{cur_ver} 当日重生）",
               flush=True)
-        return None, None
+        # v1.7.34：不再整体 return None——剩余在售档位照常锁定回放，
+        # 被删档位由主流程补生成（只增不改）。否则「一档停售、其余在售」
+        # 会导致其余档位也被重新生成，旧记录残留 + 新记录追加成双轨
+        #（同一天同一档两条记录，用户看到推荐被偷偷换组）。
+        today_records = [r for r in today_records if id(r) not in stale_ids]
+        if not today_records:
+            return None, None
 
     def rebuild(tier_name):
         """按档位名（稳健/均衡/搏击）找回当天已发布的该档推荐。

@@ -74,11 +74,11 @@ for key in ("parlay2", "parlay3", "parlay4"):
     check(f"{key}.recommended 边界",
           p["recommended"] == (p["realEv"] >= -2.0),
           f"realEv={p['realEv']}% recommended={p['recommended']}")
-    # 凯利仓位按真实口径：recommended 时仓位 > 0，观望时仓位 = 0
-    if p["recommended"]:
-        check(f"{key}.推荐时仓位>0", p["suggestStake"] > 0, f"stake={p['suggestStake']}")
-    elif p["realEv"] < -0.02:
-        check(f"{key}.观望时仓位=0", p["suggestStake"] == 0, f"stake={p['suggestStake']}")
+    # 凯利仓位按真实口径：realEv>0 时仓位 >0；realEv≤0 时凯利为负、截断为 0（数学正确）
+    if p["realEv"] > 0:
+        check(f"{key}.realEv>0 时仓位>0", p["suggestStake"] > 0, f"stake={p['suggestStake']}")
+    else:
+        check(f"{key}.realEv≤0 时仓位=0", p["suggestStake"] == 0, f"stake={p['suggestStake']}")
 
 # ===== 4. evNote 文案匹配 =====
 print("\n[4] evNote 文案与真实口径匹配")
@@ -92,14 +92,17 @@ for key in ("parlay2", "parlay3", "parlay4"):
     be = f"{round(p['beHit'])}%"
     check(f"{key}.evNote 含真实命中率", rh in note, f"期望 {rh} in: {note}")
     check(f"{key}.evNote 含平衡线", be in note, f"期望 {be} in: {note}")
-    if p["realEv"] >= 0.10:
-        check(f"{key}.evNote 正期望措辞", note.startswith("正期望"), note)
-    elif p["realEv"] >= -0.02:
-        check(f"{key}.evNote 达标措辞", note.startswith("达标"), note)
-    elif p["realEv"] >= -0.10:
-        check(f"{key}.evNote 轻度负期望措辞", note.startswith("轻度负期望"), note)
+    # 措辞按 realEv 分档推导（与后端 ev_note 四档一致：10%/-2%/-10%，字段为百分数）
+    if p["realEv"] >= 10.0:
+        expect_prefix = "正期望"
+    elif p["realEv"] >= -2.0:
+        expect_prefix = "达标"
+    elif p["realEv"] >= -10.0:
+        expect_prefix = "轻度负期望"
     else:
-        check(f"{key}.evNote 明显负期望措辞", note.startswith("明显负期望"), note)
+        expect_prefix = "明显负期望"
+    check(f"{key}.evNote 措辞（realEv {p['realEv']}% → {expect_prefix}）",
+          note.startswith(expect_prefix), note)
 
 # ===== 5. 历史回归（canon 同款：候选非空 + 赔率单调） =====
 print("\n[5] 历史回归：候选与赔率单调")
