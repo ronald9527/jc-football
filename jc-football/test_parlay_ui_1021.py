@@ -47,14 +47,27 @@ async def main():
             .filter(c => /[🛡️⚖️💎⚠️]\\s*(稳健|均衡|精锐)\\s*·/.test(c.textContent||''))
             .map(c => c.textContent.replace(/\\s+/g,' ').trim())""")
         tier_text = " | ".join(tier_cards)
-        print(f"\n当前推荐档位卡 {len(tier_cards)} 张：")
+        print(f"\n当前推荐档位卡（均衡视图）{len(tier_cards)} 张：")
         for t in tier_cards:
             print(" ·", t[:130])
 
-        # 历史战绩区文本（含补回记录的整体 tab 内容，排除 script 内 JSON）
+        # 切回稳健芯片，验证稳健档位卡
+        await page.evaluate("""() => {
+            const b = [...document.querySelectorAll('.ptier-chip')].find(x => /稳健/.test(x.textContent||''));
+            if (b) b.click();
+        }""")
+        await page.wait_for_timeout(600)
+        steady_cards = await page.evaluate("""() => [...document.querySelectorAll('.ho-card')]
+            .filter(c => /[🛡️⚖️💎⚠️]\\s*(稳健|均衡|精锐)\\s*·/.test(c.textContent||''))
+            .map(c => c.textContent.replace(/\\s+/g,' ').trim())""")
+        steady_text = " | ".join(steady_cards)
+        print(f"当前推荐档位卡（稳健视图）{len(steady_cards)} 张：")
+        for t in steady_cards:
+            print(" ·", t[:130])
+
+        # 历史战绩区文本（#highOddsView 内容区，排除 script 内 JSON）
         hist_text = await page.evaluate("""() => {
-            const tab = document.querySelector('[data-tab="highodds"], #highOddsList, .fb-content');
-            const root = tab || document.body;
+            const root = document.querySelector('#highOddsView') || document.body;
             return root.textContent.replace(/\\s+/g,' ');
         }""")
         # 只取 DOM 渲染出的历史记录行（非 script 数据）
@@ -70,8 +83,8 @@ async def main():
 
         print("\n[断言]")
         checks = [
-            ("稳健档位卡显示推荐（🛡️ 图标、无观望标签）", "🛡️ 稳健 · 2串1" in full and "稳健 · 2串1 · 观望" not in full),
-            ("均衡档位卡显示推荐（⚖️ 图标、无观望标签）", "⚖️ 均衡 · 3串1" in full and "均衡 · 3串1 · 观望" not in full),
+            ("稳健档位卡显示推荐（🛡️ 图标、无观望标签）", "🛡️ 稳健 · 2串1" in steady_text and "稳健 · 2串1 · 观望" not in steady_text),
+            ("均衡档位卡显示推荐（⚖️ 图标、无观望标签）", "⚖️ 均衡 · 3串1" in tier_text and "均衡 · 3串1 · 观望" not in tier_text),
             ("稳健卡真实期望 +5.4% 达标文案", "+5.4%" in full.replace("−","-")),
             ("均衡卡真实期望 -0.3% 达标文案", "-0.3%" in full.replace("−","-")),
             ("稳健卡命中率 vs 平衡线文案", "39.0%" in full and "37.0%" in full),
