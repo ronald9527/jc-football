@@ -69,7 +69,11 @@ BACKFILL_DAYS = 365        # 准确性回溯窗口（天）：用球队缓存近
 
 
 def _now():
-    return datetime.utcnow()
+    # v1.7.39：改用本地时间。原 utcnow() 让 updatedAt 比页面其他模块
+    # （足球/篮球/WhoScored 均为本地时间）慢 8 小时——用户看到「更新 10:06」
+    # 实际是 18:06，selftest 新鲜度比对也会因时差误报停更。
+    # 缓存 ts 的读写同源，TTL 判定不受影响；窗口/回溯均按日期粒度，不受影响。
+    return datetime.now()
 
 
 def _load_config():
@@ -207,8 +211,14 @@ def _backtest_from_cache(cache, now):
     """
     match_by_id = {}
     for tid, entry in cache.items():
+        # 健壮性：缓存条目损坏（非 dict / 无 matches，如写入中断留下的残值）
+        # 不该让整个模块崩掉——跳过即可，下轮 _ensure_team 会重建该队。
+        if not isinstance(entry, dict):
+            continue
         nm = entry.get("name", "")
-        for m in entry.get("matches", []):
+        for m in entry.get("matches", []) or []:
+            if not isinstance(m, dict):
+                continue
             mid = m.get("id")
             if not mid or m.get("status") != "FINISHED" or m.get("hg") is None or m.get("ag") is None:
                 continue
@@ -374,6 +384,33 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                          "与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，"
                          "本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。")}
     if not cfg.get("enabled", True) or not cfg.get("api_key"):
+        # v1.7.39：缺 Key 时不再抹掉已有数据。
+        # 事故（2026-10-21~22）：任务沙箱丢失 fd_config.json（密钥文件被自举包排除、
+        # 沙箱重置后不回），无密钥路径直接把 score_predict.json 覆盖成空结构，
+        # 92 天回溯索引 + 566 条历史天天被抹，用户侧「比分预测几天没更新」且历史归零。
+        # 现改为：保留上一轮成功数据，仅标记未配置 + enabled=False；
+        # updatedAt 保持原数据的时间——数据年龄不失真，selftest 新鲜度检查才能识别停更。
+        prev = {}
+        try:
+            with open(OUT_PATH, encoding="utf-8") as f:
+                prev = json.load(f) or {}
+        except Exception:
+            prev = {}
+        if isinstance(prev, dict) and prev.get("matches"):
+            out_meta["updatedAt"] = prev.get("updatedAt") or out_meta["updatedAt"]
+            out_meta["note"] = ("未配置 football-data.org Key（fd_config.json 或环境变量 "
+                                "FD_API_KEY），比分预测暂停更新；以下为此前最后一次成功抓取的数据。")
+            json.dump({**out_meta,
+                       "matches": prev.get("matches") or [],
+                       "reliable": prev.get("reliable") or {},
+                       "accuracy": prev.get("accuracy") or {},
+                       "history": prev.get("history") or [],
+                       "dateIndex": prev.get("dateIndex") or {},
+                       "dateList": prev.get("dateList") or []},
+                      open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            print("未配置 football-data.org Key：保留上一轮成功数据（%d 场 / %d 天回溯），不覆盖"
+                  % (len(prev.get("matches") or []), len(prev.get("dateList") or [])))
+            return out_meta
         out_meta["enabled"] = False
         out_meta["note"] = "未配置 football-data.org Key：请在 fd_config.json 设置 api_key"
         json.dump({**out_meta, "matches": [], "reliable": {}, "accuracy": {}},
@@ -405,19 +442,35 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
 
     # 收集需要建缓存的球队：展示窗比赛 + 已缓存球队（旧格式需刷新为富化格式以支撑回溯）
     teams_needed = {}
+    window_team_ids = set()
     for m in fwd:
         for side in ("homeTeam", "awayTeam"):
             t = (m.get(side) or {})
             tid = t.get("id")
             if tid:
                 teams_needed[tid] = t.get("name", "")
+                window_team_ids.add(tid)      # 展示窗球队：刷新时优先补它们
     for tid, e in cache.items():
         teams_needed.setdefault(tid, e.get("name", ""))
-    if not no_fetch and not keep_cache:
-        # 冷启动保护：缓存为空时全量抓 100+ 支球队会耗时十几分钟，
-        # 会被定时任务超时掐断，导致后面的构建/部署永远执行不到。
-        # 这里限制单轮最多刷新 N 支（只刷「没有可用缓存」的队），剩余的分后续轮次补齐。
-        todo = [tid for tid in teams_needed if not (cache.get(str(tid)) or {}).get("matches")]
+    if not no_fetch:
+        # v1.7.39：「过期也刷」。原逻辑只刷「没有可用缓存」的队，已缓存队的 form
+        # 数据自建库那刻起永不更新——2026-10-22 实测任务沙箱缓存停在 10-09，
+        # 预测用的是两周前的近期状态，质量随时间持续劣化。现改为缺缓存 + 缓存
+        # 过期（>CACHE_TTL）都刷；冷启动保护不变：单轮最多 N 支（全量 100+ 支要
+        # 十几分钟，会挤爆任务预算），剩余分后续轮次补齐，展示窗球队优先。
+        # --keep-cache 轮（每日非首轮）只补「新出现的队」，不做过期刷新。
+        now_ts = _now().timestamp()
+
+        def _needs_refresh(tid):
+            e = cache.get(str(tid)) or {}
+            if not e.get("matches"):
+                return True                     # 新队：必须补，否则预测退回联赛均值
+            if keep_cache:
+                return False
+            return (now_ts - e.get("ts", 0)) >= CACHE_TTL
+
+        todo = [tid for tid in teams_needed if _needs_refresh(tid)]
+        todo.sort(key=lambda t: 0 if t in window_team_ids else 1)
         if max_teams and len(todo) > max_teams:
             print(f"球队缓存刷新受限：本轮只刷 {max_teams}/{len(todo)} 支（其余沿用旧缓存，后续轮次补齐）")
             todo = todo[:max_teams]

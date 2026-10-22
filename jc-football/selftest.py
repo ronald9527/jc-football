@@ -336,6 +336,61 @@ def check_basketball_freshness(bk):
         print("  篮球数据新鲜度：%.1f 小时（正常，更新于 %s）" % (age_h, upd))
 
 
+def check_scorepred_freshness(sp):
+    """比分预测数据新鲜度：配置丢失/停更的可见性兜底（v1.7.39）。
+
+    背景（2026-10-21~22 事故）：任务沙箱丢失 fd_config.json（密钥文件被自举包
+    排除、沙箱重置后不回），fetch_scores.py 无密钥路径天天把 score_predict.json
+    抹成空结构再部署——「比分预测」Tab 空了 5 天无人知晓（用户侧症状：
+    「又几天没更新」）。本检查让停更/缺配置在每轮自检显形。
+
+    与篮球检查的差异：比分预测的正常节奏是任务每 30 分钟一轮都刷新
+    （--keep-cache 也照样拉展示窗并写 updatedAt），阈值同篮球；另外
+    note 里出现「未配置 Key」直接 ERROR——那是确定性停更，与数据年龄无关。
+    """
+    if not isinstance(sp, dict):
+        add("WARN", "隔离", "score_predict.json 缺失或结构异常，无法判断新鲜度")
+        return
+    note = str(sp.get("note") or "")
+    if "未配置" in note:
+        add("ERROR", "隔离", "比分预测未配置 football-data.org Key（fd_config.json 或环境变量 "
+            "FD_API_KEY）——模块已停更，页面 Serve 的是旧数据；请在任务环境变量加 "
+            "FD_API_KEY 恢复")
+        return
+    upd = sp.get("updatedAt")
+    if not upd:
+        add("WARN", "隔离", "score_predict.json 无 updatedAt，无法判断新鲜度")
+        return
+    try:
+        t = datetime.datetime.strptime(str(upd)[:19], "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        add("WARN", "隔离", "score_predict.json updatedAt 无法解析: %r" % upd)
+        return
+    now = datetime.datetime.now()
+    age_h = (now - t).total_seconds() / 3600.0
+    if age_h < 0:                      # 沙箱时钟偏差，向前漂移视为新鲜
+        print("  比分预测新鲜度：updatedAt 晚于本机时钟（时钟偏差，跳过）")
+        return
+    hour = now.hour
+    if 10 <= hour <= 22:
+        warn_h, err_h = 3, 8
+    elif hour in (9, 23):
+        warn_h, err_h = 12, 16
+    else:
+        warn_h, err_h = 12, 24
+    n_match = len(sp.get("matches") or [])
+    tag = "最后更新 %s（%.1f 小时前，展示窗 %d 场）" % (upd, age_h, n_match)
+    if age_h > err_h:
+        add("ERROR", "隔离", "比分预测已停更 %s——fetch_scores 连续失败/缺 Key/被预算"
+            "门槛跳过，页面在 Serve 旧数据，需立即排查" % tag)
+    elif age_h > warn_h:
+        add("WARN", "隔离", "比分预测超过 %d 小时未刷新（%s）" % (warn_h, tag))
+    elif n_match == 0:
+        add("WARN", "隔离", "比分预测展示窗 0 场（%s）——确认联赛覆盖/接口是否正常" % tag)
+    else:
+        print("  比分预测新鲜度：%.1f 小时（正常，更新于 %s，%d 场）" % (age_h, upd, n_match))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -352,6 +407,7 @@ def main():
     check_history(hist)
     check_page()
     check_isolation()
+    check_scorepred_freshness(load("score_predict.json"))
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

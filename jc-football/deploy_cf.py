@@ -309,7 +309,14 @@ def main():
         json.dump(meta, f, ensure_ascii=False)
     # 部署数据文件，供页面端动态 fetch 实时刷新
     for data_file in ["matches.json", "hkmo_cache.json", "odds_bsd_cache.json",
-                      "odds_bsd.json", "fd_data.json"]:
+                      "odds_bsd.json", "fd_data.json",
+                      # WhoScored 人工预测 / 专家推荐快照（v1.7.39）：此前只经
+                      # index.html 的 BUILT_WHOSCORED / BUILT_EXPERT 注入，
+                      # 无静态云端副本。手动部署用本地旧快照构建会把任务侧
+                      # 更新数据覆盖回旧值（2026-10-22 实测：本地 10-20 vs
+                      # 线上 10-22）。上 Pages 后 ensure_history 可按时间戳
+                      # 把线上更新快照拉回，杜绝回归。
+                      "whoscored_data.json", "expert_recommendations.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
@@ -328,7 +335,15 @@ def main():
                       # 2026-10-22 事故——篮球抓取静默失败 44 小时，页面一直
                       # Serve 自举包里的旧快照；上了 Pages 副本后，ensure_history
                       # 才能在冷启动沙箱里把它拉回来，旧快照无法再只手遮天。
-                      "basketball_history.json", "basketball.json"]:
+                      "basketball_history.json", "basketball.json",
+                      # 比分预测（v1.7.39）：score_predict.json 是页面「比分预测」
+                      # Tab 的唯一数据源（只经 index.html 注入、此前无云端副本），
+                      # 2026-10-21 任务沙箱丢 Key 后无密钥路径把本地文件抹成空、
+                      # 天天部署空数据——上了 Pages 副本后，ensure_history 步骤 0
+                      # 可按时间戳把最后一份好数据拉回任务沙箱，页面不再空跑。
+                      # score_predict_cache.json（球队近期赛果缓存，165 支球队）
+                      # 同理：沙箱重置后不用每天 25 支慢慢重建，直接从 Pages 恢复。
+                      "score_predict.json", "score_predict_cache.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
@@ -357,6 +372,10 @@ def main():
         "whoscored_history.json", "history.json", "parlay_history.json",
         "hkmo_history.json", "strongweak_history.json", "half_full_history.json",
         "smart_model.json", "matches.json", "whoscored_data.json",
+        # 比分预测球队缓存（v1.7.39）：任务沙箱跨轮累积（165 支球队 × 近 60 场），
+        # 免费 API 限速 10/min，全量重建要十几分钟——必须由生产端自己累积，
+        # 不能被本地快照重置；沙箱重置时 ensure_history 从 Pages 副本拉回。
+        "score_predict_cache.json",
     }
     # .last_deploy.* 是部署节流状态（时间戳/SHA），跨环境共享会让定时沙箱
     # 误判「刚部署过」而跳过部署——必须排除。
