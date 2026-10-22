@@ -1525,8 +1525,24 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.35";
+const VERSION = "v1.7.37";
 const CHANGELOG = [
+  {
+    version: "v1.7.37",
+    date: "2026-10-22",
+    title: "串关跟单钱账上线：用赚亏代替命中率叙事，直接回答「选出来干嘛」",
+    features: [
+      "历史战绩区新增「💰 跟单钱账」区块：按已判定记录逐组结算（每组下注 1 单位），对比「跟达标组」与「硬跟观望组」的长期回报——当前跟达标组 12 战 4 中、回报 +95.6%，硬跟观望组 51 战、回报 -36.5%，相差 132 个百分点",
+      "历史记录徽章改革：「不推荐」改为「⚠️ 未达标·观望」（与档位卡口径一致），达标组补「✅ 达标」徽章，并新增徽章说明行——观望组记录仅作赛后对账，不是跟单提示",
+      "全负日总结卡（🚫 今日无达标串关机会）增加钱账行：今天按住不下注，省的就是观望组的长期亏损",
+    ],
+    fixes: [
+      "回应用户强烈反馈「命中率太低，又是不推荐，那我要你选出来干嘛」：① 用钱账代替命中率叙事——推荐组 33.3% 命中率配 10.5 倍平均赔率，ROI +95.6%；串关的盈亏平衡线只有 9.5%，「命中率低」是数学本质不是选得差；② 今天（10-22）三档真实期望 -15%~-25%：候选腿的同指命中率 50-70% 全部低于或仅勉强够到各腿自己的盈亏平衡线（100÷赔率，如周四010客胜同指 63.6% vs 需 73.5%），串关把缺口相乘放大（2 串联合 28.8% vs 需 35.2%）；全组合空间扫描也无可信正期望组合（唯一看似 +37% 的组合依赖 n=18 小样本噪声）——「今日无达标」本身就是产出",
+    ],
+    notes: [
+      "钱账样本仍小（达标组已判定 12 组）：10-10 一天三中贡献了大部分盈利，近期 10-13/10-16/10-21 推荐组未中，高赔串关波动大是常态；页面已标注「样本偏小，看长期方向」",
+    ]
+  },
   {
     version: "v1.7.35",
     date: "2026-10-21",
@@ -4117,6 +4133,23 @@ function renderHighOdds(){
   const recentRate = ph.recent7Rate || 0;
   const histRecords = ph.records || [];
 
+  // 跟单钱账（v1.7.36）：命中率高低≠赚亏——按已判定记录逐组结算（每组下注 1 单位），
+  // 直接回答「选出来干嘛」：跟达标组 vs 硬跟观望组的长期回报差。
+  // recommended 缺省的旧记录按未达标计（与徽章逻辑一致）。
+  const _roiStat = (()=>{
+    const recs = Array.isArray(histRecords) ? histRecords : Object.values(histRecords||{});
+    const calc = (sel)=>{
+      const d = sel.filter(r=>r.result==="hit"||r.result==="miss");
+      let pnl = 0;
+      d.forEach(r=>{ pnl += r.result==="hit" ? ((r.totalOdds||0)-1) : -1; });
+      return {n:d.length, hit:d.filter(r=>r.result==="hit").length, pnl};
+    };
+    return {rec: calc(recs.filter(r=>r.recommended!==false)),
+            neg: calc(recs.filter(r=>r.recommended===false))};
+  })();
+  const _roiPct = (s)=> s.n>0 ? (s.pnl/s.n*100) : 0;
+  const _roiTxt = (s)=> `${s.n} 战 ${s.hit} 中 · 回报 <b style="color:${_roiPct(s)>=0?"var(--good)":"var(--bad)"}">${_roiPct(s)>=0?"+":""}${_roiPct(s).toFixed(0)}%</b>`;
+
   let html = "";
   let spCand;
 
@@ -4143,6 +4176,14 @@ function renderHighOdds(){
         <div style="font-size:22px;font-weight:700;color:var(--warn)">${histPending}</div>
         <div style="font-size:11px;color:var(--sub)">待赛场次</div>
       </div>
+    </div>
+    <div style="margin:10px 0 4px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:11.5px;line-height:1.9;">
+      <b style="color:var(--text)">💰 跟单钱账：「选出来」到底有没有用</b>——命中率高低不等于赚亏：串关赔率高，<b style="color:var(--text)">40% 的命中率配上 10 倍赔率就是大赚</b>。按已判定记录逐组结算（每组下注 1 单位：全中收回「总赔−1」，未中亏 1）：
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;">
+        <div style="flex:1;min-width:210px;padding:8px 10px;background:rgba(82,196,26,0.06);border:1px solid rgba(82,196,26,0.25);border-radius:6px;">✅ 跟<b style="color:var(--text)">达标</b>组（发布时判定值得跟随）：${_roiTxt(_roiStat.rec)}${_roiStat.rec.n>0&&_roiStat.rec.n<20?'<div style="font-size:10px;color:var(--weak)">样本偏小，看长期方向，别盯单次结果</div>':''}</div>
+        <div style="flex:1;min-width:210px;padding:8px 10px;background:rgba(255,77,79,0.05);border:1px solid rgba(255,77,79,0.2);border-radius:6px;">⚠️ 硬跟<b style="color:var(--text)">观望</b>组（未达标也下注）：${_roiTxt(_roiStat.neg)}</div>
+      </div>
+      <div style="margin-top:6px;font-size:10.5px;color:var(--sub)">两边的差就是「选出来」的价值：<b style="color:var(--text)">达标日才出手、观望日按住</b>，和「无论好坏全跟」是两本账。观望组同样全部落盘，就是为了让你核对「不跟」到底省了没有。</div>
     </div>`;
 
   // ===== 历史记录：按日期查看（日期下拉「选项」+ 快捷按钮） =====
@@ -4164,7 +4205,8 @@ function renderHighOdds(){
       <label for="parlayHistDate" style="font-size:12.5px;color:var(--text);font-weight:600;">选择日期：</label>
       <select id="parlayHistDate" class="pdate-select" style="font-size:13px;padding:6px 10px;border:1px solid var(--accent);border-radius:8px;background:var(--card);color:var(--text);font-weight:600;cursor:pointer;">${dateOpts}</select></div>
       <div style="margin:0 0 6px;display:flex;gap:6px;flex-wrap:wrap;">${chipHtml}</div>
-      <div style="margin:0 0 8px;font-size:10.5px;color:var(--sub);line-height:1.6;">📦 以下为历史存档：早期发布过的「搏击 / 狂击」档位因长期无数据支撑（23 战 0 中）已永久下线，记录仅作赛果回溯，不再发布新推荐；当前在档位为 🛡️稳健 / ⚖️均衡 / 💎精锐。</div>`;
+      <div style="margin:0 0 8px;font-size:10.5px;color:var(--sub);line-height:1.6;">📦 以下为历史存档：早期发布过的「搏击 / 狂击」档位因长期无数据支撑（23 战 0 中）已永久下线，记录仅作赛果回溯，不再发布新推荐；当前在档位为 🛡️稳健 / ⚖️均衡 / 💎精锐。</div>
+      <div style="margin:0 0 8px;font-size:10.5px;color:var(--sub);line-height:1.6;">🏷️ 徽章说明：<b style="color:var(--good)">✅ 达标</b> = 发布时历史同条件命中率达到盈亏平衡线（真实期望 ≥ −2%），值得跟随；<b style="color:var(--warn)">⚠️ 未达标·观望</b> = 长期负期望，记录仅作赛后对账，不是跟单提示。</div>`;
     if(viewRecs.length > 0){
       const dateLabel = _pickDate ? `📅 ${state.parlayDate} 推荐（${viewRecs.length} 组，按发布时间排序）` : `全部日期 · 共 ${histRecords.length} 组（按发布时间倒序，点击展开查看每场赛果和命中详情；也可用上方日期选项只看某一天）：`;
       html += `<div style="margin-top:8px;"><div style="font-size:12px;color:var(--sub);margin-bottom:6px;">${dateLabel}</div><div style="max-height:360px;overflow-y:auto;">`;
@@ -4185,7 +4227,7 @@ function renderHighOdds(){
       }).join(" ");
       html += `<div style="padding:8px;border-bottom:1px solid var(--border);">
         <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
-          <span style="font-size:11.5px;color:var(--sub);">${r.date||""} <b style="color:var(--text)">${r.type||""}</b>${r.recommended===false?' <span style="color:var(--bad);font-size:10px;border:1px solid var(--bad);border-radius:3px;padding:0 3px;margin-left:2px;">不推荐</span>':''}</span>
+          <span style="font-size:11.5px;color:var(--sub);">${r.date||""} <b style="color:var(--text)">${r.type||""}</b>${r.recommended===false?' <span title="历史同条件命中率未达盈亏平衡线（真实期望为负），长期平均每注亏损；记录留存仅作赛后对账，不是跟单提示" style="color:var(--warn);font-size:10px;border:1px solid var(--warn);border-radius:3px;padding:0 3px;margin-left:2px;">⚠️ 未达标·观望</span>':' <span title="发布时判定为达标（真实期望 ≥ −2%，值得跟随）" style="color:var(--good);font-size:10px;border:1px solid var(--good);border-radius:3px;padding:0 3px;margin-left:2px;">✅ 达标</span>'}</span>
           <span style="display:flex;align-items:center;gap:8px;">
             <span style="color:var(--accent);font-weight:600;font-size:12px;">${r.totalOdds||0}倍</span>
             <span style="color:${resultColor};font-weight:600;font-size:11px;">${resultText}</span>
@@ -4351,6 +4393,7 @@ function renderHighOdds(){
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">
         <div class="ho-head"><span class="ho-type" style="color:var(--warn)">🚫 今日无达标串关机会</span></div>
         <div style="margin:8px 0 2px;font-size:12px;color:var(--sub)">候选 <b>${spCand}</b> 个，但<b>全部档位</b>最优组合的历史同条件命中率均未达到盈亏平衡线（${negDesc}）。<b style="color:var(--text)">注意：未达标 = 同样打法长期平均每注亏损（单注仍可能全中，不排除运气）；档位之间没有「哪档更值得推荐」，今日不建议下注任何串关。</b>串关抽水按腿数复合放大（2串1约21.6%、3串1约30.6%、4串1约38.5%）。可关注单场「稳胆」推荐。</div>
+        ${_roiStat.neg.n>0?`<div style="margin:6px 0 2px;font-size:11px;color:var(--sub)">💵 历史账本：跟达标组 ${_roiTxt(_roiStat.rec)}，硬跟观望组 ${_roiTxt(_roiStat.neg)}——<b style="color:var(--text)">今天按住不下注，省的就是观望组的亏损</b>。</div>`:""}
         ${_allNegTrack.length?`<div style="margin:6px 0 2px;font-size:11px;color:var(--weak)">📈 各档历史战绩：${_allNegTrack.join("；")}——今日候选不达标不代表战法失效，历史盈利档位可等达标日再出手。</div>`:""}
       </div>`;
       html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");

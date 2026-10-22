@@ -12,11 +12,19 @@ import sys, json, time as _time, importlib.util, re
 
 BASE = "/workspace/jc-football"
 
-# 时间补丁回今日 09:25（与 regen_1021.py 同环境）
+built = json.load(open(f"{BASE}/matches.json", encoding="utf-8"))
+# 场景无关：取数据中最新的比赛日期为「今日」（数据每日滚动，测试不绑死某一天）
+FAKE_TODAY = max((m.get("date") or "" for m in built["matches"]), default="2026-10-21")
+FAKE_NOW = f"{FAKE_TODAY} 09:25:00"
+
+# 时间补丁回当日 09:25（与 regen 脚本同环境；停售腿门/判定逻辑按当日数据跑）
 _real_strftime = _time.strftime
-FAKE_TODAY = "2026-10-21"
 _time.strftime = lambda fmt, *a, **k: FAKE_TODAY if fmt == "%Y-%m-%d" else (
-    "2026-10-21 09:25:00" if fmt == "%Y-%m-%d %H:%M:%S" else _real_strftime(fmt, *a, **k))
+    FAKE_NOW if fmt == "%Y-%m-%d %H:%M:%S" else _real_strftime(fmt, *a, **k))
+
+def _ver_tuple(v):
+    m = re.match(r"v?(\d+)\.(\d+)\.(\d+)", v or "")
+    return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
 
 spec = importlib.util.spec_from_file_location("fd", f"{BASE}/fetch_daily.py")
 fd = importlib.util.module_from_spec(spec)
@@ -139,7 +147,10 @@ check("今日 pending 记录数 = 非空档位数",
       f"pending_records={len(today_pending)} / all={len(today_recs)}")
 for r in today_recs:
     snap = r.get("snapshot") or {}
-    check(f"{r['type']} engineVer=v1.7.33", r.get("engineVer") == "v1.7.33")
+    # engineVer 不绑死具体版本：只要 ≥ v1.7.33（双口径改革起，记录必带真实口径字段）即可
+    check(f"{r['type']} engineVer≥v1.7.33（双口径改革起）",
+          _ver_tuple(r.get("engineVer")) >= (1, 7, 33),
+          f"engineVer={r.get('engineVer')}")
     check(f"{r['type']} 快照含 realEv", "realEv" in snap)
     check(f"{r['type']} recommended 与快照一致",
           r.get("recommended") == snap.get("recommended"))

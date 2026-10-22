@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-10-21 11:01:52",
- "total": 583,
+ "updatedAt": "2026-10-22 12:01:35",
+ "total": 585,
  "records": [
   {
    "id": "2042129",
@@ -93,7 +93,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "1:2",
     "alternatives": [
@@ -210,7 +222,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -318,7 +342,19 @@
     "reasons": [],
     "goal": "+1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:1",
     "alternatives": [
@@ -435,7 +471,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -543,7 +591,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -651,7 +711,19 @@
     "reasons": [],
     "goal": "+1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -671,6 +743,222 @@
     ]
    },
    "predAt": "2026-10-21 11:01",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042130",
+   "num": "周四011",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧协联",
+   "home": "阿贾克斯",
+   "away": "亚特兰大",
+   "goal": "-1",
+   "odds": {
+    "h": 1.82,
+    "d": 3.6,
+    "a": 3.32
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧协联25",
+   "ar": "欧协联4",
+   "hrn": 25,
+   "arn": 4,
+   "goalsExp": 3.22,
+   "hhProb": 36.4,
+   "aaProb": 18.5,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.22球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.22球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.22≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.6,
+    "expAway": 1.9,
+    "totalGoals": 3.22,
+    "reasons": [
+     "预期总进球3.22球",
+     "主队预期进球1.6·客队预期进球1.9",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-22 11:03",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "2042131",
+   "num": "周四012",
+   "date": "2026-10-22",
+   "kickoff": "2026-10-23 03:00",
+   "league": "欧协联",
+   "home": "摩纳哥",
+   "away": "弗赖堡",
+   "goal": "-1",
+   "odds": {
+    "h": 1.95,
+    "d": 3.45,
+    "a": 3.07
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "欧协联9",
+   "ar": "欧协联7",
+   "hrn": 9,
+   "arn": 7,
+   "goalsExp": 3.04,
+   "hhProb": 33.3,
+   "aaProb": 19.6,
+   "verdict": {
+    "t": "warn",
+    "txt": "总进球期望3.04球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+    "dir": "d",
+    "stars": 0,
+    "score": 0.0,
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hits": [
+    {
+     "g": "组11进球预期",
+     "t": "warn",
+     "dir": "h",
+     "label": "总进球期望3.04球偏高，让球-1的强队难保不丢球，主胜打出难度加大，谨慎看待",
+     "cond": "期望进球3.04≥2.0、让球-1≥1"
+    }
+   ],
+   "score": {
+    "dir": "d",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": [
+     "组11进球预期·主胜-0.69×1.38"
+    ]
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让负（综合评分0.0）",
+    "dir": "a",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": null,
+   "scoreRec": {
+    "predicted": "2:2",
+    "alternatives": [
+     "1:1",
+     "1:2",
+     "1:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.8,
+    "totalGoals": 3.04,
+    "reasons": [
+     "预期总进球3.04球",
+     "主队预期进球1.5·客队预期进球1.8",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-10-22 11:03",
    "result": null,
    "hitFlag": null,
    "hhadHit": null,
@@ -867,7 +1155,19 @@
     "reasons": [],
     "goal": "+1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:1",
     "alternatives": [
@@ -1101,7 +1401,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -1209,7 +1521,19 @@
     "reasons": [],
     "goal": "+2"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -1349,11 +1673,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:1",
+    "had": "a",
+    "home": 0,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "partial",
+   "resultAt": "2026-10-22 12:01",
+   "hhadResult": "a",
+   "scoreActual": "0:1",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负"
   },
   {
    "id": "2042112",
@@ -1475,11 +1810,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "4:1",
+    "had": "h",
+    "home": 4,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "resultAt": "2026-10-22 09:46",
+   "hhadResult": "h",
+   "scoreActual": "4:1",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜"
   },
   {
    "id": "2042113",
@@ -1613,11 +1959,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:1",
+    "had": "h",
+    "home": 3,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "d",
+   "scoreActual": "3:1"
   },
   {
    "id": "2042114",
@@ -1742,11 +2099,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:0",
+    "had": "h",
+    "home": 1,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "d",
+   "scoreActual": "1:0"
   },
   {
    "id": "2042115",
@@ -1862,11 +2230,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "hit",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "a",
+   "scoreActual": "2:2"
   },
   {
    "id": "2042116",
@@ -2000,11 +2379,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:3",
+    "had": "a",
+    "home": 2,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "hit",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "a",
+   "scoreActual": "2:3"
   },
   {
    "id": "2042117",
@@ -2120,11 +2510,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:0",
+    "had": "h",
+    "home": 3,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "resultAt": "2026-10-22 09:46",
+   "hhadResult": "h",
+   "scoreActual": "3:0",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜"
   },
   {
    "id": "2042111",
@@ -2240,11 +2641,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:1",
+    "had": "h",
+    "home": 3,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "h",
+   "scoreActual": "3:1"
   },
   {
    "id": "2042109",
@@ -2348,11 +2760,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "4:1",
+    "had": "h",
+    "home": 4,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-22 09:06",
+   "hhadResult": "h",
+   "scoreActual": "4:1"
   },
   {
    "id": "2042110",
@@ -2468,11 +2891,22 @@
     ]
    },
    "predAt": "2026-10-20 11:01",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:4",
+    "had": "a",
+    "home": 2,
+    "away": 4,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "resultAt": "2026-10-22 09:46",
+   "hhadResult": "a",
+   "scoreActual": "2:4",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负"
   },
   {
    "id": "2042106",
@@ -2601,7 +3035,7 @@
    "scoreHit": "miss",
    "halfFullResult": "dd",
    "halfFullDesc": "平平",
-   "resultAt": "2026-10-21 21:23",
+   "resultAt": "2026-10-21 20:32",
    "hhadResult": "a",
    "scoreActual": "0:0"
   },
@@ -2732,7 +3166,7 @@
    "scoreHit": "miss",
    "halfFullResult": "dh",
    "halfFullDesc": "平胜",
-   "resultAt": "2026-10-21 21:23",
+   "resultAt": "2026-10-21 20:32",
    "hhadResult": "d",
    "scoreActual": "2:1"
   },
@@ -2863,7 +3297,7 @@
    "scoreHit": "miss",
    "halfFullResult": "da",
    "halfFullDesc": "平负",
-   "resultAt": "2026-10-21 21:23",
+   "resultAt": "2026-10-21 20:32",
    "hhadResult": "a",
    "scoreActual": "0:3"
   },
@@ -46365,7 +46799,7 @@
    "hhadHit": "hit",
    "asianHit": "miss",
    "scoreHit": "miss",
-   "resultAt": "2026-10-21 21:23",
+   "resultAt": "2026-10-22 12:01",
    "hhadResult": "a",
    "scoreActual": "3:0"
   },
