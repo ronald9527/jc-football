@@ -289,6 +289,51 @@ def check_isolation():
             print("  独立源 basketball.json：%d 场（篮球编号 %s~%s）"
                   % (len(bms), bms[0].get("num") if bms else "-",
                      bms[-1].get("num") if bms else "-"))
+            check_basketball_freshness(bk)
+
+
+def check_basketball_freshness(bk):
+    """篮球数据新鲜度：抓取静默失败的可见性兜底（v1.7.38）。
+
+    背景（2026-10-22 事故）：fetch_basketball.py 按隔离设计「失败只跳过篮球、
+    exit 0 保足球主流程」，失败信息只进 stderr；而自举代码包里携带的篮球数据
+    快照会让部署继续 Serve 旧数据——结果篮球数据停了 44 小时无人知晓。
+    本检查让「停更」在每轮自检里显形，随任务汇报与 selftest_report.json 曝光。
+
+    阈值按任务节奏（9-23 点每 30 分钟一轮、夜间停跑）设定：
+      10-22 点（白天）：>3h WARN / >8h ERROR
+      9 点 / 23 点（交接）：>12h WARN / >16h ERROR（23 点停跑到次日 9 点约 10h 属正常）
+      0-8 点（夜间停跑）：>12h WARN / >24h ERROR
+    """
+    upd = bk.get("updatedAt") if isinstance(bk, dict) else None
+    if not upd:
+        add("WARN", "隔离", "basketball.json 无 updatedAt，无法判断新鲜度")
+        return
+    try:
+        t = datetime.datetime.strptime(str(upd)[:19], "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        add("WARN", "隔离", "basketball.json updatedAt 无法解析: %r" % upd)
+        return
+    now = datetime.datetime.now()
+    age_h = (now - t).total_seconds() / 3600.0
+    if age_h < 0:                      # 沙箱时钟偏差，向前漂移视为新鲜
+        print("  篮球数据新鲜度：updatedAt 晚于本机时钟（时钟偏差，跳过）")
+        return
+    hour = now.hour
+    if 10 <= hour <= 22:
+        warn_h, err_h = 3, 8
+    elif hour in (9, 23):
+        warn_h, err_h = 12, 16
+    else:
+        warn_h, err_h = 12, 24
+    tag = "最后更新 %s（%.1f 小时前）" % (upd, age_h)
+    if age_h > err_h:
+        add("ERROR", "隔离", "篮球数据已停更 %s——fetch_basketball 连续失败或被预算"
+            "门槛跳过，页面在 Serve 旧快照，需立即排查" % tag)
+    elif age_h > warn_h:
+        add("WARN", "隔离", "篮球数据超过 %d 小时未刷新（%s）" % (warn_h, tag))
+    else:
+        print("  篮球数据新鲜度：%.1f 小时（正常，更新于 %s）" % (age_h, upd))
 
 
 def main():

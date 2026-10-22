@@ -323,7 +323,12 @@ def main():
                       "strongweak_history.json", "half_full_history.json",
                       "smart_model.json",
                       "whoscored_history.json", "whoscored_preview_cache.json",
-                      "whoscored_recent.json"]:
+                      "whoscored_recent.json",
+                      # 篮球档案（v1.7.38）：同样上 Pages 做云端副本。
+                      # 2026-10-22 事故——篮球抓取静默失败 44 小时，页面一直
+                      # Serve 自举包里的旧快照；上了 Pages 副本后，ensure_history
+                      # 才能在冷启动沙箱里把它拉回来，旧快照无法再只手遮天。
+                      "basketball_history.json", "basketball.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))

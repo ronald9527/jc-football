@@ -10,6 +10,7 @@
      的 sha256 完全不变——证明篮球板块对足球数据零影响
 """
 
+import datetime
 import hashlib
 import json
 import os
@@ -51,13 +52,33 @@ def main():
           % (len(matches), n_odds, matches[0]["num"], matches[-1]["num"],
              m["league"]))
 
-    # ---- 2. 赛果回填 ----
-    r = bk.fetch_bonus("2042092")   # 已开奖（西篮 巴伦西亚 93:116 穆尔西亚天主大学）
-    assert r == {"home": 93, "away": 116}, "已开赛场次比分解析错误: %s" % r
-    r2 = bk.fetch_bonus("2042132")  # 未开赛
-    assert r2 is None, "未开赛场次应返回 None: %s" % r2
+    # ---- 2. 赛果回填（动态取例，防数据滚动失效：v1.7.38）----
+    # 已开奖用例：从本地篮球档案挑一条已有赛果的记录，接口返回必须与档案一致
+    scored = None
+    try:
+        with open(os.path.join(HERE, "basketball_history.json"), encoding="utf-8") as f:
+            for rec in (json.load(f).get("records") or {}).values():
+                if rec.get("score") and rec.get("id"):
+                    scored = rec
+                    break
+    except Exception:
+        pass
+    assert scored, "本地篮球档案没有已回填赛果的记录，无法验证已开奖分支"
+    r = bk.fetch_bonus(scored["id"])
+    assert r == {"home": scored["score"][0], "away": scored["score"][1]}, \
+        "已开赛场次比分与档案不一致: %s vs %s" % (r, scored["score"])
+    # 未开奖用例：在售赛程里挑一个还没开球的，必须返回 None
+    now_s = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    future = next((x for x in matches if (x.get("kickoff") or "") > now_s), None)
+    if future is not None:
+        r2 = bk.fetch_bonus(future["id"])
+        assert r2 is None, "未开赛场次应返回 None: %s %s" % (future["num"], r2)
+        unfin = "未开赛 %s → None" % future["num"]
+    else:
+        unfin = "在售场次均已开球，跳过未开奖分支"
     assert bk._line_num("+1.5") == 1.5 and bk._line_num("223.5") == 223.5
-    print("2. 赛果回填 OK：已开奖 93:116 / 未开赛 None / 盘口解析正确")
+    print("2. 赛果回填 OK：已开奖 %s %d:%d / %s / 盘口解析正确"
+          % (scored["num"], scored["score"][0], scored["score"][1], unfin))
 
     # ---- 3. 数据隔离（足球文件哈希不变）----
     before = {f: sha(os.path.join(HERE, f)) for f in FOOTBALL_FILES}

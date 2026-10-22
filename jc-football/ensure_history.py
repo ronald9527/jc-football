@@ -34,6 +34,7 @@ HIST_FILES = [
     "whoscored_history.json",       # WhoScored 比分预测评估历史（records 为 dict）
     "whoscored_preview_cache.json", # WhoScored 预测比分缓存（平铺 dict）
     "whoscored_recent.json",        # WhoScored 近期比赛元数据（平铺 dict）
+    "basketball_history.json",      # 篮球赛后档案（records 为 dict，v1.7.38 纳入保护）
 ]
 
 # 各文件的真实记录数提取方式（默认 records_count 按 list/records-list 处理，
@@ -44,8 +45,18 @@ def _count_whoscored_history(obj):
         return len(recs) if isinstance(recs, (dict, list)) else 0
     return 0
 
+
+def _count_basketball_history(obj):
+    """篮球档案 records 以 matchId 为键（dict 结构），同样必须专门计数，
+    否则 records_count 只会数到 2 个顶层键，永远比对不出丢失。"""
+    if isinstance(obj, dict):
+        recs = obj.get("records")
+        return len(recs) if isinstance(recs, (dict, list)) else 0
+    return 0
+
 COUNT_FN = {
     "whoscored_history.json": _count_whoscored_history,
+    "basketball_history.json": _count_basketball_history,
 }
 
 TIMEOUT = 40
