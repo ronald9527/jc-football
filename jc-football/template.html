@@ -531,6 +531,15 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .ws-rank-bar i.out.hi{background:linear-gradient(90deg,#f7b733,#fc4a1a)}
 .ws-conf-tip{margin-top:5px;font-size:11.5px;color:var(--text);font-weight:600}
 .ws-conf.high .ws-conf-tip{color:#f7b733}
+/* v1.7.40：赛前可信度徽章——赛后回溯/完赛卡片展示该场赛前标注的可信度，
+   让「赛前🔥高可信」赛后逐场可验证（数据来自记录的 preConf 字段） */
+.sp-preconf{display:inline-block;font-size:10px;font-weight:700;border-radius:8px;padding:1px 7px;white-space:nowrap;line-height:1.6}
+.sp-preconf.high{color:#5c3a00;background:linear-gradient(180deg,#ffd76b,#f0b429);border:1px solid #d99b1c}
+.sp-preconf.mid{color:#1565c0;background:rgba(21,101,192,.10);border:1px solid rgba(21,101,192,.35)}
+.sp-preconf.low{color:var(--weak);background:var(--line);border:1px solid var(--line2)}
+.sp-preconf-inline{font-size:11.5px;color:var(--sub)}
+.sp-preconf-inline.hot{color:#f7b733;font-weight:700}
+.sp-preconf-inline b{color:var(--text)}
 @media(max-width:640px){ .ws-rank-name{width:40%} }
 .sp-jcnum{margin-left:auto;font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:9px;padding:2px 8px;white-space:nowrap}
 .sp-enline{font-size:10px;color:var(--weak);margin:-4px 0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1287,7 +1296,7 @@ footer b{color:var(--sub)}
     <div class="sp-filters" id="wsDateBar"></div>
     <div id="wsList"></div>
     <div class="sp-date-sec">
-      <div class="sp-date-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按北京日期回看，验证预测准不准</span></div>
+      <div class="sp-date-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按北京日期回看，验证预测准不准；赛前标注过可信度（含「🔥高可信」）的场次会带同款徽章，可逐场核对赛前判断的实际表现（2026-10-22 起的比赛完整记录，更早的暂无快照）</span></div>
       <div class="sp-filters" id="wsHistBar"></div>
       <div id="wsHistList"></div>
     </div>
@@ -1525,8 +1534,25 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.39";
+const VERSION = "v1.7.40";
 const CHANGELOG = [
+  {
+    version: "v1.7.40",
+    date: "2026-10-23",
+    title: "赛前高可信，赛后见分晓：回溯区标注赛前可信度，高可信预测逐场可验证",
+    features: [
+      "WhoScored 赛后回溯新增赛前可信度徽章：赛前标注过「🔥高可信」的场次，回溯卡片带同款金色徽章（悬停可见赛前原话建议），当日汇总行单独列出「🔥 赛前高可信 N 场 · 方向命中 M」——高可信预测到底准不准，一眼可查；中等/谨慎档位同样有徽章，可信度分级与实际表现可对照",
+      "主预测列表完赛场次改晒实际赛果：比赛结束后卡片直接显示实际比分与命中情况（此前只有一行状态文字），并带上该场赛前徽章；赛后再不显示「可信度待积累」——赛后给赛前建议的事后诸葛一并清除",
+    ],
+    fixes: [
+      "修复赛后诸葛：可信度本只对未开赛场次计算，但守卫只查 evaluated 标志（records 从不持久化该键、恒为 False），线上 83 场已完赛比赛仍带可信度建议——已按开球前快照重新核算并剥离残留，守卫补上「记录已有赛果」硬标志",
+      "赛前可信度存档机制（pending）：每轮把未开球场次的 conf 按 mid 暂存，比赛评估时搬进历史记录的 preConf 字段永存；超过 10 天未评估的残留自动清理，存档不无限增长",
+    ],
+    notes: [
+      "10-22 起的历史比赛已用当轮赛前快照回填（快照时间均早于开球，无事后污染）：30 条记录补上赛前标记，其中 3 场赛前高可信——FC Cincinnati 2:1 精确命中，凯尔特人 1:2、霍芬海姆 1:2 方向未中；更早的比赛无快照不补，回溯区标题已注明",
+      "回填表随自举代码包下发，任务侧每轮加载时自愈，不受部署竞态影响；记录自带 preConf 后回填表不再命中，可随时删除",
+    ]
+  },
   {
     version: "v1.7.39",
     date: "2026-10-22",
@@ -4636,6 +4662,12 @@ function renderWhoScored(){
         const zhH = wm ? spZh(wm.home) : "", zhA = wm ? spZh(wm.away) : "";
         // 队名核对：WhoScored 英文名译回中文后与竞彩官方名不一致 → 醒目提示人工核对
         const nameMismatch = !!wm && (zhH!==j.home || zhA!==j.away);
+        // v1.7.40：完赛场次（本轮刚评估：wm.actH；往轮已评估：历史记录 hr）
+        // 不再展示赛前可信度——赛后还给「赛前建议」是事后诸葛（records 不持久化
+        // evaluated 标志，wm.evaluated 对往轮已评估场次恒 False，须查历史记录）。
+        // 改展示实际赛果与命中情况，并把该场赛前标过的可信度徽章一并亮出。
+        const hr = wm ? wsHistRec(wm) : null;
+        const fin = !!hr || !!(wm && wm.evaluated && wm.actH!=null);
         let predBlock = "";
         if(hasPred){
           predBlock = `<div class="ws-scoreline">
@@ -4644,13 +4676,13 @@ function renderWhoScored(){
               <div class="ws-metawrap"><div class="sp-label">${wm.league||j.league||""}</div>
                 <div class="ws-meta">北京时间 ${wm.bjTime||j.time||"-"}</div></div>
             </div>
-            ${wsConfHtml(wm)}
+            ${fin?``:wsConfHtml(wm)}
             ${(zhH!==wm.home||zhA!==wm.away)?`<div class="sp-enline">${wm.home||""} vs ${wm.away||""}</div>`:``}`;
         } else {
           const s = lgStat[j.league];
           let reason, warn = false;
           if(wm){
-            reason = `该场已收录但无人工预测${wm.evaluated?"（赛后赛果见下方）":""}`;
+            reason = `该场已收录但无人工预测${fin?"（赛后赛果见下方）":""}`;
           } else if(s && s.p>0){
             reason = `该场暂无人工预测（同联赛共 ${s.p} 场有推荐，如认为应有预测请人工核对队名/日期）`;
             warn = true;
@@ -4664,16 +4696,21 @@ function renderWhoScored(){
         }
         // 赛后回填：WhoScored 评估出的实际比分 + 命中情况（无预测的场次只展示赛果）
         let res = "";
-        if(wm && wm.evaluated && wm.actH!=null){
-          res = `<div class="ws-res"><span class="sp-dact">实际 ${wm.actH}:${wm.actA}</span>`
-            + (hasPred ? `<span class="${wm.exactHit?"good":"bad"}">${wm.exactHit?"✓精确命中":"✗比分未中"}</span>`
-              + `<span class="${wm.outcomeHit?"good":"bad"}">${wm.outcomeHit?"方向✓":"方向✗"}</span>` : ``)
+        if(fin){
+          const aH = (wm.evaluated && wm.actH!=null) ? wm.actH : hr.actH;
+          const aA = (wm.evaluated && wm.actH!=null) ? wm.actA : hr.actA;
+          const eh = (wm.evaluated && wm.actH!=null) ? wm.exactHit : hr.exactHit;
+          const oh = (wm.evaluated && wm.actH!=null) ? wm.outcomeHit : hr.outcomeHit;
+          res = `<div class="ws-res"><span class="sp-dact">实际 ${aH}:${aA}</span>`
+            + (hasPred ? `<span class="${eh?"good":"bad"}">${eh?"✓精确命中":"✗比分未中"}</span>`
+              + `<span class="${oh?"good":"bad"}">${oh?"方向✓":"方向✗"}</span>` : ``)
+            + (hr && hr.preConf ? wsPreConfHtml(hr.preConf) : ``)
             + `</div>`;
         } else {
           const stt = wsJcStatusText(j);
           if(stt) res = `<div class="ws-res"><span class="sp-dact" style="color:var(--weak)">${stt}</span></div>`;
         }
-        html += `<div class="sp-card ws-jc ${(wm&&wm.evaluated)?"sp-fin":""}">
+        html += `<div class="sp-card ws-jc ${fin?"sp-fin":""}">
           <div class="sp-teams"><span class="sp-home">${j.home}</span><span class="sp-vs">vs</span><span class="sp-away">${j.away}</span>
             <span class="ws-jcnum">竞彩 ${j.num}</span></div>
           <div class="sp-enline">${j.league||""} · 开球 ${j.time||""}${nameMismatch?` · <span class="ws-namewarn">⚠️队名待核对：${zhH} vs ${zhA}</span>`:``}</div>
@@ -4701,15 +4738,21 @@ function renderWhoScored(){
       const rows = histJc.filter(r=>r.date===state.wsHistDate);
       if(!rows.length){ hl.innerHTML = `<div class="empty">该日期无记录</div>`; }
       else {
-        let he=0, ho=0;
-        rows.forEach(r=>{ if(r.exactHit) he++; if(r.outcomeHit) ho++; });
-        let x = `<div class="sp-date-sum">${state.wsHistDate} · 对应竞彩 <b>${rows.length}</b> 场完赛 · 精确命中 <b>${he}</b>（${(he/rows.length*100).toFixed(0)}%）· 方向命中 <b>${ho}</b>（${(ho/rows.length*100).toFixed(0)}%）</div><div class="sp-date-grid">`;
+        let he=0, ho=0, ph=0, pho=0;
+        rows.forEach(r=>{
+          if(r.exactHit) he++;
+          if(r.outcomeHit) ho++;
+          if(wsPreConfLevel(r.preConf)==="high"){ ph++; if(r.outcomeHit) pho++; }
+        });
+        let x = `<div class="sp-date-sum">${state.wsHistDate} · 对应竞彩 <b>${rows.length}</b> 场完赛 · 精确命中 <b>${he}</b>（${(he/rows.length*100).toFixed(0)}%）· 方向命中 <b>${ho}</b>（${(ho/rows.length*100).toFixed(0)}%）`
+          + (ph ? `<span class="sp-preconf-inline hot"> · 🔥 赛前高可信 <b>${ph}</b> 场 · 方向命中 <b>${pho}</b>（${(pho/ph*100).toFixed(0)}%）</span>` : ``)
+          + `</div><div class="sp-date-grid">`;
         rows.forEach(r=>{
           const zhH = spZh(r.home), zhA = spZh(r.away);
           x += `<div class="sp-dcard ws-jc">
             <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}<span class="ws-jcnum sm">竞彩 ${r.jcNum}</span></div>
             <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
-            <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span><span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span><span class="sp-dlg">${r.league||""}</span></div>
+            <div class="sp-dfoot">${wsPreConfHtml(r.preConf)}<span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span><span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span><span class="sp-dlg">${r.league||""}</span></div>
           </div>`;
         });
         x += `</div>`;
@@ -4777,6 +4820,34 @@ function renderWhoScored(){
 
 /* 该场预测是否"高可信"（比分或方向任一达到高） */
 function wsIsHot(m){ return !!(m && m.conf && (m.conf.exactLevel==="high" || m.conf.dirLevel==="high")); }
+
+/* v1.7.40：赛前可信度档位（赛后回溯用）。preConf 是 fetch_whoscored 在比赛
+   开赛前算好、评估时搬进历史记录的存档——赛后据此还原「这场赛前标过什么」。
+   样本 0（可信度待积累）不入库，故有 preConf 就一定是真实评分。 */
+function wsPreConfLevel(pc){
+  if(!pc || !pc.sample) return "";
+  if(pc.exactLevel==="high" || pc.dirLevel==="high") return "high";
+  if(pc.exactLevel==="mid" || pc.dirLevel==="mid") return "mid";
+  return "low";
+}
+/* 赛前可信度徽章（回溯行/完赛卡片通用） */
+function wsPreConfHtml(pc){
+  const lv = wsPreConfLevel(pc);
+  if(!lv) return "";
+  const tag = lv==="high" ? "🔥 赛前高可信" : (lv==="mid" ? "赛前可信度中等" : "赛前谨慎");
+  const tip = ((pc.tip||"赛前可信度评估") + (pc.outcome?`（方向：${pc.outcome}）`:"")).replace(/"/g, "");
+  return `<span class="sp-preconf ${lv}" title="${tip}">${tag}</span>`;
+}
+/* 按 mid 查历史记录（赛后评估存档）：主列表里「往轮已评估、本轮仍在列表」的
+   完赛场次要靠它取实际比分与赛前可信度——records 不持久化 evaluated 标志，
+   wm.evaluated 对它们是 False。只认带赛果的记录。 */
+function wsHistRec(m){
+  if(!m || !m.id) return null;
+  const ws = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) || {};
+  if(!wsHistRec._ix){ wsHistRec._ix = {}; (ws.history||[]).forEach(r=>{ if(r && r.id!=null) wsHistRec._ix[r.id]=r; }); }
+  const r = wsHistRec._ix[m.id];
+  return (r && r.actH!=null) ? r : null;
+}
 
 /* 可信度区块：历史命中率反哺 → 该场预测的可信度 + 跟注建议（仅参考，不构成投注建议） */
 function wsConfHtml(m){

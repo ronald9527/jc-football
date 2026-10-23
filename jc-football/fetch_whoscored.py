@@ -33,12 +33,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_PATH = os.path.join(HERE, "whoscored_data.json")
 PREVIEW_CACHE = os.path.join(HERE, "whoscored_preview_cache.json")   # 预测比分不可变 → 永久缓存
 HISTORY_PATH = os.path.join(HERE, "whoscored_history.json")          # 累积历史（按比赛 id 去重）
+# v1.7.40 一次性回填表：pending 机制上线前已评估的比赛没有赛前 conf 存档，
+# 用上线时整理的快照回填表补 preConf（详见文件内 _note）。随自举代码包下发，
+# 任务沙箱每轮加载时自愈，不受部署竞态影响；记录自带 preConf 后不再命中。
+BACKFILL_PATH = os.path.join(HERE, "preconf_backfill.json")
 # 近期比赛元数据持久化：/previews 只列「未开球」的比赛，一旦开球就从列表消失。
 # 每轮把见到的比赛 upsert 到这里；输出时把「今天及往前几天」的比赛从存储补回，
 # 保证当天竞彩场次全天都在（不会一开球就从面板消失）。仅存元数据，不存预测（预测在 PREVIEW_CACHE）。
 RECENT_PATH = os.path.join(HERE, "whoscored_recent.json")
 RECENT_KEEP_DAYS = 7      # 存储保留天数
 RECENT_BACKFILL_DAYS = 4  # 回填窗口：今天往前 4 天（覆盖周末/节假日连赛）
+# v1.7.40：赛前可信度存档保留天数。可信度只对未开赛场次计算，赛后即从 matches
+# 消失；pending 把每轮的赛前 conf 按 mid 暂存，比赛评估时搬进历史记录的
+# preConf 字段，让「赛前标过🔥高可信」在赛后回溯里逐场可验证。评估后 preConf
+# 已持久化在 records 里，pending 只剩未评估残留，按日期清理防无限增长。
+PENDING_KEEP_DAYS = 10
 
 BASE = "https://www.whoscored.com"
 # 指纹链：chrome124 / safari184 实测可完整拿到数据（含软挑战真实页）；
@@ -454,6 +463,91 @@ def _outcome(h, a):
     return "H" if h > a else ("D" if h == a else "A")
 
 
+def _merge_preconf(old_rec, pend, has_act):
+    """赛前可信度快照并入赛后历史记录（v1.7.40，纯函数，便于单测）。
+
+    old_rec：records 里的旧记录（重建前，可能带往轮写入的 preConf）
+    pend：pending[mid] 赛前存档（上一轮 conf 循环写入），无则 None
+    has_act：重建后的新记录是否带实际比分（actH 非空）
+
+    规则：
+      1. pend 有 conf 且新记录有赛果 -> 采用赛前快照。pending 每轮刷新，
+         评估前最后一轮写入的就是最接近开球的赛前看法，优先于任何旧值。
+      2. pend 缺失/无 conf -> 保留旧记录的 preConf（防御：pending 被清理或
+         丢失时，已写入记录的赛前标记不因重建而消失）。
+      3. 两者皆无 -> None（不挂 preConf 键）。
+    """
+    old_rec = old_rec if isinstance(old_rec, dict) else {}
+    if has_act and isinstance(pend, dict) and pend.get("conf"):
+        return dict(pend["conf"])   # 副本：记录与存档各自独立，防串改
+    return old_rec.get("preConf") or None
+
+
+def _should_score_conf(x, records):
+    """该场是否计算赛前可信度（v1.7.40，纯函数，便于单测）。
+
+    False 的条件（满足其一）：
+      1. 已评估（本轮刚回填赛果）——赛后不再给「赛前建议」；
+      2. 无预测比分——没有评分对象；
+      3. records 里已有赛果（actH 非空）——往轮已评估、本轮仍在列表里的
+         场次。records 从不持久化 evaluated 键，仅看 x["evaluated"] 会漏判
+         （线上曾出现 83 场已完赛比赛仍带可信度建议的事后诸葛）。
+    """
+    if x.get("evaluated") or x.get("predH") is None:
+        return False
+    if (records.get(x.get("id")) or {}).get("actH") is not None:
+        return False
+    return True
+
+
+def _prune_pending(pending, today_bj, keep_days=PENDING_KEEP_DAYS):
+    """清理过期赛前可信度存档（v1.7.40，纯函数，便于单测）。
+
+    today_bj：北京时间当天（YYYY-MM-DD）。date 早于 today-keep_days 的
+    存档出库——比赛取消/赛果永远抓不到才会残留这么久；正常比赛评估后
+    preConf 已入 records，pending 条目最多再躺几天就被清掉。
+    缺 date 的条目按「永不过期」保守保留（脏数据不误删）。
+    """
+    cutoff = (datetime.strptime(today_bj, "%Y-%m-%d")
+              - timedelta(days=keep_days)).strftime("%Y-%m-%d")
+    return {k: v for k, v in (pending or {}).items()
+            if (v.get("date") or "9999-99-99") >= cutoff}
+
+
+def _apply_preconf_backfill(records):
+    """把上线前已评估的比赛补上 preConf（v1.7.40，一次性回填，幂等）。
+
+    pending 机制只对上线后的新比赛生效；上线前已评估的历史记录没有赛前
+    conf 存档。回填表 preconf_backfill.json 按 mid 给出当轮赛前快照
+    （快照时间均早于开球，无事后污染），在这里加载时补挂——只补缺失、
+    不覆盖，且预测比分必须与记录一致才挂（防错配）。
+
+    返回补挂条数；有补挂时由调用方落盘。
+    """
+    table = _load(BACKFILL_PATH, {}) or {}
+    entries = table.get("records") if isinstance(table, dict) else None
+    if not isinstance(entries, dict) or not entries:
+        return 0
+    n = 0
+    for mid, e in entries.items():
+        if not isinstance(e, dict):
+            continue
+        r = records.get(mid)
+        if not r or r.get("preConf") or r.get("actH") is None:
+            continue                      # 无记录/已挂/未评估（不该有赛果）
+        conf = e.get("conf")
+        if not conf or not conf.get("sample"):
+            continue
+        # 防错配：回填快照的预测比分必须与记录一致，否则说明表与数据漂移，不挂
+        if e.get("predH") != r.get("predH") or e.get("predA") != r.get("predA"):
+            print("  [赛前可信度] 回填跳过 %s：预测比分不一致（表 %s:%s vs 记录 %s:%s）"
+                  % (mid, e.get("predH"), e.get("predA"), r.get("predH"), r.get("predA")))
+            continue
+        r["preConf"] = dict(conf)
+        n += 1
+    return n
+
+
 def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
                     budget_s=TOTAL_BUDGET_S):
     """主流程。budget_s：整体时间预算（秒）——调度器整条流水线共 480s，
@@ -477,6 +571,16 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
     pc = _load(PREVIEW_CACHE, {})          # {mid: {predH, predA, ts}}
     hist = _load(HISTORY_PATH, {"records": {}})  # {records: {mid: {...}}}
     records = hist.get("records") or {}
+    # v1.7.40：赛前可信度存档。conf 只对未开赛场次计算，比赛评估后即从
+    # matches 消失——赛后回溯想看「这场赛前是不是标过🔥高可信」就没了依据。
+    # pending 按 mid 暂存每轮的赛前 conf，评估时搬进记录的 preConf 字段。
+    pending = hist.get("pending") or {}    # {mid: {date, league, home, away, jcNum, predH, predA, conf}}
+    # 一次性回填：上线前已评估的历史记录没有 pending 存档，用回填表补 preConf
+    n_bk = _apply_preconf_backfill(records)
+    if n_bk:
+        hist["records"] = records
+        _save(HISTORY_PATH, hist)
+        print("  [赛前可信度] 回填历史记录 preConf %d 条（上线前已评估比赛，一次性）" % n_bk)
 
     items, err = fetch_previews()
     matches = []
@@ -688,7 +792,8 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
     # 再用持久档案统一补挂（见下方 backfill 段）。
     for x in matches:
         if x.get("evaluated") and x.get("predH") is not None:
-            records[x["id"]] = {
+            old = records.get(x["id"]) or {}
+            rec = {
                 "id": x["id"], "date": x.get("date"), "league": x["league"],
                 "home": x["home"], "away": x["away"],
                 "predH": x["predH"], "predA": x["predA"],
@@ -696,6 +801,12 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
                 "exactHit": x["exactHit"], "outcomeHit": x["outcomeHit"],
                 "jcNum": x.get("jcNum"),
             }
+            # v1.7.40：并入赛前可信度快照（pending 优先；缺失时保留旧记录的
+            # preConf）——赛后回溯据此展示「该场赛前标过什么可信度」。
+            pre = _merge_preconf(old, pending.get(x["id"]), x.get("actH") is not None)
+            if pre:
+                rec["preConf"] = pre
+            records[x["id"]] = rec
     hist["records"] = records
     hist["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
     _save(HISTORY_PATH, hist)
@@ -804,7 +915,7 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
     OUTCOME_ZH = {"H": "主胜", "D": "平局", "A": "客胜"}
 
     for x in matches:
-        if x.get("evaluated") or x.get("predH") is None:
+        if not _should_score_conf(x, records):
             continue
         lg = lg_stat.get(x.get("league") or "", {"n": 0, "e": 0, "o": 0})
         hs = tm_stat.get(x.get("home") or "", {"n": 0, "e": 0, "o": 0})
@@ -845,6 +956,31 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
             "leagueN": lg["n"], "teamN": tn, "sample": lg["n"] + tn,
             "outcome": oc, "tip": tip,
         }
+        # v1.7.40：赛前可信度入 pending 存档。比赛评估时该存档会搬进历史
+        # 记录的 preConf，赛后回溯据此标注「这场赛前标过什么可信度」。
+        # 样本 0（可信度待积累）不入库——那种场次赛前也没有任何标记。
+        if x["conf"].get("sample"):
+            pending[x["id"]] = {
+                "date": x.get("date"), "league": x.get("league"),
+                "home": x["home"], "away": x["away"],
+                "jcNum": x.get("jcNum"),
+                "predH": x["predH"], "predA": x["predA"],
+                "conf": dict(x["conf"]),
+            }
+
+    # ---- pending 清理 + 落盘（v1.7.40）----
+    # pending 只是中转站：评估时 conf 已搬进 records 的 preConf，这里按日期
+    # 清理超过 PENDING_KEEP_DAYS 天未评估的残留（比赛取消/赛果永远抓不到等），
+    # 防止无限增长；records 里的 preConf 已持久化，清理不影响赛后回溯展示。
+    today_bj = (now + timedelta(seconds=BJ_OFFSET)).strftime("%Y-%m-%d")
+    n_pend = len(pending)
+    pending = _prune_pending(pending, today_bj)
+    hist["pending"] = pending
+    if len(pending) != n_pend:
+        print("  [赛前可信度] 清理过期 pending %d 条（保留 %d 条）"
+              % (n_pend - len(pending), len(pending)))
+    hist["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
+    _save(HISTORY_PATH, hist)
 
     # ---- 输出 ----
     matches.sort(key=lambda x: (x.get("date") or "", x.get("bjTime") or ""), reverse=True)
