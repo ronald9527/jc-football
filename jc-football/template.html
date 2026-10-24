@@ -1409,13 +1409,13 @@ footer b{color:var(--sub)}
       <div class="about-title">命中回溯</div>
       <div class="about-item"><b>竞彩历史</b><span>永久保存，赛后自动回填赛果并判定命中/错误</span></div>
       <div class="about-item"><b>北单历史</b><span>永久保存追加合并，开奖后自动判定推荐命中/未命中</span></div>
-      <div class="about-item"><b>串关历史</b><span>localStorage永久保存，每天16:00后自动锁定当天精选</span></div>
+      <div class="about-item"><b>串关历史</b><span>云端服务器永久保存，赛后自动回填赛果并判定命中/错误，换设备/清缓存不丢</span></div>
     </div>
     <div class="about-sec">
       <div class="about-title">技术架构</div>
       <div class="about-item"><b>Cloudflare Pages</b><span>免费托管，固定链接 jc-football-1eo.pages.dev</span></div>
       <div class="about-item"><b>每日高频更新</b><span>09:00-21:00 每30分钟自动刷新赔率/支持率/港澳赔率并回填赛果</span></div>
-      <div class="about-item"><b>本地存储</b><span>串关历史、北单推荐、主题偏好、自动刷新开关均存 localStorage</span></div>
+      <div class="about-item"><b>数据存储</b><span>所有推荐与历史数据均保存在云端服务器（Cloudflare Pages），本地仅存主题偏好、自动刷新开关、登录态</span></div>
       <div class="about-item"><b>6套主题</b><span>深色/浅色/暗夜黑/护眼绿/赛博朋克/暖橙，循环切换并记忆偏好</span></div>
     </div>
     <div class="tip" style="margin-top:10px">本页面为数据分析与可视化演示，不构成任何投注建议或预测结论；请遵守法律法规，理性购彩。</div>
@@ -1534,8 +1534,24 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.40";
+const VERSION = "v1.7.42";
 const CHANGELOG = [
+  {
+    version: "v1.7.42",
+    date: "2026-10-24",
+    title: "串关历史云端对账修复：恢复 10-23 丢失的推荐记录，双端独有数据不再被吞",
+    features: [
+      "串关历史恢复 10-23 的 3 组推荐（稳健2串1/均衡3串1/精锐4串1）：此前本地生成后未能在线上条数追平前完成合并，被对账规则当旧数据覆盖，用户翻历史时「昨天的推荐又跑了」——现已按记录签名从两端合并恢复，赛后赛果已回填（吉马良斯 5:0 主胜中、博尔顿 1:5 客胜中、都灵 3:2 主胜中；阿拉维斯 1:1、波鸿 1:1 两场平球断缆，三组均未中）",
+      "对账规则升级为签名并集（ensure_history.parlay_union）：parlay_history.json 不再按「条数相同、线上时间戳更晚」整体覆盖，改为按 (日期, 腿签名) 取并集——任一端独有的记录都保留并写回本地，随部署推回 Pages，服务器保存全部历史，双端分叉不再丢数据",
+    ],
+    fixes: [
+      "修正「关于」页过时文案：串关历史早在 v1.7.x 已统一为服务端单一来源（parlay_history.json → matches.json → Pages 云端），页面却仍写「localStorage永久保存」「本地存储含串关历史」——已改为云端保存表述，避免误导",
+    ],
+    notes: [
+      "当前浏览器 localStorage 只剩偏好设置：主题、自动刷新开关、登录态、版本提示已读；所有推荐与历史数据均在云端服务器，换设备/清缓存不丢",
+      "10-24 的 3 组推荐（今晚开球）显示待开奖，赛后自动结算；任务侧每轮对账会自动把云端最新数据拉回沙箱，本地与 Pages 双端保持完整",
+    ]
+  },
   {
     version: "v1.7.40",
     date: "2026-10-23",

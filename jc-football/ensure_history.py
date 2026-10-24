@@ -20,6 +20,13 @@ ensure_history.py —— 历史数据「防抹除」保护
       条数非单调（在售赛程每天进出、赛果回填、展示窗滚动），
       同样条数可能是旧快照；线上 updatedAt 严格更晚即恢复，同刻才比条数。
 
+  专用规则（v1.7.41）：
+    parlay_history.json -> 签名并集对账（parlay_union）：条数+时间戳对
+      「双端同条数、内容互补」的分叉无能为力（2026-10-24 事故：本地独有
+      10-23 组被线上 10-24 组的同条数新快照吞掉，用户看到「昨天的串关
+      历史又跑了」）。按 (date, legs签名) 取并集，任一方独有的记录都
+      保留并写回本地，随部署推回 Pages。
+
 用法：
   python3 ensure_history.py            # 对账并按需恢复
   python3 ensure_history.py --dry      # 只报告不写文件
@@ -222,6 +229,54 @@ def count_should_restore(local, remote):
         return True                       # 同条数但线上更新（赛果回填等）
     return False
 
+def _parlay_leg_sig(legs):
+    """串关记录的腿签名（与 fetch_daily.save_parlay_history._leg_sig 同口径）。"""
+    return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir"))
+                        for l in (legs or [])))
+
+
+def _parlay_rec_sig(rec):
+    """串关记录签名：(date, legs签名)。同一天同组腿=同一条已发布推荐。"""
+    return (rec.get("date", ""), _parlay_leg_sig(rec.get("legs")))
+
+
+def parlay_union(local_d, remote_d):
+    """parlay_history.json 签名并集对账（v1.7.41，纯函数）。
+
+    背景（2026-10-24 事故）：本地 10-23 09:07 生成的 3 组串关推荐，未能在
+    线上条数追平前完成合并部署；随后对账两边均为 69 条，按「条数相同、
+    线上时间戳更晚」整体覆盖，本地独有的 10-23 组被当旧数据吞掉——用户看到
+    「昨天的串关推荐历史记录又跑哪里去了」。条数+时间戳判定对「双端同条数、
+    内容互补」的分叉无能为力，必须按记录签名取并集。
+
+    规则：
+      1. 签名只在一方出现  -> 无条件保留（任一端独有记录都不丢）
+      2. 同签名两边都有    -> 取 savedAt 更晚的版本（赛后结算更新的胜出）
+    返回 (merged_records 按 date+savedAt 排序, 本地缺失需从线上补入的条数)。
+    local_d 为 None（本地缺失/损坏）时返回线上全量；remote_d 为 None 返回 (None, 0)。
+    """
+    if remote_d is None:
+        return None, 0
+    r_recs = (remote_d.get("records") or []) if isinstance(remote_d, dict) else []
+    if not isinstance(local_d, dict):
+        return list(r_recs), len(r_recs)          # 本地缺失/损坏：整体恢复线上
+    l_recs = local_d.get("records") or []
+    by_sig = {}
+    for r in r_recs:
+        by_sig[_parlay_rec_sig(r)] = r
+    for r in l_recs:
+        s = _parlay_rec_sig(r)
+        if s not in by_sig:
+            by_sig[s] = r
+        elif (r.get("savedAt") or "") > (by_sig[s].get("savedAt") or ""):
+            by_sig[s] = r                          # 同签名取 savedAt 更晚（已结算）
+    merged = sorted(by_sig.values(),
+                    key=lambda r: (r.get("date") or "", r.get("savedAt") or ""))
+    l_sigs = {_parlay_rec_sig(r) for r in l_recs}
+    n_added = sum(1 for s in by_sig if s not in l_sigs)
+    return merged, n_added
+
+
 TIMEOUT = 40
 
 
@@ -294,6 +349,47 @@ def main():
         if isinstance(remote_d, dict):
             r_upd = str(remote_d.get("updatedAt") or remote_d.get("updateTime")
                         or remote_d.get("fetched_at") or "")
+
+        # parlay_history.json 专用：签名并集对账（v1.7.41）。
+        # 条数+时间戳的整体覆盖吞过一端独有记录（2026-10-24 事故：本地独有
+        # 10-23 组 vs 线上独有 10-24 组，两边 69=69 条时本地组被当旧数据丢弃），
+        # 改为按 (date, legs签名) 取并集：任一方独有的记录都写回本地，
+        # 随下次部署推回 Pages——服务器保存全部历史，杜绝「又跑了」。
+        if name == "parlay_history.json":
+            merged, n_added = parlay_union(l_obj, remote_d)
+            if merged is None:
+                print("  %-26s 线上不可解析，保持本地" % name)
+                kept.append(name)
+                continue
+            if len(merged) > (l_n or 0):
+                if dry:
+                    print("  %-26s 本地 %s 条 | 线上 %s 条 → 并集 %d 条，"
+                          "需从线上补 %d 条（--dry 未写入）"
+                          % (name, l_n if l_n is not None else "缺失", r_n,
+                             len(merged), n_added))
+                    restored.append(name)
+                    continue
+                if os.path.exists(local):
+                    bak = local + ".bak_lost_" + datetime.datetime.now().strftime("%m%d%H%M%S")
+                    os.rename(local, bak)
+                    print("  %-26s 本地旧版本已留存为 %s" % (name, os.path.basename(bak)))
+                base = l_obj if isinstance(l_obj, dict) else remote_d
+                out = dict(base)
+                out["records"] = merged
+                upd = max(str(l_upd or ""), str(r_upd or ""))
+                if upd:
+                    out["updatedAt"] = upd
+                with io.open(local, "w", encoding="utf-8") as f:
+                    json.dump(out, f, ensure_ascii=False, indent=1)
+                print("  %-26s ⚠️ 本地 %s 条 < 并集 %d 条（线上补 %d 条）→ 已按签名并集恢复"
+                      % (name, l_n if l_n is not None else "缺失",
+                         len(merged), n_added))
+                restored.append(name)
+            else:
+                print("  %-26s 本地 %s 条 >= 并集 %d 条 → 正常（签名并集判定）"
+                      % (name, l_n if l_n is not None else "缺失", len(merged)))
+                kept.append(name)
+            continue
 
         is_bk = name in TS_FILES
         if is_bk:
