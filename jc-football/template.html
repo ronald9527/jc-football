@@ -456,6 +456,42 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .bk-wnm span{font-size:9.5px;color:var(--sub);background:var(--panel3);padding:1px 5px;border-radius:4px}
 .bk-score{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
 .bk-res{font-size:9.5px;color:var(--sub);margin-left:8px}
+/* 篮球 AI 预测 / 串关 / 历史统计（v1.7.44） */
+.bk-ai-plays{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
+@media(max-width:768px){.bk-ai-plays{grid-template-columns:repeat(2,1fr)}}
+.bk-ai-play{background:var(--panel3);border-radius:6px;padding:6px 7px;text-align:center}
+.bk-ai-pk{font-size:9.5px;color:var(--sub);margin-bottom:2px}
+.bk-ai-dir{font-size:12.5px;font-weight:800;color:var(--accent)}
+.bk-ai-odds{font-size:11px;color:var(--weak);font-variant-numeric:tabular-nums;margin-top:1px}
+.bk-ai-conf{font-size:9px;color:var(--sub);margin-top:1px}
+.bk-ai-top{font-size:10.5px;color:var(--sub);margin-top:6px;border-top:1px dashed var(--line);padding-top:5px}
+.bk-ai-top b{color:var(--accent)}
+.bk-rank{font-size:9px;color:var(--weak);background:var(--panel3);padding:1px 5px;border-radius:4px;margin-left:2px}
+.bk-parlay-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.bk-parlay-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:700}
+.bk-parlay-type{font-size:13px;color:var(--accent)}
+.bk-parlay-date{font-size:10px;color:var(--sub);font-variant-numeric:tabular-nums}
+.bk-res-hit{font-size:10px;color:var(--good);background:var(--accent-dim);padding:1px 7px;border-radius:4px;font-weight:700}
+.bk-res-miss{font-size:10px;color:var(--bad);background:var(--good-bg);padding:1px 7px;border-radius:4px;font-weight:700}
+.bk-res-pend{font-size:10px;color:var(--sub);background:var(--panel3);padding:1px 7px;border-radius:4px;font-weight:700}
+.bk-rec{font-size:10px;color:var(--good);font-weight:700}
+.bk-rec-no{font-size:10px;color:var(--warn);font-weight:700}
+.bk-parlay-meta{font-size:10px;color:var(--sub);margin:4px 0;font-variant-numeric:tabular-nums}
+.bk-parlay-legs{display:flex;flex-wrap:wrap;gap:6px}
+.bk-parlay-leg{font-size:10.5px;color:var(--sub);background:var(--panel3);padding:2px 7px;border-radius:5px;font-variant-numeric:tabular-nums}
+.bk-stats-note{font-size:10.5px;color:var(--warn);margin-bottom:10px;background:var(--warn-bg);padding:6px 10px;border-radius:6px}
+.bk-stats-sec{margin-bottom:14px}
+.bk-stats-title{font-size:12px;font-weight:700;color:var(--accent);margin:10px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
+.bk-stats-row{font-size:11.5px;color:var(--sub);margin:3px 0;font-variant-numeric:tabular-nums}
+.bk-stats-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.bk-stats-tbl th,.bk-stats-tbl td{border:1px solid var(--line);padding:4px 6px;text-align:center}
+.bk-stats-tbl th{background:var(--panel3);color:var(--sub);font-weight:700}
+.bk-wnm-dist{margin:6px 0}
+.bk-wnm-bar{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:11px;color:var(--sub)}
+.bk-wnm-k{width:54px;flex-shrink:0}
+.bk-wnm-bar-bg{flex:1;background:var(--panel3);border-radius:4px;height:12px;overflow:hidden}
+.bk-wnm-bar-fg{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bk-wnm-v{width:28px;text-align:right;font-variant-numeric:tabular-nums}
 /* ============ 比分预测（独立源） ============ */
 .sp-view{padding:4px 0}
 .sp-reliable{margin:6px 0 10px}
@@ -1285,6 +1321,20 @@ footer b{color:var(--sub)}
       <div class="sp-filters" id="bkHistDateBar"></div>
       <div id="bkHistList"></div>
     </div>
+    <!-- AI预测 pane（v1.7.44） -->
+    <div id="bkAiPane" style="display:none">
+      <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkAiSummary"></div>
+      <div id="bkAiList"></div>
+    </div>
+    <!-- 篮球串关 pane（v1.7.44） -->
+    <div id="bkParlayPane" style="display:none">
+      <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkParlaySummary"></div>
+      <div id="bkParlayList"></div>
+    </div>
+    <!-- 历史统计 pane（v1.7.44） -->
+    <div id="bkStatsPane" style="display:none">
+      <div id="bkStatsList"></div>
+    </div>
   </div>
 
   <div class="sp-view" id="scorePredView" style="display:none">
@@ -1534,8 +1584,27 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.43";
+const VERSION = "v1.7.44";
 const CHANGELOG = [
+  {
+    version: "v1.7.44",
+    date: "2026-10-26",
+    title: "篮球预测 + 串关 + 历史统计上线（完整对标足球，独立源零耦合）",
+    features: [
+      "篮球 AI 预测（二级 tab「AI预测」）：对标足球 calc_same_odds_signal + gen_safe_parlay，基于 basketball_history 赛后档案实时算四玩法同指命中率（n<5 护栏），对每场在售比赛产出胜负/让分胜负/大小分/胜分差四玩法预测（方向+信心+同指命中率+pTrue），单场单意见取 canon 评分最高者为主推",
+      "篮球串关（二级 tab「篮球串关」）：独立 basketball_parlay_history.json，三档（稳健2串/均衡3串/精锐4串）参数对标 v1.7.43 足球——信心度主导评分、同指仅≥65 采信地面值、双口径 EV（realEv 用地面真实）、凑不齐留空不硬凑；落盘结构完整对标 parlay_history.json（含 realEv/engineVer/snapshot），赛后自动结算 legHit/result",
+      "篮球历史统计（二级 tab「历史统计」）：联赛胜率、让分/大小分盘路命中率、胜分差分布、主场优势、跟单 ROI 模拟（买市场概率最高方），全部基于赛后档案独立计算",
+      "同指护栏与市场共识自适应：样本薄时同指命中率自动退化为市场共识+alpha 收缩口径（篮球首版缺校准模型，pTrue=市场共识），不会重蹈 v1.7.43 反向虚高覆辙",
+    ],
+    fixes: [
+      "部署持久化 bug 修复：deploy_cf.py 的 persistent_data 此前漏保护篮球文件，自举包冷启动会用旧快照覆盖线上累积的赛果档案——本次补加 basketball.json / basketball_history.json / basketball_parlay_history.json / basketball_stats.json / basketball_ai.json，并同步云端副本上传名单",
+    ],
+    notes: [
+      "样本薄提示：篮球历史赛果目前仅约 65 条（6 天），远低于足球预测模型所需的几百场。四玩法分桶后每桶样本极小，同指命中率仅供参考，预测以市场共识为主；随每日累积，同指率 n≥5 后自然生效增强",
+      "篮球信心体系为简化规则（市场隐含概率 + 排名差，无足球的 smart_engine 校准模型），首版预测精度有限，核心价值是搭好框架 + 数据闭环 + UI，随样本增长自动增强",
+      "篮球串关 EV 普遍为负（篮球分红高、抽水体现的诚实结果），前端对 recommended=False 的组合标注「谨慎」而非硬推；EV 为负的档位长期必亏，跟单需自负风险",
+    ]
+  },
   {
     version: "v1.7.43",
     date: "2026-10-26",
@@ -2318,6 +2387,10 @@ const BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
 // 竞彩篮球（独立源：官方 basketball 接口，与足球数据/模型零耦合，v1.7.29）
 const BUILT_BASKETBALL = __BASKETBALL_PLACEHOLDER__;
 const BUILT_BASKETBALL_HISTORY = __BASKETBALL_HISTORY_PLACEHOLDER__;
+// 篮球 AI 预测 / 串关 / 历史统计（v1.7.44，独立源，与足球零耦合）
+const BUILT_BASKETBALL_AI = __BASKETBALL_AI_PLACEHOLDER__;
+const BUILT_BASKETBALL_PARLAY = __BASKETBALL_PARLAY_PLACEHOLDER__;
+const BUILT_BASKETBALL_STATS = __BASKETBALL_STATS_PLACEHOLDER__;
 const ODDS_BSD = {};
 (BUILT_ODDS_BSD.matches || []).forEach(x => { if (x && x.num) ODDS_BSD[x.num] = x; });
 const FD = {};
@@ -2344,6 +2417,9 @@ const state = {
   // 竞彩篮球（独立源，v1.7.29）：赛程赔率 + 历史档案（含赛果回填）
   basketball: JSON.parse(JSON.stringify(BUILT_BASKETBALL || {matches:[]})),
   basketballHist: JSON.parse(JSON.stringify(BUILT_BASKETBALL_HISTORY || {records:{}})),
+  basketballAi: JSON.parse(JSON.stringify(BUILT_BASKETBALL_AI || {predictions:[]})),
+  basketballParlay: JSON.parse(JSON.stringify(BUILT_BASKETBALL_PARLAY || {records:[]})),
+  basketballStats: JSON.parse(JSON.stringify(BUILT_BASKETBALL_STATS || {})),
   bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   lastFbTab: "today",
@@ -5187,7 +5263,10 @@ function renderBasketball(){
     const tabs = [
       {k:"sched", label:"赛程赔率", n:nPre},
       {k:"hist",  label:"赛后回看", n:nDone},
-      // ▼ 后续篮球功能在此追加二级 tab（如 {k:"ai", label:"AI预测"}）
+      {k:"ai",    label:"AI预测", n:null},
+      {k:"parlay",label:"篮球串关", n:null},
+      {k:"stats", label:"历史统计", n:null},
+      // ▼ 后续篮球功能在此追加二级 tab
     ];
     subTabs.innerHTML = tabs.map(t =>
       `<button class="bk-subtab ${state.bkSubTab===t.k?"on":""}" data-bksub="${t.k}">${t.label}${t.n!=null?`<span class="n">${t.n}</span>`:""}</button>`
@@ -5198,8 +5277,12 @@ function renderBasketball(){
   }
 
   /* pane 切换 + 分派渲染 */
-  $("#bkSchedPane").style.display = state.bkSubTab === "sched" ? "block" : "none";
-  $("#bkHistPane").style.display = state.bkSubTab === "hist" ? "block" : "none";
+  const _bkPanes = {sched:"bkSchedPane", hist:"bkHistPane", ai:"bkAiPane", parlay:"bkParlayPane", stats:"bkStatsPane"};
+  Object.keys(_bkPanes).forEach(k =>
+    $("#" + _bkPanes[k]).style.display = (state.bkSubTab === k) ? "block" : "none");
+  if(state.bkSubTab === "ai"){ renderBkAi(); return; }
+  if(state.bkSubTab === "parlay"){ renderBkParlay(); return; }
+  if(state.bkSubTab === "stats"){ renderBkStats(); return; }
   if(state.bkSubTab === "hist"){ renderBkHist(all); return; }
   renderBkSched(all);
 }
@@ -5326,6 +5409,145 @@ function bkOdCell(name, line, hv, av, result){
     + (line ? `<div class="bk-od-line">${line}</div>` : "")
     + `<div class="bk-od-v ${hCls}">主 ${hv || "-"}</div>`
     + `<div class="bk-od-v ${aCls}">客 ${av || "-"}</div></div>`;
+}
+
+/* ===== 篮球 AI 预测（v1.7.44） ===== */
+function bkAiDirTxt(pk, pl){
+  const d = pl.dir;
+  if(pk === "mnl") return d === "h" ? "主胜" : "客胜";
+  if(pk === "hdc") return d === "h" ? "让分主胜" : "让分客胜";
+  if(pk === "hilo") return d === "h" ? "大分" : "小分";
+  if(pk === "wnm") return "主胜" + d + "区间";
+  return d;
+}
+function bkAiCardHtml(p){
+  const kickBJ = (p.kickoff || "").slice(5, 16);
+  let html = `<div class="bk-card">`
+    + `<div class="bk-card-head">`
+    + `<span class="bk-num">${p.num || ""}</span>`
+    + `<span class="bk-league">${p.league || ""}</span>`
+    + `<span class="bk-time">${kickBJ}</span>`
+    + `<span class="bk-teams">${p.home || ""}<span class="bk-vs">vs</span>${p.away || ""}</span>`
+    + (p.hr ? `<span class="bk-rank">${p.hr}</span>` : "")
+    + (p.ar ? `<span class="bk-rank">${p.ar}</span>` : "")
+    + `</div>`;
+  const plays = p.plays || {};
+  const order = ["mnl", "hdc", "hilo", "wnm"];
+  const pname = {mnl:"胜负", hdc:"让分", hilo:"大小分", wnm:"胜分差"};
+  html += `<div class="bk-ai-plays">`;
+  order.forEach(pk => {
+    const pl = plays[pk];
+    if(!pl) return;
+    const so = (pl.sameOddsHit != null) ? `同指${pl.sameOddsHit}%` : "同指样本不足";
+    html += `<div class="bk-ai-play">`
+      + `<div class="bk-ai-pk">${pname[pk]}</div>`
+      + `<div class="bk-ai-dir">${bkAiDirTxt(pk, pl)}</div>`
+      + `<div class="bk-ai-odds">@${pl.odds}</div>`
+      + `<div class="bk-ai-conf">信心${pl.confidence} · ${so}</div>`
+      + `</div>`;
+  });
+  html += `</div>`;
+  if(p.topPlay && plays[p.topPlay]){
+    html += `<div class="bk-ai-top">单场主推：<b>${pname[p.topPlay]}</b> · ${bkAiDirTxt(p.topPlay, plays[p.topPlay])} @${plays[p.topPlay].odds}</div>`;
+  }
+  return html + `</div>`;
+}
+function renderBkAi(){
+  const sumBox = $("#bkAiSummary");
+  const listBox = $("#bkAiList");
+  if(!listBox) return;
+  const ai = state.basketballAi || {};
+  const preds = ai.predictions || [];
+  if(sumBox){
+    sumBox.innerHTML = `共 <b>${preds.length}</b> 场在售比赛已产出四玩法预测`
+      + (ai.note ? ` · <span style="color:var(--warn)">${ai.note}</span>` : "");
+  }
+  if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球预测数据（每 30 分钟自动更新）</div>`; return; }
+  listBox.innerHTML = preds.map(p => bkAiCardHtml(p)).join("");
+}
+
+/* ===== 篮球串关（v1.7.44） ===== */
+function bkParlayCardHtml(r){
+  const resTxt = r.result === "hit" ? `<span class="bk-res-hit">命中</span>`
+    : r.result === "miss" ? `<span class="bk-res-miss">未中</span>`
+    : r.result === "pending" ? `<span class="bk-res-pend">待开奖</span>` : "";
+  let html = `<div class="bk-parlay-card">`
+    + `<div class="bk-parlay-head">`
+    + `<span class="bk-parlay-type">${r.type}</span>`
+    + `<span class="bk-parlay-date">${r.date}</span>`
+    + resTxt
+    + (r.recommended ? `<span class="bk-rec">推荐</span>` : `<span class="bk-rec-no">谨慎</span>`)
+    + `</div>`;
+  html += `<div class="bk-parlay-meta">总赔 ${r.totalOdds} · 均信心${r.avgConfidence} · realEv=${r.realEv!=null?r.realEv:"-"}</div>`;
+  html += `<div class="bk-parlay-legs">`;
+  (r.legs || []).forEach(l => {
+    const legRes = l.legHit === true ? `<span class="bk-res-hit">✓</span>`
+      : l.legHit === false ? `<span class="bk-res-miss">✗</span>` : "";
+    const actual = l.actualScore ? `（${l.actualScore}）` : "";
+    html += `<span class="bk-parlay-leg">${l.num} ${BK_PLAY_NAME[l.play] || l.play}${l.dir} @${l.odds}${legRes}${actual}</span>`;
+  });
+  html += `</div></div>`;
+  return html;
+}
+function renderBkParlay(){
+  const sumBox = $("#bkParlaySummary");
+  const listBox = $("#bkParlayList");
+  if(!listBox) return;
+  const pl = state.basketballParlay || {};
+  const recs = pl.records || [];
+  if(sumBox){
+    sumBox.innerHTML = `篮球串关历史战绩：共 <b>${pl.total || 0}</b> 组 · 命中 ${pl.hit || 0} · 错误 ${pl.miss || 0} · 待开奖 ${pl.pending || 0}`
+      + ` · 三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，EV 为负的档位长期必亏，谨慎跟单`;
+  }
+  if(!recs.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
+  const sorted = recs.slice().sort((a, b) =>
+    (b.date || "").localeCompare(a.date || "") || (b.savedAt || "").localeCompare(a.savedAt || ""));
+  listBox.innerHTML = sorted.map(r => bkParlayCardHtml(r)).join("");
+}
+
+/* ===== 篮球历史统计（v1.7.44） ===== */
+function renderBkStats(){
+  const listBox = $("#bkStatsList");
+  if(!listBox) return;
+  const st = state.basketballStats || {};
+  const smp = st.sample || {};
+  let html = `<div class="bk-stats-note">样本：${smp.total || 0} 条档案（${smp.scored || 0} 有赛果）。${smp.note || ""}</div>`;
+  const lg = st.leagues || {};
+  html += `<div class="bk-stats-sec"><div class="bk-stats-title">各联赛胜率与盘路</div>`;
+  html += `<table class="bk-stats-tbl"><tr><th>联赛</th><th>场</th><th>主胜率</th><th>让分主胜</th><th>大分率</th><th>均总分</th></tr>`;
+  Object.keys(lg).forEach(k => {
+    const d = lg[k];
+    html += `<tr><td>${k}</td><td>${d.n}</td><td>${d.home_win_rate != null ? d.home_win_rate + "%" : "-"}</td>`
+      + `<td>${d.hdc_home_hit_rate != null ? d.hdc_home_hit_rate + "%" : "-"}</td>`
+      + `<td>${d.hilo_over_rate != null ? d.hilo_over_rate + "%" : "-"}</td>`
+      + `<td>${d.avg_total != null ? d.avg_total : "-"}</td></tr>`;
+  });
+  html += `</table></div>`;
+  const hdc = st.hdc_overall || {}, hilo = st.hilo_overall || {}, wnm = st.wnm_dist || {},
+        ha = st.home_advantage || {}, roi = st.roi || {};
+  html += `<div class="bk-stats-sec"><div class="bk-stats-title">盘路总览</div>`;
+  html += `<div class="bk-stats-row">让分盘：主胜 ${hdc.h || 0} / 客胜 ${hdc.a || 0} / 走水 ${hdc.d || 0}（主胜率 ${hdc.home_hit_rate != null ? hdc.home_hit_rate + "%" : "-" }）</div>`;
+  html += `<div class="bk-stats-row">大小分：大 ${hilo.over || 0} / 小 ${hilo.under || 0}（大分率 ${hilo.over_rate != null ? hilo.over_rate + "%" : "-" }）</div>`;
+  html += `<div class="bk-stats-row">主场优势：主胜率 ${ha.home_win_rate != null ? ha.home_win_rate + "%" : "-" }</div>`;
+  html += `<div class="bk-stats-title">胜分差分布（主胜分差区间频率）</div><div class="bk-wnm-dist">`;
+  const wnmMax = Math.max(1, ...Object.values(wnm).map(v => v || 0));
+  Object.keys(wnm).forEach(k => {
+    const v = wnm[k] || 0;
+    const pct = Math.round(v / wnmMax * 100);
+    html += `<div class="bk-wnm-bar"><span class="bk-wnm-k">${BK_WNM_NAME[k] || k}</span>`
+      + `<span class="bk-wnm-bar-bg"><span class="bk-wnm-bar-fg" style="width:${pct}%"></span></span>`
+      + `<span class="bk-wnm-v">${v}</span></div>`;
+  });
+  html += `</div></div>`;
+  html += `<div class="bk-stats-sec"><div class="bk-stats-title">跟单 ROI（买市场概率最高方，等额投注）</div>`;
+  html += `<table class="bk-stats-tbl"><tr><th>玩法</th><th>场</th><th>累计盈亏</th><th>ROI</th></tr>`;
+  Object.keys(roi).forEach(k => {
+    const d = roi[k];
+    html += `<tr><td>${BK_PLAY_NAME[k] || k}</td><td>${d.bet}</td><td>${d.profit}</td>`
+      + `<td style="color:${d.roi < 0 ? 'var(--bad)' : 'var(--good)'}">${d.roi}%</td></tr>`;
+  });
+  html += `</table></div>`;
+  listBox.innerHTML = html;
 }
 
 function renderExpert(){

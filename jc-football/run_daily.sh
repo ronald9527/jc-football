@@ -142,6 +142,28 @@ else
 fi
 set -e
 
+# ---------- 步骤1.90：篮球预测/串关/统计（v1.7.44，独立源零耦合）----------
+# 隔离设计同 1.89：篮球 AI 失败只跳过篮球预测，绝不影响足球与部署。
+# fetch_basketball_ai.py 产出 basketball_ai.json（四玩法预测）+ basketball_stats.json
+# （联赛历史统计）；fetch_basketball_parlay.py 产出 basketball_parlay_history.json（串关）。
+# 三者均依赖 1.89 的 basketball.json / basketball_history.json，故放在其后。
+set +e
+if have_time 90; then
+  log "==> 步骤1.90a 篮球预测与统计 (fetch_basketball_ai.py)"
+  "$PY" fetch_basketball_ai.py
+  if [ $? -ne 0 ]; then
+    log "!! 篮球预测/统计生成失败，沿用上次（不影响足球与部署）"
+  fi
+  log "==> 步骤1.90b 篮球串关 (fetch_basketball_parlay.py)"
+  "$PY" fetch_basketball_parlay.py
+  if [ $? -ne 0 ]; then
+    log "!! 篮球串关生成失败，沿用上次（不影响足球与部署）"
+  fi
+else
+  log "!! 剩余时间不足，跳过篮球预测/串关/统计（沿用上次数据），优先保证部署"
+fi
+set -e
+
 log "==> 步骤2 构建页面 (build_panel.py)"
 # 容错：构建脚本偶发异常不应让定时任务被判失败（否则触发告警/邮件）。
 # 抓取步骤已恢复数据，构建失败可沿用上次 index.html，下个周期重试。

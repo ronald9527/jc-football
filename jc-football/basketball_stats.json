@@ -1,0 +1,96 @@
+{
+ "sample": {
+  "total": 65,
+  "scored": 54,
+  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
+ },
+ "leagues": {
+  "美职篮": {
+   "n": 36,
+   "home_win_rate": 50.0,
+   "hdc_home_hit_rate": 44.4,
+   "hilo_over_rate": 44.4,
+   "avg_total": 230.2
+  },
+  "欧篮联": {
+   "n": 7,
+   "home_win_rate": 57.1,
+   "hdc_home_hit_rate": 57.1,
+   "hilo_over_rate": 42.9,
+   "avg_total": 170.0
+  },
+  "澳篮联": {
+   "n": 3,
+   "home_win_rate": 33.3,
+   "hdc_home_hit_rate": 66.7,
+   "hilo_over_rate": 66.7,
+   "avg_total": 195.3
+  },
+  "德篮联": {
+   "n": 4,
+   "home_win_rate": 50.0,
+   "hdc_home_hit_rate": 50.0,
+   "hilo_over_rate": 50.0,
+   "avg_total": 172.0
+  },
+  "西篮联": {
+   "n": 3,
+   "home_win_rate": 33.3,
+   "hdc_home_hit_rate": 33.3,
+   "hilo_over_rate": 0.0,
+   "avg_total": 176.3
+  },
+  "美职女篮": {
+   "n": 1,
+   "home_win_rate": 100.0,
+   "hdc_home_hit_rate": 100.0,
+   "hilo_over_rate": 0.0,
+   "avg_total": 129.0
+  }
+ },
+ "hdc_overall": {
+  "h": 26,
+  "a": 28,
+  "d": 0,
+  "home_hit_rate": 48.1
+ },
+ "hilo_overall": {
+  "over": 23,
+  "under": 31,
+  "over_rate": 42.6
+ },
+ "wnm_dist": {
+  "l1": 6,
+  "l2": 10,
+  "l3": 2,
+  "l4": 6,
+  "l5": 2,
+  "l6": 1
+ },
+ "home_advantage": {
+  "home_win_rate": 50.0
+ },
+ "roi": {
+  "hdc": {
+   "bet": 54,
+   "profit": -15.6,
+   "roi": -28.9
+  },
+  "hilo": {
+   "bet": 54,
+   "profit": -15.4,
+   "roi": -28.5
+  },
+  "mnl": {
+   "bet": 51,
+   "profit": -20.7,
+   "roi": -40.7
+  },
+  "wnm": {
+   "bet": 27,
+   "profit": 12.4,
+   "roi": 45.9
+  }
+ },
+ "updatedAt": "2026-10-26 19:52:49"
+}

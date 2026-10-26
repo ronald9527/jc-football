@@ -336,6 +336,105 @@ def check_basketball_freshness(bk):
         print("  篮球数据新鲜度：%.1f 小时（正常，更新于 %s）" % (age_h, upd))
 
 
+def check_basketball_ai():
+    """篮球预测/串关/统计（v1.7.44）新鲜度与隔离兜底。
+
+    让「篮球 AI 停更 / 串关未生成 / 统计缺失」在每轮自检显形，并守住零耦合红线：
+    篮球三份文件不得混入足球字段、预测 id 必须全部来自 basketball.json。
+    """
+    print("· 检查 8 篮球预测/串关/统计（v1.7.44）新鲜度与隔离")
+    bk = load("basketball.json", {})
+    bk_ms = (bk or {}).get("matches", []) if isinstance(bk, dict) else []
+    bk_unsold_ids = {m.get("id") for m in bk_ms if isinstance(m, dict) and not m.get("score")}
+
+    # 1) 预测篮球_ai.json
+    ai = load("basketball_ai.json")
+    if ai is None:
+        add("WARN", "隔离", "basketball_ai.json 缺失——篮球预测未生成（降级：专区 AI 预测为空）")
+    else:
+        preds = ai.get("predictions") if isinstance(ai, dict) else None
+        if not isinstance(preds, list):
+            add("ERROR", "隔离", "basketball_ai.json.predictions 结构异常（应为列表）")
+        else:
+            if not preds:
+                add("WARN", "隔离", "篮球 AI 预测为空——大概率 fetch_basketball_ai 失败，专区预测空白")
+            else:
+                # 覆盖度：当前在售场应有预测（允许个别比赛四玩法全缺赔率而落榜）
+                covered = sum(1 for p in preds if p.get("id") in bk_unsold_ids)
+                if bk_unsold_ids and covered < len(bk_unsold_ids):
+                    add("WARN", "隔离", "篮球 AI 覆盖不足：%d/%d 在售场有预测"
+                        % (covered, len(bk_unsold_ids)))
+                else:
+                    print("  篮球 AI 预测：%d 场（覆盖在售 %d 场）" % (len(preds), len(bk_unsold_ids)))
+                # 四玩法健全：每场含 mnl/hdc/hilo/wnm 且赔率>1
+                bad = 0
+                for p in preds:
+                    pls = p.get("plays") or {}
+                    m = next((x for x in bk_ms if x.get("id") == p.get("id")), {})
+                    for pk in ("mnl", "hdc", "hilo", "wnm"):
+                        if not isinstance(m.get(pk), dict):
+                            continue
+                        if pk not in pls or not (pls[pk].get("odds", 0) > 1):
+                            bad += 1
+                if bad:
+                    add("WARN", "隔离", "篮球 AI 有 %d 处「有赔率却缺预测」" % bad)
+                # 隔离：不得混入足球独立源字段
+                if any("odds_bsd" in p for p in preds):
+                    add("ERROR", "隔离", "basketball_ai.json 混入 odds_bsd 字段（隔离破防）")
+                # 样本薄提示应随预测下发（诚实）
+                if ai.get("note"):
+                    print("  样本薄提示已下发：%s" % ai["note"][:30] + "…")
+
+    # 2) 串关 basketball_parlay_history.json
+    pf = load("basketball_parlay_history.json")
+    if pf is None:
+        add("WARN", "隔离", "basketball_parlay_history.json 缺失——篮球串关未生成（降级：专区串关为空）")
+    else:
+        recs = pf.get("records") if isinstance(pf, dict) else None
+        if not isinstance(recs, list):
+            add("ERROR", "隔离", "basketball_parlay_history.json.records 结构异常")
+        else:
+            if not recs:
+                add("WARN", "隔离", "篮球串关历史为空——fetch_basketball_parlay 未落盘（降级：专区串关空白）")
+            else:
+                # 最新一组应为近期（今天或昨天），证明串关每日生成
+                today = datetime.datetime.now().strftime("%Y-%m-%d")
+                yest = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+                latest = recs[0].get("date") if recs else None
+                if latest not in (today, yest):
+                    add("WARN", "隔离", "篮球串关最新一组 %s 非今/昨（%s）——串关可能停更"
+                        % (latest, today))
+                else:
+                    print("  篮球串关历史：%d 组（最新 %s，命中 %d/错 %d/待 %d）"
+                          % (len(recs), latest, pf.get("hit", 0), pf.get("miss", 0), pf.get("pending", 0)))
+                # 诚实标记：realEv<0 必 recommended=False
+                dishonest = [r for r in recs
+                             if isinstance(r.get("realEv"), (int, float)) and r["realEv"] < 0
+                             and r.get("recommended") is not False]
+                if dishonest:
+                    add("ERROR", "隔离", "篮球串关有 %d 组 realEv<0 却标记推荐（诚实破防）" % len(dishonest))
+                # 结构对齐足球：含 legs/engineVer
+                if any("engineVer" not in r for r in recs):
+                    add("WARN", "隔离", "篮球串关记录缺 engineVer（版本溯源缺失）")
+
+    # 3) 统计 basketball_stats.json
+    st = load("basketball_stats.json")
+    if st is None:
+        add("WARN", "隔离", "basketball_stats.json 缺失——篮球历史统计未生成（降级：专区统计空白）")
+    else:
+        if not isinstance(st, dict) or not isinstance(st.get("roi"), dict):
+            add("ERROR", "隔离", "basketball_stats.json 结构异常（缺 roi）")
+        else:
+            sc = (st.get("sample") or {}).get("scored", 0)
+            if sc <= 0:
+                add("WARN", "隔离", "篮球统计样本为 0——历史档案无赛果回填")
+            else:
+                print("  篮球历史统计：样本 %d 条有赛果，ROI 含 %d 玩法"
+                      % (sc, len(st.get("roi", {}))))
+            if not isinstance(st.get("leagues"), dict):
+                add("WARN", "隔离", "basketball_stats.json 缺 leagues 统计")
+
+
 def check_scorepred_freshness(sp):
     """比分预测数据新鲜度：配置丢失/停更的可见性兜底（v1.7.39）。
 
@@ -407,6 +506,7 @@ def main():
     check_history(hist)
     check_page()
     check_isolation()
+    check_basketball_ai()
     check_scorepred_freshness(load("score_predict.json"))
 
     errs = [i for i in issues if i["level"] == "ERROR"]
