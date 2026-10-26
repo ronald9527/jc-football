@@ -849,9 +849,11 @@
     "gapScore": 11,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 2:0",
+    "hit": true,
+    "hhadHit": true,
+    "resultDir": "主胜",
+    "actualScore": "2:0"
    },
    {
     "num": "周六028",
@@ -867,9 +869,11 @@
     "gapScore": 11,
     "topScorer": "",
     "isBrutal": true,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 1:0",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "1:0"
    },
    {
     "num": "周六001",
@@ -885,9 +889,11 @@
     "gapScore": 9,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "平局 1:1",
+    "hit": false,
+    "hhadHit": false,
+    "resultDir": "平局",
+    "actualScore": "1:1"
    },
    {
     "num": "周六008",
@@ -903,9 +909,11 @@
     "gapScore": 9,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "客胜 0:3",
+    "hit": false,
+    "hhadHit": false,
+    "resultDir": "客胜",
+    "actualScore": "0:3"
    },
    {
     "num": "周六025",
@@ -919,6 +927,33 @@
     "goal": 1,
     "gapLevel": "明显",
     "gapScore": 7,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "客胜 1:2",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "客胜",
+    "actualScore": "1:2"
+   }
+  ]
+ },
+ "2026-10-26": {
+  "date": "2026-10-26",
+  "generatedAt": "2026-10-26 18:46:34",
+  "count": 1,
+  "matches": [
+   {
+    "num": "周一001",
+    "home": "圣克拉拉",
+    "away": "本菲卡",
+    "strongTeam": "本菲卡",
+    "weakTeam": "圣克拉拉",
+    "recommendation": "客胜",
+    "recommendOdds": 1.22,
+    "hhadRecommendation": "让平",
+    "goal": 1,
+    "gapLevel": "悬殊",
+    "gapScore": 9,
     "topScorer": "",
     "isBrutal": false,
     "result": "",

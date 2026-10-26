@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-24 12:02:55",
+ "updatedAt": "2026-10-26 18:46:34",
  "total": 660,
  "records": [
   {
@@ -124,7 +124,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -232,7 +244,19 @@
     "reasons": [],
     "goal": "-1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "1:2",
     "alternatives": [
@@ -340,7 +364,19 @@
     "reasons": [],
     "goal": "+1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:1",
     "alternatives": [
@@ -448,7 +484,19 @@
     "reasons": [],
     "goal": "+1"
    },
-   "asianVerdict": null,
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐下盘（—，综合评分2.5）",
+    "dir": "a",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
    "scoreRec": {
     "predicted": "2:2",
     "alternatives": [
@@ -576,11 +624,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "hit",
+   "halfFullResult": "ad",
+   "halfFullDesc": "负平",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "2:2"
   },
   {
    "id": "2042240",
@@ -705,11 +764,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "partial",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "1:2"
   },
   {
    "id": "2042239",
@@ -813,11 +883,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "partial",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "1:2"
   },
   {
    "id": "2042238",
@@ -921,11 +1002,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042237",
@@ -1041,11 +1133,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042236",
@@ -1149,11 +1252,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042235",
@@ -1257,11 +1371,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042233",
@@ -1365,11 +1490,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:0",
+    "had": "d",
+    "home": 0,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "h",
+   "scoreActual": "0:0"
   },
   {
    "id": "2042234",
@@ -1473,11 +1609,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:3",
+    "had": "a",
+    "home": 1,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:44",
+   "hhadResult": "d",
+   "scoreActual": "1:3"
   },
   {
    "id": "2042232",
@@ -1590,11 +1737,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "3:0",
+    "had": "h",
+    "home": 3,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "3:0"
   },
   {
    "id": "2042231",
@@ -1698,11 +1856,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:0",
+    "had": "d",
+    "home": 0,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "0:0"
   },
   {
    "id": "2042230",
@@ -1806,11 +1975,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "3:0",
+    "had": "h",
+    "home": 3,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "3:0"
   },
   {
    "id": "2042224",
@@ -1926,11 +2106,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "partial",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042227",
@@ -2046,11 +2237,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:0",
+    "had": "h",
+    "home": 1,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "1:0"
   },
   {
    "id": "2042225",
@@ -2154,11 +2356,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042226",
@@ -2262,11 +2475,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:3",
+    "had": "a",
+    "home": 0,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:3"
   },
   {
    "id": "2042228",
@@ -2478,11 +2702,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "partial",
+   "halfFullResult": "ad",
+   "halfFullDesc": "负平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042222",
@@ -2598,11 +2833,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "partial",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042223",
@@ -2715,11 +2961,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "3:1",
+    "had": "h",
+    "home": 3,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "3:1"
   },
   {
    "id": "2042219",
@@ -2823,11 +3080,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "4:0",
+    "had": "h",
+    "home": 4,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "4:0"
   },
   {
    "id": "2042220",
@@ -2931,11 +3199,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "partial",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042221",
@@ -3039,11 +3318,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "hit",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "2:2"
   },
   {
    "id": "2042218",
@@ -3177,11 +3467,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042217",
@@ -3317,11 +3618,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:0",
+    "had": "h",
+    "home": 1,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "1:0"
   },
   {
    "id": "2042215",
@@ -3455,11 +3767,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "6:0",
+    "had": "h",
+    "home": 6,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "6:0"
   },
   {
    "id": "2042216",
@@ -3575,11 +3898,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042214",
@@ -3683,11 +4017,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "hit",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042213",
@@ -3803,11 +4148,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "ah",
+   "halfFullDesc": "负胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042212",
@@ -3911,11 +4267,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "partial",
+   "halfFullResult": "ad",
+   "halfFullDesc": "负平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042211",
@@ -4031,11 +4398,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:1",
+    "had": "a",
+    "home": 0,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "0:1"
   },
   {
    "id": "2042210",
@@ -4191,11 +4569,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:0",
+    "had": "h",
+    "home": 1,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:0"
   },
   {
    "id": "2042208",
@@ -4360,11 +4749,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042209",
@@ -4480,11 +4880,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "ah",
+   "halfFullDesc": "负胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042205",
@@ -4631,11 +5042,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042206",
@@ -4891,11 +5313,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:2",
+    "had": "a",
+    "home": 1,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "partial",
+   "halfFullResult": "ha",
+   "halfFullDesc": "胜负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "1:2"
   },
   {
    "id": "2042204",
@@ -5011,11 +5444,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:3",
+    "had": "d",
+    "home": 3,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "3:3"
   },
   {
    "id": "2042202",
@@ -5131,11 +5575,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "partial",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042203",
@@ -5251,11 +5706,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "miss",
+   "scoreHit": "partial",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042201",
@@ -5371,11 +5837,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042198",
@@ -5502,11 +5979,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:0",
+    "had": "h",
+    "home": 2,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "2:0"
   },
   {
    "id": "2042199",
@@ -5622,11 +6110,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:1",
+    "had": "a",
+    "home": 0,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "0:1"
   },
   {
    "id": "2042200",
@@ -5748,11 +6247,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "0:1",
+    "had": "a",
+    "home": 0,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:1"
   },
   {
    "id": "2042193",
@@ -5896,11 +6406,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "4:0",
+    "had": "h",
+    "home": 4,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "4:0"
   },
   {
    "id": "2042194",
@@ -6036,11 +6557,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:3",
+    "had": "a",
+    "home": 2,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "2:3"
   },
   {
    "id": "2042195",
@@ -6156,11 +6688,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:0",
+    "had": "h",
+    "home": 1,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "d",
+   "scoreActual": "1:0"
   },
   {
    "id": "2042196",
@@ -6276,11 +6819,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:0",
+    "had": "d",
+    "home": 0,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:0"
   },
   {
    "id": "2042197",
@@ -6396,11 +6950,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "partial",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042191",
@@ -6556,11 +7121,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:0",
+    "had": "h",
+    "home": 2,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "2:0"
   },
   {
    "id": "2042192",
@@ -6685,11 +7261,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:2",
+    "had": "a",
+    "home": 0,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:2"
   },
   {
    "id": "2042190",
@@ -6805,11 +7392,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:3",
+    "had": "a",
+    "home": 0,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "partial",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:3"
   },
   {
    "id": "2042188",
@@ -6955,11 +7553,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hh",
+   "halfFullDesc": "胜胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "2:1"
   },
   {
    "id": "2042189",
@@ -7063,11 +7672,22 @@
     ]
    },
    "predAt": "2026-10-24 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:3",
+    "had": "a",
+    "home": 1,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "miss",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "da",
+   "halfFullDesc": "平负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:3"
   },
   {
    "id": "2042187",
@@ -7171,11 +7791,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
    "asianHit": null,
-   "scoreHit": null
+   "scoreHit": "miss",
+   "halfFullResult": "hd",
+   "halfFullDesc": "胜平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042185",
@@ -7293,11 +7924,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "0:0",
+    "had": "d",
+    "home": 0,
+    "away": 0,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "0:0"
   },
   {
    "id": "2042186",
@@ -7413,11 +8055,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:3",
+    "had": "a",
+    "home": 2,
+    "away": 3,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "hit",
+   "scoreHit": "miss",
+   "halfFullResult": "aa",
+   "halfFullDesc": "负负",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "2:3"
   },
   {
    "id": "2042183",
@@ -7555,11 +8208,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "1:1",
+    "had": "d",
+    "home": 1,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "miss",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "miss",
+   "halfFullResult": "dd",
+   "halfFullDesc": "平平",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "a",
+   "scoreActual": "1:1"
   },
   {
    "id": "2042184",
@@ -7695,11 +8359,22 @@
     ]
    },
    "predAt": "2026-10-23 11:02",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "3:1",
+    "had": "h",
+    "home": 3,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "miss",
+   "scoreHit": "miss",
+   "halfFullResult": "dh",
+   "halfFullDesc": "平胜",
+   "resultAt": "2026-10-26 18:45",
+   "hhadResult": "h",
+   "scoreActual": "3:1"
   },
   {
    "id": "2042166",
@@ -56482,7 +57157,7 @@
    "hhadHit": "hit",
    "asianHit": "miss",
    "scoreHit": "miss",
-   "resultAt": "2026-10-24 12:02",
+   "resultAt": "2026-10-26 18:45",
    "hhadResult": "a",
    "scoreActual": "3:0"
   },

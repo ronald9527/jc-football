@@ -3887,6 +3887,52 @@ def _parlay_true_prob(m, d):
     return min(max(rest * (prob.get(d) or 0) / tot, 0.01), 0.95)
 
 
+def parlay_canon_score(opt):
+    """单场单意见选腿评分（v1.7.43 起信心度主导，模块级便于单测）。
+
+    归因实证（parlay_history 72 组回溯 + 二项检验，2026-10-26）：
+    · confidence≥75 的腿实际命中 94%（17/18）——模型信心信号可靠；
+    · 同指命中率 45-60% 区间实际命中仅 17%（4/24），市场共识期望 49%
+      （z=-3.15, p<0.001）——该区间虚高且反向，不能当「地面真相」；
+    · 同指 ≥65 区间实际 67-82%（可信），仅作小幅加成（封顶 0.08）。
+    v1.7.25/33 曾把同指命中率当第一选腿信号（confidence 权重压到 0.002），
+    正是 10-20 后腿级命中 55.9%→36.6%、11 组全败的直接原因。
+
+    评分 = 信心度 + 同指分段修正 + 0.10×EV + 技术/五维微调。
+    pTrue 相对市场共识的超额部分截断在 ±0.06（细分样本置信区间全部跨越 0，
+    个别 pTrue 异常值不得借此放大 EV）。
+    """
+    conf = opt.get("confidence") or 0
+    so, n_ = opt.get("sameOddsHit"), opt.get("sameOddsN") or 0
+    base = conf / 100.0
+    so_adj = 0.0
+    if so is not None and n_ >= 10:
+        if so >= 65:
+            so_adj = min(0.08, (so - 65) / 100.0)
+        elif so >= 45:
+            so_adj = -0.10
+        else:
+            so_adj = -0.15
+    # 该选项自身的期望值（市场共识 + alpha 收缩，与 _leg_prob 同口径）
+    o = opt.get("odds") or 0
+    ev = 0.0
+    if o > 1:
+        p_market = 0.886 / o
+        pt = opt.get("pTrue")
+        if pt:
+            p = p_market + (pt / 100.0 - p_market) * 0.6
+            p = min(max(p, p_market - 0.06), p_market + 0.06)
+        else:
+            p = p_market
+        ev = min(max(p, 0.01), 0.95) * o - 1.0
+    # 期望权重 0.10（原 0.15）：EV 只是调味，信心度才是主菜；
+    # tech/fiveDim 仅在同信心同同指时做细微区分。
+    return (base + so_adj
+            + 0.10 * ev
+            + 0.01 * (opt.get("techCount") or 0)
+            + 0.001 * (opt.get("fiveDim") or 0))
+
+
 def gen_safe_parlay(matches):
     """智能混合过关稳串（分层双哲学策略）：
     核心原则：
@@ -4312,34 +4358,15 @@ def gen_safe_parlay(matches):
         # 历史教训（用户实测反馈）：此前每场保留最多3个选项、各档位在组合时自行挑选，
         # 导致同一场比赛在稳健档选「客胜@2.2」、均衡档选「让球+1让胜@1.51」——
         # 同一场两套说法，用户视角自相矛盾（"一会客胜一会让胜，简直就是乱来"）。
-        # 现改为：每场先用统一评分选出唯一意见（历史同指命中率优先，叠加 EV/信心/技术信号），
+        # 现改为：每场先用统一评分选出唯一意见（v1.7.43 起信心度主导：同指命中率
+        # 仅在 ≥65 分段加分、45-60 反向区间扣分，叠加 EV/技术/五维微调），
         # 三档只在这个「意见池」里做组合——同一场比赛全天一个说法，
         # 档位差异只体现在「选不选它、拼几场」，不再有同场不同玩法。
         # 若某档因意见池收窄而凑不出达标组合，该档留空（前端如实展示），不靠改说法硬凑。
         if match_options:
-            def _canon_score(opt):
-                # 地面真实优先：样本充足的同指命中率；否则校准概率 pTrue；再退信心度
-                so, n_ = opt.get("sameOddsHit"), opt.get("sameOddsN") or 0
-                if so is not None and n_ >= 10:
-                    base = so / 100.0
-                elif opt.get("pTrue"):
-                    base = opt["pTrue"] / 100.0
-                else:
-                    base = (opt.get("confidence") or 0) / 100.0
-                # 该选项自身的期望值（市场共识 + alpha 收缩，与 _leg_prob 同口径）
-                o = opt.get("odds") or 0
-                ev = 0.0
-                if o > 1:
-                    p_market = 0.886 / o
-                    pt = opt.get("pTrue")
-                    p = p_market + (pt / 100.0 - p_market) * 0.6 if pt else p_market
-                    ev = min(max(p, 0.01), 0.95) * o - 1.0
-                return (base
-                        + 0.15 * ev
-                        + 0.002 * (opt.get("confidence") or 0)
-                        + 0.01 * (opt.get("techCount") or 0)
-                        + 0.001 * (opt.get("fiveDim") or 0))
-            opt = max(match_options, key=_canon_score)
+            # v1.7.43：评分逻辑提取为模块级 parlay_canon_score（见上），此处直接调用
+            _scored = [(parlay_canon_score(o), o) for o in match_options]
+            canon, opt = max(_scored, key=lambda t: t[0])
             candidates.append({
                 "num": m.get("num"), "league": m.get("league"),
                 "home": m.get("home"), "away": m.get("away"),
@@ -4352,13 +4379,15 @@ def gen_safe_parlay(matches):
                 "pTrue": opt.get("pTrue"),
                 "sameOddsHit": opt.get("sameOddsHit"),
                 "sameOddsN": opt.get("sameOddsN"),
-                "fiveDim": opt.get("fiveDim")
+                "fiveDim": opt.get("fiveDim"),
+                # v1.7.43：选腿时的 canon 评分快照，供赛后回溯「为什么选这条腿」
+                "canon": round(canon, 3),
             })
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
     # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选最优组合 =====
-    # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明)
+    # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明, 单腿赔率上限, 同指硬门槛)
     # 2026-10-20 改革（v1.7.25）：赔率单调承诺——三档按 稳健→均衡→精锐 顺序构建，
     # 每档总赔必须高于上一档实际总赔（动态地板），杜绝「精锐4串1(6.03) 反而低于
     # 均衡3串1(6.27)」的档位倒挂（根因：三档独立构建 + 精锐 hit 模式偏爱便宜腿，
@@ -4366,15 +4395,22 @@ def gen_safe_parlay(matches):
     # 均衡档同步调整：静态总赔下限 4.50→4.00（让位给动态地板，避免带重叠）、
     # 单腿信心下限 55→60（拒绝为填赔率带塞入信心仅 55 的弱腿）。
     # v1.7.33 改革：EV 下限（min_ev）改为「地面真实口径」（同指命中率×总赔−1）。
-    # 旧模型口径（pTrue）系统性偏保守，每天都判全部档位负 EV → 86% 的日子挂「不推荐」，
-    # 而历史实证两档实际盈利（稳健 14 战 9 中 / 均衡 18 战 5 中），推荐标准必须换成真实口径。
+    # v1.7.43 回调（2026-10-26 命中率归因）：选腿信号全面回调——信心主导。
+    #   归因实证（parlay_history 72 组回溯 + 二项检验）：
+    #   · 同指命中率 45-60% 区间的腿实际命中 17%（4/24），市场共识期望 49%，
+    #     z=-3.15 p<0.001——同指率在该区间虚高且反向，v1.7.25/33 把它当
+    #     「地面真相」是 10-20 后 11 组全败、腿级 55.9%→36.6% 的直接原因；
+    #   · 同指 ≥65% 区间实际 67-82%（可信）；confidence≥75 实际 94%（17/18）。
+    #   回调：_canon_score 信心主导（同指仅高分段加成、中分段惩罚）；
+    #   同指硬门槛 45→60（精锐 65），4 串零容忍软腿；combo_hit/real_ev 只在
+    #   同指 ≥65 时采信地面值，45-60 区间回退市场+alpha 口径。
     TIERS = [
         ("parlay2", "稳健", (2,), 1.45, 2.20, 4.50, 66.0, 0.20, -0.08, "hit",
-         "2串1 · 稳胆哲学：在历史同条件命中率护栏内，优先选『联合命中率最高』的组合（场场最有把握拼一起、尽量中奖），总赔2.2-4.5倍；历史命中率未达盈亏平衡线仍标观望", 4.0),
+         "2串1 · 稳胆哲学：信心主导选腿（同指≥65 加分、45-60 反向区间扣分），优先选联合命中率最高的组合，总赔2.2-4.5倍；历史命中率未达盈亏平衡线仍标观望", 4.0, 60),
         ("parlay3", "均衡", (3,), 1.50, 4.00, 10.0, 60.0, 0.08, -0.15, "ev",
-         "3串1 · 价值哲学：命中率与赔率折中，取历史真实期望最优组合，总赔高于稳健档且 4.0-10 倍；历史命中率未达盈亏平衡线仍标观望", 4.0),
+         "3串1 · 价值哲学：命中率与赔率折中，取历史真实期望最优组合，总赔高于稳健档且 4.0-10 倍；历史命中率未达盈亏平衡线仍标观望", 4.0, 60),
         ("parlay4", "精锐", (4,), 1.35, 5.0, 20.0, 66.0, 0.08, -0.08, "hit",
-         "4串1 · 精锐哲学：与稳健档同一套选腿标准——只挑数据支撑最强的腿（信心≥66、同指命中≥45%、赔率≤3.2 拒绝纯高倍），4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；历史命中率未达盈亏平衡线仍标观望", 3.2),
+         "4串1 · 精锐哲学：同指≥65 硬门槛（无同指样本的腿除外），只挑数据支撑最强的腿，4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；历史命中率未达盈亏平衡线仍标观望", 3.2, 65),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4401,7 +4437,7 @@ def gen_safe_parlay(matches):
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
     def build_tier(tier, floor_total=0.0):
-        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc, max_leg = tier
+        key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc, max_leg, so_floor = tier
         # v1.7.25 赔率单调：本档总赔不得低于上一档实际总赔（+0.01 保证严格大于）。
         # 倒挂根因：三档独立构建时，精锐档 hit 模式天然偏爱便宜腿（赔率低=市场共识
         # 概率高=同指命中率高），4 条便宜腿乘积极可能低于 3 条中价腿（6.03 vs 6.27），
@@ -4431,14 +4467,18 @@ def gen_safe_parlay(matches):
                 # 「纯挑高倍」正是搏击档 23 战 0 胜的根因，从选腿环节杜绝
                 if any(c["odds"] > max_leg for c in combo):
                     continue
-                # 同指陷阱过滤（搏击档 23 战 0 胜的根因是同指命中 22-40% 的高赔软腿）：
-                # 2/3 串精品组合零容忍；4 串 1 要凑齐 4 条强腿太难，最多容忍 1 条软腿。
-                # 无同指样本（None）的腿不算软腿，由 combo_hit 在排序中自然压低权重。
+                # 同指硬门槛（v1.7.43）：同指命中率 <档位门槛 且样本充足 → 软腿，直接剔除。
+                # 实证依据：同指 45-60% 区间实际命中 17%（4/24）vs 市场期望 49%
+                # （z=-3.15, p<0.001），该区间虚高且反向；旧门槛 45% 放进了大量
+                # 这类腿，是 10-20 后腿级命中 55.9%→36.6% 的直接原因。
+                # 无同指样本（None 或 n<10）的腿不算软腿，由 combo_hit 自然压低权重。
+                # v1.7.43 起 4 串也零容忍（精锐 4 条全中本就依赖每条都强，
+                # 容忍 1 条软腿=数学自杀；凑不齐就留空，不硬凑）。
                 _soft_legs = sum(1 for c in combo
                                  if c.get("sameOddsHit") is not None
                                  and (c.get("sameOddsN") or 0) >= 10
-                                 and c.get("sameOddsHit") < 45)
-                if _soft_legs > (1 if n >= 4 else 0):
+                                 and c.get("sameOddsHit") < so_floor)
+                if _soft_legs > 0:
                     continue
                 # 档位信心门槛（单腿）
                 if any((c.get("confidence") or 0) < min_conf for c in combo):
@@ -4454,10 +4494,13 @@ def gen_safe_parlay(matches):
                 if joint_p < min_joint:
                     continue
                 # 组合真实历史命中率（地面真实优先，样本不足回退去水概率）
+                # v1.7.43：同指命中率只在 ≥65 分段采信（实证 67-82% 可信）；
+                # 45-60 分段实证反向（17%），一律回退市场+alpha 口径（_leg_prob），
+                # 不再让虚高的同指率抬高 combo_hit / real_ev / 推荐判定。
                 combo_hit = 1.0
                 for c in combo:
                     so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
-                    leg_p = (so / 100.0) if (so is not None and n_ >= 10) else _leg_prob(c)
+                    leg_p = (so / 100.0) if (so is not None and n_ >= 10 and so >= 65) else _leg_prob(c)
                     combo_hit *= leg_p
                 # ===== 双口径 EV（v1.7.33 推荐标准改革）=====
                 # ev      = 模型口径（pTrue 校准概率 + alpha 0.6 收缩）。该口径系统性偏保守：
@@ -4482,12 +4525,14 @@ def gen_safe_parlay(matches):
                 tech_sum = sum(c.get("techCount", 0) for c in combo)
                 stable_sum = sum(c.get("stableIndex", 0) for c in combo)
                 five_dim_sum = sum(c.get("fiveDim") or 0 for c in combo)
-                # 同指陷阱惩罚：某腿历史同指命中率<45%且样本充足 → 该组合减分
+                # 同指陷阱惩罚（v1.7.43：阈值随档位 so_floor，默认 60）：
+                # 某腿同指命中率低于门槛且样本充足 → 该组合减分（已被硬门槛剔除，
+                # 这里对 n<10 无样本腿不做惩罚，仅保留原 45% 深罚逻辑）
                 so_penalty = 0.0
                 for c in combo:
                     so = c.get("sameOddsHit")
-                    if so is not None and c.get("sameOddsN", 0) >= 10 and so < 45:
-                        so_penalty += 0.0006 * (45 - so)
+                    if so is not None and c.get("sameOddsN", 0) >= 10 and so < so_floor:
+                        so_penalty += 0.0006 * (so_floor - so)
                 # 组合真实历史命中率已在前述门槛前计算（combo_hit），此处直接用于排序。
                 # 选择哲学分支（v1.7.33：排序分同步改用真实期望口径）：
                 if mode == "hit":
@@ -4582,7 +4627,7 @@ def gen_safe_parlay(matches):
             } for c in candidates
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分（历史同指命中率优先，叠加 EV/信心/技术信号）选出唯一选项，三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；引擎版本门（v1.7.25）——当日由旧引擎生成且尚未开球的推荐，在引擎升级后自动解锁并由新逻辑当日重生，已判定记录是历史战绩凭证绝不动；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<45% 的软腿直接过滤，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分选出唯一选项（v1.7.43 起信心度主导：同指命中率仅 ≥65 分段小幅加分、45-60 反向区间扣分，叠加 EV/技术/五维微调），三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；引擎版本门（v1.7.25）——当日由旧引擎生成且尚未开球的推荐，在引擎升级后自动解锁并由新逻辑当日重生，已判定记录是历史战绩凭证绝不动；选腿信号回调（v1.7.43）——历史同指命中率实证：≥65 分段实际命中 67-82% 可信，45-60 分段实际仅 17%（市场期望 49%，二项检验 p<0.001）虚高且反向，故 combo_hit/real_ev 只在同指 ≥65 时采信地面值、其余回退市场+alpha 口径；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<60%（精锐档65%）的软腿直接过滤且 4 串零容忍，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,
@@ -4972,7 +5017,12 @@ def save_parlay_history(safe_parlay, high_parlay):
             "date": today, "type": ptype,
             "totalOdds": p["totalOdds"], "avgConfidence": p.get("avgConfidence", 0),
             "legs": p["legs"], "recommended": bool(p.get("recommended", False)),
-            "ev": p.get("ev"), "result": "pending",
+            "ev": p.get("ev"),
+            # v1.7.43：地面真实口径 EV（同指命中率×总赔−1）顶层透传。
+            # 此前仅存于 snapshot 内，回溯「为什么推荐/为什么不推荐」要翻快照，
+            # 现与 ev 并列落盘，推荐标准可逐日审计。
+            "realEv": p.get("realEv"),
+            "result": "pending",
             "savedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
             # 引擎版本门（v1.7.25）：记录生成时的引擎版本。当日未开球的推荐若为旧引擎
             # 产物，下次跑批时 load_locked_parlay 会自动解锁并由新引擎当日重生。

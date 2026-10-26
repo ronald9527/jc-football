@@ -9229,7 +9229,10 @@
      "pTrue": 55.96,
      "sameOddsHit": 68.9,
      "sameOddsN": 122,
-     "fiveDim": 63.8
+     "fiveDim": 63.8,
+     "actualScore": "1:1",
+     "legHit": false,
+     "hit": "miss"
     },
     {
      "num": "周六012",
@@ -9254,12 +9257,15 @@
      "pTrue": 76.75,
      "sameOddsHit": 64.6,
      "sameOddsN": 113,
-     "fiveDim": 54.5
+     "fiveDim": 54.5,
+     "actualScore": "2:3",
+     "legHit": false,
+     "hit": "miss"
     }
    ],
    "recommended": true,
    "ev": -6.8,
-   "result": "pending",
+   "result": "miss",
    "savedAt": "2026-10-24 09:13:55",
    "engineVer": "v1.7.40",
    "snapshot": {
@@ -9335,7 +9341,8 @@
     "rake": 21.5,
     "evNote": "达标：历史同条件命中率 45%，贴近盈亏平衡线（需 42%），可小注参与",
     "recommended": true
-   }
+   },
+   "checkedAt": "2026-10-26 18:46"
   },
   {
    "date": "2026-10-24",
@@ -9365,7 +9372,10 @@
      "pTrue": 55.96,
      "sameOddsHit": 68.9,
      "sameOddsN": 122,
-     "fiveDim": 63.8
+     "fiveDim": 63.8,
+     "actualScore": "1:1",
+     "legHit": false,
+     "hit": "miss"
     },
     {
      "num": "周六012",
@@ -9390,7 +9400,10 @@
      "pTrue": 76.75,
      "sameOddsHit": 64.6,
      "sameOddsN": 113,
-     "fiveDim": 54.5
+     "fiveDim": 54.5,
+     "actualScore": "2:3",
+     "legHit": false,
+     "hit": "miss"
     },
     {
      "num": "周六025",
@@ -9416,12 +9429,15 @@
      "pTrue": 47.48,
      "sameOddsHit": 50.9,
      "sameOddsN": 55,
-     "fiveDim": 71.0
+     "fiveDim": 71.0,
+     "actualScore": "1:2",
+     "legHit": true,
+     "hit": "hit"
     }
    ],
    "recommended": true,
    "ev": -13.3,
-   "result": "pending",
+   "result": "miss",
    "savedAt": "2026-10-24 09:13:55",
    "engineVer": "v1.7.40",
    "snapshot": {
@@ -9523,7 +9539,8 @@
     "rake": 30.4,
     "evNote": "达标：历史同条件命中率 23%，贴近盈亏平衡线（需 21%），可小注参与",
     "recommended": true
-   }
+   },
+   "checkedAt": "2026-10-26 18:46"
   },
   {
    "date": "2026-10-24",
@@ -9554,7 +9571,10 @@
      "pTrue": 60.61,
      "sameOddsHit": 70.3,
      "sameOddsN": 101,
-     "fiveDim": 60.2
+     "fiveDim": 60.2,
+     "actualScore": "2:0",
+     "legHit": true,
+     "hit": "hit"
     },
     {
      "num": "周六023",
@@ -9579,7 +9599,10 @@
      "pTrue": 51.1,
      "sameOddsHit": 62.5,
      "sameOddsN": 104,
-     "fiveDim": 54.2
+     "fiveDim": 54.2,
+     "actualScore": "0:2",
+     "legHit": false,
+     "hit": "miss"
     },
     {
      "num": "周六020",
@@ -9603,7 +9626,10 @@
      "pTrue": 55.96,
      "sameOddsHit": 68.9,
      "sameOddsN": 122,
-     "fiveDim": 63.8
+     "fiveDim": 63.8,
+     "actualScore": "1:1",
+     "legHit": false,
+     "hit": "miss"
     },
     {
      "num": "周六012",
@@ -9628,12 +9654,15 @@
      "pTrue": 76.75,
      "sameOddsHit": 64.6,
      "sameOddsN": 113,
-     "fiveDim": 54.5
+     "fiveDim": 54.5,
+     "actualScore": "2:3",
+     "legHit": false,
+     "hit": "miss"
     }
    ],
    "recommended": true,
    "ev": -32.6,
-   "result": "pending",
+   "result": "miss",
    "savedAt": "2026-10-24 09:13:55",
    "engineVer": "v1.7.40",
    "snapshot": {
@@ -9759,8 +9788,9 @@
     "rake": 38.4,
     "evNote": "达标：历史同条件命中率 20%，贴近盈亏平衡线（需 19%），可小注参与",
     "recommended": true
-   }
+   },
+   "checkedAt": "2026-10-26 18:46"
   }
  ],
- "updatedAt": "2026-10-24 12:36:59"
+ "updatedAt": "2026-10-26 18:46:34"
 }

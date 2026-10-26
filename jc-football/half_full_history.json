@@ -5315,10 +5315,10 @@
      "平负": 5.0,
      "胜负": 2.2
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 1,
+     "home": 4,
      "away": 0
     }
    },
@@ -5344,10 +5344,10 @@
      "平负": 4.8,
      "胜负": 2.2
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 2,
+     "home": 1,
      "away": 0
     }
    },
@@ -5373,11 +5373,11 @@
      "负胜": 5.0,
      "胜负": 2.2
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 0,
-     "away": 1
+     "home": 2,
+     "away": 0
     }
    },
    {
@@ -5402,10 +5402,10 @@
      "负平": 4.6,
      "胜负": 2.1
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": true,
     "fullScore": {
-     "home": 1,
+     "home": 2,
      "away": 0
     }
    },
@@ -5431,11 +5431,11 @@
      "负胜": 5.0,
      "胜负": 2.2
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 0,
-     "away": 1
+     "home": 1,
+     "away": 0
     }
    },
    {
@@ -5460,11 +5460,11 @@
      "负平": 4.6,
      "胜负": 2.1
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
      "home": 2,
-     "away": 5
+     "away": 1
     }
    },
    {
@@ -5489,11 +5489,11 @@
      "胜平": 4.6,
      "负胜": 2.1
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
      "home": 0,
-     "away": 0
+     "away": 1
     }
    },
    {
@@ -5518,10 +5518,10 @@
      "胜负": 4.8,
      "负胜": 2.1
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "胜胜",
+    "hit": false,
     "fullScore": {
-     "home": 1,
+     "home": 2,
      "away": 1
     }
    },
@@ -5547,11 +5547,11 @@
      "负胜": 4.7,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
      "home": 1,
-     "away": 0
+     "away": 1
     }
    },
    {
@@ -5576,11 +5576,11 @@
      "负胜": 4.6,
      "胜负": 2.0
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 1,
-     "away": 3
+     "home": 0,
+     "away": 2
     }
    },
    {
@@ -5605,11 +5605,11 @@
      "负胜": 4.6,
      "胜负": 2.0
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "负负",
+    "hit": false,
     "fullScore": {
-     "home": 4,
-     "away": 0
+     "home": 2,
+     "away": 3
     }
    },
    {
@@ -5634,10 +5634,10 @@
      "负胜": 4.6,
      "胜负": 2.1
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
-     "home": 0,
+     "home": 1,
      "away": 1
     }
    },
@@ -5663,11 +5663,11 @@
      "负胜": 4.5,
      "胜负": 1.9
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "负负",
+    "hit": false,
     "fullScore": {
-     "home": 2,
-     "away": 2
+     "home": 0,
+     "away": 3
     }
    },
    {
@@ -5692,10 +5692,10 @@
      "负胜": 4.4,
      "胜负": 1.9
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
-     "home": 2,
+     "home": 1,
      "away": 1
     }
    },
@@ -5721,11 +5721,11 @@
      "负胜": 4.3,
      "胜负": 1.9
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "负负",
+    "hit": false,
     "fullScore": {
      "home": 0,
-     "away": 0
+     "away": 2
     }
    },
    {
@@ -5750,11 +5750,11 @@
      "负胜": 3.9,
      "胜负": 3.1
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 1,
-     "away": 2
+     "home": 0,
+     "away": 1
     }
    },
    {
@@ -5837,11 +5837,11 @@
      "胜负": 4.1,
      "负胜": 2.4
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
-     "home": 0,
-     "away": 2
+     "home": 1,
+     "away": 3
     }
    },
    {
@@ -5866,11 +5866,11 @@
      "胜负": 4.1,
      "负胜": 2.6
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "胜负",
+    "hit": false,
     "fullScore": {
-     "home": 6,
-     "away": 1
+     "home": 1,
+     "away": 2
     }
    },
    {
@@ -5895,11 +5895,11 @@
      "负胜": 3.8,
      "胜负": 3.1
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "负胜",
+    "hit": false,
     "fullScore": {
-     "home": 3,
-     "away": 4
+     "home": 2,
+     "away": 1
     }
    },
    {
@@ -5924,11 +5924,11 @@
      "负胜": 3.6,
      "胜负": 3.0
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "胜平",
+    "hit": false,
     "fullScore": {
      "home": 1,
-     "away": 3
+     "away": 1
     }
    },
    {
@@ -5982,11 +5982,11 @@
      "胜负": 4.0,
      "负胜": 2.7
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "平负",
+    "hit": false,
     "fullScore": {
      "home": 0,
-     "away": 0
+     "away": 1
     }
    },
    {
@@ -6011,11 +6011,11 @@
      "负胜": 4.0,
      "胜负": 2.8
     },
-    "actualHalfFull": "?d",
-    "hit": null,
+    "actualHalfFull": "负负",
+    "hit": false,
     "fullScore": {
      "home": 2,
-     "away": 2
+     "away": 3
     }
    },
    {
@@ -6040,11 +6040,11 @@
      "负胜": 3.9,
      "胜负": 2.4
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 2,
-     "away": 0
+     "home": 3,
+     "away": 1
     }
    },
    {
@@ -6069,11 +6069,11 @@
      "负胜": 4.0,
      "胜负": 2.9
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平胜",
+    "hit": false,
     "fullScore": {
-     "home": 4,
-     "away": 3
+     "home": 1,
+     "away": 0
     }
    },
    {
@@ -6098,11 +6098,11 @@
      "负胜": 3.6,
      "胜负": 2.9
     },
-    "actualHalfFull": "?h",
-    "hit": null,
+    "actualHalfFull": "平平",
+    "hit": false,
     "fullScore": {
-     "home": 2,
-     "away": 1
+     "home": 0,
+     "away": 0
     }
    },
    {
@@ -6127,10 +6127,10 @@
      "胜负": 3.7,
      "负胜": 2.9
     },
-    "actualHalfFull": "?a",
-    "hit": null,
+    "actualHalfFull": "胜平",
+    "hit": false,
     "fullScore": {
-     "home": 1,
+     "home": 3,
      "away": 3
     }
    },
@@ -6156,10 +6156,133 @@
      "胜负": 3.5,
      "负胜": 2.9
     },
+    "actualHalfFull": "平负",
+    "hit": false,
+    "fullScore": {
+     "home": 0,
+     "away": 2
+    }
+   }
+  ]
+ },
+ "2026-10-26": {
+  "date": "2026-10-26",
+  "generatedAt": "2026-10-26 18:46:34",
+  "count": 4,
+  "matches": [
+   {
+    "num": "周一004",
+    "home": "弗拉门戈",
+    "away": "米内罗竞技",
+    "league": "巴甲",
+    "kickoff": "2026-10-27 07:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 37.0,
+    "recommend2": "负负",
+    "confidence2": 15.7,
+    "probDist": {
+     "胜胜": 37.0,
+     "负负": 15.7,
+     "平胜": 13.7,
+     "平平": 8.7,
+     "胜平": 8.1,
+     "负胜": 5.1,
+     "平负": 4.9,
+     "负平": 4.5,
+     "胜负": 2.3
+    },
     "actualHalfFull": "?a",
     "hit": null,
     "fullScore": {
      "home": 0,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一001",
+    "home": "圣克拉拉",
+    "away": "本菲卡",
+    "league": "葡超",
+    "kickoff": "2026-10-27 02:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 35.4,
+    "recommend2": "胜胜",
+    "confidence2": 15.9,
+    "probDist": {
+     "负负": 35.4,
+     "胜胜": 15.9,
+     "平负": 10.9,
+     "平平": 9.4,
+     "平胜": 9.0,
+     "负平": 7.8,
+     "胜负": 4.9,
+     "胜平": 4.6,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 4,
+     "away": 0
+    }
+   },
+   {
+    "num": "周一003",
+    "home": "塞维利亚",
+    "away": "奥萨苏纳",
+    "league": "西甲",
+    "kickoff": "2026-10-27 04:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.2,
+    "recommend2": "负负",
+    "confidence2": 18.8,
+    "probDist": {
+     "胜胜": 28.2,
+     "负负": 18.8,
+     "平胜": 15.9,
+     "平平": 11.3,
+     "平负": 8.1,
+     "胜平": 6.6,
+     "负平": 5.1,
+     "负胜": 4.2,
+     "胜负": 1.8
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 0,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一002",
+    "home": "布洛涅",
+    "away": "兰斯",
+    "league": "法乙",
+    "kickoff": "2026-10-27 03:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 25.8,
+    "recommend2": "胜胜",
+    "confidence2": 20.3,
+    "probDist": {
+     "负负": 25.8,
+     "胜胜": 20.3,
+     "平胜": 13.1,
+     "平平": 11.6,
+     "平负": 11.4,
+     "负平": 6.2,
+     "胜平": 5.3,
+     "胜负": 4.0,
+     "负胜": 2.2
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 1,
      "away": 2
     }
    }

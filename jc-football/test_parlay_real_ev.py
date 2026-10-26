@@ -21,6 +21,9 @@ FAKE_NOW = f"{FAKE_TODAY} 09:25:00"
 _real_strftime = _time.strftime
 _time.strftime = lambda fmt, *a, **k: FAKE_TODAY if fmt == "%Y-%m-%d" else (
     FAKE_NOW if fmt == "%Y-%m-%d %H:%M:%S" else _real_strftime(fmt, *a, **k))
+# gen_safe_parlay 用 time.time() 过滤已开赛比赛——必须同步补丁，
+# 否则数据日（10-24）过后真实时间晚于开球，候选池被时间门滤空（测试假失败）。
+_time.time = lambda: _time.mktime(_time.strptime(FAKE_NOW, "%Y-%m-%d %H:%M:%S"))
 
 def _ver_tuple(v):
     m = re.match(r"v?(\d+)\.(\d+)\.(\d+)", v or "")
@@ -142,9 +145,19 @@ today_recs = [r for r in hist["records"] if r.get("date") == FAKE_TODAY]
 # v1.7.34：当日推荐位只回放 pending；已判定（hit/miss）记录归宿是历史战绩区，
 # 不再计入「非空档位」比对（补判/补回的旧组同样只出现在历史区）
 today_pending = [r for r in today_recs if r.get("result") == "pending"]
-check("今日 pending 记录数 = 非空档位数",
-      len(today_pending) == sum(1 for k in ("parlay2", "parlay3", "parlay4") if safe.get(k)),
-      f"pending_records={len(today_pending)} / all={len(today_recs)}")
+_n_tiers = sum(1 for k in ("parlay2", "parlay3", "parlay4") if safe.get(k))
+# v1.7.43：引擎升级（同指硬门槛 45→60/65）后重跑当日数据可能减少档位
+# （如精锐 4 串被反向区间软腿剔除）——记录是历史凭证只增不删，
+# 故断言放宽为 ≥（防漏存），不再要求严格相等。
+check("今日 pending 记录数 ≥ 非空档位数（防漏存）",
+      len(today_pending) >= _n_tiers,
+      f"pending_records={len(today_pending)} / tiers={_n_tiers}")
+# 去重有效性：当日所有记录 legs 签名唯一（同签名不重复落盘）
+def _sig(legs):
+    return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir")) for l in (legs or [])))
+_sigs = [_sig(r.get("legs", [])) for r in today_recs]
+check("当日记录 legs 签名唯一（去重有效）", len(_sigs) == len(set(_sigs)),
+      f"{len(_sigs)} 条记录 {len(set(_sigs))} 个签名")
 for r in today_recs:
     snap = r.get("snapshot") or {}
     # engineVer 不绑死具体版本：只要 ≥ v1.7.33（双口径改革起，记录必带真实口径字段）即可
