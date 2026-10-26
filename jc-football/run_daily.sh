@@ -103,6 +103,33 @@ fi
 set -e
 
 # ---------- 步骤1.85：独立「比分预测」Tab（football-data.org + 自建 Poisson，零耦合核心模型）----------
+# v1.7.44 修复：fd_config.json 被 .gitignore 排除（不入 git，防密钥泄露），任务沙箱从 git
+# 初始化时无此文件 → fetch_scores.py 缺 key → 走「保留旧数据」分支，把 score_predict.json 的
+# updatedAt 冻结回上一轮，导致「比分预测」Tab 静默停更（v1.7.39 同款坑）。自愈：缺 key 但
+# 环境变量 FD_API_KEY 已配置则写入 fd_config.json；都没有则打印明确告警便于排查。
+_cfg_ok=$(python3 - <<'PY' 2>/dev/null
+import json, os
+try:
+    d = json.load(open("fd_config.json"))
+    print("" if d.get("api_key", "").strip() else "MISSING")
+except Exception:
+    print("MISSING")
+PY
+)
+if [ -z "$_cfg_ok" ]; then
+  log "   比分预测密钥就绪 (fd_config.json)"
+else
+  if [ -n "$FD_API_KEY" ]; then
+    python3 - <<PY
+import json, os
+json.dump({"api_key": os.environ["FD_API_KEY"], "enabled": True},
+          open("fd_config.json", "w"), ensure_ascii=False, indent=2)
+PY
+    log "   ✅ 已从环境变量 FD_API_KEY 恢复 fd_config.json（密钥自愈，比分预测可正常更新）"
+  else
+    log "   ⚠️ 警告：fd_config.json 缺密钥且无 FD_API_KEY 环境变量，『比分预测』将暂停更新（沿用旧数据）"
+  fi
+fi
 log "==> 步骤1.85 比分预测 (fetch_scores.py)"
 # 球队详情每天只需刷新一次（全量刷新曾耗时 16 分钟，是流水线的头号超时元凶）
 TEAM_FLAG=.last_team_refresh

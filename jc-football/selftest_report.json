@@ -1,17 +1,12 @@
 {
-  "checkedAt": "2026-10-26 20:16:10",
-  "errorCount": 1,
+  "checkedAt": "2026-10-26 20:37:51",
+  "errorCount": 0,
   "warnCount": 1,
   "issues": [
     {
       "level": "WARN",
       "cat": "串关",
       "msg": "今日无串关推荐（候选不满足档位门槛）"
-    },
-    {
-      "level": "ERROR",
-      "cat": "隔离",
-      "msg": "比分预测已停更 最后更新 2026-10-22 18:09:18（98.1 小时前，展示窗 11 场）——fetch_scores 连续失败/缺 Key/被预算门槛跳过，页面在 Serve 旧数据，需立即排查"
     }
   ]
 }
