@@ -502,6 +502,38 @@ def check_scorepred_freshness(sp):
             print("  比分预测新鲜度：%.1f 小时（正常，更新于 %s，%d 场）" % (age_h, upd, n_match))
 
 
+def check_pipeline_safeguards():
+    """流水线自愈护栏静态校验（v1.7.46）。
+
+    防止本次修复的两处根因被未来改动误删：
+    (1) run_daily.sh 必须有「篮球/比分预测陈旧豁免强制重抓」（步骤2.5）——
+        否则单轮被预算门槛跳过就会再次停更；
+    (2) 部署决策 SHA 必须含 5 个篮球文件——否则篮球更新了也不触发上线。
+    """
+    print("· 检查 9 流水线自愈护栏（v1.7.46）")
+    try:
+        src = open("run_daily.sh", encoding="utf-8").read()
+    except Exception:
+        add("WARN", "隔离", "run_daily.sh 不可读，跳过自愈护栏校验")
+        return
+    # (1) 陈旧恢复护栏存在（_py_age 陈旧判定 + 64800s=18h 阈值 + 触发 fetch_basketball）
+    if "fetch_basketball.py" in src and "_py_age" in src and "64800" in src:
+        print("  篮球/比分预测陈旧豁免重抓护栏：存在")
+    else:
+        add("ERROR", "隔离", "run_daily.sh 缺少「陈旧豁免强制重抓」护栏（v1.7.46 根治项），"
+            "篮球/比分预测将再次面临停更风险")
+    # (2) 部署指纹含 5 个篮球文件
+    missing = [f for f in ("basketball.json", "basketball_history.json",
+                            "basketball_ai.json", "basketball_stats.json",
+                            "basketball_parlay_history.json")
+               if ('filehash("%s")' % f) not in src]
+    if not missing:
+        print("  部署指纹含 5 个篮球文件：是")
+    else:
+        add("ERROR", "隔离", "run_daily.sh 部署指纹漏算篮球文件：%s（篮球更新不触发上线）"
+            % ", ".join(missing))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -520,6 +552,7 @@ def main():
     check_isolation()
     check_basketball_ai()
     check_scorepred_freshness(load("score_predict.json"))
+    check_pipeline_safeguards()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

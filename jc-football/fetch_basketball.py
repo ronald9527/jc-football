@@ -141,6 +141,14 @@ def main():
 
     # ---- 1. 在售赛程+赔率 ----
     matches = fetch_calc()
+    # v1.7.46 加固：接口偶发空响应（网关波动/限流）会返回 0 场但不抛异常，
+    # 若直接落盘会把在售赛程抹空。旧数据非空时退回上一轮在售，避免「误删」。
+    old = _load(BK_PATH, {})
+    old_matches = old.get("matches") or []
+    if not matches and old_matches:
+        print("[篮球] 接口返回 0 场（疑似空响应/网关波动），保留上一轮 %d 场在售，不覆盖"
+              % len(old_matches), flush=True)
+        matches = old_matches
     print("[篮球] 在售赛程 %d 场（含赔率 %d 场）"
           % (len(matches), sum(1 for x in matches if x.get("hasOdds"))), flush=True)
 

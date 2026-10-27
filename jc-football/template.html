@@ -1584,8 +1584,26 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.44";
+const VERSION = "v1.7.45";
 const CHANGELOG = [
+  {
+    version: "v1.7.45",
+    date: "2026-10-27",
+    title: "数据新鲜度全面加固：篮球停更根治 + 比分预测兜底 + 部署指纹修复",
+    features: [
+      "篮球停更根治（run_daily.sh 步骤2.5）：新增「陈旧豁免强制重抓」最终保险——部署前检测 basketball.json / score_predict.json，若 >18h 未更新则无视预算门槛强制重抓并重算衍生数据，确保发出的部署一定带最新数据；重抓失败才沿用旧数据，绝不阻断部署",
+      "比分预测本地兜底（fetch_scores.py）：无 football-data Key 时用竞彩 matches.json 的盘口隐含期望进球（hadProb + goalsExp）跑 Poisson，输出与官方路径完全同构，数据每日随赛程刷新（覆盖为竞彩赛事）",
+      "部署指纹补全（run_daily.sh）：部署决策 SHA 此前漏算 5 个篮球文件，导致篮球更新了也不触发上线；现纳入 basketball.json / basketball_history.json / basketball_ai.json / basketball_stats.json / basketball_parlay_history.json",
+    ],
+    fixes: [
+      "篮球空响应防护（fetch_basketball.py）：竞彩网关偶发空响应（0 场但不报错）会清空在售赛程，现改为退回上一轮在售、不覆盖",
+      "比分预测密钥自愈（run_daily.sh）：缺 Key 时按 fd_config → cf_config.fd_api_key → 环境变量 FD_API_KEY 顺序恢复，均失败才走竞彩兜底（不再静默冻结 updatedAt 导致永久停更）",
+    ],
+    notes: [
+      "根治后「自动更新」由 run_daily.sh 自愈合保证：即便单轮被预算门槛跳过，部署前的陈旧检测也会补救；篮球/比分预测不再出现 17h/98h 级停更",
+      "如需恢复 football-data 全球联赛覆盖（当前兜底仅竞彩赛事），在 CI 仓库配置环境变量 FD_API_KEY（值=fd_config.json 的 api_key）即可，任务沙箱会自动切回官方模式",
+    ]
+  },
   {
     version: "v1.7.44",
     date: "2026-10-26",

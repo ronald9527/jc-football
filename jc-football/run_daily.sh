@@ -221,6 +221,43 @@ if [ "$BUILD_RC" -ne 0 ]; then
   log "!! 构建异常（exit=$BUILD_RC），沿用上次 index.html（下个周期自动重试）"
 fi
 
+# ---------- 步骤2.5：关键数据「陈旧豁免重抓」——每日新鲜的最后保险 ----------
+# 成因：步骤1.85/1.89 的 have_time 预算门槛可能在总预算吃紧时跳过篮球/比分预测，
+# 导致这两类数据偶尔陈旧（v1.7.44~v1.7.45 反复出现 17h/98h 停更）。部署是受保护的
+# 必跑步骤，故在部署前做一次「陈旧检测」：若 >18h 未更新则无视预算强制重抓，确保
+# 即将发出的部署一定带最新数据；重抓失败沿用旧数据，绝不阻断部署。
+_py_age() { "$PY" -c "import time,os,sys; p=sys.argv[1]; print(int(time.time()-os.path.getmtime(p)) if os.path.exists(p) else 999999)" "$1"; }
+_refreshed=0
+if [ -f basketball.json ]; then
+  _age=$(_py_age basketball.json)
+  if [ "$_age" -gt 64800 ]; then
+    log "   ⚠️ 竞彩篮球已陈旧（$((_age/3600))h），触发预算豁免强制重抓"
+    if "$PY" fetch_basketball.py 2>/dev/null; then
+      log "   ✅ 竞彩篮球已刷新"
+      "$PY" fetch_basketball_ai.py 2>/dev/null && "$PY" fetch_basketball_parlay.py 2>/dev/null
+      _refreshed=1
+    else
+      log "   !! 竞彩篮球重抓失败（沿用旧数据）"
+    fi
+  fi
+fi
+if [ -f score_predict.json ]; then
+  _age=$(_py_age score_predict.json)
+  if [ "$_age" -gt 64800 ]; then
+    log "   ⚠️ 比分预测已陈旧（$((_age/3600))h），触发预算豁免强制重抓"
+    if "$PY" fetch_scores.py --keep-cache --max-teams 25 2>/dev/null; then
+      log "   ✅ 比分预测已刷新"
+      _refreshed=1
+    else
+      log "   !! 比分预测重抓失败（沿用旧数据）"
+    fi
+  fi
+fi
+if [ "$_refreshed" = "1" ]; then
+  log "==> 步骤2.5b 陈旧重抓后重建页面"
+  "$PY" build_panel.py 2>/dev/null || true
+fi
+
 if [ "$MODE" = "deploy" ]; then
   # ---------- 部署节流：Cloudflare Pages 免费层仅 500 次构建/月 ----------
   # 自动任务 30 次/天 ≈ 900 次/月会超限（约第 17 天起新部署被拒，站点停在旧版本）。
@@ -249,6 +286,12 @@ parts += norm("history.json", "records")
 parts += norm("fd_data.json", "matches", "byNum")
 parts += norm("score_predict.json", "matches", "reliable", "accuracy")
 parts += norm("whoscored_data.json", "matches", "dateList", "history", "reliable")
+# 篮球数据（v1.7.46 补入：此前漏算，导致篮球更新了也不触发上线 / 部署指纹失准）
+parts += filehash("basketball.json")
+parts += filehash("basketball_history.json")
+parts += filehash("basketball_ai.json")
+parts += filehash("basketball_stats.json")
+parts += filehash("basketball_parlay_history.json")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")
