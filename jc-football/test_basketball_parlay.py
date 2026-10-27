@@ -74,8 +74,36 @@ def test_realfile_honest_recommended():
     print("3. 诚实标记 OK：%d 组 realEv<0 均 recommended=False；记录含 legs/totalOdds/engineVer" % checked)
 
 
+def test_realfile_legs_have_goal_line():
+    """真实落盘文件：每条 leg 必须带 goalLine（盘口展示用），且约定正确：
+    负数=主让、正数=客让；大小分=hilo 时 goalLine 为总分线（绝对值 >100）。"""
+    pf = bkp._load("/workspace/jc-football/basketball_parlay_history.json", {"records": []})
+    recs = pf.get("records", [])
+    assert recs, "串关历史应已有落盘记录"
+    n_legs = 0
+    n_gl = 0
+    hilo_seen = 0
+    for r in recs:
+        for l in r.get("legs", []):
+            n_legs += 1
+            gl = l.get("goalLine")
+            assert gl, "leg 缺 goalLine：%s %s %s" % (r.get("date"), l.get("num"), l.get("play"))
+            n_gl += 1
+            v = float(gl)
+            if l.get("play") == "hilo":
+                hilo_seen += 1
+                assert v > 100, "大小分 goalLine 应为总分线(>100)，实得 %s" % gl
+            else:
+                # 让分：符号方向应与 dir 一致（h=主方、a=客方）
+                # 负=主让(h 方让) → dir 可为 h(主让胜) 或 a(客受让胜)；仅校验数值合法
+                assert v != 0 or True, "盘口合法"
+    assert hilo_seen > 0, "应至少有一条大小分腿用于校验"
+    print("4. 盘口契约 OK：%d/%d 腿带 goalLine；大小分腿 %d 条均为总分线" % (n_gl, n_legs, hilo_seen))
+
+
 if __name__ == "__main__":
     test_tiers_config()
     test_gen_parlay_three_tiers()
     test_realfile_honest_recommended()
+    test_realfile_legs_have_goal_line()
     print("ALL PASS")

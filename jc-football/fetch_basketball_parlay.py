@@ -120,6 +120,7 @@ def gen_bk_candidates(preds, matches_map):
             "play": tp, "playKey": tp, "dir": pl["dir"],
             "label": _leg_label(tp, pl, goal),
             "playDesc": _leg_play_desc(tp, goal),
+            "goalLine": goal,
             "odds": pl["odds"], "confidence": pl["confidence"],
             "sameOddsHit": pl.get("sameOddsHit"), "sameOddsN": pl.get("sameOddsN"),
             "pTrue": pl.get("pTrue"), "canon": pl.get("canon"),
@@ -271,7 +272,8 @@ def save_parlay_history(safe, today):
                 "id": c.get("id"), "num": c["num"], "league": c["league"],
                 "home": c["home"], "away": c["away"],
                 "play": c["play"], "playKey": c["playKey"], "dir": c["dir"],
-                "label": c["label"], "playDesc": c["playDesc"], "odds": c["odds"],
+                "label": c["label"], "playDesc": c["playDesc"],
+                "goalLine": c.get("goalLine"), "odds": c["odds"],
                 "kickoff": c.get("kickoff"),
                 "confidence": c["confidence"], "sameOddsHit": c.get("sameOddsHit"),
                 "sameOddsN": c.get("sameOddsN"), "pTrue": c.get("pTrue"),
@@ -337,6 +339,22 @@ def _backfill_ids(hist, bk_records):
     return changed
 
 
+def _backfill_goal_lines(hist):
+    """早期记录 leg 无 goalLine，从 playDesc 解析补写（home 视角盘口，
+    与候选 goal 同口径：负=主让/正=客让），让前端统一用 leg.goalLine 渲染盘口。"""
+    import re as _re
+    changed = 0
+    for rec in hist.get("records", []):
+        for leg in rec.get("legs", []):
+            if leg.get("goalLine"):
+                continue
+            m = _re.search(r"([-+]?\d+(?:\.\d+)?)", leg.get("playDesc", ""))
+            if m:
+                leg["goalLine"] = m.group(1)
+                changed += 1
+    return changed
+
+
 def check_basketball_parlay():
     """结算已开赛、仍 pending 的记录，回填 legHit/result。"""
     hist = _load(PARLAY_PATH, {"records": []})
@@ -345,6 +363,8 @@ def check_basketball_parlay():
     bk_records = bkh.get("records") or {}
     # 先回填早期记录缺失的 id/kickoff，否则永远无法结算（v1.7.46 修复）
     _backfill_ids(hist, bk_records)
+    # 回填早期记录缺失的 goalLine（盘口展示用，v1.7.49）
+    gl_changed = _backfill_goal_lines(hist)
     now = datetime.now()
     changed = 0
     for r in records:
@@ -377,7 +397,7 @@ def check_basketball_parlay():
         r["result"] = "hit" if all_hit else "miss"
         r["checkedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         changed += 1
-    if changed:
+    if changed or gl_changed:
         _recalc(hist, records)
         _save(PARLAY_PATH, hist)
     return changed

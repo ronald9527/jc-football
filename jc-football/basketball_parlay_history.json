@@ -27,7 +27,8 @@
      "kickoff": "2026-10-27 08:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "102:110"
+     "actualScore": "102:110",
+     "goalLine": "+5.5"
     },
     {
      "num": "周一310",
@@ -49,7 +50,8 @@
      "kickoff": "2026-10-27 09:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "102:110"
+     "actualScore": "102:110",
+     "goalLine": "-1.5"
     }
    ],
    "recommended": false,
@@ -140,7 +142,8 @@
      "kickoff": "2026-10-27 03:00",
      "legHit": false,
      "hit": "miss",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "-4.5"
     },
     {
      "num": "周一307",
@@ -162,7 +165,8 @@
      "kickoff": "2026-10-27 08:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "+5.5"
     },
     {
      "num": "周一310",
@@ -184,7 +188,8 @@
      "kickoff": "2026-10-27 09:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "-1.5"
     }
    ],
    "recommended": false,
@@ -294,7 +299,8 @@
      "kickoff": "2026-10-27 03:00",
      "legHit": false,
      "hit": "miss",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "-4.5"
     },
     {
      "num": "周一307",
@@ -316,7 +322,8 @@
      "kickoff": "2026-10-27 08:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "+5.5"
     },
     {
      "num": "周一308",
@@ -338,7 +345,8 @@
      "kickoff": "2026-10-27 08:00",
      "legHit": false,
      "hit": "miss",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "-1.5"
     },
     {
      "num": "周一310",
@@ -360,7 +368,8 @@
      "kickoff": "2026-10-27 09:00",
      "legHit": true,
      "hit": "hit",
-     "actualScore": "88:98"
+     "actualScore": "88:98",
+     "goalLine": "-1.5"
     }
    ],
    "recommended": false,
@@ -480,6 +489,7 @@
      "dir": "a",
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
+     "goalLine": "-17.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
@@ -499,6 +509,7 @@
      "dir": "h",
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
+     "goalLine": "-3.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
@@ -513,7 +524,7 @@
    "realEv": -0.2531,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 13:30:41",
+   "savedAt": "2026-10-27 19:17:55",
    "snapshot": {
     "type": "稳健2串1",
     "tier": "bk2",
@@ -531,6 +542,7 @@
       "dir": "a",
       "label": "让分客胜",
       "playDesc": "让分(-17.5)",
+      "goalLine": "-17.5",
       "odds": 1.65,
       "confidence": 58.6,
       "sameOddsHit": null,
@@ -550,6 +562,7 @@
       "dir": "h",
       "label": "让分主胜",
       "playDesc": "让分(-3.5)",
+      "goalLine": "-3.5",
       "odds": 1.65,
       "confidence": 58.0,
       "sameOddsHit": 25.0,
@@ -586,6 +599,7 @@
      "dir": "h",
      "label": "大分",
      "playDesc": "总分线(+176.5)",
+     "goalLine": "+176.5",
      "odds": 1.66,
      "kickoff": "2026-10-28 03:00",
      "confidence": 55.0,
@@ -605,6 +619,7 @@
      "dir": "a",
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
+     "goalLine": "-17.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
@@ -624,6 +639,7 @@
      "dir": "h",
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
+     "goalLine": "-3.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
@@ -638,7 +654,7 @@
    "realEv": -0.3544,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 13:30:41",
+   "savedAt": "2026-10-27 19:17:55",
    "snapshot": {
     "type": "均衡3串1",
     "tier": "bk3",
@@ -656,6 +672,7 @@
       "dir": "h",
       "label": "大分",
       "playDesc": "总分线(+176.5)",
+      "goalLine": "+176.5",
       "odds": 1.66,
       "confidence": 55.0,
       "sameOddsHit": null,
@@ -675,6 +692,7 @@
       "dir": "a",
       "label": "让分客胜",
       "playDesc": "让分(-17.5)",
+      "goalLine": "-17.5",
       "odds": 1.65,
       "confidence": 58.6,
       "sameOddsHit": null,
@@ -694,6 +712,7 @@
       "dir": "h",
       "label": "让分主胜",
       "playDesc": "让分(-3.5)",
+      "goalLine": "-3.5",
       "odds": 1.65,
       "confidence": 58.0,
       "sameOddsHit": 25.0,
@@ -730,6 +749,7 @@
      "dir": "h",
      "label": "大分",
      "playDesc": "总分线(+176.5)",
+     "goalLine": "+176.5",
      "odds": 1.66,
      "kickoff": "2026-10-28 03:00",
      "confidence": 55.0,
@@ -749,6 +769,7 @@
      "dir": "h",
      "label": "大分",
      "playDesc": "总分线(+173.5)",
+     "goalLine": "+173.5",
      "odds": 1.66,
      "kickoff": "2026-10-28 03:30",
      "confidence": 55.0,
@@ -768,6 +789,7 @@
      "dir": "a",
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
+     "goalLine": "-17.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
@@ -787,6 +809,7 @@
      "dir": "h",
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
+     "goalLine": "-3.5",
      "odds": 1.65,
      "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
@@ -801,7 +824,7 @@
    "realEv": -0.442,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 13:30:41",
+   "savedAt": "2026-10-27 19:17:55",
    "snapshot": {
     "type": "精锐4串1",
     "tier": "bk4",
@@ -819,6 +842,7 @@
       "dir": "h",
       "label": "大分",
       "playDesc": "总分线(+176.5)",
+      "goalLine": "+176.5",
       "odds": 1.66,
       "confidence": 55.0,
       "sameOddsHit": null,
@@ -838,6 +862,7 @@
       "dir": "h",
       "label": "大分",
       "playDesc": "总分线(+173.5)",
+      "goalLine": "+173.5",
       "odds": 1.66,
       "confidence": 55.0,
       "sameOddsHit": null,
@@ -857,6 +882,7 @@
       "dir": "a",
       "label": "让分客胜",
       "playDesc": "让分(-17.5)",
+      "goalLine": "-17.5",
       "odds": 1.65,
       "confidence": 58.6,
       "sameOddsHit": null,
@@ -876,6 +902,7 @@
       "dir": "h",
       "label": "让分主胜",
       "playDesc": "让分(-3.5)",
+      "goalLine": "-3.5",
       "odds": 1.65,
       "confidence": 58.0,
       "sameOddsHit": 25.0,
@@ -899,7 +926,7 @@
  "hit": 1,
  "miss": 2,
  "pending": 3,
- "updatedAt": "2026-10-27 13:30:41",
+ "updatedAt": "2026-10-27 19:17:55",
  "hitRate": 33.3,
  "recent7Rate": 33.3
 }

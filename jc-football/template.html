@@ -464,6 +464,7 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .bk-ai-dir{font-size:12.5px;font-weight:800;color:var(--accent)}
 .bk-ai-odds{font-size:11px;color:var(--weak);font-variant-numeric:tabular-nums;margin-top:1px}
 .bk-ai-conf{font-size:9px;color:var(--sub);margin-top:1px}
+.bk-ai-line{font-size:9px;color:var(--accent);margin-top:1px;font-variant-numeric:tabular-nums}
 .bk-ai-top{font-size:10.5px;color:var(--sub);margin-top:6px;border-top:1px dashed var(--line);padding-top:5px}
 .bk-ai-top b{color:var(--accent)}
 .bk-rank{font-size:9px;color:var(--weak);background:var(--panel3);padding:1px 5px;border-radius:4px;margin-left:2px}
@@ -1601,8 +1602,24 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.48";
+const VERSION = "v1.7.49";
 const CHANGELOG = [
+  {
+    version: "v1.7.49",
+    date: "2026-10-27",
+    title: "篮球 AI 预测 / 串关 4 处均显示盘口（让分哪边让多少 + 大小分总分）",
+    features: [
+      "篮球 AI 预测（今日预测）：每玩法下方显示盘口——让分胜负显示「主让/客让 X.X」（哪边让、让多少分），大小分显示「总分 X.X」（多少球）；单场主推行同步带盘口",
+      "篮球 AI 预测（历史回溯）：逐场展开的四玩法命中明细中，让分/大小分均带盘口文本，回看历史也能看到当时盘口",
+      "篮球串关（当前推荐 + 历史回溯）：每条串关腿显示盘口——让分腿显示「主让/客让 X.X」、大小分腿显示「总分 X.X」，配合方向（主胜/客胜/大分/小分）一目了然",
+    ],
+    fixes: [
+      "fetch_basketball_parlay.py 候选与串关腿补齐 goalLine 字段；新增 _backfill_goal_lines 从 playDesc 回填早期历史记录盘口，历史 6 组 18 腿全部带盘口",
+    ],
+    notes: [
+      "盘口约定：负数=主让、正数=客让（与赛程赔率卡片一致）；大小分「总分」即官方大小分线",
+    ]
+  },
   {
     version: "v1.7.48",
     date: "2026-10-27",
@@ -5504,6 +5521,22 @@ function bkAiDirTxt(pk, pl){
   if(pk === "wnm") return "主胜" + d + "区间";
   return d;
 }
+/* 盘口文本：让分哪边让多少分（gl 为 home 视角盘口），大小分总分多少球 */
+function bkSpreadTxt(gl){
+  if(gl === undefined || gl === null || gl === "") return "";
+  const v = parseFloat(gl);
+  if(isNaN(v)) return "";
+  if(v < 0) return "主让" + Math.abs(v);
+  if(v > 0) return "客让" + v;
+  return "平手";
+}
+function bkTotalTxt(gl){
+  if(gl === undefined || gl === null || gl === "") return "";
+  const v = parseFloat(gl);
+  if(isNaN(v)) return "";
+  return "总分" + v;
+}
+function bkGoalOf(pl){ return pl.goalLine != null ? pl.goalLine : (pl.gl != null ? pl.gl : ""); }
 function bkAiCardHtml(p){
   const kickBJ = (p.kickoff || "").slice(5, 16);
   let html = `<div class="bk-card">`
@@ -5523,16 +5556,24 @@ function bkAiCardHtml(p){
     const pl = plays[pk];
     if(!pl) return;
     const so = (pl.sameOddsHit != null) ? `同指${pl.sameOddsHit}%` : "同指样本不足";
+    let line = "";
+    if(pk === "hdc"){ const g = bkSpreadTxt(bkGoalOf(pl)); if(g) line = `<div class="bk-ai-line">盘口 ${g}</div>`; }
+    else if(pk === "hilo"){ const g = bkTotalTxt(bkGoalOf(pl)); if(g) line = `<div class="bk-ai-line">盘口 ${g}</div>`; }
     html += `<div class="bk-ai-play">`
       + `<div class="bk-ai-pk">${pname[pk]}</div>`
       + `<div class="bk-ai-dir">${bkAiDirTxt(pk, pl)}</div>`
       + `<div class="bk-ai-odds">@${pl.odds}</div>`
+      + line
       + `<div class="bk-ai-conf">信心${pl.confidence} · ${so}</div>`
       + `</div>`;
   });
   html += `</div>`;
   if(p.topPlay && plays[p.topPlay]){
-    html += `<div class="bk-ai-top">单场主推：<b>${pname[p.topPlay]}</b> · ${bkAiDirTxt(p.topPlay, plays[p.topPlay])} @${plays[p.topPlay].odds}</div>`;
+    const tp = plays[p.topPlay];
+    let topLine = "";
+    if(p.topPlay === "hdc"){ const g = bkSpreadTxt(bkGoalOf(tp)); if(g) topLine = ` · 盘口 ${g}`; }
+    else if(p.topPlay === "hilo"){ const g = bkTotalTxt(bkGoalOf(tp)); if(g) topLine = ` · 盘口 ${g}`; }
+    html += `<div class="bk-ai-top">单场主推：<b>${pname[p.topPlay]}</b> · ${bkAiDirTxt(p.topPlay, tp)} @${tp.odds}${topLine}</div>`;
   }
   return html + `</div>`;
 }
@@ -5624,7 +5665,10 @@ function renderBkAiHistory(){
       if(!x) return;
       const cls = x.hit === true ? "var(--good)" : x.hit === false ? "var(--bad)" : "var(--warn)";
       const txt = x.hit === true ? "✓" : x.hit === false ? "✗" : "待";
-      plays += `<span style="margin-right:8px;font-size:11px;">${pname[k]}<b style="color:${cls}">${x.dir}${txt}</b></span>`;
+      let line = "";
+      if(k === "hdc"){ const g = bkSpreadTxt(bkGoalOf(x)); if(g) line = ` <span style="color:var(--sub)">${g}</span>`; }
+      else if(k === "hilo"){ const g = bkTotalTxt(bkGoalOf(x)); if(g) line = ` <span style="color:var(--sub)">${g}</span>`; }
+      plays += `<span style="margin-right:8px;font-size:11px;">${pname[k]}<b style="color:${cls}">${x.dir}${txt}</b>${line}</span>`;
     });
     lh += `<div class="bk-ai-row bk-collapsed">
       <div class="bk-ai-head" onclick="bkToggleCard(this.parentNode)">
@@ -5657,7 +5701,14 @@ function bkParlayCardHtml(r){
     const legRes = l.legHit === true ? `<span class="bk-res-hit">✓</span>`
       : l.legHit === false ? `<span class="bk-res-miss">✗</span>` : "";
     const actual = l.actualScore ? `（${l.actualScore}）` : "";
-    html += `<span class="bk-parlay-leg">${l.num} ${BK_PLAY_NAME[l.play] || l.play}${l.dir} @${l.odds}${legRes}${actual}</span>`;
+    const legLine = l.play === "hdc" ? bkSpreadTxt(l.goalLine)
+                 : l.play === "hilo" ? bkTotalTxt(l.goalLine) : "";
+    const dirTxt = l.play === "hdc" ? (l.dir === "h" ? "主胜" : "客胜")
+                 : l.play === "hilo" ? (l.dir === "h" ? "大分" : "小分")
+                 : l.dir;
+    html += `<span class="bk-parlay-leg">${l.num} ${BK_PLAY_NAME[l.play] || l.play}`
+      + (legLine ? ` <b style="color:var(--accent)">${legLine}</b>` : "")
+      + ` ${dirTxt} @${l.odds}${legRes}${actual}</span>`;
   });
   html += `</div></div>`;
   return html;
