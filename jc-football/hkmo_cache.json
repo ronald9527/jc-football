@@ -1,56 +1,53 @@
 {
- "date": "2026-10-26",
- "fetched_at": "2026-10-26 18:46:34",
+ "date": "2026-10-27",
+ "fetched_at": "2026-10-27 18:33:21",
  "matches": [
   {
-   "fid": "1438160",
+   "fid": "1473897",
    "hk": {
     "current": {
-     "h": 9,
-     "d": 4.5,
-     "a": 1.36,
-     "returnRate": 93.58,
-     "time": "2026-10-26 17:43:28"
+     "h": 2.2,
+     "d": 3.4,
+     "a": 2.75,
+     "returnRate": 89.9,
+     "time": "2026-10-26 20:16:42"
     },
     "open": {
-     "h": 7.5,
-     "d": 4.33,
-     "a": 1.4,
-     "time": "2026-10-12 23:05:13"
+     "h": 2.2,
+     "d": 3.4,
+     "a": 2.75,
+     "time": "2026-10-26 20:16:42"
     },
-    "drop_dirs": [
-     "a"
-    ],
-    "history_count": 16
+    "drop_dirs": [],
+    "history_count": 1
    },
    "mo": {
     "current": {
-     "h": 8.5,
-     "d": 5,
-     "a": 1.35,
-     "returnRate": 94.48,
-     "time": "2026-10-26 17:35:21"
+     "h": 2.45,
+     "d": 3.25,
+     "a": 2.8,
+     "returnRate": 93.2,
+     "time": "2026-10-27 12:33:15"
     },
     "open": {
-     "h": 7.75,
-     "d": 4.5,
-     "a": 1.43,
-     "time": "2026-10-19 02:21:11"
+     "h": 2.15,
+     "d": 3.5,
+     "a": 3,
+     "time": "2026-10-26 16:20:18"
     },
     "drop_dirs": [
+     "d",
      "a"
     ],
-    "history_count": 33
+    "history_count": 9
    },
-   "both_drop": true,
-   "common_drop_dirs": [
-    "a"
-   ],
-   "home": "圣克拉拉",
-   "away": "本菲卡",
-   "league": "葡超",
-   "num": "周一001",
-   "kickoff": "2026-10-27 02:45",
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "北京国安",
+   "away": "全北现代",
+   "league": "亚冠",
+   "num": "周二003",
+   "kickoff": "2026-10-27 20:15",
    "asian": {
     "open": "—",
     "open_num": null,
@@ -61,41 +58,384 @@
    }
   },
   {
-   "fid": "1416933",
+   "fid": "1490697",
    "hk": {
     "current": {
      "h": 3.25,
-     "d": 3.1,
-     "a": 2.1,
-     "returnRate": 90.38,
-     "time": "2026-10-26 18:30:21"
+     "d": 3.6,
+     "a": 2.05,
+     "returnRate": 93.17,
+     "time": "2026-10-27 18:22:09"
     },
     "open": {
-     "h": 3.1,
-     "d": 3,
-     "a": 2.15,
-     "time": "2026-10-25 10:37:35"
+     "h": 2.5,
+     "d": 3.4,
+     "a": 2.5,
+     "time": "2026-10-03 04:02:28"
     },
     "drop_dirs": [
      "a"
     ],
-    "history_count": 8
+    "history_count": 31
    },
    "mo": {
     "current": {
      "h": 3.35,
-     "d": 3.05,
-     "a": 2.15,
-     "returnRate": 91.62,
-     "time": "2026-10-26 17:45:24"
+     "d": 3.7,
+     "a": 2.1,
+     "returnRate": 95.7,
+     "time": "2026-10-27 14:52:17"
     },
     "open": {
-     "h": 2.95,
-     "d": 3.05,
-     "a": 2.35,
-     "time": "2026-10-22 03:55:13"
+     "h": 2.55,
+     "d": 3.7,
+     "a": 2.5,
+     "time": "2026-09-08 02:43:43"
     },
     "drop_dirs": [
+     "a"
+    ],
+    "history_count": 14
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "汉堡",
+   "away": "法兰克福",
+   "league": "德国杯",
+   "num": "周二004",
+   "kickoff": "2026-10-28 01:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414253",
+   "hk": {
+    "current": {
+     "h": 3.4,
+     "d": 3.6,
+     "a": 2.05,
+     "returnRate": 94.37,
+     "time": "2026-10-27 15:51:46"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3.4,
+     "a": 2.45,
+     "time": "2026-10-19 11:57:44"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 46
+   },
+   "mo": {
+    "current": {
+     "h": 3.3,
+     "d": 3.6,
+     "a": 2.1,
+     "returnRate": 94.61,
+     "time": "2026-10-27 17:10:49"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3.45,
+     "a": 2.5,
+     "time": "2026-10-20 01:45:42"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 38
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "萨索洛",
+   "away": "拉齐奥",
+   "league": "意甲",
+   "num": "周二005",
+   "kickoff": "2026-10-28 01:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1490695",
+   "hk": {
+    "current": {
+     "h": 1.42,
+     "d": 4.5,
+     "a": 7,
+     "returnRate": 93.52,
+     "time": "2026-10-27 17:16:23"
+    },
+    "open": {
+     "h": 1.33,
+     "d": 5,
+     "a": 7,
+     "time": "2026-10-03 00:16:51"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 12
+   },
+   "mo": {
+    "current": {
+     "h": 1.4,
+     "d": 5.25,
+     "a": 7,
+     "returnRate": 95.45,
+     "time": "2026-10-27 18:20:11"
+    },
+    "open": {
+     "h": 1.35,
+     "d": 5.25,
+     "a": 8,
+     "time": "2026-09-08 02:43:33"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 18
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "多特蒙德",
+   "away": "云达不来梅",
+   "league": "德国杯",
+   "num": "周二007",
+   "kickoff": "2026-10-28 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1490693",
+   "hk": {
+    "current": {
+     "h": 1.75,
+     "d": 3.6,
+     "a": 4.5,
+     "returnRate": 93.33,
+     "time": "2026-10-27 18:09:28"
+    },
+    "open": {
+     "h": 1.67,
+     "d": 3.6,
+     "a": 4.5,
+     "time": "2026-10-06 16:10:48"
+    },
+    "drop_dirs": [],
+    "history_count": 16
+   },
+   "mo": {
+    "current": {
+     "h": 1.9,
+     "d": 3.75,
+     "a": 3.9,
+     "returnRate": 95.29,
+     "time": "2026-10-27 17:32:49"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.55,
+     "a": 3.3,
+     "time": "2026-09-08 02:44:29"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 20
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "科隆",
+   "away": "柏林联合",
+   "league": "德国杯",
+   "num": "周二008",
+   "kickoff": "2026-10-28 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414173",
+   "hk": {
+    "current": {
+     "h": 1.33,
+     "d": 5,
+     "a": 10,
+     "returnRate": 95.07,
+     "time": "2026-10-26 23:42:35"
+    },
+    "open": {
+     "h": 1.36,
+     "d": 4.75,
+     "a": 9,
+     "time": "2026-10-19 11:57:17"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 4
+   },
+   "mo": {
+    "current": {
+     "h": 1.33,
+     "d": 5.5,
+     "a": 9,
+     "returnRate": 95.71,
+     "time": "2026-10-27 13:56:37"
+    },
+    "open": {
+     "h": 1.37,
+     "d": 5.25,
+     "a": 8.25,
+     "time": "2026-10-20 03:57:59"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "罗马",
+   "away": "卡利亚里",
+   "league": "意甲",
+   "num": "周二009",
+   "kickoff": "2026-10-28 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414221",
+   "hk": {
+    "current": {
+     "h": 5.25,
+     "d": 3.9,
+     "a": 1.67,
+     "returnRate": 95.63,
+     "time": "2026-10-27 18:07:08"
+    },
+    "open": {
+     "h": 4.5,
+     "d": 3.6,
+     "a": 1.75,
+     "time": "2026-10-19 11:57:46"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 28
+   },
+   "mo": {
+    "current": {
+     "h": 4.5,
+     "d": 3.8,
+     "a": 1.75,
+     "returnRate": 94.62,
+     "time": "2026-10-27 18:08:50"
+    },
+    "open": {
+     "h": 4.5,
+     "d": 3.75,
+     "a": 1.77,
+     "time": "2026-10-20 03:47:21"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 47
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "都灵",
+   "away": "科莫",
+   "league": "意甲",
+   "num": "周二010",
+   "kickoff": "2026-10-28 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1473930",
+   "hk": {
+    "current": {
+     "h": 1.65,
+     "d": 4,
+     "a": 3.9,
+     "returnRate": 89.89,
+     "time": "2026-10-27 10:01:18"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 4,
+     "a": 4.1,
+     "time": "2026-10-27 09:11:51"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 2
+   },
+   "mo": {
+    "current": {
+     "h": 1.73,
+     "d": 3.75,
+     "a": 4.2,
+     "returnRate": 92.35,
+     "time": "2026-10-27 15:06:30"
+    },
+    "open": {
+     "h": 1.65,
+     "d": 3.9,
+     "a": 4.7,
+     "time": "2026-10-27 00:57:34"
+    },
+    "drop_dirs": [
+     "d",
      "a"
     ],
     "history_count": 5
@@ -104,11 +444,11 @@
    "common_drop_dirs": [
     "a"
    ],
-   "home": "布洛涅",
-   "away": "兰斯",
-   "league": "法乙",
-   "num": "周一002",
-   "kickoff": "2026-10-27 03:45",
+   "home": "大阪钢巴",
+   "away": "布里兰",
+   "league": "亚冠",
+   "num": "周三001",
+   "kickoff": "2026-10-28 18:00",
    "asian": {
     "open": "—",
     "open_num": null,
@@ -119,83 +459,25 @@
    }
   },
   {
-   "fid": "1428100",
-   "hk": {
-    "current": {
-     "h": 1.85,
-     "d": 3.4,
-     "a": 4.5,
-     "returnRate": 94.62,
-     "time": "2026-10-26 18:40:37"
-    },
-    "open": {
-     "h": 1.9,
-     "d": 3.3,
-     "a": 4,
-     "time": "2026-10-11 20:46:53"
-    },
-    "drop_dirs": [
-     "h"
-    ],
-    "history_count": 142
-   },
-   "mo": {
-    "current": {
-     "h": 1.9,
-     "d": 3.4,
-     "a": 4.3,
-     "returnRate": 94.97,
-     "time": "2026-10-26 13:56:25"
-    },
-    "open": {
-     "h": 1.97,
-     "d": 3.35,
-     "a": 3.95,
-     "time": "2026-10-12 21:08:28"
-    },
-    "drop_dirs": [
-     "h"
-    ],
-    "history_count": 23
-   },
-   "both_drop": true,
-   "common_drop_dirs": [
-    "h"
-   ],
-   "home": "塞维利亚",
-   "away": "奥萨苏纳",
-   "league": "西甲",
-   "num": "周一003",
-   "kickoff": "2026-10-27 04:00",
-   "asian": {
-    "open": "—",
-    "open_num": null,
-    "current": "—",
-    "current_num": null,
-    "change": "none",
-    "diff": 0
-   }
-  },
-  {
-   "fid": "1362544",
+   "fid": "1473965",
    "hk": {
     "current": {
      "h": 1.25,
-     "d": 5,
-     "a": 11,
-     "returnRate": 91.67,
-     "time": "2026-10-26 16:01:45"
+     "d": 5.5,
+     "a": 7.5,
+     "returnRate": 89.67,
+     "time": "2026-10-27 18:03:41"
     },
     "open": {
-     "h": 1.4,
-     "d": 4.75,
-     "a": 7,
-     "time": "2026-10-13 22:17:44"
+     "h": 1.33,
+     "d": 5,
+     "a": 6,
+     "time": "2026-10-27 09:11:50"
     },
     "drop_dirs": [
      "h"
     ],
-    "history_count": 120
+    "history_count": 4
    },
    "mo": {
     "current": {
@@ -203,28 +485,610 @@
      "d": 6,
      "a": 10,
      "returnRate": 93.75,
-     "time": "2026-10-26 18:09:15"
+     "time": "2026-10-27 16:43:08"
     },
     "open": {
-     "h": 1.37,
-     "d": 4.9,
-     "a": 7.5,
-     "time": "2026-10-19 18:22:08"
+     "h": 1.33,
+     "d": 5.25,
+     "a": 8,
+     "time": "2026-10-27 00:56:27"
     },
     "drop_dirs": [
      "h"
     ],
-    "history_count": 11
+    "history_count": 10
    },
    "both_drop": true,
    "common_drop_dirs": [
     "h"
    ],
-   "home": "弗拉门戈",
-   "away": "米内罗竞技",
-   "league": "巴甲",
-   "num": "周一004",
-   "kickoff": "2026-10-27 07:00",
+   "home": "鹿岛鹿角",
+   "away": "浦项制铁",
+   "league": "亚冠",
+   "num": "周三002",
+   "kickoff": "2026-10-28 18:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1502036",
+   "hk": null,
+   "mo": null,
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "横滨水手",
+   "away": "广岛三箭",
+   "league": "日联赛杯",
+   "num": "周三003",
+   "kickoff": "2026-10-28 18:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1490705",
+   "hk": {
+    "current": {
+     "h": 5.75,
+     "d": 4.2,
+     "a": 1.53,
+     "returnRate": 93.84,
+     "time": "2026-10-27 00:55:11"
+    },
+    "open": {
+     "h": 5.5,
+     "d": 4,
+     "a": 1.5,
+     "time": "2026-10-03 00:48:33"
+    },
+    "drop_dirs": [],
+    "history_count": 11
+   },
+   "mo": {
+    "current": {
+     "h": 5.5,
+     "d": 4.5,
+     "a": 1.55,
+     "returnRate": 95.31,
+     "time": "2026-10-26 22:33:46"
+    },
+    "open": {
+     "h": 4.9,
+     "d": 4.2,
+     "a": 1.63,
+     "time": "2026-09-08 02:44:19"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 12
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "帕德博恩",
+   "away": "斯图加特",
+   "league": "德国杯",
+   "num": "周三004",
+   "kickoff": "2026-10-29 01:00",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414163",
+   "hk": {
+    "current": {
+     "h": 8.5,
+     "d": 5,
+     "a": 1.36,
+     "returnRate": 94.97,
+     "time": "2026-10-26 20:22:24"
+    },
+    "open": {
+     "h": 8.5,
+     "d": 5,
+     "a": 1.33,
+     "time": "2026-10-19 12:04:36"
+    },
+    "drop_dirs": [],
+    "history_count": 9
+   },
+   "mo": {
+    "current": {
+     "h": 8.25,
+     "d": 5.25,
+     "a": 1.37,
+     "returnRate": 96,
+     "time": "2026-10-26 21:30:36"
+    },
+    "open": {
+     "h": 7.25,
+     "d": 6,
+     "a": 1.35,
+     "time": "2026-10-21 01:42:17"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 21
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "威尼斯",
+   "away": "国际米兰",
+   "league": "意甲",
+   "num": "周三005",
+   "kickoff": "2026-10-29 01:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414185",
+   "hk": {
+    "current": {
+     "h": 1.62,
+     "d": 3.75,
+     "a": 6,
+     "returnRate": 95.18,
+     "time": "2026-10-26 08:46:58"
+    },
+    "open": {
+     "h": 1.6,
+     "d": 3.8,
+     "a": 5.5,
+     "time": "2026-10-19 12:03:32"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 4
+   },
+   "mo": {
+    "current": {
+     "h": 1.63,
+     "d": 3.95,
+     "a": 5.5,
+     "returnRate": 95.38,
+     "time": "2026-10-27 16:17:40"
+    },
+    "open": {
+     "h": 1.63,
+     "d": 4.1,
+     "a": 5.5,
+     "time": "2026-10-21 01:42:21"
+    },
+    "drop_dirs": [
+     "d"
+    ],
+    "history_count": 17
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "d"
+   ],
+   "home": "AC米兰",
+   "away": "博洛尼亚",
+   "league": "意甲",
+   "num": "周三006",
+   "kickoff": "2026-10-29 01:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414220",
+   "hk": {
+    "current": {
+     "h": 2.9,
+     "d": 3.2,
+     "a": 2.5,
+     "returnRate": 94.58,
+     "time": "2026-10-27 02:47:23"
+    },
+    "open": {
+     "h": 3.1,
+     "d": 3.2,
+     "a": 2.35,
+     "time": "2026-10-19 12:04:30"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 53
+   },
+   "mo": {
+    "current": {
+     "h": 2.9,
+     "d": 3.15,
+     "a": 2.55,
+     "returnRate": 94.84,
+     "time": "2026-10-27 00:05:10"
+    },
+    "open": {
+     "h": 2.95,
+     "d": 3.25,
+     "a": 2.45,
+     "time": "2026-10-21 01:43:16"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 7
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "帕尔马",
+   "away": "乌迪内斯",
+   "league": "意甲",
+   "num": "周三007",
+   "kickoff": "2026-10-29 01:30",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1493663",
+   "hk": {
+    "current": {
+     "h": 3.4,
+     "d": 3.5,
+     "a": 2.01,
+     "returnRate": 92.82,
+     "time": "2026-10-27 17:02:19"
+    },
+    "open": {
+     "h": 3,
+     "d": 3.3,
+     "a": 2.3,
+     "time": "2026-09-25 09:44:43"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 9
+   },
+   "mo": {
+    "current": {
+     "h": 3.45,
+     "d": 3.6,
+     "a": 2.05,
+     "returnRate": 94.75,
+     "time": "2026-10-27 14:08:48"
+    },
+    "open": {
+     "h": 2.75,
+     "d": 3.3,
+     "a": 2.4,
+     "time": "2026-09-21 19:24:21"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 13
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "桑德兰",
+   "away": "布伦特福德",
+   "league": "英联赛杯",
+   "num": "周三010",
+   "kickoff": "2026-10-29 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1493657",
+   "hk": {
+    "current": {
+     "h": 2.25,
+     "d": 3.5,
+     "a": 3,
+     "returnRate": 94.03,
+     "time": "2026-10-26 12:30:29"
+    },
+    "open": {
+     "h": 2.3,
+     "d": 3.4,
+     "a": 2.88,
+     "time": "2026-09-25 08:11:25"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 8
+   },
+   "mo": {
+    "current": {
+     "h": 2.3,
+     "d": 3.55,
+     "a": 3.05,
+     "returnRate": 95.75,
+     "time": "2026-10-26 22:06:10"
+    },
+    "open": {
+     "h": 2.25,
+     "d": 3.5,
+     "a": 2.75,
+     "time": "2026-09-21 19:23:16"
+    },
+    "drop_dirs": [],
+    "history_count": 7
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "伯恩茅斯",
+   "away": "阿斯顿维拉",
+   "league": "英联赛杯",
+   "num": "周三011",
+   "kickoff": "2026-10-29 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1493661",
+   "hk": {
+    "current": {
+     "h": 1.83,
+     "d": 3.75,
+     "a": 4,
+     "returnRate": 94.06,
+     "time": "2026-10-26 13:45:58"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.6,
+     "a": 3.2,
+     "time": "2026-09-22 21:29:07"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 13
+   },
+   "mo": {
+    "current": {
+     "h": 1.9,
+     "d": 3.85,
+     "a": 3.9,
+     "returnRate": 95.93,
+     "time": "2026-10-26 22:07:49"
+    },
+    "open": {
+     "h": 2.1,
+     "d": 3.45,
+     "a": 3.15,
+     "time": "2026-09-21 19:23:45"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 10
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "h"
+   ],
+   "home": "富勒姆",
+   "away": "水晶宫",
+   "league": "英联赛杯",
+   "num": "周三012",
+   "kickoff": "2026-10-29 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414210",
+   "hk": {
+    "current": {
+     "h": 4.5,
+     "d": 3.9,
+     "a": 1.75,
+     "returnRate": 95.23,
+     "time": "2026-10-27 00:59:37"
+    },
+    "open": {
+     "h": 4.2,
+     "d": 3.5,
+     "a": 1.83,
+     "time": "2026-10-19 12:07:24"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 151
+   },
+   "mo": {
+    "current": {
+     "h": 4.4,
+     "d": 3.9,
+     "a": 1.77,
+     "returnRate": 95.36,
+     "time": "2026-10-27 05:41:22"
+    },
+    "open": {
+     "h": 3.7,
+     "d": 3.6,
+     "a": 1.97,
+     "time": "2026-10-21 03:58:59"
+    },
+    "drop_dirs": [
+     "a"
+    ],
+    "history_count": 26
+   },
+   "both_drop": true,
+   "common_drop_dirs": [
+    "a"
+   ],
+   "home": "蒙扎",
+   "away": "那不勒斯",
+   "league": "意甲",
+   "num": "周三013",
+   "kickoff": "2026-10-29 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1414225",
+   "hk": {
+    "current": {
+     "h": 5.5,
+     "d": 3.6,
+     "a": 1.67,
+     "returnRate": 94.48,
+     "time": "2026-10-26 08:53:38"
+    },
+    "open": {
+     "h": 5.5,
+     "d": 3.6,
+     "a": 1.65,
+     "time": "2026-10-19 12:04:51"
+    },
+    "drop_dirs": [],
+    "history_count": 2
+   },
+   "mo": {
+    "current": {
+     "h": 5.25,
+     "d": 3.7,
+     "a": 1.7,
+     "returnRate": 95.33,
+     "time": "2026-10-26 09:03:53"
+    },
+    "open": {
+     "h": 5.5,
+     "d": 3.75,
+     "a": 1.67,
+     "time": "2026-10-21 03:58:33"
+    },
+    "drop_dirs": [
+     "h",
+     "d"
+    ],
+    "history_count": 5
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "热那亚",
+   "away": "尤文图斯",
+   "league": "意甲",
+   "num": "周三014",
+   "kickoff": "2026-10-29 03:45",
+   "asian": {
+    "open": "—",
+    "open_num": null,
+    "current": "—",
+    "current_num": null,
+    "change": "none",
+    "diff": 0
+   }
+  },
+  {
+   "fid": "1493662",
+   "hk": {
+    "current": {
+     "h": 2.15,
+     "d": 3.9,
+     "a": 2.82,
+     "returnRate": 92.93,
+     "time": "2026-10-27 17:03:44"
+    },
+    "open": {
+     "h": 2.5,
+     "d": 3.6,
+     "a": 2.63,
+     "time": "2026-09-23 23:13:27"
+    },
+    "drop_dirs": [
+     "h"
+    ],
+    "history_count": 27
+   },
+   "mo": {
+    "current": {
+     "h": 2.25,
+     "d": 3.9,
+     "a": 2.85,
+     "returnRate": 95.08,
+     "time": "2026-10-27 14:18:26"
+    },
+    "open": {
+     "h": 2.2,
+     "d": 3.6,
+     "a": 2.8,
+     "time": "2026-09-21 19:23:46"
+    },
+    "drop_dirs": [],
+    "history_count": 22
+   },
+   "both_drop": false,
+   "common_drop_dirs": [],
+   "home": "利物浦",
+   "away": "切尔西",
+   "league": "英联赛杯",
+   "num": "周三015",
+   "kickoff": "2026-10-29 04:00",
    "asian": {
     "open": "—",
     "open_num": null,
@@ -235,8 +1099,8 @@
    }
   }
  ],
- "both_drop_count": 4,
+ "both_drop_count": 11,
  "asian_up_count": 0,
  "asian_down_count": 0,
- "total": 4
+ "total": 20
 }

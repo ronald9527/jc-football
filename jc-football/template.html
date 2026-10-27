@@ -479,6 +479,17 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .bk-parlay-meta{font-size:10px;color:var(--sub);margin:4px 0;font-variant-numeric:tabular-nums}
 .bk-parlay-legs{display:flex;flex-wrap:wrap;gap:6px}
 .bk-parlay-leg{font-size:10.5px;color:var(--sub);background:var(--panel3);padding:2px 7px;border-radius:5px;font-variant-numeric:tabular-nums}
+/* 回溯卡片/行 默认折叠：点击标题展开详情（v1.7.48） */
+.bk-parlay-card.bk-collapsed .bk-parlay-meta,
+.bk-parlay-card.bk-collapsed .bk-parlay-legs{display:none}
+.bk-parlay-head{cursor:pointer;user-select:none}
+.bk-chev{display:inline-block;width:12px;color:var(--sub);font-size:10px;transition:transform .15s}
+.bk-parlay-card:not(.bk-collapsed) .bk-chev,
+.bk-ai-row:not(.bk-collapsed) .bk-chev{transform:rotate(90deg)}
+.bk-ai-row{border-bottom:1px solid var(--border)}
+.bk-ai-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;cursor:pointer;user-select:none;padding:8px 10px}
+.bk-ai-row.bk-collapsed .bk-ai-plays{display:none}
+.bk-ai-plays{font-size:11px;color:var(--sub);padding:2px 10px 9px}
 .bk-stats-note{font-size:10.5px;color:var(--warn);margin-bottom:10px;background:var(--warn-bg);padding:6px 10px;border-radius:6px}
 .bk-stats-sec{margin-bottom:14px}
 .bk-stats-title{font-size:12px;font-weight:700;color:var(--accent);margin:10px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
@@ -1590,8 +1601,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.47";
+const VERSION = "v1.7.48";
 const CHANGELOG = [
+  {
+    version: "v1.7.48",
+    date: "2026-10-27",
+    title: "篮球回溯视图默认折叠 + 数据刷新部署",
+    features: [
+      "篮球串关 / AI 预测历史回溯卡片默认折叠：仅显示标题（类型/日期/命中结果 或 对阵/主推命中），点击标题展开四玩法/串关腿明细，列表更整洁；角标与日期按钮不变",
+    ],
+    fixes: [
+      "重新抓取全部数据源并部署（matches.json 此前已陈旧约 24h），线上页面数据恢复最新",
+    ],
+    notes: [
+      "回溯默认折叠，需点击每条标题展开；如需「展开全部」可后续再加按钮",
+    ]
+  },
   {
     version: "v1.7.47",
     date: "2026-10-27",
@@ -5589,7 +5614,7 @@ function renderBkAiHistory(){
   // 当日列表
   const rows = h.filter(r=>r.date === state.bkAiDate);
   rows.sort((a,b)=> (a.num||"").localeCompare(b.num||""));
-  let lh = `<div style="margin:8px 0;font-size:12px;color:var(--sub);">${state.bkAiDate} · 共 ${rows.length} 场预测</div>`;
+  let lh = `<div style="margin:8px 0;font-size:12px;color:var(--sub);">${state.bkAiDate} · 共 ${rows.length} 场预测（点击展开看四玩法命中）</div>`;
   rows.forEach(r=>{
     const topCls = r.topHit === true ? "var(--good)" : r.topHit === false ? "var(--bad)" : "var(--warn)";
     const topTxt = r.topHit === true ? "主推✓" : r.topHit === false ? "主推✗" : "待赛";
@@ -5601,12 +5626,13 @@ function renderBkAiHistory(){
       const txt = x.hit === true ? "✓" : x.hit === false ? "✗" : "待";
       plays += `<span style="margin-right:8px;font-size:11px;">${pname[k]}<b style="color:${cls}">${x.dir}${txt}</b></span>`;
     });
-    lh += `<div style="padding:8px 10px;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+    lh += `<div class="bk-ai-row bk-collapsed">
+      <div class="bk-ai-head" onclick="bkToggleCard(this.parentNode)">
+        <span class="bk-chev">▸</span>
         <span style="font-size:12.5px;font-weight:600;">${r.num||""} ${r.home||""} vs ${r.away||""}</span>
         <span style="font-size:11px;font-weight:600;color:${topCls};">主推 ${pname[r.topPlay]||r.topPlay} ${r.topDir} · ${topTxt}</span>
       </div>
-      <div style="margin-top:4px;font-size:11px;color:var(--sub);">${plays}${r.score?` · 赛果 ${r.score}`:""}</div>
+      <div class="bk-ai-plays">${plays}${r.score?` · 赛果 ${r.score}`:""}</div>
     </div>`;
   });
   listBox.innerHTML = lh;
@@ -5617,8 +5643,9 @@ function bkParlayCardHtml(r){
   const resTxt = r.result === "hit" ? `<span class="bk-res-hit">命中</span>`
     : r.result === "miss" ? `<span class="bk-res-miss">未中</span>`
     : r.result === "pending" ? `<span class="bk-res-pend">待开奖</span>` : "";
-  let html = `<div class="bk-parlay-card">`
-    + `<div class="bk-parlay-head">`
+  let html = `<div class="bk-parlay-card bk-collapsed">`
+    + `<div class="bk-parlay-head" onclick="bkToggleCard(this.parentNode)">`
+    + `<span class="bk-chev">▸</span>`
     + `<span class="bk-parlay-type">${r.type}</span>`
     + `<span class="bk-parlay-date">${r.date}</span>`
     + resTxt
@@ -5635,6 +5662,8 @@ function bkParlayCardHtml(r){
   html += `</div></div>`;
   return html;
 }
+/* 卡片/行 折叠展开（默认折叠，点击标题展开详情） */
+function bkToggleCard(card){ if(card) card.classList.toggle("bk-collapsed"); }
 function renderBkParlay(){
   const sumBox = $("#bkParlaySummary");
   const listBox = $("#bkParlayList");

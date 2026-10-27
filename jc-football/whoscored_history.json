@@ -4146,9 +4146,134 @@
     "outcome": "主胜",
     "tip": "比分可信度高，可跟注比分 3:1"
    }
+  },
+  "1989074": {
+   "id": "1989074",
+   "date": "2026-10-24",
+   "league": "英冠",
+   "home": "Sheffield United",
+   "away": "Derby",
+   "predH": 2,
+   "predA": 0,
+   "actH": 1,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 42.4,
+    "exact": 6.5,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 26,
+    "teamN": 4,
+    "sample": 30,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989060": {
+   "id": "1989060",
+   "date": "2026-10-24",
+   "league": "英冠",
+   "home": "Charlton",
+   "away": "Norwich",
+   "predH": 1,
+   "predA": 1,
+   "actH": 1,
+   "actA": 3,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周六007",
+   "preConf": {
+    "dir": 43.6,
+    "exact": 6.5,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 26,
+    "teamN": 4,
+    "sample": 30,
+    "outcome": "平局",
+    "tip": "方向中等可信，方向「平局」可作小注参考"
+   }
+  },
+  "1983617": {
+   "id": "1983617",
+   "date": "2026-10-24",
+   "league": "英超",
+   "home": "Aston Villa",
+   "away": "Manchester City",
+   "predH": 1,
+   "predA": 3,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周六006",
+   "preConf": {
+    "dir": 47.2,
+    "exact": 10.9,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 12,
+    "teamN": 6,
+    "sample": 18,
+    "outcome": "客胜",
+    "tip": "比分可信度高，可跟注比分 1:3"
+   }
+  },
+  "1989066": {
+   "id": "1989066",
+   "date": "2026-10-24",
+   "league": "英冠",
+   "home": "Portsmouth",
+   "away": "Millwall",
+   "predH": 1,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 44.3,
+    "exact": 7.7,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 26,
+    "teamN": 5,
+    "sample": 31,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  "1999653": {
+   "id": "1999653",
+   "date": "2026-10-24",
+   "league": "土超",
+   "home": "Eyupspor",
+   "away": "Kasimpasa",
+   "predH": 0,
+   "predA": 3,
+   "actH": 0,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": null,
+   "preConf": {
+    "dir": 48.5,
+    "exact": 9.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 11,
+    "teamN": 3,
+    "sample": 14,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 0:3 可作小注参考"
+   }
   }
  },
- "updatedAt": "2026-10-24 04:02:56",
+ "updatedAt": "2026-10-27 10:37:30",
  "pending": {
   "1983622": {
    "date": "2026-10-24",
@@ -4379,13 +4504,13 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 50.0,
-    "exact": 11.3,
+    "dir": 48.8,
+    "exact": 10.9,
     "dirLevel": "mid",
     "exactLevel": "high",
-    "leagueN": 12,
+    "leagueN": 13,
     "teamN": 4,
-    "sample": 16,
+    "sample": 17,
     "outcome": "主胜",
     "tip": "比分可信度高，可跟注比分 2:0"
    }
@@ -4399,13 +4524,13 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 46.8,
-    "exact": 13.0,
+    "dir": 45.6,
+    "exact": 12.6,
     "dirLevel": "mid",
     "exactLevel": "high",
-    "leagueN": 12,
+    "leagueN": 13,
     "teamN": 3,
-    "sample": 15,
+    "sample": 16,
     "outcome": "平局",
     "tip": "比分可信度高，可跟注比分 1:1"
    }
@@ -4419,13 +4544,13 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 48.1,
-    "exact": 12.8,
+    "dir": 46.9,
+    "exact": 12.4,
     "dirLevel": "mid",
     "exactLevel": "high",
-    "leagueN": 12,
+    "leagueN": 13,
     "teamN": 2,
-    "sample": 14,
+    "sample": 15,
     "outcome": "主胜",
     "tip": "比分可信度高，可跟注比分 2:1"
    }
@@ -4439,7 +4564,7 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 37.9,
+    "dir": 37.6,
     "exact": 8.3,
     "dirLevel": "low",
     "exactLevel": "mid",
@@ -4459,7 +4584,7 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 37.9,
+    "dir": 37.6,
     "exact": 8.3,
     "dirLevel": "low",
     "exactLevel": "mid",
@@ -4479,7 +4604,7 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 37.9,
+    "dir": 37.6,
     "exact": 8.3,
     "dirLevel": "low",
     "exactLevel": "mid",
@@ -4499,7 +4624,7 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 37.9,
+    "dir": 37.6,
     "exact": 8.3,
     "dirLevel": "low",
     "exactLevel": "mid",
@@ -4519,8 +4644,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 41.6,
-    "exact": 8.0,
+    "dir": 41.3,
+    "exact": 7.9,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 10,
@@ -4539,8 +4664,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 38.3,
-    "exact": 8.0,
+    "dir": 38.0,
+    "exact": 7.9,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 10,
@@ -4559,7 +4684,7 @@
    "predH": 1,
    "predA": 0,
    "conf": {
-    "dir": 46.3,
+    "dir": 46.0,
     "exact": 10.6,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -4579,8 +4704,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 46.3,
-    "exact": 9.7,
+    "dir": 46.0,
+    "exact": 9.6,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4599,8 +4724,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 45.9,
-    "exact": 9.5,
+    "dir": 45.6,
+    "exact": 9.4,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4619,8 +4744,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 46.8,
-    "exact": 9.3,
+    "dir": 46.5,
+    "exact": 9.2,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4639,8 +4764,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 41.6,
-    "exact": 7.9,
+    "dir": 41.3,
+    "exact": 7.8,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4659,8 +4784,8 @@
    "predH": 3,
    "predA": 1,
    "conf": {
-    "dir": 41.7,
-    "exact": 7.6,
+    "dir": 41.4,
+    "exact": 7.5,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4679,8 +4804,8 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 44.0,
-    "exact": 7.5,
+    "dir": 43.7,
+    "exact": 7.4,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4699,8 +4824,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 41.6,
-    "exact": 7.9,
+    "dir": 41.3,
+    "exact": 7.8,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 13,
@@ -4779,13 +4904,13 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 44.7,
-    "exact": 6.5,
+    "dir": 43.1,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "客胜",
     "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
@@ -4799,13 +4924,13 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 43.6,
-    "exact": 6.5,
+    "dir": 41.9,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "客胜",
     "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
@@ -4819,13 +4944,13 @@
    "predH": 0,
    "predA": 1,
    "conf": {
-    "dir": 43.6,
-    "exact": 6.5,
+    "dir": 41.9,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "客胜",
     "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
@@ -4839,15 +4964,15 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 42.4,
-    "exact": 6.5,
-    "dirLevel": "mid",
+    "dir": 40.8,
+    "exact": 6.2,
+    "dirLevel": "low",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "平局",
-    "tip": "方向中等可信，方向「平局」可作小注参考"
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
    }
   },
   "1989063": {
@@ -4859,15 +4984,15 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 42.4,
-    "exact": 6.5,
-    "dirLevel": "mid",
+    "dir": 40.8,
+    "exact": 6.2,
+    "dirLevel": "low",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "平局",
-    "tip": "方向中等可信，方向「平局」可作小注参考"
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
    }
   },
   "1989077": {
@@ -4879,13 +5004,13 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 41.3,
-    "exact": 6.5,
+    "dir": 39.7,
+    "exact": 6.2,
     "dirLevel": "low",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "主胜",
     "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
    }
@@ -4899,13 +5024,13 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 43.0,
-    "exact": 7.7,
+    "dir": 41.4,
+    "exact": 7.5,
     "dirLevel": "mid",
     "exactLevel": "mid",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 5,
-    "sample": 31,
+    "sample": 34,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:0 可作小注参考"
    }
@@ -4919,13 +5044,13 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 44.7,
-    "exact": 6.5,
+    "dir": 43.1,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
-    "leagueN": 26,
+    "leagueN": 29,
     "teamN": 4,
-    "sample": 30,
+    "sample": 33,
     "outcome": "平局",
     "tip": "方向中等可信，方向「平局」可作小注参考"
    }
@@ -4939,8 +5064,8 @@
    "predH": 3,
    "predA": 0,
    "conf": {
-    "dir": 47.0,
-    "exact": 6.6,
+    "dir": 46.8,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -4959,8 +5084,8 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 47.0,
-    "exact": 6.6,
+    "dir": 46.8,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -4979,8 +5104,8 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 48.2,
-    "exact": 6.6,
+    "dir": 47.9,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -4999,8 +5124,8 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 49.3,
-    "exact": 6.6,
+    "dir": 49.0,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5019,8 +5144,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 45.9,
-    "exact": 6.6,
+    "dir": 45.6,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5039,8 +5164,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 47.0,
-    "exact": 6.6,
+    "dir": 46.8,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5059,8 +5184,8 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 48.2,
-    "exact": 6.6,
+    "dir": 47.9,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5079,8 +5204,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 47.0,
-    "exact": 6.6,
+    "dir": 46.8,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5099,8 +5224,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 45.9,
-    "exact": 6.6,
+    "dir": 45.6,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5119,7 +5244,7 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 47.0,
+    "dir": 46.8,
     "exact": 7.7,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -5139,7 +5264,7 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 47.0,
+    "dir": 46.8,
     "exact": 7.7,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -5159,8 +5284,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 47.0,
-    "exact": 6.6,
+    "dir": 46.8,
+    "exact": 6.5,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5179,7 +5304,7 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 38.6,
+    "dir": 38.4,
     "exact": 7.7,
     "dirLevel": "low",
     "exactLevel": "mid",
@@ -5199,8 +5324,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 37.5,
-    "exact": 6.6,
+    "dir": 37.2,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5219,8 +5344,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 37.5,
-    "exact": 6.6,
+    "dir": 37.2,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5239,8 +5364,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 38.6,
-    "exact": 6.6,
+    "dir": 38.4,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5259,8 +5384,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 37.5,
-    "exact": 6.6,
+    "dir": 37.2,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5279,8 +5404,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 39.8,
-    "exact": 6.6,
+    "dir": 39.5,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5299,8 +5424,8 @@
    "predH": 3,
    "predA": 1,
    "conf": {
-    "dir": 38.6,
-    "exact": 6.6,
+    "dir": 38.4,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5319,8 +5444,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 39.8,
-    "exact": 6.6,
+    "dir": 39.5,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5339,8 +5464,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 38.6,
-    "exact": 6.6,
+    "dir": 38.4,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5359,8 +5484,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 38.6,
-    "exact": 6.6,
+    "dir": 38.4,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5379,8 +5504,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 39.8,
-    "exact": 6.6,
+    "dir": 39.5,
+    "exact": 6.5,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 24,
@@ -5399,8 +5524,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 44.2,
-    "exact": 6.3,
+    "dir": 43.9,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 10,
@@ -5419,8 +5544,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 45.1,
-    "exact": 6.3,
+    "dir": 44.8,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 10,
@@ -5439,8 +5564,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 45.1,
-    "exact": 6.3,
+    "dir": 44.8,
+    "exact": 6.2,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 10,
@@ -5479,15 +5604,15 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 49.2,
-    "exact": 11.1,
+    "dir": 49.8,
+    "exact": 10.8,
     "dirLevel": "mid",
-    "exactLevel": "high",
-    "leagueN": 11,
+    "exactLevel": "mid",
+    "leagueN": 12,
     "teamN": 2,
-    "sample": 13,
+    "sample": 14,
     "outcome": "客胜",
-    "tip": "比分可信度高，可跟注比分 1:2"
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
    }
   },
   "1999667": {
@@ -5499,13 +5624,13 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 49.2,
-    "exact": 10.2,
+    "dir": 49.8,
+    "exact": 9.9,
     "dirLevel": "mid",
     "exactLevel": "mid",
-    "leagueN": 11,
+    "leagueN": 12,
     "teamN": 2,
-    "sample": 13,
+    "sample": 14,
     "outcome": "客胜",
     "tip": "比分中等可信，比分 0:2 可作小注参考"
    }
@@ -5519,8 +5644,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5539,8 +5664,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5559,8 +5684,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5579,8 +5704,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 36.2,
-    "exact": 6.2,
+    "dir": 35.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5599,8 +5724,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5619,8 +5744,8 @@
    "predH": 3,
    "predA": 2,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5639,8 +5764,8 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 35.2,
-    "exact": 6.2,
+    "dir": 34.9,
+    "exact": 6.1,
     "dirLevel": "low",
     "exactLevel": "low",
     "leagueN": 11,
@@ -5659,8 +5784,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 44.7,
-    "exact": 10.2,
+    "dir": 44.4,
+    "exact": 10.1,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 6,
@@ -5679,8 +5804,8 @@
    "predH": 2,
    "predA": 0,
    "conf": {
-    "dir": 43.7,
-    "exact": 9.2,
+    "dir": 43.4,
+    "exact": 9.1,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 6,
@@ -5699,8 +5824,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 44.7,
-    "exact": 9.2,
+    "dir": 44.4,
+    "exact": 9.1,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 6,
@@ -5719,8 +5844,8 @@
    "predH": 0,
    "predA": 2,
    "conf": {
-    "dir": 44.7,
-    "exact": 9.2,
+    "dir": 44.4,
+    "exact": 9.1,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 6,
@@ -5739,8 +5864,8 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 42.8,
-    "exact": 7.4,
+    "dir": 42.5,
+    "exact": 7.3,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 3,
@@ -5759,8 +5884,8 @@
    "predH": 2,
    "predA": 2,
    "conf": {
-    "dir": 42.3,
-    "exact": 7.4,
+    "dir": 42.0,
+    "exact": 7.3,
     "dirLevel": "mid",
     "exactLevel": "mid",
     "leagueN": 3,
@@ -5779,7 +5904,7 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 42.0,
+    "dir": 41.6,
     "exact": 7.3,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -5799,7 +5924,7 @@
    "predH": 1,
    "predA": 1,
    "conf": {
-    "dir": 41.9,
+    "dir": 41.6,
     "exact": 9.9,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -5819,7 +5944,7 @@
    "predH": 0,
    "predA": 3,
    "conf": {
-    "dir": 43.0,
+    "dir": 42.8,
     "exact": 9.1,
     "dirLevel": "mid",
     "exactLevel": "mid",
@@ -5828,6 +5953,46 @@
     "sample": 36,
     "outcome": "客胜",
     "tip": "比分中等可信，比分 0:3 可作小注参考"
+   }
+  },
+  "2013733": {
+   "date": "2026-10-27",
+   "league": "意乙",
+   "home": "LR Vicenza",
+   "away": "Modena",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 34.5,
+    "exact": 6.0,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 11,
+    "teamN": 3,
+    "sample": 14,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "2013729": {
+   "date": "2026-10-27",
+   "league": "意乙",
+   "home": "Virtus Entella",
+   "away": "Avellino",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 34.9,
+    "exact": 6.1,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 11,
+    "teamN": 2,
+    "sample": 13,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
    }
   }
  }

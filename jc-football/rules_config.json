@@ -2,18 +2,18 @@
  "组1热度深负": {
   "base": 15,
   "threshold": 14,
-  "samples": 273,
-  "hit": 205,
-  "miss": 68,
-  "hitRate": 75.1
+  "samples": 283,
+  "hit": 213,
+  "miss": 70,
+  "hitRate": 75.3
  },
  "组6深度过热": {
   "base": 22,
   "threshold": 21,
-  "samples": 176,
-  "hit": 142,
-  "miss": 34,
-  "hitRate": 80.7
+  "samples": 186,
+  "hit": 150,
+  "miss": 36,
+  "hitRate": 80.6
  },
  "组2正路确认": {
   "base": 9.58,
@@ -60,37 +60,37 @@
  "组9凯利价值": {
   "base": 1.59,
   "threshold": 1.51,
-  "samples": 116,
-  "hit": 67,
+  "samples": 120,
+  "hit": 71,
   "miss": 49,
-  "hitRate": 57.8,
+  "hitRate": 59.2,
   "alpha": 3.03
  },
  "组10排名压制": {
   "base": 8.39,
   "threshold": 7.4,
-  "samples": 98,
-  "hit": 61,
-  "miss": 37,
-  "hitRate": 62.2,
+  "samples": 107,
+  "hit": 67,
+  "miss": 40,
+  "hitRate": 62.6,
   "alpha": 2.44
  },
  "组11进球预期": {
   "base": 3.0,
   "threshold": 2.0,
-  "samples": 335,
-  "hit": 230,
-  "miss": 105,
-  "hitRate": 68.7,
+  "samples": 353,
+  "hit": 243,
+  "miss": 110,
+  "hitRate": 68.8,
   "alpha": 0.16
  },
  "组12半场掌控": {
   "base": 57.04,
   "threshold": 56.0,
-  "samples": 81,
-  "hit": 55,
-  "miss": 26,
-  "hitRate": 67.9,
+  "samples": 91,
+  "hit": 61,
+  "miss": 30,
+  "hitRate": 67.0,
   "alpha": 4.85
  },
  "组13攻防压制": {
