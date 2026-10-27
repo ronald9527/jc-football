@@ -1609,8 +1609,21 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.53";
+const VERSION = "v1.7.54";
 const CHANGELOG = [
+  {
+    version: "v1.7.54",
+    date: "2026-10-28",
+    title: "比分预测根治：徽章不再恒显「0」+ 中文队名被误译导致漏显修复",
+    fixes: [
+      "初始化即渲染「比分预测」区块（renderScorePred 在页面加载时调用），徽章显示真实数量，杜绝未点击标签前恒显「比分预测0」被误认为没有预测",
+      "spJcFilter 增加原始队名兜底匹配：防 spZh 把竞彩中文名改写（如「阿斯顿维拉」→「维拉」）导致已覆盖比赛被隐藏——周三13场竞彩比分预测 13/13 全覆盖",
+      "team_map.py 修正「维拉|阿斯顿维拉」条目顺序（规范名应在前），使阿斯顿维拉显示为全称、不再误缩为「维拉」"
+    ],
+    features: [
+      "数据刷新至周三(2026-10-28)在售赛程，比分预测随赛程刷新"
+    ]
+  },
   {
     version: "v1.7.53",
     date: "2026-10-28",
@@ -5183,8 +5196,12 @@ function spJcFilter(list){
     const h = spZh(m.home), a = spZh(m.away);
     // 仅「译名含中文」才参与匹配：FD 英文队名翻译失败（纯英文）视为缺失→隐藏；
     // 本地赔率兜底的竞彩中文名（可能含 AIK 等拉丁缩写）含中文→正常匹配，不再误杀。
-    if(!h || !a || !/[一-鿿]/.test(h) || !/[一-鿿]/.test(a)) return false;
-    return pairs.has(h+"|"+a) || pairs.has(a+"|"+h);
+    if(h && a && /[一-鿿]/.test(h) && /[一-鿿]/.test(a)
+       && (pairs.has(h+"|"+a) || pairs.has(a+"|"+h))) return true;
+    // 兜底：直接用原始队名试匹配——防止 spZh 把竞彩中文名改写（如「阿斯顿维拉」→「维拉」）
+    // 导致已覆盖的比赛被误杀；本地赔率兜底记录本就用竞彩原始中文名。
+    if(m.home && m.away && (pairs.has(m.home+"|"+m.away) || pairs.has(m.away+"|"+m.home))) return true;
+    return false;
   });
 }
 
@@ -6568,6 +6585,8 @@ if(checkLogin()){
   // 未登录时也渲染基础结构，但内容被登录框遮挡
   render();
 }
+// 初始化即渲染「比分预测」区块（含徽章数量），避免未点击标签前徽章恒显「0」、被误认为没有预测
+try{ renderScorePred(); }catch(e){}
 </script>
 <!-- 高手推荐原文覆盖层 -->
 <div id="expertArticleOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:var(--bg);flex-direction:column;">

@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-27 18:33:21",
+ "updatedAt": "2026-10-28 01:55:41",
  "total": 681,
  "records": [
   {
@@ -2935,11 +2935,20 @@
     ]
    },
    "predAt": "2026-10-27 18:32",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": null,
-   "asianHit": null,
-   "scoreHit": null
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "n-a",
+   "hhadHit": "hit",
+   "asianHit": "n-a",
+   "scoreHit": "hit",
+   "resultAt": "2026-10-28 01:54",
+   "hhadResult": "a",
+   "scoreActual": "2:2"
   },
   {
    "id": "2042245",
@@ -60162,7 +60171,7 @@
    "hhadHit": "hit",
    "asianHit": "miss",
    "scoreHit": "miss",
-   "resultAt": "2026-10-27 18:32",
+   "resultAt": "2026-10-28 01:55",
    "hhadResult": "a",
    "scoreActual": "3:0"
   },

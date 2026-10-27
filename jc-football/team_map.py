@@ -76,7 +76,7 @@ _TEAM_SRC = """
 伯明翰|Birmingham|Birmingham City
 布里斯托尔城|Bristol City
 米尔顿凯恩斯|Milton Keynes|MK Dons
-维拉|阿斯顿维拉
+阿斯顿维拉|维拉
 曼城|曼彻斯特城
 热刺|托特纳姆热刺
 狼队|伍尔弗汉普顿
