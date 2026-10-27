@@ -731,6 +731,76 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                     "source": "local-odds",
                 })
                 _local_added += 1
+        # v1.7.55：历史竞彩日补全覆盖——matches.json 每天滚动刷新为「仅当天在售」，
+        # 昨日/前日竞彩赛程已被覆盖，但其比赛仍应有比分预测（用户要求每天都有）。
+        # 补全源扩展为「当前 matches.json + 竞彩历史档案 history.json 近 N 天(不含当天)」，
+        # 对尚未被接口(FD)/当日补全覆盖的竞彩对阵补 Poisson 基线：优先用 scoreRec 隐含
+        # 期望进球(_lambda_from_jc 退路)，缺失则退回联赛均值。确保历史竞彩日不空缺。
+        _hp = os.path.join(HERE, "history.json")
+        _HIST_WIN = 9
+        if os.path.exists(_hp):
+            try:
+                _hj = json.load(open(_hp, encoding="utf-8")) or {}
+                # v1.7.55 修复：历史竞彩日补全必须用「自身已补集合」去重，
+                # 不能复用 _covered——_covered 含 FD 英文队名经 spZh 翻出的中文对阵，
+                # 会误判 history 中文竞彩场次「已覆盖」而跳过（典型如 27号 3 场意甲：
+                # FD 回 US Sassuolo Calcio/Torino FC/AS Roma 英文，翻成萨索洛/都灵/罗马
+                # 后污染 _covered，导致罗马/都灵/萨索洛竞彩场次漏补、回溯区缺 3 场）。
+                # 竞彩历史档案的中文队名才是渲染层 spJcFilter 实际显示版本，FD 英文场次被隐藏，
+                # 故只要该中文对阵尚未被 history 自身补加，就补本地基线，确保历史竞彩日全量可见。
+                _hist_added = set()
+                for _r in (_hj.get("records") or []):
+                    _lg = _r.get("league", "")
+                    _date = _r.get("date", "")
+                    try:
+                        _md = datetime.strptime(_date, "%Y-%m-%d").date()
+                    except Exception:
+                        continue
+                    # 仅补过去竞彩日(now-9~now-1)，当天及未来由 matches.json 源负责，避免重复
+                    if not ((now - timedelta(days=_HIST_WIN)).date() <= _md <= (now - timedelta(days=1)).date()):
+                        continue
+                    _jh, _ja = _r.get("home", ""), _r.get("away", "")
+                    if not _jh or not _ja:
+                        continue
+                    if frozenset([_jh, _ja]) in _hist_added:
+                        continue  # 已被 history 自身补加，不重复
+                    _lh, _la = _lambda_from_jc(_r)
+                    if _lh is None or _la is None:
+                        _lh, _la = (max(0.2, min(4.5, LEAGUE_HOME_GPG * HOME_ADV)),
+                                    max(0.2, min(4.5, LEAGUE_AWAY_GPG / HOME_ADV)))
+                    _pred = _poisson_grid(_lh, _la)
+                    # 优先用智能引擎 scoreRec.predicted 作为预测比分（更有区分度/可信度），
+                    # 缺失或格式异常则退回 Poisson 众数。
+                    _sr = _r.get("scoreRec") or {}
+                    _ps = (_sr.get("predicted") or "").strip()
+                    _pm = _re.match(r"^\s*(\d+)\s*[:：\-]\s*(\d+)\s*$", _ps)
+                    if _pm:
+                        _pred = dict(_pred)
+                        _pred["predH"] = int(_pm.group(1))
+                        _pred["predA"] = int(_pm.group(2))
+                    _ko = ""
+                    try:
+                        _kk = (_r.get("kickoff") or "").split(" ")[-1]
+                        _ko = _kk[:5] if len(_kk) >= 5 else ""
+                    except Exception:
+                        _ko = ""
+                    _utc = ("%sT%s:00" % (_date, _ko)) if _ko else (_date + "T00:00:00")
+                    _acth = _r.get("actH") or _r.get("scoreActual")
+                    _acta = _r.get("actA") or _r.get("scoreActual")
+                    matches_out.append({
+                        "id": _r.get("id"), "competition": "", "league": _lg,
+                        "home": _jh, "away": _ja,
+                        "utcDate": _utc, "status": _r.get("status", ""),
+                        "predH": _pred["predH"], "predA": _pred["predA"],
+                        "pHome": _pred["pHome"], "pDraw": _pred["pDraw"], "pAway": _pred["pAway"],
+                        "predOutcome": _outcome_of(_pred["predH"], _pred["predA"]),
+                        "actH": _acth, "actA": _acta, "evaluated": False,
+                        "source": "local-odds",
+                    })
+                    _hist_added.add(frozenset([_jh, _ja]))
+                    _local_added += 1
+            except Exception as _he:
+                print("读取 history.json 补全覆盖异常跳过：%s" % _he)
     except Exception as _e:
         print("本地赔率补全（保底基线）异常跳过：%s" % _e)
 
@@ -794,6 +864,23 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
             "predOutcome": h.get("predOutcome"), "actOutcome": h.get("actOutcome"),
             "exactHit": h.get("exactHit"), "outcomeHit": h.get("outcomeHit"),
             "mae": h.get("mae"),
+        })
+
+    # v1.7.55：本地补全覆盖的竞彩比赛（含历史竞彩日如 27号）也纳入日期回溯索引，
+    # 让用户能在「日期回溯」区按竞彩日回看每天的预测，而不只 FD 已完赛比赛。
+    for _m in matches_out:
+        if _m.get("source") != "local-odds":
+            continue
+        _d = (_m.get("utcDate") or "")[:10]
+        if not _d:
+            continue
+        date_index.setdefault(_d, []).append({
+            "id": _m.get("id"), "league": _m.get("league"),
+            "home": _m.get("home"), "away": _m.get("away"),
+            "predH": _m.get("predH"), "predA": _m.get("predA"),
+            "actH": _m.get("actH"), "actA": _m.get("actA"),
+            "predOutcome": _m.get("predOutcome"), "actOutcome": None,
+            "exactHit": None, "outcomeHit": None, "mae": None,
         })
 
     result = {

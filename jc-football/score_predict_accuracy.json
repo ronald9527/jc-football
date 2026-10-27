@@ -1297,6 +1297,22 @@
    "mae": 0.5
   },
   {
+   "id": 564719,
+   "league": "西甲",
+   "home": "Deportivo Alavés",
+   "away": "Málaga CF",
+   "date": "2026-10-23",
+   "predH": 2,
+   "predA": 0,
+   "actH": 1,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
    "id": 576424,
    "league": "CLI",
    "home": "SE Palmeiras",
@@ -1359,6 +1375,22 @@
    "exactHit": true,
    "outcomeHit": true,
    "mae": 0.0
+  },
+  {
+   "id": 575375,
+   "league": "CL",
+   "home": "Sporting Clube de Portugal",
+   "away": "Sporting Clube de Portugal",
+   "date": "2026-10-21",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 3,
+   "predOutcome": "H",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
   },
   {
    "id": 561826,
@@ -1487,6 +1519,38 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 3.0
+  },
+  {
+   "id": 555044,
+   "league": "巴甲",
+   "home": "SC Corinthians Paulista",
+   "away": "EC Vitória",
+   "date": "2026-10-19",
+   "predH": 1,
+   "predA": 1,
+   "actH": 1,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": true,
+   "outcomeHit": true,
+   "mae": 0.0
+  },
+  {
+   "id": 567271,
+   "league": "葡超",
+   "home": "Sporting Clube de Braga",
+   "away": "Gil Vicente FC",
+   "date": "2026-10-19",
+   "predH": 0,
+   "predA": 0,
+   "actH": 1,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
   },
   {
    "id": 558569,
@@ -1873,6 +1937,22 @@
    "mae": 0.0
   },
   {
+   "id": 564714,
+   "league": "西甲",
+   "home": "Málaga CF",
+   "away": "Málaga CF",
+   "date": "2026-10-18",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 5,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 3.5
+  },
+  {
    "id": 561884,
    "league": "英冠",
    "home": "Millwall FC",
@@ -2223,6 +2303,86 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 1.0
+  },
+  {
+   "id": 565821,
+   "league": "德甲",
+   "home": "1. FC Union Berlin",
+   "away": "Borussia Dortmund",
+   "date": "2026-10-17",
+   "predH": 3,
+   "predA": 2,
+   "actH": 0,
+   "actA": 0,
+   "predOutcome": "H",
+   "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 2.5
+  },
+  {
+   "id": 565823,
+   "league": "德甲",
+   "home": "SV Werder Bremen",
+   "away": "SV Werder Bremen",
+   "date": "2026-10-17",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": true,
+   "outcomeHit": true,
+   "mae": 0.0
+  },
+  {
+   "id": 561890,
+   "league": "英冠",
+   "home": "Swansea City AFC",
+   "away": "West Ham United FC",
+   "date": "2026-10-17",
+   "predH": 2,
+   "predA": 0,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
+  },
+  {
+   "id": 561886,
+   "league": "英冠",
+   "home": "Birmingham City FC",
+   "away": "Birmingham City FC",
+   "date": "2026-10-17",
+   "predH": 1,
+   "predA": 1,
+   "actH": 3,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
+  },
+  {
+   "id": 561891,
+   "league": "英冠",
+   "home": "West Bromwich Albion FC",
+   "away": "West Bromwich Albion FC",
+   "date": "2026-10-17",
+   "predH": 0,
+   "predA": 0,
+   "actH": 3,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 2.5
   },
   {
    "id": 558872,
@@ -2684,6 +2844,22 @@
    "actA": 1,
    "predOutcome": "D",
    "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
+   "id": 575341,
+   "league": "CL",
+   "home": "Racing Club de Lens",
+   "away": "Sporting Clube de Portugal",
+   "date": "2026-10-13",
+   "predH": 2,
+   "predA": 2,
+   "actH": 0,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "A",
    "exactHit": false,
    "outcomeHit": false,
    "mae": 1.0
@@ -5537,6 +5713,22 @@
    "mae": 0.0
   },
   {
+   "id": 576249,
+   "league": "CLI",
+   "home": "SC Corinthians Paulista",
+   "away": "SC Corinthians Paulista",
+   "date": "2026-09-17",
+   "predH": 0,
+   "predA": 0,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 554941,
    "league": "巴甲",
    "home": "Botafogo FR",
@@ -6977,6 +7169,22 @@
    "mae": 1.0
   },
   {
+   "id": 575336,
+   "league": "CL",
+   "home": "PSV",
+   "away": "PSV",
+   "date": "2026-09-10",
+   "predH": 4,
+   "predA": 4,
+   "actH": 1,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 3.0
+  },
+  {
    "id": 561831,
    "league": "英冠",
    "home": "Charlton Athletic FC",
@@ -7102,6 +7310,22 @@
    "actOutcome": "H",
    "exactHit": false,
    "outcomeHit": true,
+   "mae": 1.0
+  },
+  {
+   "id": 575334,
+   "league": "CL",
+   "home": "Sporting Clube de Portugal",
+   "away": "Sporting Clube de Portugal",
+   "date": "2026-09-09",
+   "predH": 2,
+   "predA": 2,
+   "actH": 3,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
    "mae": 1.0
   },
   {
@@ -8721,6 +8945,22 @@
    "mae": 1.5
   },
   {
+   "id": 564470,
+   "league": "CLI",
+   "home": "SC Corinthians Paulista",
+   "away": "SC Corinthians Paulista",
+   "date": "2026-08-21",
+   "predH": 0,
+   "predA": 0,
+   "actH": 1,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 564468,
    "league": "CLI",
    "home": "CR Flamengo",
@@ -8911,6 +9151,22 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
+  },
+  {
+   "id": 564461,
+   "league": "CLI",
+   "home": "Mirassol FC",
+   "away": "Mirassol FC",
+   "date": "2026-08-13",
+   "predH": 0,
+   "predA": 0,
+   "actH": 1,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.0
   },
   {
    "id": 554957,
@@ -9681,6 +9937,22 @@
    "mae": 1.0
   },
   {
+   "id": 557142,
+   "league": "CLI",
+   "home": "SC Corinthians Paulista",
+   "away": "SC Corinthians Paulista",
+   "date": "2026-05-28",
+   "predH": 1,
+   "predA": 0,
+   "actH": 0,
+   "actA": 2,
+   "predOutcome": "H",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
+  },
+  {
    "id": 554901,
    "league": "巴甲",
    "home": "Coritiba FBC",
@@ -10161,6 +10433,22 @@
    "mae": 1.0
   },
   {
+   "id": 557163,
+   "league": "CLI",
+   "home": "Mirassol FC",
+   "away": "Mirassol FC",
+   "date": "2026-05-07",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
    "id": 554875,
    "league": "巴甲",
    "home": "SC Internacional",
@@ -10316,6 +10604,38 @@
    "actA": 1,
    "predOutcome": "H",
    "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
+   "id": 557136,
+   "league": "CLI",
+   "home": "SC Corinthians Paulista",
+   "away": "SC Corinthians Paulista",
+   "date": "2026-05-01",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
+   "id": 557161,
+   "league": "CLI",
+   "home": "Mirassol FC",
+   "away": "Mirassol FC",
+   "date": "2026-04-29",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
    "exactHit": false,
    "outcomeHit": false,
    "mae": 1.0
@@ -10641,6 +10961,22 @@
    "mae": 1.0
   },
   {
+   "id": 557134,
+   "league": "CLI",
+   "home": "SC Corinthians Paulista",
+   "away": "SC Corinthians Paulista",
+   "date": "2026-04-16",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
    "id": 554842,
    "league": "巴甲",
    "home": "SC Corinthians Paulista",
@@ -10799,6 +11135,22 @@
    "exactHit": true,
    "outcomeHit": true,
    "mae": 0.0
+  },
+  {
+   "id": 557156,
+   "league": "CLI",
+   "home": "Mirassol FC",
+   "away": "Mirassol FC",
+   "date": "2026-04-08",
+   "predH": 1,
+   "predA": 1,
+   "actH": 1,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
   },
   {
    "id": 554836,
@@ -11873,6 +12225,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-10-28 02:02:22",
+ "updatedAt": "2026-10-28 03:04:51",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
