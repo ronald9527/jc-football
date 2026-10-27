@@ -1321,9 +1321,14 @@ footer b{color:var(--sub)}
       <div class="sp-filters" id="bkHistDateBar"></div>
       <div id="bkHistList"></div>
     </div>
-    <!-- AI预测 pane（v1.7.44） -->
+    <!-- AI预测 pane（v1.7.44，v1.7.46 增加历史回溯） -->
     <div id="bkAiPane" style="display:none">
+      <div class="seg" id="bkAiViewSeg" style="margin:8px 0;">
+        <button data-bkai="today" class="on">今日预测</button>
+        <button data-bkai="hist">历史回溯</button>
+      </div>
       <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkAiSummary"></div>
+      <div class="sp-filters" id="bkAiDateBar" style="display:none"></div>
       <div id="bkAiList"></div>
     </div>
     <!-- 篮球串关 pane（v1.7.44） -->
@@ -1584,8 +1589,25 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.45";
+const VERSION = "v1.7.46";
 const CHANGELOG = [
+  {
+    version: "v1.7.46",
+    date: "2026-10-27",
+    title: "篮球 AI 预测 + 串关 历史回溯上线（对齐足球 score_predict_accuracy / parlay_history）",
+    features: [
+      "篮球 AI 预测回溯（新文件 basketball_ai_accuracy.json）：每场预测按四玩法记录方向+盘口，赛后用 basketball_history 赛果结算命中率；上线即对 64 场已赛档案回测播种，主页「AI预测」页新增「历史回溯」视图——日期选择 + 主推命中率 + 分玩法（胜负/让分/大小分/胜分差）命中率 + 逐日逐场命中",
+      "篮球串关结算修复（fetch_basketball_parlay.py）：根治 save_parlay_history 漏写 leg.id/kickoff 导致 check_basketball_parlay 永远按 id=None 查不到赛果、且按 kickoff=None 被门控跳过、全部记录恒为 pending 的 bug；现首位命中=已结算（1 中 / 2 错 / 3 待），并补 hitRate / recent7Rate 指标，串关页摘要可见历史命中率与近7日率",
+    ],
+    fixes: [
+      "篮球串关历史回填（_backfill_ids）：按 (竞彩编号,主,客,联赛) 唯一匹配档案，补回早期记录缺失的 leg.id/kickoff，旧 pending 记录可被正常结算，不再形同虚设",
+      "部署指纹与持久化补全（run_daily.sh / deploy_cf.py）：纳入 basketball_ai_accuracy.json，避免篮球回溯库冷启动被旧快照覆盖、且篮球更新不触发上线",
+    ],
+    notes: [
+      "篮球 AI 回溯当前胜分差(wnm)命中率极低（约 5%）属真实回测信号——六区间长盘本就极难精确命中，回溯的价值正是暴露这类弱点供参考，而非虚高",
+      "回溯库每日随 fetch_basketball_ai.py 自动累积：当日预测先记 pending，赛果回填后自动结算，无需人工干预",
+    ]
+  },
   {
     version: "v1.7.45",
     date: "2026-10-27",
@@ -2409,6 +2431,8 @@ const BUILT_BASKETBALL_HISTORY = __BASKETBALL_HISTORY_PLACEHOLDER__;
 const BUILT_BASKETBALL_AI = __BASKETBALL_AI_PLACEHOLDER__;
 const BUILT_BASKETBALL_PARLAY = __BASKETBALL_PARLAY_PLACEHOLDER__;
 const BUILT_BASKETBALL_STATS = __BASKETBALL_STATS_PLACEHOLDER__;
+// 篮球 AI 预测回溯库（v1.7.46，对齐足球 score_predict_accuracy）
+const BUILT_BASKETBALL_AI_ACC = __BASKETBALL_AI_ACC_PLACEHOLDER__;
 const ODDS_BSD = {};
 (BUILT_ODDS_BSD.matches || []).forEach(x => { if (x && x.num) ODDS_BSD[x.num] = x; });
 const FD = {};
@@ -2436,6 +2460,7 @@ const state = {
   basketball: JSON.parse(JSON.stringify(BUILT_BASKETBALL || {matches:[]})),
   basketballHist: JSON.parse(JSON.stringify(BUILT_BASKETBALL_HISTORY || {records:{}})),
   basketballAi: JSON.parse(JSON.stringify(BUILT_BASKETBALL_AI || {predictions:[]})),
+  basketballAiAcc: JSON.parse(JSON.stringify(BUILT_BASKETBALL_AI_ACC || {history:[]})),
   basketballParlay: JSON.parse(JSON.stringify(BUILT_BASKETBALL_PARLAY || {records:[]})),
   basketballStats: JSON.parse(JSON.stringify(BUILT_BASKETBALL_STATS || {})),
   bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
@@ -5471,6 +5496,14 @@ function bkAiCardHtml(p){
   return html + `</div>`;
 }
 function renderBkAi(){
+  // 视图切换（今日预测 / 历史回溯）
+  const seg = $("#bkAiViewSeg");
+  if(seg) seg.querySelectorAll("button[data-bkai]").forEach(b=>{
+    b.classList.toggle("on", (state.bkAiView || "today") === b.dataset.bkai);
+  });
+  const dateBar = $("#bkAiDateBar");
+  if(dateBar) dateBar.style.display = (state.bkAiView === "hist") ? "block" : "none";
+  if((state.bkAiView || "today") === "hist"){ renderBkAiHistory(); return; }
   const sumBox = $("#bkAiSummary");
   const listBox = $("#bkAiList");
   if(!listBox) return;
@@ -5482,6 +5515,85 @@ function renderBkAi(){
   }
   if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球预测数据（每 30 分钟自动更新）</div>`; return; }
   listBox.innerHTML = preds.map(p => bkAiCardHtml(p)).join("");
+}
+
+/* 篮球 AI 预测 · 历史回溯（v1.7.46，对齐足球 score_predict_accuracy 的日期回溯） */
+function renderBkAiHistory(){
+  const sumBox = $("#bkAiSummary");
+  const listBox = $("#bkAiList");
+  const dateBar = $("#bkAiDateBar");
+  if(!listBox) return;
+  const acc = state.basketballAiAcc || {history:[]};
+  const h = acc.history || [];
+  if(!h.length){
+    if(sumBox) sumBox.innerHTML = "历史回溯：暂无数据（每日运行后自动累积）";
+    listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球 AI 预测回溯数据</div>`;
+    return;
+  }
+  // 整体命中率（主推方向 + 分玩法）
+  let topN = 0, topH = 0;
+  const playH = {mnl:[0,0], hdc:[0,0], hilo:[0,0], wnm:[0,0]};
+  h.forEach(r=>{
+    if(r.topHit === true || r.topHit === false){ topN++; if(r.topHit) topH++; }
+    const pl = r.plays || {};
+    ["mnl","hdc","hilo","wnm"].forEach(k=>{
+      const x = pl[k];
+      if(x && (x.hit === true || x.hit === false)){ playH[k][0]++; if(x.hit) playH[k][1]++; }
+    });
+  });
+  const topRate = topN ? (topH / topN * 100).toFixed(1) : "-";
+  const pname = {mnl:"胜负", hdc:"让分", hilo:"大小分", wnm:"胜分差"};
+  let pstr = "";
+  ["mnl","hdc","hilo","wnm"].forEach(k=>{
+    const v = playH[k];
+    const rt = v[0] ? (v[1] / v[0] * 100).toFixed(1) : "-";
+    pstr += `<span style="margin-right:10px;">${pname[k]} <b style="color:var(--text)">${rt}%</b>`
+          + `<span style="color:var(--sub)">(${v[1]}/${v[0]})</span></span>`;
+  });
+  if(sumBox) sumBox.innerHTML = `篮球 AI 预测回溯：共 <b>${h.length}</b> 条记录 · 主推命中率 `
+    + `<b style="color:var(--accent)">${topRate}%</b>（${topH}/${topN}）`
+    + `<div style="margin-top:4px;">分玩法命中率：${pstr}</div>`;
+
+  // 日期选择栏
+  const dates = [...new Set(h.map(r=>r.date))].sort().reverse();
+  if(!state.bkAiDate || dates.indexOf(state.bkAiDate) < 0) state.bkAiDate = dates[0];
+  if(dateBar){
+    dateBar.innerHTML = dates.slice(0, 40).map(d=>{
+      const day = h.filter(r=>r.date === d);
+      const settled = day.filter(r=>r.topHit !== null);
+      const hh = settled.filter(r=>r.topHit === true).length;
+      const active = (d === state.bkAiDate);
+      return `<button class="sp-chip ${active ? "on":""}" data-dt="${d}">${d.slice(5)}`
+           + ` <span style="font-size:9px;">${hh}/${settled.length}✓</span></button>`;
+    }).join("");
+    dateBar.querySelectorAll(".sp-chip").forEach(b=>{
+      b.onclick = ()=>{ state.bkAiDate = b.dataset.dt; renderBkAi(); };
+    });
+  }
+  // 当日列表
+  const rows = h.filter(r=>r.date === state.bkAiDate);
+  rows.sort((a,b)=> (a.num||"").localeCompare(b.num||""));
+  let lh = `<div style="margin:8px 0;font-size:12px;color:var(--sub);">${state.bkAiDate} · 共 ${rows.length} 场预测</div>`;
+  rows.forEach(r=>{
+    const topCls = r.topHit === true ? "var(--good)" : r.topHit === false ? "var(--bad)" : "var(--warn)";
+    const topTxt = r.topHit === true ? "主推✓" : r.topHit === false ? "主推✗" : "待赛";
+    let plays = "";
+    ["mnl","hdc","hilo","wnm"].forEach(k=>{
+      const x = (r.plays || {})[k];
+      if(!x) return;
+      const cls = x.hit === true ? "var(--good)" : x.hit === false ? "var(--bad)" : "var(--warn)";
+      const txt = x.hit === true ? "✓" : x.hit === false ? "✗" : "待";
+      plays += `<span style="margin-right:8px;font-size:11px;">${pname[k]}<b style="color:${cls}">${x.dir}${txt}</b></span>`;
+    });
+    lh += `<div style="padding:8px 10px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+        <span style="font-size:12.5px;font-weight:600;">${r.num||""} ${r.home||""} vs ${r.away||""}</span>
+        <span style="font-size:11px;font-weight:600;color:${topCls};">主推 ${pname[r.topPlay]||r.topPlay} ${r.topDir} · ${topTxt}</span>
+      </div>
+      <div style="margin-top:4px;font-size:11px;color:var(--sub);">${plays}${r.score?` · 赛果 ${r.score}`:""}</div>
+    </div>`;
+  });
+  listBox.innerHTML = lh;
 }
 
 /* ===== 篮球串关（v1.7.44） ===== */
@@ -5515,6 +5627,7 @@ function renderBkParlay(){
   const recs = pl.records || [];
   if(sumBox){
     sumBox.innerHTML = `篮球串关历史战绩：共 <b>${pl.total || 0}</b> 组 · 命中 ${pl.hit || 0} · 错误 ${pl.miss || 0} · 待开奖 ${pl.pending || 0}`
+      + ` · 历史命中率 <b>${pl.hitRate != null ? pl.hitRate : 0}%</b> · 近7日 <b>${pl.recent7Rate != null ? pl.recent7Rate : 0}%</b>`
       + ` · 三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，EV 为负的档位长期必亏，谨慎跟单`;
   }
   if(!recs.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
@@ -5890,6 +6003,14 @@ document.querySelectorAll("[data-expert-view]").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     state.expertView = btn.dataset.expertView;
     renderExpert();
+  });
+});
+
+/* 篮球 AI 预测 今日/历史回溯 切换 */
+document.querySelectorAll("[data-bkai]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    state.bkAiView = btn.dataset.bkai;
+    renderBkAi();
   });
 });
 

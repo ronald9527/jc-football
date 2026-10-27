@@ -268,9 +268,11 @@ def save_parlay_history(safe, today):
         legs = []
         for c in t["legs"]:
             legs.append({
-                "num": c["num"], "league": c["league"], "home": c["home"], "away": c["away"],
+                "id": c.get("id"), "num": c["num"], "league": c["league"],
+                "home": c["home"], "away": c["away"],
                 "play": c["play"], "playKey": c["playKey"], "dir": c["dir"],
                 "label": c["label"], "playDesc": c["playDesc"], "odds": c["odds"],
+                "kickoff": c.get("kickoff"),
                 "confidence": c["confidence"], "sameOddsHit": c.get("sameOddsHit"),
                 "sameOddsN": c.get("sameOddsN"), "pTrue": c.get("pTrue"),
                 "canon": c.get("canon"),
@@ -296,12 +298,43 @@ def _recalc(hist, records):
     hit = sum(1 for r in records if r.get("result") == "hit")
     miss = sum(1 for r in records if r.get("result") == "miss")
     pend = sum(1 for r in records if r.get("result") == "pending")
+    judged = hit + miss
     hist["records"] = records
     hist["total"] = len(records)
     hist["hit"] = hit
     hist["miss"] = miss
     hist["pending"] = pend
+    hist["hitRate"] = round(hit / judged * 100, 1) if judged else 0
+    # 近 7 日（按 date）命中率
+    dates = sorted({r.get("date") for r in records if r.get("date")}, reverse=True)[:7]
+    recent = [r for r in records if r.get("date") in dates and r.get("result") in ("hit", "miss")]
+    rj = len(recent)
+    rh = sum(1 for r in recent if r.get("result") == "hit")
+    hist["recent7Rate"] = round(rh / rj * 100, 1) if rj else 0
     hist["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _backfill_ids(hist, bk_records):
+    """回填历史记录 leg 缺失的 id/kickoff（早期版本 save_parlay_history 漏写，
+    导致 check_basketball_parlay 永远按 id=None 查不到赛果、也按 kickoff=None 被门控跳过）。
+    按 (竞彩编号, 主, 客, 联赛) 唯一匹配 basketball_history 档案。"""
+    by_key = {}
+    for rid, r in bk_records.items():
+        key = (r.get("num"), r.get("home"), r.get("away"), r.get("league"))
+        by_key.setdefault(key, rid)
+    changed = 0
+    for rec in hist.get("records", []):
+        for leg in rec.get("legs", []):
+            if leg.get("id"):
+                continue
+            key = (leg.get("num"), leg.get("home"), leg.get("away"), leg.get("league"))
+            rid = by_key.get(key)
+            if rid and rid in bk_records:
+                src = bk_records[rid]
+                leg["id"] = rid
+                leg["kickoff"] = src.get("kickoff")
+                changed += 1
+    return changed
 
 
 def check_basketball_parlay():
@@ -310,13 +343,16 @@ def check_basketball_parlay():
     records = hist.get("records") or []
     bkh = _load(BKH_PATH, {"records": {}})
     bk_records = bkh.get("records") or {}
+    # 先回填早期记录缺失的 id/kickoff，否则永远无法结算（v1.7.46 修复）
+    _backfill_ids(hist, bk_records)
     now = datetime.now()
     changed = 0
     for r in records:
         if r.get("result") != "pending":
             continue
-        kd = _kickoff_dt(r.get("kickoff"))
-        # 用首腿 kickoff 判断；全部腿同属当日比赛，取第一条
+        legs = r.get("legs") or []
+        kd = _kickoff_dt(legs[0].get("kickoff")) if legs else None
+        # 用首腿 kickoff 判断（记录本身无顶层 kickoff，早期版本因此恒被跳过）
         if kd is None or kd > now:
             continue
         # 取该记录任一腿的比赛 score（同场同 id）

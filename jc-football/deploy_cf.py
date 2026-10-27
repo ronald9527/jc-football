@@ -340,8 +340,9 @@ def main():
                       # basketball_parlay_history.json（串关落盘）、basketball_stats.json
                       # （联赛历史统计）全部由 fetch_basketball_ai.py / fetch_basketball_parlay.py
                       # 生成，需上 Pages 供 ensure_history 冷启动拉回，否则沙箱重置会丢累积。
+                      # v1.7.46 新增 basketball_ai_accuracy.json（AI 预测回溯库）。
                       "basketball_ai.json", "basketball_parlay_history.json",
-                      "basketball_stats.json",
+                      "basketball_stats.json", "basketball_ai_accuracy.json",
                       # 比分预测（v1.7.39）：score_predict.json 是页面「比分预测」
                       # Tab 的唯一数据源（只经 index.html 注入、此前无云端副本），
                       # 2026-10-21 任务沙箱丢 Key 后无密钥路径把本地文件抹成空、
@@ -388,6 +389,7 @@ def main():
         # 自举包用旧快照覆盖线上累积的篮球赛果与预测档案（此前漏保护，是真实线上 bug）。
         "basketball.json", "basketball_history.json", "basketball_ai.json",
         "basketball_parlay_history.json", "basketball_stats.json",
+        "basketball_ai_accuracy.json",
     }
     # .last_deploy.* 是部署节流状态（时间戳/SHA），跨环境共享会让定时沙箱
     # 误判「刚部署过」而跳过部署——必须排除。

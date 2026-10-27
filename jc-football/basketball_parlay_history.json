@@ -22,7 +22,12 @@
      "sameOddsHit": null,
      "sameOddsN": 1,
      "pTrue": 53.1,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042286",
+     "kickoff": "2026-10-27 08:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "102:110"
     },
     {
      "num": "周一310",
@@ -39,13 +44,18 @@
      "sameOddsHit": 37.5,
      "sameOddsN": 8,
      "pTrue": 51.5,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042289",
+     "kickoff": "2026-10-27 09:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "102:110"
     }
    ],
    "recommended": false,
    "ev": -0.2531,
    "realEv": -0.2531,
-   "result": "pending",
+   "result": "hit",
    "engineVer": "v1.7.44",
    "savedAt": "2026-10-26 19:52:50",
    "snapshot": {
@@ -100,7 +110,8 @@
     "realEv": -0.2531,
     "recommended": false,
     "score": 28.287
-   }
+   },
+   "checkedAt": "2026-10-27 13:30:41"
   },
   {
    "date": "2026-10-26",
@@ -124,7 +135,12 @@
      "sameOddsHit": null,
      "sameOddsN": 3,
      "pTrue": 51.5,
-     "canon": 0.56
+     "canon": 0.56,
+     "id": "2042280",
+     "kickoff": "2026-10-27 03:00",
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "88:98"
     },
     {
      "num": "周一307",
@@ -141,7 +157,12 @@
      "sameOddsHit": null,
      "sameOddsN": 1,
      "pTrue": 53.1,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042286",
+     "kickoff": "2026-10-27 08:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "88:98"
     },
     {
      "num": "周一310",
@@ -158,13 +179,18 @@
      "sameOddsHit": 37.5,
      "sameOddsN": 8,
      "pTrue": 51.5,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042289",
+     "kickoff": "2026-10-27 09:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "88:98"
     }
    ],
    "recommended": false,
    "ev": -0.3545,
    "realEv": -0.3545,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.44",
    "savedAt": "2026-10-26 19:52:50",
    "snapshot": {
@@ -238,7 +264,8 @@
     "realEv": -0.3545,
     "recommended": false,
     "score": 14.814
-   }
+   },
+   "checkedAt": "2026-10-27 13:30:41"
   },
   {
    "date": "2026-10-26",
@@ -262,7 +289,12 @@
      "sameOddsHit": null,
      "sameOddsN": 3,
      "pTrue": 51.5,
-     "canon": 0.56
+     "canon": 0.56,
+     "id": "2042280",
+     "kickoff": "2026-10-27 03:00",
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "88:98"
     },
     {
      "num": "周一307",
@@ -279,7 +311,12 @@
      "sameOddsHit": null,
      "sameOddsN": 1,
      "pTrue": 53.1,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042286",
+     "kickoff": "2026-10-27 08:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "88:98"
     },
     {
      "num": "周一308",
@@ -296,7 +333,12 @@
      "sameOddsHit": 62.5,
      "sameOddsN": 8,
      "pTrue": 50.0,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042287",
+     "kickoff": "2026-10-27 08:00",
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "88:98"
     },
     {
      "num": "周一310",
@@ -313,13 +355,18 @@
      "sameOddsHit": 37.5,
      "sameOddsN": 8,
      "pTrue": 51.5,
-     "canon": 0.536
+     "canon": 0.536,
+     "id": "2042289",
+     "kickoff": "2026-10-27 09:00",
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "88:98"
     }
    ],
    "recommended": false,
    "ev": -0.4421,
    "realEv": -0.4421,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.44",
    "savedAt": "2026-10-26 19:52:50",
    "snapshot": {
@@ -412,7 +459,8 @@
     "realEv": -0.4421,
     "recommended": false,
     "score": 7.53
-   }
+   },
+   "checkedAt": "2026-10-27 13:30:41"
   },
   {
    "date": "2026-10-27",
@@ -422,6 +470,7 @@
    "avgConfidence": 58.3,
    "legs": [
     {
+     "id": "2042332",
      "num": "周二308",
      "league": "美职篮",
      "home": "圣安东尼奥马刺",
@@ -432,6 +481,7 @@
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
      "sameOddsHit": null,
      "sameOddsN": 0,
@@ -439,6 +489,7 @@
      "canon": 0.572
     },
     {
+     "id": "2042333",
      "num": "周二309",
      "league": "美职篮",
      "home": "洛杉矶湖人",
@@ -449,6 +500,7 @@
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
      "sameOddsHit": 25.0,
      "sameOddsN": 8,
@@ -461,7 +513,7 @@
    "realEv": -0.2531,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 12:33:24",
+   "savedAt": "2026-10-27 13:30:41",
    "snapshot": {
     "type": "稳健2串1",
     "tier": "bk2",
@@ -524,6 +576,7 @@
    "avgConfidence": 57.2,
    "legs": [
     {
+     "id": "2042326",
      "num": "周二302",
      "league": "欧篮联",
      "home": "拜仁慕尼黑",
@@ -534,6 +587,7 @@
      "label": "大分",
      "playDesc": "总分线(+176.5)",
      "odds": 1.66,
+     "kickoff": "2026-10-28 03:00",
      "confidence": 55.0,
      "sameOddsHit": null,
      "sameOddsN": 1,
@@ -541,6 +595,7 @@
      "canon": 0.536
     },
     {
+     "id": "2042332",
      "num": "周二308",
      "league": "美职篮",
      "home": "圣安东尼奥马刺",
@@ -551,6 +606,7 @@
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
      "sameOddsHit": null,
      "sameOddsN": 0,
@@ -558,6 +614,7 @@
      "canon": 0.572
     },
     {
+     "id": "2042333",
      "num": "周二309",
      "league": "美职篮",
      "home": "洛杉矶湖人",
@@ -568,6 +625,7 @@
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
      "sameOddsHit": 25.0,
      "sameOddsN": 8,
@@ -580,7 +638,7 @@
    "realEv": -0.3544,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 12:33:24",
+   "savedAt": "2026-10-27 13:30:41",
    "snapshot": {
     "type": "均衡3串1",
     "tier": "bk3",
@@ -662,6 +720,7 @@
    "avgConfidence": 56.6,
    "legs": [
     {
+     "id": "2042326",
      "num": "周二302",
      "league": "欧篮联",
      "home": "拜仁慕尼黑",
@@ -672,6 +731,7 @@
      "label": "大分",
      "playDesc": "总分线(+176.5)",
      "odds": 1.66,
+     "kickoff": "2026-10-28 03:00",
      "confidence": 55.0,
      "sameOddsHit": null,
      "sameOddsN": 1,
@@ -679,6 +739,7 @@
      "canon": 0.536
     },
     {
+     "id": "2042328",
      "num": "周二304",
      "league": "欧篮联",
      "home": "巴伦西亚",
@@ -689,6 +750,7 @@
      "label": "大分",
      "playDesc": "总分线(+173.5)",
      "odds": 1.66,
+     "kickoff": "2026-10-28 03:30",
      "confidence": 55.0,
      "sameOddsHit": null,
      "sameOddsN": 1,
@@ -696,6 +758,7 @@
      "canon": 0.536
     },
     {
+     "id": "2042332",
      "num": "周二308",
      "league": "美职篮",
      "home": "圣安东尼奥马刺",
@@ -706,6 +769,7 @@
      "label": "让分客胜",
      "playDesc": "让分(-17.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 08:00",
      "confidence": 58.6,
      "sameOddsHit": null,
      "sameOddsN": 0,
@@ -713,6 +777,7 @@
      "canon": 0.572
     },
     {
+     "id": "2042333",
      "num": "周二309",
      "league": "美职篮",
      "home": "洛杉矶湖人",
@@ -723,6 +788,7 @@
      "label": "让分主胜",
      "playDesc": "让分(-3.5)",
      "odds": 1.65,
+     "kickoff": "2026-10-28 11:00",
      "confidence": 58.0,
      "sameOddsHit": 25.0,
      "sameOddsN": 8,
@@ -735,7 +801,7 @@
    "realEv": -0.442,
    "result": "pending",
    "engineVer": "v1.7.44",
-   "savedAt": "2026-10-27 12:33:24",
+   "savedAt": "2026-10-27 13:30:41",
    "snapshot": {
     "type": "精锐4串1",
     "tier": "bk4",
@@ -830,8 +896,10 @@
   }
  ],
  "total": 6,
- "hit": 0,
- "miss": 0,
- "pending": 6,
- "updatedAt": "2026-10-27 12:33:24"
+ "hit": 1,
+ "miss": 2,
+ "pending": 3,
+ "updatedAt": "2026-10-27 13:30:41",
+ "hitRate": 33.3,
+ "recent7Rate": 33.3
 }

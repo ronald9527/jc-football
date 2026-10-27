@@ -435,6 +435,52 @@ def check_basketball_ai():
                 add("WARN", "隔离", "basketball_stats.json 缺 leagues 统计")
 
 
+def check_basketball_backtrack():
+    """篮球 AI 预测 / 串关 历史回溯（v1.7.46 新增）完整性。
+
+    让「篮球回溯库缺失 / 串关结算卡死（永远全 pending）」显形：
+    - basketball_ai_accuracy.json 必须存在且 history 非空（回溯库已累积）
+    - basketball_parlay_history.json 若存在「本应结算却仍 pending」的记录
+      （腿 id 命中了有赛果的档案）则判 ERROR——v1.7.46 前 save_parlay_history
+      漏写 leg.id/kickoff，结算恒失败 → 全 pending，回溯形同虚设。
+    """
+    print("· 检查 8.5 篮球 AI/串关历史回溯（v1.7.46）")
+    # 1) AI 预测回溯库
+    acc = load("basketball_ai_accuracy.json")
+    if acc is None:
+        add("WARN", "隔离", "basketball_ai_accuracy.json 缺失——篮球 AI 预测回溯未生成"
+            "（降级：专区无历史回溯）")
+    else:
+        h = acc.get("history") if isinstance(acc, dict) else None
+        if not isinstance(h, list) or not h:
+            add("WARN", "隔离", "篮球 AI 预测回溯库为空——尚未累积任何回溯记录")
+        else:
+            settled = [r for r in h if r.get("topHit") in (True, False)]
+            print("  篮球 AI 预测回溯库：%d 条（已结算 %d 条）" % (len(h), len(settled)))
+
+    # 2) 串关结算不应卡死
+    pf = load("basketball_parlay_history.json")
+    bkh = load("basketball_history.json", {})
+    bkrec = (bkh or {}).get("records", {}) if isinstance(bkh, dict) else {}
+    if isinstance(pf, dict) and isinstance(pf.get("records"), list):
+        recs = pf["records"]
+        stuck = 0
+        for r in recs:
+            if r.get("result") != "pending":
+                continue
+            for leg in (r.get("legs") or []):
+                rid = leg.get("id")
+                if rid and isinstance(bkrec.get(rid, {}).get("score"), list):
+                    stuck += 1
+                    break
+        if stuck:
+            add("ERROR", "隔离", "篮球串关有 %d 组本应已结算却仍 pending"
+                "（结算逻辑故障，回溯卡死）" % stuck)
+        else:
+            print("  篮球串关结算：无卡死（hit %d / miss %d / pending %d）"
+                  % (pf.get("hit", 0), pf.get("miss", 0), pf.get("pending", 0)))
+
+
 def check_scorepred_freshness(sp):
     """比分预测数据新鲜度：配置丢失/停更的可见性兜底（v1.7.39）。
 
@@ -522,10 +568,10 @@ def check_pipeline_safeguards():
     else:
         add("ERROR", "隔离", "run_daily.sh 缺少「陈旧豁免强制重抓」护栏（v1.7.46 根治项），"
             "篮球/比分预测将再次面临停更风险")
-    # (2) 部署指纹含 5 个篮球文件
+    # (2) 部署指纹含 5 个篮球文件（+ v1.7.46 篮球 AI 回溯库）
     missing = [f for f in ("basketball.json", "basketball_history.json",
                             "basketball_ai.json", "basketball_stats.json",
-                            "basketball_parlay_history.json")
+                            "basketball_parlay_history.json", "basketball_ai_accuracy.json")
                if ('filehash("%s")' % f) not in src]
     if not missing:
         print("  部署指纹含 5 个篮球文件：是")
@@ -551,6 +597,7 @@ def main():
     check_page()
     check_isolation()
     check_basketball_ai()
+    check_basketball_backtrack()
     check_scorepred_freshness(load("score_predict.json"))
     check_pipeline_safeguards()
 

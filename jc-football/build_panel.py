@@ -199,6 +199,16 @@ def main():
         except Exception:
             pass
     js_bkst = json.dumps(bkst_data, ensure_ascii=False).replace("</", "<\\/")
+    # 篮球 AI 预测回溯库（v1.7.46）
+    bkaiacc_data = {"updatedAt": "", "history": []}
+    bkaiaccp = os.path.join(HERE, "basketball_ai_accuracy.json")
+    if os.path.exists(bkaiaccp):
+        try:
+            with open(bkaiaccp, encoding="utf-8") as f:
+                bkaiacc_data = json.load(f)
+        except Exception:
+            pass
+    js_bkaiacc = json.dumps(bkaiacc_data, ensure_ascii=False).replace("</", "<\\/")
     # SP_TEAM_ZH：英文队名 → 竞彩中文名，由 team_map.py 单一真相源生成
     # （原为 template.html 内手写硬编码字典，key 格式与 WhoScored 实际输出
     #  不一致导致大量汉化失败，v1.7.22 改为自动注入，杜绝双字典漂移）
@@ -230,7 +240,8 @@ def main():
               .replace("__BASKETBALL_HISTORY_PLACEHOLDER__", js_bkh)
               .replace("__BASKETBALL_AI_PLACEHOLDER__", js_bkai)
               .replace("__BASKETBALL_PARLAY_PLACEHOLDER__", js_bkpl)
-              .replace("__BASKETBALL_STATS_PLACEHOLDER__", js_bkst))
+              .replace("__BASKETBALL_STATS_PLACEHOLDER__", js_bkst)
+              .replace("__BASKETBALL_AI_ACC_PLACEHOLDER__", js_bkaiacc))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
                "__BD_DATA_PLACEHOLDER__", "__BD_HISTORY_PLACEHOLDER__", "__HKMO_HISTORY_PLACEHOLDER__",
@@ -240,7 +251,8 @@ def main():
                "__SCORE_PREDICT_PLACEHOLDER__", "__SP_TEAM_ZH_PLACEHOLDER__",
                "__WHOSCORED_PLACEHOLDER__", "__BASKETBALL_PLACEHOLDER__",
                "__BASKETBALL_HISTORY_PLACEHOLDER__", "__BASKETBALL_AI_PLACEHOLDER__",
-               "__BASKETBALL_PARLAY_PLACEHOLDER__", "__BASKETBALL_STATS_PLACEHOLDER__"):
+               "__BASKETBALL_PARLAY_PLACEHOLDER__", "__BASKETBALL_STATS_PLACEHOLDER__",
+               "__BASKETBALL_AI_ACC_PLACEHOLDER__"):
         assert ph not in out, f"占位符未替换: {ph}"
     out_path = os.path.join(HERE, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:

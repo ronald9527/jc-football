@@ -292,6 +292,7 @@ parts += filehash("basketball_history.json")
 parts += filehash("basketball_ai.json")
 parts += filehash("basketball_stats.json")
 parts += filehash("basketball_parlay_history.json")
+parts += filehash("basketball_ai_accuracy.json")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")

@@ -28,6 +28,9 @@ BK_PATH = os.path.join(HERE, "basketball.json")
 BKH_PATH = os.path.join(HERE, "basketball_history.json")
 AI_PATH = os.path.join(HERE, "basketball_ai.json")
 STATS_PATH = os.path.join(HERE, "basketball_stats.json")
+# 预测回溯库（对齐足球 score_predict_accuracy.json）：记录每日四玩法预测方向，
+# 赛后用 basketball_history 赛果结算命中率（v1.7.46 新增）。
+ACC_PATH = os.path.join(HERE, "basketball_ai_accuracy.json")
 
 # 市场共识参数（对标 fetch_daily._leg_prob：竞彩综合返奖率经验值；篮球首版沿用，待实测校准）
 PAYBACK = 0.886
@@ -240,6 +243,7 @@ def _predict_play(play_key, play, records):
         "dir": best["dir"], "odds": best["odds"], "confidence": best["confidence"],
         "sameOddsHit": best["sameOddsHit"], "sameOddsN": best["sameOddsN"],
         "pTrue": best["pTrue"], "canon": round(best["canon"], 3),
+        "goalLine": play.get("goalLine"),
         "alts": alts,
     }
 
@@ -417,6 +421,122 @@ def _roi_accum_wnm(roi, wnm, actual_lx):
 
 
 # ----------------------------------------------------------------------------
+# 预测回溯（历史命中率，对齐足球 score_predict_accuracy）
+# ----------------------------------------------------------------------------
+def _play_hit(play_key, direction, goal_line, score):
+    """单玩法预测方向 vs 实际赛果：返回命中布尔；走水/无法判定返回 None。
+
+    score = [home, away]；goal_line 为预测时的盘口（hdc/hilo 需要）。
+    """
+    home, away = score[0], score[1]
+    try:
+        gl = float(goal_line) if goal_line not in (None, "") else None
+    except (TypeError, ValueError):
+        gl = None
+    if play_key == "mnl":
+        actual = "h" if home > away else "a"
+        return actual == direction
+    if play_key == "hdc":
+        if gl is None:
+            return None
+        adj = home + gl
+        if adj > away:
+            actual = "h"
+        elif adj < away:
+            actual = "a"
+        else:
+            return None  # 走水不计
+        return actual == direction
+    if play_key == "hilo":
+        if gl is None:
+            return None
+        actual = "h" if (home + away) > gl else "l"
+        return actual == direction
+    if play_key == "wnm":
+        diff = home - away
+        if diff <= 0:
+            return False  # 主负，所有胜分差区间不中
+        lx = next((lx for lx, lo, hi in WNM_BOUNDS if lo <= diff <= hi), None)
+        return (lx == direction) if lx else False
+    return None
+
+
+def record_bk_accuracy(preds, date):
+    """把当日预测写入 basketball_ai_accuracy.json（按 date+id 去重，避免每日重跑重复落盘）。"""
+    acc = _load(ACC_PATH, {"history": []})
+    hist = acc.get("history") or []
+    seen = {(h.get("date"), h.get("id")) for h in hist}
+    added = 0
+    for p in preds:
+        key = (date, p.get("id"))
+        if key in seen:
+            continue
+        plays = {}
+        for pk, pl in (p.get("plays") or {}).items():
+            plays[pk] = {
+                "dir": pl.get("dir"),
+                "conf": pl.get("confidence"),
+                "gl": pl.get("goalLine"),
+                "hit": None,
+            }
+        tp = p.get("topPlay")
+        tpl = (p.get("plays") or {}).get(tp, {})
+        hist.append({
+            "date": date, "id": p.get("id"), "num": p.get("num"),
+            "league": p.get("league"), "home": p.get("home"), "away": p.get("away"),
+            "topPlay": tp, "topDir": tpl.get("dir"), "topConf": tpl.get("confidence"),
+            "plays": plays, "topHit": None, "score": None,
+        })
+        seen.add(key)
+        added += 1
+    acc["history"] = hist
+    acc["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    _save(ACC_PATH, acc)
+    return added
+
+
+def settle_bk_accuracy(bk_records):
+    """用赛后档案结算回溯记录（回填每个玩法的 hit / topHit / score）。"""
+    acc = _load(ACC_PATH, {"history": []})
+    hist = acc.get("history") or []
+    changed = 0
+    for h in hist:
+        if h.get("score") is not None:
+            continue
+        rec = bk_records.get(h.get("id"))
+        if not rec or not isinstance(rec.get("score"), list) or len(rec["score"]) != 2:
+            continue
+        score = rec["score"]
+        h["score"] = "%d:%d" % (score[0], score[1])
+        for pk, pl in (h.get("plays") or {}).items():
+            pl["hit"] = _play_hit(pk, pl.get("dir"), pl.get("gl"), score)
+        tp = h.get("topPlay")
+        tpl = (h.get("plays") or {}).get(tp)
+        h["topHit"] = tpl.get("hit") if tpl else None
+        changed += 1
+    acc["history"] = hist
+    acc["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    _save(ACC_PATH, acc)
+    return changed
+
+
+def seed_bk_accuracy(bk_records):
+    """回测播种回溯库：对每场已赛档案按当前模型跑预测并结算（档案本身含当时赔率+赛果）。
+    仅处理 date 早于今日的真实历史，按 (date,id) 去重、幂等；让回溯库上线即有覆盖，
+    对齐项目既有 backfill 惯例（backfill_*.py / ensure_history.py）。"""
+    today = datetime.now().strftime("%Y-%m-%d")
+    matches = [r for r in bk_records.values()
+               if isinstance(r.get("score"), list) and len(r["score"]) == 2
+               and (r.get("date") or "") < today]
+    preds = gen_bk_prediction(matches, bk_records)
+    added = 0
+    for p in preds:
+        d = (bk_records.get(p.get("id")) or {}).get("date") or p.get("date")
+        added += record_bk_accuracy([p], d)
+    return added
+
+
+# ----------------------------------------------------------------------------
 # 主流程
 # ----------------------------------------------------------------------------
 def main():
@@ -437,8 +557,17 @@ def main():
     stats["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     _save(STATS_PATH, stats)
 
+    # 预测回溯：记录当日预测 + 回测播种历史 + 用赛果档案结算（v1.7.46）
+    today = datetime.now().strftime("%Y-%m-%d")
+    added = record_bk_accuracy(preds, today)
+    seeded = seed_bk_accuracy(records)
+    settled = settle_bk_accuracy(records)
+
     print("[篮球AI] 预测 %d 场（四玩法）/ 历史统计基于 %d 条档案（%d 有赛果）"
           % (len(preds), len(records), sum(1 for r in records.values() if r.get("score"))))
+    print("[篮球AI回溯] 当日新增 %d / 历史播种 %d / 结算 %d（累计 %d 条）"
+          % (added, seeded, settled,
+             len((_load(ACC_PATH, {"history": []})).get("history") or [])))
     return 0
 
 
