@@ -1331,9 +1331,10 @@ footer b{color:var(--sub)}
       <div class="sp-filters" id="bkAiDateBar" style="display:none"></div>
       <div id="bkAiList"></div>
     </div>
-    <!-- 篮球串关 pane（v1.7.44） -->
+    <!-- 篮球串关 pane（v1.7.44，v1.7.47 增加日期按钮筛选） -->
     <div id="bkParlayPane" style="display:none">
       <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkParlaySummary"></div>
+      <div class="sp-filters" id="bkParlayDateBar" style="margin:6px 0"></div>
       <div id="bkParlayList"></div>
     </div>
     <!-- 历史统计 pane（v1.7.44） -->
@@ -1589,8 +1590,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.46";
+const VERSION = "v1.7.47";
 const CHANGELOG = [
+  {
+    version: "v1.7.47",
+    date: "2026-10-27",
+    title: "篮球串关历史回溯增加日期按钮筛选 + 两块回溯视图整洁化",
+    features: [
+      "篮球串关历史回溯（bkParlayPane）：新增日期按钮栏——「全部」+ 逐日按钮，每个按钮角标显示当日命中/总数（待开奖日显示 命中/总组数），点击即筛选该日串关组，浏览历史更直观",
+      "篮球 AI 预测历史回溯（bkAiPane→历史回溯）与串关回溯统一采用 .sp-chip 日期按钮风格，视图更整洁干净；AI 回溯日期按钮角标显示当日主推命中/已结算数",
+    ],
+    fixes: [
+      "上一轮 v1.7.46 功能已落地但未实际部署到 Cloudflare Pages（dist/index.html 缺失），本版重新构建并部署，线上页面与代码一致",
+    ],
+    notes: [
+      "篮球串关与 AI 预测回溯均按北京日期回看，串关默认「全部」展示最新在前，AI 回溯默认展示最新有赛果的一天",
+    ]
+  },
   {
     version: "v1.7.46",
     date: "2026-10-27",
@@ -5622,6 +5638,7 @@ function bkParlayCardHtml(r){
 function renderBkParlay(){
   const sumBox = $("#bkParlaySummary");
   const listBox = $("#bkParlayList");
+  const dateBar = $("#bkParlayDateBar");
   if(!listBox) return;
   const pl = state.basketballParlay || {};
   const recs = pl.records || [];
@@ -5630,8 +5647,31 @@ function renderBkParlay(){
       + ` · 历史命中率 <b>${pl.hitRate != null ? pl.hitRate : 0}%</b> · 近7日 <b>${pl.recent7Rate != null ? pl.recent7Rate : 0}%</b>`
       + ` · 三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，EV 为负的档位长期必亏，谨慎跟单`;
   }
-  if(!recs.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
-  const sorted = recs.slice().sort((a, b) =>
+  if(!recs.length){ if(dateBar) dateBar.innerHTML = ""; listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
+
+  // 日期栏：全部 + 逐日按钮，角标显示当日命中/总数（待开奖日仅显示命中/总数）
+  const dates = [...new Set(recs.map(r=>r.date))].sort().reverse();
+  if(!state.bkParlayDate || (state.bkParlayDate !== "all" && dates.indexOf(state.bkParlayDate) < 0)) state.bkParlayDate = "all";
+  if(dateBar){
+    let bar = `<button class="sp-chip ${state.bkParlayDate==="all"?"on":""}" data-pdt="all">全部</button>`;
+    bar += dates.map(d=>{
+      const day = recs.filter(r=>r.date===d);
+      const hit = day.filter(r=>r.result==="hit").length;
+      const miss = day.filter(r=>r.result==="miss").length;
+      const pend = day.filter(r=>r.result==="pending").length;
+      const badge = pend ? `${hit}/${day.length}` : `${hit}-${miss}`;
+      return `<button class="sp-chip ${state.bkParlayDate===d?"on":""}" data-pdt="${d}">${d.slice(5).replace("-","/")} `
+           + `<span style="font-size:9px;opacity:.85">${badge}</span></button>`;
+    }).join("");
+    dateBar.innerHTML = bar;
+    dateBar.querySelectorAll(".sp-chip").forEach(b=>{
+      b.onclick = ()=>{ state.bkParlayDate = b.dataset.pdt; renderBkParlay(); };
+    });
+  }
+
+  // 列表：当前选中日期（或全部）
+  const shown = (state.bkParlayDate === "all") ? recs : recs.filter(r=>r.date===state.bkParlayDate);
+  const sorted = shown.slice().sort((a, b) =>
     (b.date || "").localeCompare(a.date || "") || (b.savedAt || "").localeCompare(a.savedAt || ""));
   listBox.innerHTML = sorted.map(r => bkParlayCardHtml(r)).join("");
 }
