@@ -127,7 +127,25 @@ json.dump({"api_key": os.environ["FD_API_KEY"], "enabled": True},
 PY
     log "   ✅ 已从环境变量 FD_API_KEY 恢复 fd_config.json（密钥自愈，比分预测可正常更新）"
   else
-    log "   ⚠️ 警告：fd_config.json 缺密钥且无 FD_API_KEY 环境变量，『比分预测』将暂停更新（沿用旧数据）"
+    _cf_key=$(python3 - <<'PY' 2>/dev/null
+import json
+try:
+    print(json.load(open("cf_config.json")).get("fd_api_key", "") or "")
+except Exception:
+    print("")
+PY
+)
+    if [ -n "$_cf_key" ]; then
+      python3 - <<PY
+import json
+k = json.load(open("cf_config.json")).get("fd_api_key", "")
+json.dump({"api_key": k, "enabled": True},
+          open("fd_config.json", "w"), ensure_ascii=False, indent=2)
+PY
+      log "   ✅ 已从 cf_config.json.fd_api_key 恢复 fd_config.json（密钥自愈，比分预测可正常更新）"
+    else
+      log "   ⚠️ 警告：fd_config.json 缺密钥、且环境变量 FD_API_KEY 与 cf_config.fd_api_key 均无，『比分预测』将暂停更新（沿用旧数据）"
+    fi
   fi
 fi
 log "==> 步骤1.85 比分预测 (fetch_scores.py)"

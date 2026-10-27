@@ -78,12 +78,25 @@ def _now():
 
 def _load_config():
     cfg = {"api_key": "", "enabled": True}
+    # 来源1：fd_config.json（本地优先，含密钥）
     if os.path.exists(CONFIG_PATH):
         try:
             with open(CONFIG_PATH, encoding="utf-8") as f:
                 cfg.update(json.load(f) or {})
         except Exception:
             pass
+    # 来源2：cf_config.json 里的 fd_api_key（任务沙箱若只能持久化 cf_config 文件，
+    # 而 fd_config 被 .gitignore 排除无法随 git 恢复时，可把 key 寄生在 cf_config 内）
+    if not cfg.get("api_key"):
+        cf = os.path.join(HERE, "cf_config.json")
+        if os.path.exists(cf):
+            try:
+                c = json.load(open(cf, encoding="utf-8")) or {}
+                if c.get("fd_api_key"):
+                    cfg["api_key"] = c["fd_api_key"]
+            except Exception:
+                pass
+    # 来源3：环境变量 FD_API_KEY（任务沙箱平台注入，最可靠的跨轮通道；run_daily 自愈会写入）
     if not cfg.get("api_key"):
         cfg["api_key"] = os.environ.get("FD_API_KEY", "")
     return cfg
