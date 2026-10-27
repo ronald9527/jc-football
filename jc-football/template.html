@@ -441,6 +441,11 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .bk-time{font-size:10px;color:var(--sub);font-variant-numeric:tabular-nums}
 .bk-teams{font-weight:700;font-size:13.5px;flex:1;min-width:180px}
 .bk-teams .bk-vs{color:var(--weak);font-size:11px;font-weight:400;margin:0 6px}
+/* 主/客 标识（v1.7.51）：让对阵一眼分清主队与客队 */
+.bk-vs{color:var(--weak);font-size:11px;font-weight:400;margin:0 5px}
+.bk-htag,.bk-atag{display:inline-block;font-size:9px;font-weight:800;color:#fff;padding:0 4px;border-radius:3px;margin-right:3px;vertical-align:middle;line-height:14px}
+.bk-htag{background:var(--accent)}
+.bk-atag{background:var(--weak)}
 .bk-status{font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px}
 .bk-status.st-pre{color:var(--sub);background:var(--panel3)}
 .bk-status.st-done{color:var(--good);background:var(--accent-dim)}
@@ -1604,8 +1609,25 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.50";
+const VERSION = "v1.7.51";
 const CHANGELOG = [
+  {
+    version: "v1.7.51",
+    date: "2026-10-27",
+    title: "篮球主客队标识 + 足球比分预测全覆盖（Poisson 补全未覆盖联赛）",
+    features: [
+      "篮球主客队标识：赛程/赛后回看、AI 预测（今日+历史）、串关腿四处对阵均加「主/客」小标签（主队在前、客队在后），一眼分清主客，不再只靠左右位置猜",
+      "足球比分预测全覆盖：自建 Poisson 模型此前只覆盖 football-data 已收录的联赛（今天仅 3 场意甲），亚冠/德国杯/瑞超等 5 场竞彩比赛无任何比分预测；现对足球数据未覆盖的联赛用竞彩赔率隐含 Poisson 兜底，保证每天全部竞彩比赛都有自建比分预测",
+    ],
+    fixes: [
+      "fetch_scores.py 混合覆盖：足球数据路径在产出后，循环竞彩赛程对未覆盖联赛（league 不在 CODE_TO_LEAGUE 取值集合）补生成赔率隐含 Poisson 预测；联赛集合互不相交，天然不重复",
+      "fetch_scores.py 健壮性：① 足球数据拉取为空（网络不可达/限流）→ 全量本地赔率兜底，绝不空白；② 球队缓存刷新加 90s 墙钟保护，避免上游不可达时每队 20s 超时累加导致整轮卡死",
+    ],
+    notes: [
+      "足球数据不可达时整轮退化为全量本地赔率（竞彩赔率隐含 Poisson），覆盖与平时一致；网络恢复后自动回到「足球数据队形 + 本地补未覆盖」混合模式",
+      "篮球「主/客」标签颜色：主=主题色、客=弱色，与赛程卡片赔率区「主队」标注呼应",
+    ]
+  },
   {
     version: "v1.7.50",
     date: "2026-10-27",
@@ -5480,6 +5502,13 @@ function renderBkHist(all){
   listBox.innerHTML = html;
 }
 
+/* 篮球对阵 + 主/客标识：主队在前、客队在后，带「主/客」小标签 */
+function bkTeamHtml(home, away){
+  return `<span class="bk-htag">主</span>${home || "？"}`
+       + `<span class="bk-vs">vs</span>`
+       + `<span class="bk-atag">客</span>${away || "？"}`;
+}
+
 /* 篮球比赛卡片（赛程/回看共用） */
 function bkCardHtml(m){
   const done = !!m.score;
@@ -5490,7 +5519,7 @@ function bkCardHtml(m){
     + `<span class="bk-num">${m.num || ""}</span>`
     + `<span class="bk-league">${m.league || ""}</span>`
     + `<span class="bk-time">${kickBJ}</span>`
-    + `<span class="bk-teams">${m.home || ""}<span class="bk-vs">vs</span>${m.away || ""}</span>`
+    + `<span class="bk-teams">${bkTeamHtml(m.home, m.away)}</span>`
     + (done
         ? `<span class="bk-status st-done">已完赛</span><span class="bk-score">${m.score[0]} : ${m.score[1]}</span>`
         : `<span class="bk-status st-pre">未开赛</span>`)
@@ -5561,7 +5590,7 @@ function bkAiCardHtml(p){
     + `<span class="bk-num">${p.num || ""}</span>`
     + `<span class="bk-league">${p.league || ""}</span>`
     + `<span class="bk-time">${kickBJ}</span>`
-    + `<span class="bk-teams">${p.home || ""}<span class="bk-vs">vs</span>${p.away || ""}</span>`
+    + `<span class="bk-teams">${bkTeamHtml(p.home, p.away)}</span>`
     + (p.hr ? `<span class="bk-rank">${p.hr}</span>` : "")
     + (p.ar ? `<span class="bk-rank">${p.ar}</span>` : "")
     + `</div>`;
@@ -5690,7 +5719,7 @@ function renderBkAiHistory(){
     lh += `<div class="bk-ai-row bk-collapsed">
       <div class="bk-ai-head" onclick="bkToggleCard(this.parentNode)">
         <span class="bk-chev">▸</span>
-        <span style="font-size:12.5px;font-weight:600;">${r.num||""} ${r.home||""} vs ${r.away||""}</span>
+        <span style="font-size:12.5px;font-weight:600;">${r.num||""} ${bkTeamHtml(r.home, r.away)}</span>
         <span style="font-size:11px;font-weight:600;color:${topCls};">主推 ${pname[r.topPlay]||r.topPlay} ${r.topDir} · ${topTxt}</span>
       </div>
       <div class="bk-ai-plays">${plays}${r.score?` · 赛果 ${r.score}`:""}</div>
@@ -5725,7 +5754,7 @@ function bkParlayCardHtml(r){
                  : l.dir;
     html += `<span class="bk-parlay-leg">`
       + `<span class="bk-pl-num">${l.num || ""}</span>`
-      + (l.home || l.away ? `<span class="bk-pl-teams">${l.home || "？"} vs ${l.away || "？"}</span>` : "")
+      + (l.home || l.away ? `<span class="bk-pl-teams">${bkTeamHtml(l.home, l.away)}</span>` : "")
       + `${BK_PLAY_NAME[l.play] || l.play}`
       + (legLine ? ` <b style="color:var(--accent)">${legLine}</b>` : "")
       + ` ${dirTxt} @${l.odds}${legRes}${actual}</span>`;

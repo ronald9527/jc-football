@@ -512,7 +512,9 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                 "isolation": True,
                 "note": ("独立数据源：football-data.org 赛程/赛果 + 自建透明 Poisson 比分模型；"
                          "与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，"
-                         "本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。")}
+                         "本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。"
+                         "足球数据未覆盖的联赛（亚冠/德国杯/瑞超等）用竞彩赔率隐含 Poisson 兜底，"
+                         "保证每天全部竞彩比赛都有自建比分预测。")}
     if not cfg.get("enabled", True) or not cfg.get("api_key"):
         # v1.7.45：缺 Key 不再「冻结旧数据」导致页面永久停更（v1.7.39~v1.7.44 反复踩坑）。
         # 改用本地竞彩赔率（matches.json 的 scoreRec/goalsExp）做 Poisson 兜底预测，
@@ -568,6 +570,12 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
         code = (m.get("competition") or {}).get("code") or ""
         return code in CODE_TO_LEAGUE
     fwd = [m for m in ([] if no_fetch else _pull(fwd_from, fwd_to)) if _keep(m)]
+    if not fwd and not no_fetch:
+        # v1.7.51：football-data 拉取为空（网络不可达/限流/窗口无覆盖联赛）→ 全量本地赔率兜底，
+        # 保证『比分预测』Tab 始终覆盖全部竞彩比赛，绝不因上游不可达而空白。
+        print("football-data 拉取为空：改用竞彩赔率全量本地 Poisson 兜底，保证覆盖")
+        if _local_fallback(out_meta):
+            return out_meta
     # 回溯：从已抓取的球队缓存重建历史比赛并回算准确性（零额外 API 调用，规避免费层过去窗口稀疏问题）
     bak = [] if no_fetch else _backtest_from_cache(cache, now)
 
@@ -605,7 +613,11 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
         if max_teams and len(todo) > max_teams:
             print(f"球队缓存刷新受限：本轮只刷 {max_teams}/{len(todo)} 支（其余沿用旧缓存，后续轮次补齐）")
             todo = todo[:max_teams]
+        _t0 = time.time()
         for tid in todo:
+            if time.time() - _t0 > 90:
+                print("球队缓存刷新超时（90s 墙钟保护），剩余沿用旧缓存，后续轮次补齐")
+                break
             _ensure_team(tid, teams_needed[tid], api, cache)
         _save_team_cache(cache)
 
@@ -655,6 +667,48 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
             rec["outcomeHit"] = ou
             rec["mae"] = mae
         matches_out.append(rec)
+
+    # v1.7.51：补全 Poisson 覆盖——football-data 只覆盖 CODE_TO_LEAGUE 联赛，
+    # 竞彩当日的亚冠/德国杯/瑞超等未被覆盖的比赛，用竞彩赔率隐含 Poisson（_lambda_from_jc）
+    # 兜底生成预测，保证『比分预测』Tab 自建模型区每天都覆盖全部竞彩比赛（不再有 5/8 场空白）。
+    # 联赛集合与 football-data 天然不相交，不会重复。
+    _local_added = 0
+    _CODE_LEAGUE_VALUES = set(CODE_TO_LEAGUE.values())  # 足球数据已覆盖的联赛中文名
+    try:
+        _mp = os.path.join(HERE, "matches.json")
+        if os.path.exists(_mp):
+            with open(_mp, encoding="utf-8") as _f:
+                _mj = json.load(_f) or {}
+            for _m in (_mj.get("matches") or []):
+                _lg = _m.get("league", "")
+                if _lg in _CODE_LEAGUE_VALUES:
+                    continue  # 已由 football-data（队形 Poisson）覆盖，不重复
+                _date = _m.get("date", "")
+                try:
+                    _md = datetime.strptime(_date, "%Y-%m-%d").date()
+                except Exception:
+                    continue
+                if not ((now - timedelta(days=2)).date() <= _md <= (now + timedelta(days=2)).date()):
+                    continue
+                _lh, _la = _lambda_from_jc(_m)
+                if _lh is None or _la is None:
+                    continue
+                _pred = _poisson_grid(_lh, _la)
+                _ko = _m.get("kickoff") or _m.get("time") or ""
+                _utc = ("%sT%s:00" % (_date, _ko)) if _ko else (_date + "T00:00:00")
+                matches_out.append({
+                    "id": _m.get("id"), "competition": "", "league": _lg,
+                    "home": _m.get("home"), "away": _m.get("away"),
+                    "utcDate": _utc, "status": _m.get("status", ""),
+                    "predH": _pred["predH"], "predA": _pred["predA"],
+                    "pHome": _pred["pHome"], "pDraw": _pred["pDraw"], "pAway": _pred["pAway"],
+                    "predOutcome": _outcome_of(_pred["predH"], _pred["predA"]),
+                    "actH": None, "actA": None, "evaluated": False,
+                    "source": "local-odds",
+                })
+                _local_added += 1
+    except Exception as _e:
+        print("本地赔率补全（足球数据未覆盖联赛）异常跳过：%s" % _e)
 
     # 准确性回溯：① 缓存重建的历史比赛（已算好）② 展示窗已结束比赛（用赛前形式重算）
     acc = _load_accuracy()
@@ -734,7 +788,8 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
         "dateList": sorted(date_index.keys(), reverse=True),
     }
     json.dump(result, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"比分预测：展示窗 {len(matches_out)} 场，回溯新增 {new_eval} 场（累计 {n} 场）；"
+    print(f"比分预测：展示窗 {len(matches_out)} 场（足球数据 {len(matches_out)-_local_added} + 本地赔率补全 {_local_added}），"
+          f"回溯新增 {new_eval} 场（累计 {n} 场）；"
           f"整体精确命中 {overall.get('exactHit','-')}%，方向命中 {overall.get('outcomeHit','-')}%，"
           f"已写入 {OUT_PATH}；API 调用 {api.calls} 次")
     return result
