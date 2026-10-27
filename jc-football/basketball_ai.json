@@ -1,64 +1,46 @@
 {
- "updatedAt": "2026-10-26 19:52:49",
+ "updatedAt": "2026-10-27 12:18:38",
  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主",
  "predictions": [
   {
-   "id": "2042280",
-   "num": "周一301",
-   "league": "德篮联",
-   "home": "维尔茨堡",
-   "away": "开姆尼茨",
-   "kickoff": "2026-10-27 03:00",
-   "hr": "德篮联13",
-   "ar": "德篮联17",
+   "id": "2042325",
+   "num": "周二301",
+   "league": "欧篮联",
+   "home": "迪拜",
+   "away": "巴黎",
+   "kickoff": "2026-10-28 00:00",
+   "hr": "欧篮联6",
+   "ar": "欧篮联18",
    "plays": {
     "mnl": {
      "dir": "h",
-     "odds": 1.31,
-     "confidence": 63.9,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 64.8,
-     "canon": 0.525,
+     "odds": 1.03,
+     "confidence": 85.4,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 82.3,
+     "canon": 0.74,
      "alts": [
       {
        "dir": "a",
-       "odds": 2.41,
+       "odds": 4.8,
        "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
       }
      ]
     },
     "hdc": {
      "dir": "h",
-     "odds": 1.65,
-     "confidence": 57.4,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 51.5,
-     "canon": 0.56,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
      "odds": 1.7,
-     "confidence": 57.4,
+     "confidence": 62.2,
      "sameOddsHit": null,
      "sameOddsN": 1,
      "pTrue": 50.0,
-     "canon": 0.56,
+     "canon": 0.608,
      "alts": [
       {
-       "dir": "l",
+       "dir": "a",
        "odds": 1.7,
        "confidence": 55.0,
        "sameOddsHit": null,
@@ -66,80 +48,306 @@
       }
      ]
     },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.66,
+     "confidence": 62.2,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 51.2,
+     "canon": 0.608,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
     "wnm": {
-     "dir": "l3",
-     "odds": 11.0,
-     "confidence": 57.4,
-     "sameOddsHit": 7.4,
-     "sameOddsN": 27,
-     "pTrue": 17.2,
-     "canon": 0.473,
+     "dir": "l6",
+     "odds": 85.0,
+     "confidence": 62.2,
+     "sameOddsHit": 3.4,
+     "sameOddsN": 29,
+     "pTrue": 4.3,
+     "canon": 0.627,
      "alts": [
       {
        "dir": "l1",
-       "odds": 5.8,
+       "odds": 9.5,
        "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
       },
       {
        "dir": "l2",
-       "odds": 6.1,
+       "odds": 13.0,
        "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 26.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
       },
       {
        "dir": "l4",
-       "odds": 21.0,
+       "odds": 40.0,
        "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
+       "sameOddsHit": 20.7,
+       "sameOddsN": 29
       },
       {
        "dir": "l5",
-       "odds": 32.0,
+       "odds": 55.0,
        "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 42.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
       }
      ]
     }
    },
-   "topPlay": "hdc"
+   "topPlay": "mnl"
   },
   {
-   "id": "2042281",
-   "num": "周一302",
-   "league": "美职篮",
-   "home": "克利夫兰骑士",
-   "away": "明尼苏达森林狼",
-   "kickoff": "2026-10-27 07:00",
-   "hr": "美职篮9",
-   "ar": "美职篮5",
+   "id": "2042326",
+   "num": "周二302",
+   "league": "欧篮联",
+   "home": "拜仁慕尼黑",
+   "away": "巴塞罗那",
+   "kickoff": "2026-10-28 03:00",
+   "hr": "欧篮联16",
+   "ar": "欧篮联9",
    "plays": {
     "mnl": {
-     "dir": "a",
-     "odds": 1.92,
+     "dir": "h",
+     "odds": 1.65,
      "confidence": 55.0,
-     "sameOddsHit": 47.1,
-     "sameOddsN": 51,
-     "pTrue": 44.2,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 51.5,
      "canon": 0.436,
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.52,
+       "dir": "a",
+       "odds": 1.75,
        "confidence": 55.0,
-       "sameOddsHit": 52.9,
-       "sameOddsN": 51
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 1.75,
+     "confidence": 55.0,
+     "sameOddsHit": 60.0,
+     "sameOddsN": 10,
+     "pTrue": 48.5,
+     "canon": 0.436,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.65,
+       "confidence": 55.0,
+       "sameOddsHit": 40.0,
+       "sameOddsN": 10
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.66,
+     "confidence": 55.0,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 51.2,
+     "canon": 0.536,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l4",
+     "odds": 15.0,
+     "confidence": 55.0,
+     "sameOddsHit": 20.7,
+     "sameOddsN": 29,
+     "pTrue": 9.3,
+     "canon": 0.419,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 4.4,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l2",
+       "odds": 4.5,
+       "confidence": 55.0,
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 7.8,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 24.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l6",
+       "odds": 30.0,
+       "confidence": 55.0,
+       "sameOddsHit": 3.4,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042327",
+   "num": "周二303",
+   "league": "欧篮联",
+   "home": "帕纳辛纳科斯",
+   "away": "米兰",
+   "kickoff": "2026-10-28 03:15",
+   "hr": "欧篮联1",
+   "ar": "欧篮联19",
+   "plays": {
+    "hdc": {
+     "dir": "a",
+     "odds": 1.65,
+     "confidence": 63.0,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 51.5,
+     "canon": 0.616,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.75,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.66,
+     "confidence": 63.0,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 51.2,
+     "canon": 0.616,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l6",
+     "odds": 140.0,
+     "confidence": 63.0,
+     "sameOddsHit": 3.4,
+     "sameOddsN": 29,
+     "pTrue": 4.6,
+     "canon": 0.802,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 16.0,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l2",
+       "odds": 27.0,
+       "confidence": 55.0,
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 44.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l4",
+       "odds": 65.0,
+       "confidence": 55.0,
+       "sameOddsHit": 20.7,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 90.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "wnm"
+  },
+  {
+   "id": "2042328",
+   "num": "周二304",
+   "league": "欧篮联",
+   "home": "巴伦西亚",
+   "away": "费内巴切",
+   "kickoff": "2026-10-28 03:30",
+   "hr": "欧篮联3",
+   "ar": "欧篮联2",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 1.6,
+     "confidence": 55.0,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 53.1,
+     "canon": 0.436,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.81,
+       "confidence": 55.0,
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
       }
      ]
     },
@@ -147,8 +355,347 @@
      "dir": "h",
      "odds": 1.7,
      "confidence": 55.0,
-     "sameOddsHit": 28.6,
-     "sameOddsN": 7,
+     "sameOddsHit": 60.0,
+     "sameOddsN": 10,
+     "pTrue": 50.0,
+     "canon": 0.436,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.7,
+       "confidence": 55.0,
+       "sameOddsHit": 40.0,
+       "sameOddsN": 10
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.66,
+     "confidence": 55.0,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 51.2,
+     "canon": 0.536,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l4",
+     "odds": 16.0,
+     "confidence": 55.0,
+     "sameOddsHit": 20.7,
+     "sameOddsN": 29,
+     "pTrue": 9.1,
+     "canon": 0.423,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 4.55,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l2",
+       "odds": 4.65,
+       "confidence": 55.0,
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 8.2,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 25.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l6",
+       "odds": 32.0,
+       "confidence": 55.0,
+       "sameOddsHit": 3.4,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042329",
+   "num": "周二305",
+   "league": "欧篮联",
+   "home": "巴斯克尼亚",
+   "away": "皇家马德里",
+   "kickoff": "2026-10-28 04:00",
+   "hr": "欧篮联20",
+   "ar": "欧篮联7",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 1.05,
+     "confidence": 68.9,
+     "sameOddsHit": 51.7,
+     "sameOddsN": 60,
+     "pTrue": 80.7,
+     "canon": 0.575,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 4.4,
+       "confidence": 55.0,
+       "sameOddsHit": 48.3,
+       "sameOddsN": 60
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "a",
+     "odds": 1.6,
+     "confidence": 55.0,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 53.1,
+     "canon": 0.536,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.81,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.62,
+     "confidence": 55.0,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 52.4,
+     "canon": 0.536,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.78,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l2",
+     "odds": 3.5,
+     "confidence": 55.0,
+     "sameOddsHit": 34.5,
+     "sameOddsN": 29,
+     "pTrue": 23.8,
+     "canon": 0.385,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 5.0,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 4.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l4",
+       "odds": 5.25,
+       "confidence": 55.0,
+       "sameOddsHit": 20.7,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 7.5,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l6",
+       "odds": 7.0,
+       "confidence": 55.0,
+       "sameOddsHit": 3.4,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "mnl"
+  },
+  {
+   "id": "2042330",
+   "num": "周二306",
+   "league": "美职篮",
+   "home": "波士顿凯尔特人",
+   "away": "布鲁克林篮网",
+   "kickoff": "2026-10-28 07:30",
+   "hr": "美职篮8",
+   "ar": "美职篮14",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 1.02,
+     "confidence": 82.6,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 83.2,
+     "canon": 0.712,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 5.05,
+       "confidence": 55.0,
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 1.65,
+     "confidence": 58.6,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 51.5,
+     "canon": 0.572,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.75,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.66,
+     "confidence": 58.6,
+     "sameOddsHit": null,
+     "sameOddsN": 2,
+     "pTrue": 51.2,
+     "canon": 0.572,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 2
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l4",
+     "odds": 40.0,
+     "confidence": 58.6,
+     "sameOddsHit": 20.7,
+     "sameOddsN": 29,
+     "pTrue": 10.7,
+     "canon": 0.628,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 12.0,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l2",
+       "odds": 15.0,
+       "confidence": 55.0,
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 28.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 82.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l6",
+       "odds": 90.0,
+       "confidence": 55.0,
+       "sameOddsHit": 3.4,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "mnl"
+  },
+  {
+   "id": "2042331",
+   "num": "周二307",
+   "league": "美职篮",
+   "home": "纽约尼克斯",
+   "away": "底特律活塞",
+   "kickoff": "2026-10-28 08:00",
+   "hr": "美职篮12",
+   "ar": "美职篮1",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 1.4,
+     "confidence": 55.0,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 60.6,
+     "canon": 0.436,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 2.15,
+       "confidence": 55.0,
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 55.0,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
      "pTrue": 50.0,
      "canon": 0.536,
      "alts": [
@@ -156,23 +703,185 @@
        "dir": "a",
        "odds": 1.7,
        "confidence": 55.0,
-       "sameOddsHit": 71.4,
-       "sameOddsN": 7
+       "sameOddsHit": null,
+       "sameOddsN": 4
       }
      ]
     },
     "hilo": {
      "dir": "h",
-     "odds": 1.7,
+     "odds": 1.66,
      "confidence": 55.0,
      "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 50.0,
+     "sameOddsN": 0,
+     "pTrue": 51.2,
      "canon": 0.536,
      "alts": [
       {
        "dir": "l",
-       "odds": 1.7,
+       "odds": 1.74,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l3",
+     "odds": 12.0,
+     "confidence": 55.0,
+     "sameOddsHit": 6.9,
+     "sameOddsN": 29,
+     "pTrue": 14.8,
+     "canon": 0.442,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 5.65,
+       "confidence": 55.0,
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l2",
+       "odds": 5.8,
+       "confidence": 55.0,
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l4",
+       "odds": 16.0,
+       "confidence": 55.0,
+       "sameOddsHit": 20.7,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l5",
+       "odds": 30.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l6",
+       "odds": 28.0,
+       "confidence": 55.0,
+       "sameOddsHit": 3.4,
+       "sameOddsN": 29
+      }
+     ]
+    }
+   },
+   "topPlay": "hdc"
+  },
+  {
+   "id": "2042332",
+   "num": "周二308",
+   "league": "美职篮",
+   "home": "圣安东尼奥马刺",
+   "away": "萨克拉门托国王",
+   "kickoff": "2026-10-28 08:00",
+   "hr": "美职篮9",
+   "ar": "美职篮15",
+   "plays": {
+    "hdc": {
+     "dir": "a",
+     "odds": 1.65,
+     "confidence": 58.6,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 51.5,
+     "canon": 0.572,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.75,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.62,
+     "confidence": 58.6,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 52.4,
+     "canon": 0.572,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.78,
+       "confidence": 55.0,
+       "sameOddsHit": null,
+       "sameOddsN": 3
+      }
+     ]
+    }
+   },
+   "topPlay": "hdc"
+  },
+  {
+   "id": "2042333",
+   "num": "周二309",
+   "league": "美职篮",
+   "home": "洛杉矶湖人",
+   "away": "波特兰开拓者",
+   "kickoff": "2026-10-28 11:00",
+   "hr": "美职篮1",
+   "ar": "美职篮6",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 1.4,
+     "confidence": 60.5,
+     "sameOddsHit": 48.3,
+     "sameOddsN": 60,
+     "pTrue": 60.6,
+     "canon": 0.491,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 2.15,
+       "confidence": 55.0,
+       "sameOddsHit": 51.7,
+       "sameOddsN": 60
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 1.65,
+     "confidence": 58.0,
+     "sameOddsHit": 25.0,
+     "sameOddsN": 8,
+     "pTrue": 51.5,
+     "canon": 0.566,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.75,
+       "confidence": 55.0,
+       "sameOddsHit": 75.0,
+       "sameOddsN": 8
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.62,
+     "confidence": 58.0,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 52.4,
+     "canon": 0.566,
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.78,
        "confidence": 55.0,
        "sameOddsHit": null,
        "sameOddsN": 3
@@ -182,1050 +891,51 @@
     "wnm": {
      "dir": "l6",
      "odds": 25.0,
-     "confidence": 55.0,
-     "sameOddsHit": 3.7,
-     "sameOddsN": 27,
-     "pTrue": 6.4,
-     "canon": 0.431,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 5.2,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 5.45,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 9.5,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 15.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 26.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042282",
-   "num": "周一303",
-   "league": "美职篮",
-   "home": "夏洛特黄蜂",
-   "away": "华盛顿奇才",
-   "kickoff": "2026-10-27 07:00",
-   "hr": "美职篮7",
-   "ar": "美职篮5",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 1.55,
-     "confidence": 55.0,
-     "sameOddsHit": 47.1,
-     "sameOddsN": 51,
-     "pTrue": 54.7,
-     "canon": 0.436,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.87,
-       "confidence": 55.0,
-       "sameOddsHit": 52.9,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 50.0,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.62,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 52.4,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.78,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 10.0,
-     "confidence": 55.0,
-     "sameOddsHit": 22.2,
-     "sameOddsN": 27,
-     "pTrue": 13.0,
-     "canon": 0.413,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.5,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 4.6,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 7.5,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 19.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 22.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042283",
-   "num": "周一304",
-   "league": "美职篮",
-   "home": "波士顿凯尔特人",
-   "away": "芝加哥公牛",
-   "kickoff": "2026-10-27 07:30",
-   "hr": "美职篮8",
-   "ar": "美职篮11",
-   "plays": {
-    "hdc": {
-     "dir": "h",
-     "odds": 1.65,
-     "confidence": 56.8,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 51.5,
-     "canon": 0.554,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.62,
-     "confidence": 56.8,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 52.4,
-     "canon": 0.554,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.78,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 120.0,
-     "confidence": 56.8,
-     "sameOddsHit": 3.7,
-     "sameOddsN": 27,
-     "pTrue": 4.6,
-     "canon": 0.685,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 15.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 20.0,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 38.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 50.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 100.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "wnm"
-  },
-  {
-   "id": "2042284",
-   "num": "周一305",
-   "league": "美职篮",
-   "home": "迈阿密热火",
-   "away": "达拉斯独行侠",
-   "kickoff": "2026-10-27 07:30",
-   "hr": "美职篮15",
-   "ar": "美职篮10",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.14,
-     "confidence": 67.7,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 74.4,
-     "canon": 0.563,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 3.32,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.6,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 53.1,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.81,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.66,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 51.2,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.74,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 55.0,
-     "confidence": 55.0,
-     "sameOddsHit": 3.7,
-     "sameOddsN": 27,
-     "pTrue": 4.6,
-     "canon": 0.487,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 7.3,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 7.7,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 18.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 27.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 48.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "mnl"
-  },
-  {
-   "id": "2042285",
-   "num": "周一306",
-   "league": "美职篮",
-   "home": "俄克拉荷马城雷霆",
-   "away": "菲尼克斯太阳",
-   "kickoff": "2026-10-27 08:00",
-   "hr": "美职篮2",
-   "ar": "美职篮8",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.06,
-     "confidence": 79.6,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 80.0,
-     "canon": 0.682,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 4.25,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.65,
-     "confidence": 58.6,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 51.5,
-     "canon": 0.572,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.66,
-     "confidence": 58.6,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 51.2,
-     "canon": 0.572,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.74,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 55.0,
-     "confidence": 58.6,
-     "sameOddsHit": 3.7,
-     "sameOddsN": 27,
-     "pTrue": 5.7,
-     "canon": 0.56,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 9.3,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 11.0,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 21.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 27.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 50.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "mnl"
-  },
-  {
-   "id": "2042286",
-   "num": "周一307",
-   "league": "美职篮",
-   "home": "密尔沃基雄鹿",
-   "away": "印第安那步行者",
-   "kickoff": "2026-10-27 08:00",
-   "hr": "美职篮13",
-   "ar": "美职篮6",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 1.29,
-     "confidence": 58.3,
-     "sameOddsHit": 47.1,
-     "sameOddsN": 51,
-     "pTrue": 65.8,
+     "confidence": 58.0,
+     "sameOddsHit": 3.4,
+     "sameOddsN": 29,
+     "pTrue": 6.9,
      "canon": 0.469,
      "alts": [
       {
-       "dir": "h",
-       "odds": 2.48,
-       "confidence": 55.0,
-       "sameOddsHit": 52.9,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.6,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 53.1,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.81,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.66,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 51.2,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.74,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l3",
-     "odds": 5.4,
-     "confidence": 55.0,
-     "sameOddsHit": 7.4,
-     "sameOddsN": 27,
-     "pTrue": 19.0,
-     "canon": 0.397,
-     "alts": [
-      {
        "dir": "l1",
-       "odds": 4.1,
+       "odds": 5.35,
        "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
+       "sameOddsHit": 27.6,
+       "sameOddsN": 29
       },
       {
        "dir": "l2",
-       "odds": 3.75,
+       "odds": 5.7,
        "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
+       "sameOddsHit": 34.5,
+       "sameOddsN": 29
+      },
+      {
+       "dir": "l3",
+       "odds": 11.0,
+       "confidence": 55.0,
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
       },
       {
        "dir": "l4",
-       "odds": 8.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 12.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 14.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042287",
-   "num": "周一308",
-   "league": "美职女篮",
-   "home": "金州女武神",
-   "away": "亚特兰大梦想",
-   "kickoff": "2026-10-27 08:00",
-   "hr": "美职女篮2",
-   "ar": "美职女篮1",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.65,
-     "confidence": 55.0,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 51.5,
-     "canon": 0.436,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 55.0,
-     "sameOddsHit": 62.5,
-     "sameOddsN": 8,
-     "pTrue": 50.0,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": 37.5,
-       "sameOddsN": 8
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 50.0,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l5",
-     "odds": 24.0,
-     "confidence": 55.0,
-     "sameOddsHit": 7.4,
-     "sameOddsN": 27,
-     "pTrue": 6.0,
-     "canon": 0.422,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.5,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 4.65,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 7.9,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 18.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 26.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042288",
-   "num": "周一309",
-   "league": "美职篮",
-   "home": "休斯敦火箭",
-   "away": "亚特兰大老鹰",
-   "kickoff": "2026-10-27 08:30",
-   "hr": "美职篮3",
-   "ar": "美职篮3",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.17,
-     "confidence": 68.8,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 72.5,
-     "canon": 0.574,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 3.08,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 50.0,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 50.0,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 21.0,
-     "confidence": 55.0,
-     "sameOddsHit": 22.2,
-     "sameOddsN": 27,
-     "pTrue": 9.8,
-     "canon": 0.459,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 6.2,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 6.5,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 15.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l5",
-       "odds": 34.0,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 36.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "mnl"
-  },
-  {
-   "id": "2042289",
-   "num": "周一310",
-   "league": "美职篮",
-   "home": "犹他爵士",
-   "away": "孟菲斯灰熊",
-   "kickoff": "2026-10-27 09:00",
-   "hr": "美职篮12",
-   "ar": "美职篮4",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.65,
-     "confidence": 55.0,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 51.5,
-     "canon": 0.436,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.65,
-     "confidence": 55.0,
-     "sameOddsHit": 37.5,
-     "sameOddsN": 8,
-     "pTrue": 51.5,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": 62.5,
-       "sameOddsN": 8
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.66,
-     "confidence": 55.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 51.2,
-     "canon": 0.536,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.74,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l5",
-     "odds": 22.0,
-     "confidence": 55.0,
-     "sameOddsHit": 7.4,
-     "sameOddsN": 27,
-     "pTrue": 6.5,
-     "canon": 0.421,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.65,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 4.85,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
-       "odds": 8.4,
-       "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 13.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l6",
-       "odds": 28.0,
-       "confidence": 55.0,
-       "sameOddsHit": 3.7,
-       "sameOddsN": 27
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042290",
-   "num": "周一311",
-   "league": "美职篮",
-   "home": "丹佛掘金",
-   "away": "金州勇士",
-   "kickoff": "2026-10-27 10:00",
-   "hr": "美职篮7",
-   "ar": "美职篮14",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.1,
-     "confidence": 77.4,
-     "sameOddsHit": 52.9,
-     "sameOddsN": 51,
-     "pTrue": 77.1,
-     "canon": 0.66,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 3.7,
-       "confidence": 55.0,
-       "sameOddsHit": 47.1,
-       "sameOddsN": 51
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.65,
-     "confidence": 59.2,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 51.5,
-     "canon": 0.578,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.75,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 59.2,
-     "sameOddsHit": null,
-     "sameOddsN": 4,
-     "pTrue": 50.0,
-     "canon": 0.578,
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": null,
-       "sameOddsN": 4
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 58.0,
-     "confidence": 59.2,
-     "sameOddsHit": 3.7,
-     "sameOddsN": 27,
-     "pTrue": 4.6,
-     "canon": 0.538,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 7.7,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l2",
-       "odds": 8.2,
-       "confidence": 55.0,
-       "sameOddsHit": 37.0,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l3",
        "odds": 19.0,
        "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
-      },
-      {
-       "dir": "l4",
-       "odds": 28.0,
-       "confidence": 55.0,
-       "sameOddsHit": 22.2,
-       "sameOddsN": 27
+       "sameOddsHit": 20.7,
+       "sameOddsN": 29
       },
       {
        "dir": "l5",
-       "odds": 50.0,
+       "odds": 28.0,
        "confidence": 55.0,
-       "sameOddsHit": 7.4,
-       "sameOddsN": 27
+       "sameOddsHit": 6.9,
+       "sameOddsN": 29
       }
      ]
     }
    },
-   "topPlay": "mnl"
+   "topPlay": "hdc"
   }
  ]
 }

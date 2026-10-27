@@ -103,10 +103,11 @@ fi
 set -e
 
 # ---------- 步骤1.85：独立「比分预测」Tab（football-data.org + 自建 Poisson，零耦合核心模型）----------
-# v1.7.44 修复：fd_config.json 被 .gitignore 排除（不入 git，防密钥泄露），任务沙箱从 git
-# 初始化时无此文件 → fetch_scores.py 缺 key → 走「保留旧数据」分支，把 score_predict.json 的
-# updatedAt 冻结回上一轮，导致「比分预测」Tab 静默停更（v1.7.39 同款坑）。自愈：缺 key 但
-# 环境变量 FD_API_KEY 已配置则写入 fd_config.json；都没有则打印明确告警便于排查。
+# v1.7.45 修复：fd_config.json 被 .gitignore 排除（不入 git，防密钥泄露），任务沙箱从 git
+# 初始化时无此文件 → fetch_scores.py 缺 key。v1.7.45 起缺 key 不再「冻结旧数据」，
+# 而是改用竞彩 matches.json 的赔率隐含期望进球（hadProb/goalsExp）做 Poisson 兜底预测，
+# 数据每日随赛程刷新，『比分预测』Tab 始终新鲜（覆盖为竞彩赛事）。若 CI 配置了 FD_API_KEY
+# 环境变量（或 cf_config.fd_api_key），则优先用 football-data.org 全球联赛覆盖。自愈逻辑如下。
 _cfg_ok=$(python3 - <<'PY' 2>/dev/null
 import json, os
 try:
@@ -144,7 +145,7 @@ json.dump({"api_key": k, "enabled": True},
 PY
       log "   ✅ 已从 cf_config.json.fd_api_key 恢复 fd_config.json（密钥自愈，比分预测可正常更新）"
     else
-      log "   ⚠️ 警告：fd_config.json 缺密钥、且环境变量 FD_API_KEY 与 cf_config.fd_api_key 均无，『比分预测』将暂停更新（沿用旧数据）"
+      log "   ℹ️ 无 football-data Key：『比分预测』改用竞彩赔率兜底预测（每日随赛程刷新）；如需全球联赛覆盖，请在 CI 配置 FD_API_KEY"
     fi
   fi
 fi

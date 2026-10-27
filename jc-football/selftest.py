@@ -445,16 +445,24 @@ def check_scorepred_freshness(sp):
 
     与篮球检查的差异：比分预测的正常节奏是任务每 30 分钟一轮都刷新
     （--keep-cache 也照样拉展示窗并写 updatedAt），阈值同篮球；另外
-    note 里出现「未配置 Key」直接 ERROR——那是确定性停更，与数据年龄无关。
+    note 里出现「未配置 Key」通常直接 ERROR——那是确定性停更。但 v1.7.45 起缺 Key
+    会改走「本地竞彩赔率兜底」（note 含『兜底/本地竞彩』），数据每日随赛程刷新，
+    属正常模式，不再判停更，仅走 updatedAt 新鲜度检查（兜底也失效则照样报错）。
     """
     if not isinstance(sp, dict):
         add("WARN", "隔离", "score_predict.json 缺失或结构异常，无法判断新鲜度")
         return
     note = str(sp.get("note") or "")
-    if "未配置" in note:
+    # v1.7.45：缺 football-data Key 时 fetch_scores 改走「本地竞彩赔率兜底」，
+    # 数据每日随赛程刷新（note 含『兜底/本地竞彩』），此时不应判停更——改走 updatedAt
+    # 新鲜度检查即可（兜底若也失效，updatedAt 会变旧，新鲜度检查照样报错）。
+    # 仅当「未配置 Key」且『非兜底』（兜底彻底失败、无数据）才确定停更。
+    is_fallback = ("兜底" in note) or ("本地竞彩" in note) or \
+                  str(sp.get("source") or "").startswith("本地竞彩")
+    if "未配置" in note and not is_fallback:
         add("ERROR", "隔离", "比分预测未配置 football-data.org Key（fd_config.json 或环境变量 "
-            "FD_API_KEY）——模块已停更，页面 Serve 的是旧数据；请在任务环境变量加 "
-            "FD_API_KEY 恢复")
+            "FD_API_KEY）且本地竞彩兜底也不可用——模块已停更，页面 Serve 的是旧数据；"
+            "请在任务环境变量加 FD_API_KEY 恢复")
         return
     upd = sp.get("updatedAt")
     if not upd:
@@ -487,7 +495,11 @@ def check_scorepred_freshness(sp):
     elif n_match == 0:
         add("WARN", "隔离", "比分预测展示窗 0 场（%s）——确认联赛覆盖/接口是否正常" % tag)
     else:
-        print("  比分预测新鲜度：%.1f 小时（正常，更新于 %s，%d 场）" % (age_h, upd, n_match))
+        if is_fallback:
+            print("  比分预测新鲜度：%.1f 小时（正常·本地竞彩兜底模式，更新于 %s，%d 场）"
+                  % (age_h, upd, n_match))
+        else:
+            print("  比分预测新鲜度：%.1f 小时（正常，更新于 %s，%d 场）" % (age_h, upd, n_match))
 
 
 def main():

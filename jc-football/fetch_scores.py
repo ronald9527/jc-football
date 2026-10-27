@@ -304,6 +304,11 @@ def predict_score(form_h, form_a):
     lam_a = LEAGUE_AWAY_GPG * atk_a * def_h / HOME_ADV
     lam_h = max(0.2, min(4.5, lam_h))
     lam_a = max(0.2, min(4.5, lam_a))
+    return _poisson_grid(lam_h, lam_a)
+
+
+def _poisson_grid(lam_h, lam_a):
+    """对 (λ_h, λ_a) 跑 Poisson 联合分布，返回预测比分与胜平负概率。"""
     # 联合众数（预测比分）
     best, bv = (0, 0), -1.0
     pHome = pDraw = pAway = 0.0
@@ -323,6 +328,118 @@ def predict_score(form_h, form_a):
     return {"predH": best[0], "predA": best[1],
             "pHome": round(pHome * 100, 1), "pDraw": round(pDraw * 100, 1),
             "pAway": round(pAway * 100, 1)}
+
+
+def _lambda_from_jc(m):
+    """从竞彩 matches.json 的赔率隐含期望进球：主路用 hadProb（去水分胜负概率）+
+    goalsExp（期望总进球）按胜负强度拆分，与盘口一致；scoreRec.expHome/expAway 作为退路。
+    返回 (lam_h, lam_a)；无法解析返回 (None, None)。"""
+    # 主路：市场盘口隐含（内部一致，最可靠）
+    try:
+        hp = m.get("hadProb") or {}
+        h = float(hp.get("h") or 0); d = float(hp.get("d") or 0); a = float(hp.get("a") or 0)
+        ge = m.get("goalsExp")
+        tot = h + d + a
+        if ge and tot > 0:
+            ge = float(ge)
+            ha = h + d / 2.0            # 主场有效强度（平局折半）
+            aa = a + d / 2.0
+            s = ha + aa
+            if s > 0:
+                lh = ge * ha / s
+                la = ge * aa / s
+                if lh > 0 and la > 0:
+                    return max(0.2, min(4.5, lh)), max(0.2, min(4.5, la))
+    except (TypeError, ValueError):
+        pass
+    # 退路：scoreRec.expHome/expAway
+    sr = m.get("scoreRec") or {}
+    try:
+        eh, ea = sr.get("expHome"), sr.get("expAway")
+        if eh and ea and float(eh) > 0 and float(ea) > 0:
+            return max(0.2, min(4.5, float(eh))), max(0.2, min(4.5, float(ea)))
+    except (TypeError, ValueError):
+        pass
+    return None, None
+
+
+def _local_fallback(out_meta):
+    """无 football-data Key 时的本地兜底：用竞彩 matches.json 的赔率隐含期望进球做 Poisson 预测。
+    数据每日随赛程刷新，保证『比分预测』Tab 始终新鲜。football-data 主路径完全隔离、不受影响。
+    返回 True 表示已成功生成并写盘；False 表示无法生成（调用方应保留上一轮）。"""
+    mp = os.path.join(HERE, "matches.json")
+    if not os.path.exists(mp):
+        return False
+    try:
+        with open(mp, encoding="utf-8") as f:
+            mj = json.load(f) or {}
+    except Exception:
+        return False
+    jc = mj.get("matches") or []
+    if not jc:
+        return False
+    now = _now()
+    lo = (now - timedelta(days=2)).date()
+    hi = (now + timedelta(days=2)).date()
+    matches_out = []
+    for m in jc:
+        date = m.get("date", "")
+        try:
+            md = datetime.strptime(date, "%Y-%m-%d").date()
+        except Exception:
+            continue
+        if not (lo <= md <= hi):
+            continue
+        lh, la = _lambda_from_jc(m)
+        if lh is None or la is None:
+            continue
+        pred = _poisson_grid(lh, la)
+        ko = m.get("kickoff") or m.get("time") or ""
+        utc = ("%sT%s:00" % (date, ko)) if ko else (date + "T00:00:00")
+        matches_out.append({
+            "id": m.get("id"), "competition": "", "league": m.get("league", ""),
+            "home": m.get("home"), "away": m.get("away"), "utcDate": utc,
+            "status": m.get("status", ""),
+            "predH": pred["predH"], "predA": pred["predA"],
+            "pHome": pred["pHome"], "pDraw": pred["pDraw"], "pAway": pred["pAway"],
+            "predOutcome": _outcome_of(pred["predH"], pred["predA"]),
+            "actH": None, "actA": None, "evaluated": False,
+            "source": "local-odds",
+        })
+    if not matches_out:
+        return False
+    # 准确性回溯：本地无赛果源，沿用上一轮 history（冻结展示，不丢失）
+    prev_hist, date_index, date_list = [], {}, []
+    try:
+        with open(OUT_PATH, encoding="utf-8") as f:
+            prev = json.load(f) or {}
+        prev_hist = prev.get("history") or []
+        date_index = prev.get("dateIndex") or {}
+        date_list = prev.get("dateList") or []
+    except Exception:
+        prev = {}
+    hist = prev_hist[:1500]
+    n = len(hist)
+    overall = {"n": n}
+    if n:
+        overall["exactHit"] = round(sum(1 for h in hist if h.get("exactHit")) / n * 100, 1)
+        overall["outcomeHit"] = round(sum(1 for h in hist if h.get("outcomeHit")) / n * 100, 1)
+        overall["mae"] = round(sum(h.get("mae", 0) for h in hist) / n, 2)
+    leagues, teams = _reliable(hist)
+    out_meta["source"] = "本地竞彩赔率隐含 Poisson（football-data Key 未配置时的兜底）"
+    out_meta["note"] = ("未配置 football-data.org Key：已改用竞彩 matches.json 的赔率隐含期望进球"
+                        "（scoreRec / goalsExp）做 Poisson 兜底预测，数据随每日赛程刷新，"
+                        "『比分预测』Tab 保持新鲜。准确性回溯沿用历史样本（本地无赛果源，暂未回算新场）。")
+    result = {**out_meta,
+              "matches": matches_out,
+              "reliable": {"overall": overall, "leagues": leagues, "teams": teams,
+                           "backtestDays": BACKFILL_DAYS, "newEval": 0},
+              "accuracy": overall, "history": hist,
+              "dateIndex": date_index, "dateList": date_list}
+    json.dump(result, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("本地兜底（无 FD Key）：基于 matches.json 生成比分预测 %d 场，已写入 %s"
+          % (len(matches_out), OUT_PATH))
+    return True
 
 
 def _outcome_of(h, a):
@@ -397,12 +514,12 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                          "与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，"
                          "本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。")}
     if not cfg.get("enabled", True) or not cfg.get("api_key"):
-        # v1.7.39：缺 Key 时不再抹掉已有数据。
-        # 事故（2026-10-21~22）：任务沙箱丢失 fd_config.json（密钥文件被自举包排除、
-        # 沙箱重置后不回），无密钥路径直接把 score_predict.json 覆盖成空结构，
-        # 92 天回溯索引 + 566 条历史天天被抹，用户侧「比分预测几天没更新」且历史归零。
-        # 现改为：保留上一轮成功数据，仅标记未配置 + enabled=False；
-        # updatedAt 保持原数据的时间——数据年龄不失真，selftest 新鲜度检查才能识别停更。
+        # v1.7.45：缺 Key 不再「冻结旧数据」导致页面永久停更（v1.7.39~v1.7.44 反复踩坑）。
+        # 改用本地竞彩赔率（matches.json 的 scoreRec/goalsExp）做 Poisson 兜底预测，
+        # 数据每日随赛程刷新，『比分预测』Tab 始终新鲜。football-data 主路径完全隔离、不受影响。
+        if _local_fallback(out_meta):
+            return out_meta
+        # 兜底也无法生成（matches.json 缺失/异常）才保留上一轮，避免空数据
         prev = {}
         try:
             with open(OUT_PATH, encoding="utf-8") as f:
@@ -411,8 +528,8 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
             prev = {}
         if isinstance(prev, dict) and prev.get("matches"):
             out_meta["updatedAt"] = prev.get("updatedAt") or out_meta["updatedAt"]
-            out_meta["note"] = ("未配置 football-data.org Key（fd_config.json 或环境变量 "
-                                "FD_API_KEY），比分预测暂停更新；以下为此前最后一次成功抓取的数据。")
+            out_meta["note"] = ("未配置 football-data.org Key 且本地竞彩数据不可用，"
+                                "比分预测暂停更新；以下为此前最后一次成功抓取的数据。")
             json.dump({**out_meta,
                        "matches": prev.get("matches") or [],
                        "reliable": prev.get("reliable") or {},
@@ -421,12 +538,13 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                        "dateIndex": prev.get("dateIndex") or {},
                        "dateList": prev.get("dateList") or []},
                       open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-            print("未配置 football-data.org Key：保留上一轮成功数据（%d 场 / %d 天回溯），不覆盖"
-                  % (len(prev.get("matches") or []), len(prev.get("dateList") or [])))
+            print("未配置 football-data.org Key：保留上一轮成功数据（%d 场）"
+                  % len(prev.get("matches") or []))
             return out_meta
         out_meta["enabled"] = False
         out_meta["note"] = "未配置 football-data.org Key：请在 fd_config.json 设置 api_key"
-        json.dump({**out_meta, "matches": [], "reliable": {}, "accuracy": {}},
+        json.dump({**out_meta, "matches": [], "reliable": {}, "accuracy": {},
+                   "history": [], "dateIndex": {}, "dateList": []},
                   open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         return out_meta
 

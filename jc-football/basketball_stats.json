@@ -1,16 +1,16 @@
 {
  "sample": {
-  "total": 65,
-  "scored": 54,
+  "total": 74,
+  "scored": 64,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
   "美职篮": {
-   "n": 36,
-   "home_win_rate": 50.0,
-   "hdc_home_hit_rate": 44.4,
-   "hilo_over_rate": 44.4,
-   "avg_total": 230.2
+   "n": 44,
+   "home_win_rate": 45.5,
+   "hdc_home_hit_rate": 38.6,
+   "hilo_over_rate": 40.9,
+   "avg_total": 229.6
   },
   "欧篮联": {
    "n": 7,
@@ -27,11 +27,11 @@
    "avg_total": 195.3
   },
   "德篮联": {
-   "n": 4,
-   "home_win_rate": 50.0,
-   "hdc_home_hit_rate": 50.0,
-   "hilo_over_rate": 50.0,
-   "avg_total": 172.0
+   "n": 5,
+   "home_win_rate": 40.0,
+   "hdc_home_hit_rate": 40.0,
+   "hilo_over_rate": 60.0,
+   "avg_total": 174.8
   },
   "西篮联": {
    "n": 3,
@@ -41,26 +41,26 @@
    "avg_total": 176.3
   },
   "美职女篮": {
-   "n": 1,
-   "home_win_rate": 100.0,
-   "hdc_home_hit_rate": 100.0,
+   "n": 2,
+   "home_win_rate": 50.0,
+   "hdc_home_hit_rate": 50.0,
    "hilo_over_rate": 0.0,
-   "avg_total": 129.0
+   "avg_total": 124.0
   }
  },
  "hdc_overall": {
-  "h": 26,
-  "a": 28,
+  "h": 27,
+  "a": 37,
   "d": 0,
-  "home_hit_rate": 48.1
+  "home_hit_rate": 42.2
  },
  "hilo_overall": {
-  "over": 23,
-  "under": 31,
-  "over_rate": 42.6
+  "over": 26,
+  "under": 38,
+  "over_rate": 40.6
  },
  "wnm_dist": {
-  "l1": 6,
+  "l1": 8,
   "l2": 10,
   "l3": 2,
   "l4": 6,
@@ -68,29 +68,29 @@
   "l6": 1
  },
  "home_advantage": {
-  "home_win_rate": 50.0
+  "home_win_rate": 45.3
  },
  "roi": {
   "hdc": {
-   "bet": 54,
-   "profit": -15.6,
-   "roi": -28.9
+   "bet": 64,
+   "profit": -24.0,
+   "roi": -37.5
   },
   "hilo": {
-   "bet": 54,
-   "profit": -15.4,
-   "roi": -28.5
+   "bet": 64,
+   "profit": -20.3,
+   "roi": -31.8
   },
   "mnl": {
-   "bet": 51,
-   "profit": -20.7,
-   "roi": -40.7
+   "bet": 60,
+   "profit": -24.1,
+   "roi": -40.2
   },
   "wnm": {
-   "bet": 27,
-   "profit": 12.4,
-   "roi": 45.9
+   "bet": 29,
+   "profit": 22.4,
+   "roi": 77.1
   }
  },
- "updatedAt": "2026-10-26 19:52:49"
+ "updatedAt": "2026-10-27 12:18:38"
 }
