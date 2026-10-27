@@ -480,6 +480,8 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .bk-parlay-meta{font-size:10px;color:var(--sub);margin:4px 0;font-variant-numeric:tabular-nums}
 .bk-parlay-legs{display:flex;flex-wrap:wrap;gap:6px}
 .bk-parlay-leg{font-size:10.5px;color:var(--sub);background:var(--panel3);padding:2px 7px;border-radius:5px;font-variant-numeric:tabular-nums}
+.bk-pl-num{font-weight:700;color:var(--text)}
+.bk-pl-teams{color:var(--text);font-weight:600;margin:0 5px;white-space:nowrap}
 /* 回溯卡片/行 默认折叠：点击标题展开详情（v1.7.48） */
 .bk-parlay-card.bk-collapsed .bk-parlay-meta,
 .bk-parlay-card.bk-collapsed .bk-parlay-legs{display:none}
@@ -1602,8 +1604,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.49";
+const VERSION = "v1.7.50";
 const CHANGELOG = [
+  {
+    version: "v1.7.50",
+    date: "2026-10-27",
+    title: "篮球串关腿全部显示主客队（当前推荐 + 历史回溯）",
+    features: [
+      "篮球串关（当前推荐 + 历史回溯）每条串关腿在开始处显示「主队 vs 客队」——此前只显示竞彩编号（如周一307），现在能直接看出每条腿是哪两队的对决",
+      "赛程赔率 / 赛后回看 / AI 预测（今日+历史）四块此前已显示主客队，本次补上串关最后一块缺口，篮球全部比赛视图均带主客队",
+    ],
+    fixes: [
+      "bkParlayCardHtml 每条 leg 渲染中补齐 <span class=\"bk-pl-teams\">主 vs 客</span>（数据本身已含 leg.home/leg.away）/ 新增 .bk-pl-num / .bk-pl-teams 样式",
+    ],
+    notes: [
+      "串关一条腿即代表一场比赛，故按腿显示对阵；缺失主客队时回退为「？ vs ？」不报错",
+    ]
+  },
   {
     version: "v1.7.49",
     date: "2026-10-27",
@@ -5706,7 +5723,10 @@ function bkParlayCardHtml(r){
     const dirTxt = l.play === "hdc" ? (l.dir === "h" ? "主胜" : "客胜")
                  : l.play === "hilo" ? (l.dir === "h" ? "大分" : "小分")
                  : l.dir;
-    html += `<span class="bk-parlay-leg">${l.num} ${BK_PLAY_NAME[l.play] || l.play}`
+    html += `<span class="bk-parlay-leg">`
+      + `<span class="bk-pl-num">${l.num || ""}</span>`
+      + (l.home || l.away ? `<span class="bk-pl-teams">${l.home || "？"} vs ${l.away || "？"}</span>` : "")
+      + `${BK_PLAY_NAME[l.play] || l.play}`
       + (legLine ? ` <b style="color:var(--accent)">${legLine}</b>` : "")
       + ` ${dirTxt} @${l.odds}${legRes}${actual}</span>`;
   });
