@@ -668,21 +668,40 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
             rec["mae"] = mae
         matches_out.append(rec)
 
-    # v1.7.51：补全 Poisson 覆盖——football-data 只覆盖 CODE_TO_LEAGUE 联赛，
-    # 竞彩当日的亚冠/德国杯/瑞超等未被覆盖的比赛，用竞彩赔率隐含 Poisson（_lambda_from_jc）
-    # 兜底生成预测，保证『比分预测』Tab 自建模型区每天都覆盖全部竞彩比赛（不再有 5/8 场空白）。
-    # 联赛集合与 football-data 天然不相交，不会重复。
+    # v1.7.53：五大联赛必须有比分预测——以竞彩赔率本地 Poisson 为保底基线，
+    # 给每一场「尚未被渲染层可见的接口记录覆盖」的竞彩比赛补预测（含五大联赛），
+    # 不再仅限非 CODE_TO_LEAGUE 联赛。覆盖判定与渲染层 spJcFilter 严格一致：
+    # 接口记录须能经 spZh 翻译出「两译名都含中文」的队名对，才算「已覆盖」，否则补本地基线。
+    # 这样既保证五大联赛永不空缺（接口漏返回/不可达/翻译失败都有本地兜底），又不产生可见重复卡片。
     _local_added = 0
-    _CODE_LEAGUE_VALUES = set(CODE_TO_LEAGUE.values())  # 足球数据已覆盖的联赛中文名
     try:
+        import re as _re
+        try:
+            from team_map import TEAM_EN2ZH as _EN2ZH
+        except Exception:
+            _EN2ZH = {}
+        def _spZh(n):
+            if not n: return "?"
+            if n in _EN2ZH: return _EN2ZH[n]
+            t = _re.sub(r"\b(FC|CF|AC|AS|SC|SV|SK|NK|FK|UD|US|SS|RC|CD|BK|SD|JK|KF|GD|RJ|VfL|VfB|Calcio|Club|Clube|Futebol|Football|Fotbal|Fotboll)\b","",n,flags=_re.I)
+            t = _re.sub(r"\b(1[89]\d{2}|20[0-2]\d)\b","",t)
+            t = _re.sub(r"\s+"," ",t).strip()
+            if t and t in _EN2ZH: return _EN2ZH[t]
+            t2 = _re.sub(r"^\s*[A-Z]{1,3}\s+","",t).strip()
+            if t2 and t2 in _EN2ZH: return _EN2ZH[t2]
+            return n
+        # 已由接口（含能渲染显示的队名）覆盖的竞彩对阵集合
+        _covered = set()
+        for _r in matches_out:
+            _h, _a = _spZh(_r.get("home","")), _spZh(_r.get("away",""))
+            if _re.search(r"[一-鿿]", _h) and _re.search(r"[一-鿿]", _a):
+                _covered.add(frozenset([_h, _a]))
         _mp = os.path.join(HERE, "matches.json")
         if os.path.exists(_mp):
             with open(_mp, encoding="utf-8") as _f:
                 _mj = json.load(_f) or {}
             for _m in (_mj.get("matches") or []):
                 _lg = _m.get("league", "")
-                if _lg in _CODE_LEAGUE_VALUES:
-                    continue  # 已由 football-data（队形 Poisson）覆盖，不重复
                 _date = _m.get("date", "")
                 try:
                     _md = datetime.strptime(_date, "%Y-%m-%d").date()
@@ -690,6 +709,11 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                     continue
                 if not ((now - timedelta(days=2)).date() <= _md <= (now + timedelta(days=2)).date()):
                     continue
+                _jh, _ja = _m.get("home",""), _m.get("away","")
+                if not _jh or not _ja:
+                    continue
+                if frozenset([_jh, _ja]) in _covered:
+                    continue  # 已有渲染可见的接口预测，不重复补
                 _lh, _la = _lambda_from_jc(_m)
                 if _lh is None or _la is None:
                     continue
@@ -698,7 +722,7 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                 _utc = ("%sT%s:00" % (_date, _ko)) if _ko else (_date + "T00:00:00")
                 matches_out.append({
                     "id": _m.get("id"), "competition": "", "league": _lg,
-                    "home": _m.get("home"), "away": _m.get("away"),
+                    "home": _jh, "away": _ja,
                     "utcDate": _utc, "status": _m.get("status", ""),
                     "predH": _pred["predH"], "predA": _pred["predA"],
                     "pHome": _pred["pHome"], "pDraw": _pred["pDraw"], "pAway": _pred["pAway"],
@@ -708,7 +732,7 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                 })
                 _local_added += 1
     except Exception as _e:
-        print("本地赔率补全（足球数据未覆盖联赛）异常跳过：%s" % _e)
+        print("本地赔率补全（保底基线）异常跳过：%s" % _e)
 
     # 准确性回溯：① 缓存重建的历史比赛（已算好）② 展示窗已结束比赛（用赛前形式重算）
     acc = _load_accuracy()
