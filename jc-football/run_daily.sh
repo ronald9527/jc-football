@@ -68,10 +68,21 @@ set +e
 FETCH_RC=$?
 set -e
 if [ "$FETCH_RC" -ne 0 ]; then
-  log "!! 抓取异常（exit=$FETCH_RC），恢复上次正常数据，本次跳过更新（下个周期自动重试）"
+  log "!! 抓取异常（exit=$FETCH_RC），恢复上次正常数据"
   mv -f matches.json.bak_run matches.json 2>/dev/null || true
-  log "==> 完成（数据未变更）"
-  exit 0
+  # 竞彩数据本次沿用上次正常快照，但**不再整体退出**。
+  # 原因：海外 CI（GitHub Actions）访问中国竞彩接口 webapi.sporttery.cn 会被拒
+  # （HTTP 567；本地中国网络同接口 HTTP 200）。若在此直接 exit 0，
+  # WhoScored 预测比分 / 篮球 / 历史回溯等国际数据源会一并停更。
+  # 改为「能更新的都更新」，后续步骤照常执行并部署。
+  JC_FETCH_FAILED=1
+  log "   [诊断] 竞彩与备用源可达性探测（判断是否海外 IP 封锁）："
+  for _u in "https://webapi.sporttery.cn/gateway/uniform/football/getMatchCalculatorV1.qry" \
+           "https://trade.500.com/jczq/" "https://liansai.500.com/"; do
+    _code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 -A "Mozilla/5.0" "$_u" 2>/dev/null || echo "ERR")
+    log "     $_u -> HTTP $_code"
+  done
+  log "==> 竞彩数据本次未更新（沿用上次成功快照），继续更新其余数据源"
 fi
 rm -f matches.json.bak_run
 
