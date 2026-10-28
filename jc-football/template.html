@@ -615,6 +615,24 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-dfoot .pend{color:var(--sub);font-weight:600}
 .sp-dlg{color:var(--weak);margin-left:auto}
 .sp-sec-head{font-size:13px;font-weight:800;color:var(--text);margin:16px 0 6px;padding-left:8px;border-left:4px solid var(--accent)}
+/* 比分预测：两大可折叠分区（今日预测 / 历史回溯），缩短首屏滚动、统一历史信息 */
+.sp-sec{margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.sp-sec-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 12px;font-weight:800;font-size:13px;color:var(--text);background:var(--line);user-select:none;-webkit-tap-highlight-color:transparent}
+.sp-sec-toggle:active{opacity:.85}
+.sp-sec .sp-caret{transition:transform .2s;color:var(--sub);font-size:11px;flex:0 0 auto}
+.sp-sec.collapsed .sp-caret{transform:rotate(-90deg)}
+.sp-sec-body{padding:8px 10px 10px}
+.sp-sec.collapsed .sp-sec-body{display:none}
+.sp-sub-head{font-size:12px;font-weight:700;color:var(--text);margin:13px 0 5px;padding-left:8px;border-left:3px solid var(--accent)}
+.sp-sub-head:first-child{margin-top:2px}
+/* 队标 + 队名单元格（比分预测 Tab 统一使用，免去翻译依赖） */
+.sp-tcell{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.sp-logo{width:20px;height:20px;object-fit:contain;flex:0 0 auto;border-radius:3px;background:#fff;box-shadow:0 0 0 1px var(--line);vertical-align:middle}
+.sp-tname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-tname.dim{color:var(--sub)}
+/* 队标加载失败：隐藏图片，保留队名（onerror 触发 .no-logo） */
+.sp-tcell.no-logo .sp-logo{display:none}
+.sp-tcell.no-logo{display:inline}
 .ws-jc{border-left:3px solid #faad14 !important}
 .ws-jcnum{display:inline-block;margin-left:auto;font-size:11px;font-weight:800;color:#5c3a00;background:linear-gradient(180deg,#ffd76b,#f0b429);border:1px solid #d99b1c;border-radius:10px;padding:2px 9px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .ws-jcnum.sm{font-size:9.5px;padding:1px 6px;margin-left:6px}
@@ -1367,33 +1385,36 @@ footer b{color:var(--sub)}
     <div class="fb-title">比分预测 · 独立参考源<span class="tip">独立数据源，与竞彩官方数据/推荐/模型零耦合，仅作比分参考，不构成任何投注建议</span></div>
 
     <!-- WhoScored 人工预测比分（主力）：以当天竞彩赛程为主干，全部列出，有预测挂比分/无预测标未推荐 -->
-    <div class="sp-sec-head">⚽ WhoScored 人工预测比分 · 竞彩赛程对照<span class="tip">以当天竞彩开出的比赛为唯一主干全部列出：WhoScored 有预测的对应挂上比分（附可信度与英文原名核对），没有的标「未推荐」并说明原因；比赛结束后自动回填实际赛果与命中情况</span></div>
-    <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
-    <div class="sp-filters" id="wsDateBar"></div>
-    <div id="wsList"></div>
-    <div class="sp-date-sec">
-      <div class="sp-date-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按北京日期回看，验证预测准不准；赛前标注过可信度（含「🔥高可信」）的场次会带同款徽章，可逐场核对赛前判断的实际表现（2026-10-22 起的比赛完整记录，更早的暂无快照）</span></div>
-      <div class="sp-filters" id="wsHistBar"></div>
-      <div id="wsHistList"></div>
-    </div>
-    <div class="sp-date-sec">
-      <div class="sp-date-head">🏆 准确度排行<span class="tip">基于 WhoScored 预测的真实赛后回测累积：精确命中=预测比分与实际完全一致；方向命中=胜负平方向一致。至少 3 场才入榜</span></div>
-      <div class="sp-filters" id="wsRankBar"></div>
-      <div id="wsRankList"></div>
+    <!-- 分区1：今日竞彩预测（默认展开） -->
+    <div class="sp-sec">
+      <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>⚽ 今日竞彩预测比分</span><span class="sp-caret">▾</span></div>
+      <div class="sp-sec-body">
+        <div class="sp-sub-head">WhoScored 人工预测 · 竞彩赛程对照<span class="tip">以当天竞彩开出的比赛为主干；有预测挂比分，无预测标未推荐；完赛后回填实际赛果与命中</span></div>
+        <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
+        <div class="sp-filters" id="wsDateBar"></div>
+        <div id="wsList"></div>
+        <div class="sp-sub-head">🤖 自建 Poisson 模型参考<span class="tip">透明自动化模型，与 WhoScored 独立，仅作交叉参考</span></div>
+        <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="spSummary"></div>
+        <div class="sp-reliable" id="spReliable"></div>
+        <div class="sp-filters" id="spFilters"></div>
+        <div id="spList"></div>
+      </div>
     </div>
 
-    <!-- 自建 Poisson 模型（辅助参考） -->
-    <div class="sp-sec-head">🤖 自建 Poisson 模型参考<span class="tip">透明自动化模型，与 WhoScored 互相独立，仅作交叉参考</span></div>
-    <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="spSummary"></div>
-    <div class="sp-reliable" id="spReliable"></div>
-    <div class="sp-filters" id="spFilters"></div>
-    <div id="spList"></div>
-    <div class="sp-date-sec">
-      <div class="sp-date-head">📅 日期回溯 · 按日期回看历史预测与实际赛果
-        <span class="tip">数据来自本 Tab 自建模型的本地历史（每日自动累积），与竞彩核心模型无关</span>
+    <!-- 分区2：历史回溯与命中统计（默认折叠，点标题展开） -->
+    <div class="sp-sec collapsed">
+      <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>📅 历史回溯与命中统计</span><span class="sp-caret">▾</span></div>
+      <div class="sp-sec-body">
+        <div class="sp-sub-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按日期回看验证准确与否（赛前🔥高可信场次带同款徽章）</span></div>
+        <div class="sp-filters" id="wsHistBar"></div>
+        <div id="wsHistList"></div>
+        <div class="sp-sub-head">🏆 准确度排行<span class="tip">基于预测的真实回测：精确命中=比分完全一致；方向命中=胜负平方向一致（≥3场入榜）</span></div>
+        <div class="sp-filters" id="wsRankBar"></div>
+        <div id="wsRankList"></div>
+        <div class="sp-sub-head">📅 自建模型日期回溯<span class="tip">按日期回看历史预测与实际赛果（本 Tab 每日自动累积的本地历史）</span></div>
+        <div class="sp-filters" id="spDateBar"></div>
+        <div id="spDateList"></div>
       </div>
-      <div class="sp-filters" id="spDateBar"></div>
-      <div id="spDateList"></div>
     </div>
   </div>
 
@@ -1610,8 +1631,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.58";
+const VERSION = "v1.7.59";
 const CHANGELOG = [
+  {
+    version: "v1.7.59",
+    date: "2026-10-28",
+    title: "比分预测页整洁化 + 队标化：免翻译看队、历史分区折叠",
+    fixes: [
+      "队标替代翻译：新增 fetch_crests.py 用 football-data.org 拉取各联赛球队 crest，经 team_map 归一化（含 TME 英文别名匹配 + 中文长短名级联 + 尔/耳形近字归一）生成 team_crests.json（613 条，英文/中文双键）；渲染层 spCrest() 大小写不敏感多形态回退，spTeamCell() 用「队标 + 队名」展示，加载失败自动回退队名——主流欧洲球队（曼城/阿森纳/那不勒斯/巴黎圣日耳曼等）全覆盖，不再受翻译不全影响",
+      "页面整洁化：比分预测 Tab 由平铺的 5 个子区重构为「今日竞彩预测」（默认展开）与「历史回溯与命中统计」（默认折叠）两个可折叠分区，历史信息归并统一、首屏滚动大幅缩短；新增 sp-sec / sp-sec-toggle / sp-sub-head 样式与 spToggleSec 折叠交互",
+      "统一卡片：今日预测、Poisson、赛后回溯、日期回溯四类卡片均接入 spTeamCell 队标单元格，视觉一致"
+    ],
+    features: [
+      "队标在今日预测、Poisson、WhoScored 赛后回溯、日期回溯四处一致呈现，对应日期竞彩比赛直接看图识队",
+      "历史回溯/准确度/赛后回溯折叠收纳，点击分区标题即可展开，页面更整洁、滚动更短"
+    ]
+  },
   {
     version: "v1.7.58",
     date: "2026-10-28",
@@ -4882,6 +4917,10 @@ function renderFD(){
 /* ================= 比分预测（独立源） ================= */
 /* 英文队名 → 竞彩中文名 映射（仅用于「比分预测」独立 Tab 汉化展示，不影响任何核心数据/模型） */
 const SP_TEAM_ZH = __SP_TEAM_ZH_PLACEHOLDER__;
+/* 队名 → 队标(crest) URL 映射（英文 FD 名 + 中文竞彩名 双键，由 fetch_crests.py 生成）。
+   渲染层用 spCrest() 查：无论拿到英文(FD源)还是中文(竞彩历史源)队名都能取到队标，
+   免去翻译依赖；无队标时回退队名文本。 */
+const SP_TEAM_CREST = __SP_TEAM_CREST_PLACEHOLDER__;
 /* 联赛中文名（历史记录兜底，正常已为中文） */
 const WS_LEAGUE_ZH = {"Premier League":"英超","Championship":"英冠","LaLiga":"西甲","Bundesliga":"德甲","Serie A":"意甲","Ligue 1":"法甲","Eredivisie":"荷甲","Liga Portugal":"葡超","Jupiler Pro League":"比甲","Super Lig":"土超","Allsvenskan":"瑞超","Eliteserien":"挪超","Brasileirao":"巴甲","MLS":"美职联"};
 
@@ -4899,6 +4938,43 @@ function spZh(n){
   const lead = base.replace(/^\s*[A-Z]{1,3}\s+/, "").trim();
   if(lead && SP_TEAM_ZH[lead]) return SP_TEAM_ZH[lead];
   return n;
+}
+
+/* 队名 → 队标 URL：英文/中文任一形态命中即返回；否则空串（渲染层回退队名）。
+   做大小写不敏感 + spZh 归一化回退，确保「曼城/阿森纳」等竞彩短名也能取到队标。 */
+function spCrest(n){
+  if(!n) return "";
+  if(SP_TEAM_CREST[n]) return SP_TEAM_CREST[n];
+  const lo = String(n).toLowerCase();
+  if(SP_TEAM_CREST[lo]) return SP_TEAM_CREST[lo];
+  const z = spZh(n);
+  if(z && z !== n){
+    if(SP_TEAM_CREST[z]) return SP_TEAM_CREST[z];
+    const zl = z.toLowerCase();
+    if(zl !== lo && SP_TEAM_CREST[zl]) return SP_TEAM_CREST[zl];
+  }
+  return "";
+}
+
+/* 队名单元格：队标 + 队名（加载失败/无队标时仅显示队名）。
+   name 传原始名（英文或中文皆可），展示名用 spZh 取中文，保证一致且无需完美翻译。 */
+function spTeamCell(name, opts){
+  opts = opts || {};
+  const cr = spCrest(name);
+  const zh = spZh(name);
+  const cls = "sp-tname" + (opts.dim ? " dim" : "");
+  if(cr){
+    return `<span class="sp-tcell"><img class="sp-logo" src="${cr}" alt="" loading="lazy" `
+      + `onerror="this.parentNode.classList.add('no-logo')">`
+      + `<span class="${cls}">${zh}</span></span>`;
+  }
+  return `<span class="${cls}">${zh}</span>`;
+}
+
+/* 比分预测分区折叠 */
+function spToggleSec(el){
+  const sec = el.closest(".sp-sec");
+  if(sec) sec.classList.toggle("collapsed");
 }
 
 /* ================= 比分预测 · WhoScored 区块（竞彩主干化，v1.7.23） =================
@@ -5067,7 +5143,7 @@ function renderWhoScored(){
           if(stt) res = `<div class="ws-res"><span class="sp-dact" style="color:var(--weak)">${stt}</span></div>`;
         }
         html += `<div class="sp-card ws-jc ${fin?"sp-fin":""}">
-          <div class="sp-teams"><span class="sp-home">${j.home}</span><span class="sp-vs">vs</span><span class="sp-away">${j.away}</span>
+          <div class="sp-teams">${spTeamCell(j.home)}<span class="sp-vs">vs</span>${spTeamCell(j.away)}
             <span class="ws-jcnum">竞彩 ${j.num}</span></div>
           <div class="sp-enline">${j.league||""} · 开球 ${j.time||""}${nameMismatch?` · <span class="ws-namewarn">⚠️队名待核对：${zhH} vs ${zhA}</span>`:``}</div>
           ${predBlock}
@@ -5106,7 +5182,7 @@ function renderWhoScored(){
         rows.forEach(r=>{
           const zhH = spZh(r.home), zhA = spZh(r.away);
           x += `<div class="sp-dcard ws-jc">
-            <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}<span class="ws-jcnum sm">竞彩 ${r.jcNum}</span></div>
+            <div class="sp-dteams">${spTeamCell(r.home)} <span class="sp-vs">vs</span> ${spTeamCell(r.away)}<span class="ws-jcnum sm">竞彩 ${r.jcNum}</span></div>
             <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
             <div class="sp-dfoot">${wsPreConfHtml(r.preConf)}<span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span><span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span><span class="sp-dlg">${r.league||""}</span></div>
           </div>`;
@@ -5335,7 +5411,7 @@ function renderScorePred(){
       h += `<div class="sp-rel-card"><div class="sp-rel-h">⭐ 预测较准的球队（按精确比分命中）</div><div class="sp-rows">`;
       tm.slice(0,8).forEach(x=>{
         const zhn = spZh(x.team);
-        h += `<div class="sp-row"><span class="sp-name">${zhn}</span>`
+        h += `<div class="sp-row"><span class="sp-name">${spTeamCell(x.team)}</span>`
           + (zhn!==x.team ? `<span class="sp-en">${x.team}</span>` : ``)
           + `<span class="sp-val good">${x.exactHit}%</span>`
           + `<span class="sp-meta">方向${x.outcomeHit}% · ${x.n}场</span></div>`;
@@ -5403,7 +5479,7 @@ function renderScorePred(){
       const zhH = spZh(m.home), zhA = spZh(m.away);
       const jcNum = spJcNumOf(m, m.date);
       html += `<div class="sp-card ${statusCls}">
-        <div class="sp-teams"><span class="sp-home">${zhH}</span><span class="sp-vs">vs</span><span class="sp-away">${zhA}</span>${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
+        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
         ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
         <div class="sp-scoreline">
           <div class="sp-predwrap"><div class="sp-label">预测比分</div>${predScore}</div>
@@ -5451,7 +5527,7 @@ function renderScorePred(){
       const zhH = spZh(r.home), zhA = spZh(r.away);
       const jcN = spJcNumOf(r, state.spDate);
       lh += `<div class="sp-dcard${jcN?" ws-jc":""}">
-        <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}${jcN?`<span class="ws-jcnum sm">竞彩 ${jcN}</span>`:``}</div>
+        <div class="sp-dteams">${spTeamCell(r.home)} <span class="sp-vs">vs</span> ${spTeamCell(r.away)}${jcN?`<span class="ws-jcnum sm">竞彩 ${jcN}</span>`:``}</div>
         <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH!=null?r.actH:"-"}:${r.actA!=null?r.actA:"-"}</span></div>
         <div class="sp-dfoot"><span class="${r.exactHit===null?'pend':(r.exactHit?"good":"bad")}">${r.exactHit===null?"待定":(r.exactHit?"✓精确":"✗未中")}</span>`
         + `<span class="${r.outcomeHit===null?'pend':(r.outcomeHit?"good":"bad")}">${r.outcomeHit===null?"方向待定":(r.outcomeHit?"方向✓":"方向✗")}</span>`

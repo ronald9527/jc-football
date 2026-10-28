@@ -220,6 +220,16 @@ def main():
     except Exception as e:
         print("! team_map 导入失败，SP_TEAM_ZH 为空：%s" % e)
     js_sp_team_zh = json.dumps(sp_team_zh, ensure_ascii=False).replace("</", "<\\/")
+    # SP_TEAM_CREST：队名 → 队标(crest) URL（英文 FD 名 + 中文竞彩名 双键），由 fetch_crests.py 生成
+    sp_team_crest = {}
+    tcp = os.path.join(HERE, "team_crests.json")
+    if os.path.exists(tcp):
+        try:
+            with open(tcp, encoding="utf-8") as f:
+                sp_team_crest = json.load(f)
+        except Exception as e:
+            print("! team_crests.json 读取失败：%s" % e)
+    js_sp_team_crest = json.dumps(sp_team_crest, ensure_ascii=False).replace("</", "<\\/")
     out = (tpl.replace("__DATA_PLACEHOLDER__", js_data)
               .replace("__HISTORY_PLACEHOLDER__", js_hist)
               .replace("__CONFIG_PLACEHOLDER__", js_cfg)
@@ -235,6 +245,7 @@ def main():
               .replace("__BSD_PLACEHOLDER__", js_bsd)
               .replace("__SCORE_PREDICT_PLACEHOLDER__", js_scorepred)
               .replace("__SP_TEAM_ZH_PLACEHOLDER__", js_sp_team_zh)
+              .replace("__SP_TEAM_CREST_PLACEHOLDER__", js_sp_team_crest)
               .replace("__WHOSCORED_PLACEHOLDER__", js_ws)
               .replace("__BASKETBALL_PLACEHOLDER__", js_bk)
               .replace("__BASKETBALL_HISTORY_PLACEHOLDER__", js_bkh)

@@ -210,6 +210,13 @@ else
 fi
 set -e
 
+log "==> 步骤1.9 队标映射 (fetch_crests.py --no-fetch)"
+# 离线从已抓队标文件 + team_map 反推中文键（曼城/阿森纳等竞彩短名），
+# 保证 team_map 增补后队标映射同步；FD crest 本体随首次联网抓取结果入库、长期稳定。
+set +e
+"$PY" fetch_crests.py --no-fetch 2>/dev/null || true
+set -e
+
 log "==> 步骤2 构建页面 (build_panel.py)"
 # 容错：构建脚本偶发异常不应让定时任务被判失败（否则触发告警/邮件）。
 # 抓取步骤已恢复数据，构建失败可沿用上次 index.html，下个周期重试。
