@@ -609,8 +609,8 @@ def check_code_integrity(report):
                 issues.append(f"template.html 缺少占位符: {ph}")
                 print(f"  ❌ template.html 缺少占位符: {ph}")
         print(f"  ✅ template.html 占位符检查完成({len(placeholders)}个)")
-        # 检查关键tab是否存在
-        for tab in ["halffull", "highodds", "strongweak", "hkmo"]:
+        # 检查关键tab是否存在（halffull 半全场 tab 已主动下线，不再检查）
+        for tab in ["highodds", "strongweak", "hkmo"]:
             if f'data-tab="{tab}"' not in tpl:
                 issues.append(f"template.html 缺少tab: {tab}")
                 print(f"  ⚠️ template.html 缺少tab: {tab}")

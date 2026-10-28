@@ -400,7 +400,9 @@ def check_basketball_ai():
                 # 最新一组应为近期（今天或昨天），证明串关每日生成
                 today = datetime.datetime.now().strftime("%Y-%m-%d")
                 yest = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-                latest = recs[0].get("date") if recs else None
+                # 修复：取所有记录中日期最大的一组（recs[0] 未必是日期最新，
+                # 文件中今日组常排在后面，直接取 [0] 会误把旧日期当最新 → 虚假「停更」告警）
+                latest = max((r.get("date") for r in recs if r.get("date")), default=None)
                 if latest not in (today, yest):
                     add("WARN", "隔离", "篮球串关最新一组 %s 非今/昨（%s）——串关可能停更"
                         % (latest, today))
