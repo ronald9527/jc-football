@@ -329,6 +329,19 @@ PY
       echo "$NOW_TS" > .last_deploy.ts
       echo "$NEW_SHA" > .last_deploy.sha
       log "==> 已部署并记录快照（距上次 ${GAP}s）"
+      # 部署后线上校验：专抓「部署成功但线上仍是旧数据/功能校验未过」类隐患
+      # （2026-10-28 足球、篮球两次中招，根因都是只看版本号发现不了）。
+      # 校验失败自动重部署一次；仍失败则告警（不阻断，避免部署死循环）。
+      set +e
+      "$PY" verify_deploy.py
+      VRC=$?
+      set -e
+      if [ "$VRC" -ne 0 ]; then
+        log "!! 线上校验未通过，疑似部署未生效，自动重部署一次…"
+        "$PY" deploy_cf.py
+        set +e; "$PY" verify_deploy.py; VRC2=$?; set -e
+        if [ "$VRC2" -ne 0 ]; then log "!! 二次校验仍失败，请人工核查线上状态"; fi
+      fi
     fi
   else
     log "==> 步骤3 跳过部署：数据无变化且距上次部署 ${GAP}s < 下限（已节省 Cloudflare 构建额度）"

@@ -1637,8 +1637,20 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.62";
+const VERSION = "v1.7.65";
 const CHANGELOG = [
+  {
+    version: "v1.7.63",
+    date: "2026-10-28",
+    title: "篮球 AI 历史回溯默认显示最新有赛果日（修复「篮球没有回溯」）",
+    fixes: [
+      "篮球「AI预测→历史回溯」此前默认取日期倒序最新的那一天（=当天待赛日），点开只见待赛场、看不到任何命中回看，被误认为「篮球没有回溯」；现默认展示「最新有赛果的一天」（数据中已结算记录所在最晚日期，如 2026-10-26），打开即见逐场命中明细",
+      "回溯日期按钮徽章优化：有赛果日显示「命中/已结算✓」，待赛日显示「待N」，一眼区分可回看与待开奖"
+    ],
+    features: [
+      "新增部署后线上自动校验（verify_deploy.py，接入 run_daily.sh）：每次部署后抓取线上页面，断言 VERSION、篮球 AI 已赛记录数、足球 WhoScored 竞彩有预测记录数与本地构建完全一致；任一项不一致自动重部署一次——根治「部署成功但线上仍是旧数据/功能校验未过」反复中招（2026-10-28 足球、篮球两次事故同源）"
+    ]
+  },
   {
     version: "v1.7.61",
     date: "2026-10-28",
@@ -5934,15 +5946,20 @@ function renderBkAiHistory(){
 
   // 日期选择栏
   const dates = [...new Set(h.map(r=>r.date))].sort().reverse();
-  if(!state.bkAiDate || dates.indexOf(state.bkAiDate) < 0) state.bkAiDate = dates[0];
+  // 默认展示「最新有赛果的一天」：此前直接取 dates[0]（=当天待赛日），点开回溯
+  // 只见待赛场、看不到命中回看，被误认为「没有回溯」。倒序 dates 里第一个含
+  // 已结算记录（topHit!=null）的日期即「最新有赛果日」，全无赛果时才退回 dates[0]。
+  const settledDates = dates.filter(d => h.some(r=>r.date===d && r.topHit!==null));
+  if(!state.bkAiDate || dates.indexOf(state.bkAiDate) < 0) state.bkAiDate = settledDates[0] || dates[0];
   if(dateBar){
     dateBar.innerHTML = dates.slice(0, 40).map(d=>{
       const day = h.filter(r=>r.date === d);
       const settled = day.filter(r=>r.topHit !== null);
       const hh = settled.filter(r=>r.topHit === true).length;
       const active = (d === state.bkAiDate);
+      const badge = settled.length ? `${hh}/${settled.length}✓` : `待${day.length}`;
       return `<button class="sp-chip ${active ? "on":""}" data-dt="${d}">${d.slice(5)}`
-           + ` <span style="font-size:9px;">${hh}/${settled.length}✓</span></button>`;
+           + ` <span style="font-size:9px;">${badge}</span></button>`;
     }).join("");
     dateBar.querySelectorAll(".sp-chip").forEach(b=>{
       b.onclick = ()=>{ state.bkAiDate = b.dataset.dt; renderBkAi(); };
