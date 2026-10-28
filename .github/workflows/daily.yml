@@ -15,7 +15,7 @@ on:
     branches: [main]         # 推到 main 也跑一次（即时自检）
 
 permissions:
-  contents: read             # 只读代码；部署用 Cloudflare token(secret)，不回写 GitHub
+  contents: write             # 只读代码；部署用 Cloudflare token(secret)，不回写 GitHub
 
 concurrency:
   group: daily-refresh
@@ -64,3 +64,22 @@ jobs:
       - name: 部署后在线校验（门禁）
         if: always()
         run: python3 verify_deploy.py
+      - name: 回写每日数据快照（保活定时任务 + 留数据历史）
+        if: always()
+        continue-on-error: true
+        run: |
+          FILES="matches.json whoscored_data.json whoscored_recent.json whoscored_history.json \
+          basketball.json basketball_ai.json basketball_ai_accuracy.json basketball_history.json \
+          basketball_parlay_history.json basketball_stats.json history.json parlay_history.json \
+          expert_history.json score_predict.json score_predict_accuracy.json smart_model.json \
+          half_full_history.json team_crests.json fd_data.json"
+          git add -f $FILES 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "数据快照无变化，跳过提交"
+          else
+            TS=$(TZ=Asia/Shanghai date '+%F %H:%M')
+            git -c user.name="jc-bot" -c user.email="jc-bot@users.noreply.github.com" \
+              commit -m "chore(data): 每日数据快照 $TS [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "已回写数据快照"
+          fi
