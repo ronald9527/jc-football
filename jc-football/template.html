@@ -612,6 +612,7 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-dfoot{display:flex;gap:8px;align-items:center;font-size:10.5px;flex-wrap:wrap}
 .sp-dfoot .good{color:var(--good);font-weight:700}
 .sp-dfoot .bad{color:var(--bad);font-weight:700}
+.sp-dfoot .pend{color:var(--sub);font-weight:600}
 .sp-dlg{color:var(--weak);margin-left:auto}
 .sp-sec-head{font-size:13px;font-weight:800;color:var(--text);margin:16px 0 6px;padding-left:8px;border-left:4px solid var(--accent)}
 .ws-jc{border-left:3px solid #faad14 !important}
@@ -1609,8 +1610,38 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.56";
+const VERSION = "v1.7.58";
 const CHANGELOG = [
+  {
+    version: "v1.7.58",
+    date: "2026-10-28",
+    title: "日期回溯去重根治：同一竞彩对阵不再重复卡片 + TME 缩短映射致竞彩场次误删修复",
+    fixes: [
+      "根因(重复卡片)：v1.7.57 把 history.json 中文竞彩源纳入 dateIndex 后，与原有 FD 英文源(hist 循环)对同一场竞彩同时写入「英文 FD 版 + 中文竞彩版」两条记录；渲染层 spJcFilter 两者都通过（翻译后同属竞彩对阵）→ 同一场竞彩显示两张卡片（约 270 对竞彩对阵重复，如 27号 萨索洛vs拉齐奥 既显示 US Sassuolo 又显示 萨索洛）",
+      "根因(误删)：清洗归一化时 team_map 存在「缩短映射」（阿斯顿维拉→维拉、曼彻斯特城→曼城），使存储中文名被翻成缩短形、与竞彩集合原始名对不上，导致 曼城vs雅典AEK、伍尔弗汉普顿vs朴次茅斯 等 10 场竞彩被误判非竞彩而剔除",
+      "修复：dateIndex 按「翻译归一后的竞彩对阵」同日去重——保留优先级 ① 已结算(有实际赛果) ② 中文竞彩版(避免英文源卡片)；归一化规则改为「已是中文则原样保留、仅对英文做翻译」，竞彩对阵集合同时收录「原始名 + 归一名」两形态，彻底消除 TME 缩短映射歧义",
+      "dateIndex 仅保留竞彩对阵条目（翻译后双方含中文且对阵在竞彩集合），纯英文非竞彩噪声直接剔除，文件体积大幅下降"
+    ],
+    features: [
+      "历史竞彩日 681/681 全进回溯（0 遗漏），翻译归一后重复对阵数 0，27号等回溯区每场竞彩仅一张卡片",
+      "竞彩对阵集合与渲染层 spJcPairs 完全一致（当天赛程 matches.json + 竞彩历史档案 history.json），过滤结果可预期、无错配"
+    ]
+  },
+  {
+    version: "v1.7.57",
+    date: "2026-10-28",
+    title: "比分预测全量无遗漏 + 翻译补全：历史竞彩日 681/681 全进回溯，FD 35 正式名可译",
+    fixes: [
+      "根因(遗漏)：dateIndex(日期回溯区)此前仅由「accuracy 回溯(hist) + 近9天 local-odds」构成，538/681 历史竞彩记录缺失 → 绝大多数历史日回溯空白（用户反馈『还有遗漏』）",
+      "修复：把竞彩历史档案(history.json)的每一场都写入 dateIndex（id/日期+队名去重），实际赛果取 result/scoreActual，据 预测vs实际 算精确/方向命中；无赛果则命中置 null → 渲染显示『待定』而非误判『未中』",
+      "翻译补全：FD(football-data.org) 返回的是完整正式队名（Atalanta BC / Bayer 04 Leverkusen / FC Internazionale Milano / 1. FC Köln 等），此前 spZh 仅覆盖常用短名→35 个正式名未翻译、被 spJcFilter 隐藏；team_map 增补这 35 条正式名→规范中文映射，FD 竞彩场次能以正确中文显示不再漏显",
+      "日期回溯按钮上限 30→200（现共 123 个历史日），任意历史竞彩日均可点选回看，不再有不可达的空白日"
+    ],
+    features: [
+      "日期回溯区历史竞彩日覆盖 681/681 场（0 遗漏），每场均有 预测 vs 实际赛果 与命中统计（已结算场显示精确/方向命中率，未结算显示『待定』）",
+      "当天赛程 matches.json 源 13/13 全覆盖，FD 英文正式名可正确翻译为竞彩中文名"
+    ]
+  },
   {
     version: "v1.7.56",
     date: "2026-10-28",
@@ -5398,7 +5429,7 @@ function renderScorePred(){
     }
     if(!state.spDate || dl.indexOf(state.spDate) < 0) state.spDate = dl[0];
     let dh = "";
-    dl.slice(0, 30).forEach(d=>{
+    dl.slice(0, 200).forEach(d=>{
       dh += `<button class="sp-chip ${state.spDate===d?"on":""}" data-dt="${d}">${d}</button>`;
     });
     dateBar.innerHTML = dh;
@@ -5410,18 +5441,20 @@ function renderScorePred(){
       dateListBox.innerHTML = `<div class="empty">该日期无对应竞彩的记录（非竞彩场次已隐藏）</div>`;
       return;
     }
-    let hitE=0, hitO=0;
-    rows.forEach(r=>{ if(r.exactHit) hitE++; if(r.outcomeHit) hitO++; });
-    let lh = `<div class="sp-date-sum">${state.spDate} · 共 <b>${rows.length}</b> 场 · 精确命中 <b>${hitE}</b> 场（${(hitE/rows.length*100).toFixed(1)}%）`
-      + ` · 方向命中 <b>${hitO}</b> 场（${(hitO/rows.length*100).toFixed(1)}%）</div><div class="sp-date-grid">`;
+    let hitE=0, hitO=0, evN=0;
+    rows.forEach(r=>{ if(r.exactHit!=null){ evN++; if(r.exactHit) hitE++; if(r.outcomeHit) hitO++; } });
+    const pctE = evN? (hitE/evN*100).toFixed(1) : "-";
+    const pctO = evN? (hitO/evN*100).toFixed(1) : "-";
+    let lh = `<div class="sp-date-sum">${state.spDate} · 共 <b>${rows.length}</b> 场 · 已结算 <b>${evN}</b> 场 · 精确命中 <b>${hitE}</b> 场（${pctE}%）`
+      + ` · 方向命中 <b>${hitO}</b> 场（${pctO}%）</div><div class="sp-date-grid">`;
     rows.forEach(r=>{
       const zhH = spZh(r.home), zhA = spZh(r.away);
       const jcN = spJcNumOf(r, state.spDate);
       lh += `<div class="sp-dcard${jcN?" ws-jc":""}">
         <div class="sp-dteams">${zhH} <span class="sp-vs">vs</span> ${zhA}${jcN?`<span class="ws-jcnum sm">竞彩 ${jcN}</span>`:``}</div>
-        <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH}:${r.actA}</span></div>
-        <div class="sp-dfoot"><span class="${r.exactHit?"good":"bad"}">${r.exactHit?"✓精确":"✗未中"}</span>`
-        + `<span class="${r.outcomeHit?"good":"bad"}">${r.outcomeHit?"方向✓":"方向✗"}</span>`
+        <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH!=null?r.actH:"-"}:${r.actA!=null?r.actA:"-"}</span></div>
+        <div class="sp-dfoot"><span class="${r.exactHit===null?'pend':(r.exactHit?"good":"bad")}">${r.exactHit===null?"待定":(r.exactHit?"✓精确":"✗未中")}</span>`
+        + `<span class="${r.outcomeHit===null?'pend':(r.outcomeHit?"good":"bad")}">${r.outcomeHit===null?"方向待定":(r.outcomeHit?"方向✓":"方向✗")}</span>`
         + `<span class="sp-dlg">${r.league||""}</span></div>
       </div>`;
     });

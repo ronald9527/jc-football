@@ -1,6 +1,54 @@
 {
  "history": [
   {
+   "id": 558556,
+   "league": "意甲",
+   "home": "US Sassuolo Calcio",
+   "away": "SS Lazio",
+   "date": "2026-10-27",
+   "predH": 0,
+   "predA": 2,
+   "actH": 2,
+   "actA": 6,
+   "predOutcome": "A",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 3.0
+  },
+  {
+   "id": 558555,
+   "league": "意甲",
+   "home": "AS Roma",
+   "away": "Cagliari Calcio",
+   "date": "2026-10-27",
+   "predH": 2,
+   "predA": 1,
+   "actH": 4,
+   "actA": 2,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.5
+  },
+  {
+   "id": 558557,
+   "league": "意甲",
+   "home": "Torino FC",
+   "away": "Como 1907",
+   "date": "2026-10-27",
+   "predH": 2,
+   "predA": 2,
+   "actH": 1,
+   "actA": 3,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
    "id": 567331,
    "league": "葡超",
    "home": "CD Santa Clara",
@@ -1313,6 +1361,22 @@
    "mae": 1.0
   },
   {
+   "id": 565833,
+   "league": "德甲",
+   "home": "VfB Stuttgart",
+   "away": "VfB Stuttgart",
+   "date": "2026-10-23",
+   "predH": 1,
+   "predA": 1,
+   "actH": 2,
+   "actA": 3,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
+  },
+  {
    "id": 576424,
    "league": "CLI",
    "home": "SE Palmeiras",
@@ -1393,6 +1457,22 @@
    "mae": 1.0
   },
   {
+   "id": 575372,
+   "league": "CL",
+   "home": "FC Bayern München",
+   "away": "FC Bayern München",
+   "date": "2026-10-21",
+   "predH": 3,
+   "predA": 3,
+   "actH": 2,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.0
+  },
+  {
    "id": 561826,
    "league": "英冠",
    "home": "Wolverhampton Wanderers FC",
@@ -1455,6 +1535,22 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 2.0
+  },
+  {
+   "id": 575362,
+   "league": "CL",
+   "home": "VfB Stuttgart",
+   "away": "VfB Stuttgart",
+   "date": "2026-10-20",
+   "predH": 1,
+   "predA": 1,
+   "actH": 1,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "D",
+   "exactHit": true,
+   "outcomeHit": true,
+   "mae": 0.0
   },
   {
    "id": 560606,
@@ -1953,6 +2049,22 @@
    "mae": 3.5
   },
   {
+   "id": 560608,
+   "league": "英超",
+   "home": "Nottingham Forest FC",
+   "away": "Arsenal FC",
+   "date": "2026-10-18",
+   "predH": 0,
+   "predA": 0,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 561884,
    "league": "英冠",
    "home": "Millwall FC",
@@ -2383,6 +2495,86 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 2.5
+  },
+  {
+   "id": 561881,
+   "league": "英冠",
+   "home": "Norwich City FC",
+   "away": "Norwich City FC",
+   "date": "2026-10-17",
+   "predH": 3,
+   "predA": 2,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 2.0
+  },
+  {
+   "id": 561885,
+   "league": "英冠",
+   "home": "Bristol City FC",
+   "away": "Bristol City FC",
+   "date": "2026-10-17",
+   "predH": 1,
+   "predA": 1,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
+   "id": 565824,
+   "league": "德甲",
+   "home": "SV 07 Elversberg",
+   "away": "FC Augsburg",
+   "date": "2026-10-17",
+   "predH": 3,
+   "predA": 3,
+   "actH": 4,
+   "actA": 3,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
+   "id": 565825,
+   "league": "德甲",
+   "home": "FC Bayern München",
+   "away": "FC Bayern München",
+   "date": "2026-10-17",
+   "predH": 3,
+   "predA": 2,
+   "actH": 6,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 2.0
+  },
+  {
+   "id": 565822,
+   "league": "德甲",
+   "home": "Hamburger SV",
+   "away": "VfB Stuttgart",
+   "date": "2026-10-17",
+   "predH": 1,
+   "predA": 3,
+   "actH": 1,
+   "actA": 0,
+   "predOutcome": "A",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
   },
   {
    "id": 558872,
@@ -12225,6 +12417,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-10-28 03:04:51",
+ "updatedAt": "2026-10-28 14:32:04",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }

@@ -2172,6 +2172,45 @@ AC奥卢|AC Oulu|Oulu
 阿联酋亚运男足|UAE U23|United Arab Emirates U23
 韩国亚运男足|South Korea U23|Korea Republic U23
 采列|Celje|NK Celje
+
+# v1.7.57：FD(football-data.org) 完整正式队名 → 规范中文（此前 spZh 仅覆盖常用短名，
+# 导致 Atalanta BC / Bayer 04 Leverkusen / FC Internazionale Milano 等 35 个正式名未翻译→隐藏；
+# 补全后 FD 返回的竞彩场次能以正确中文显示，不再因翻译失败被 spJcFilter 隐藏而遗漏）
+科隆|1. FC Köln
+柏林联合|1. FC Union Berlin
+美因茨|1. FSV Mainz 05
+亚特兰大|Atalanta BC
+勒沃库森|Bayer 04 Leverkusen
+门兴格拉德巴赫|Borussia Mönchengladbach
+马德里竞技|Club Atlético de Madrid
+阿拉维斯|Deportivo Alavés
+热那亚|Genoa CFC
+马拉加|Málaga CF
+马赛|Olympique de Marseille
+西班牙人|RCD Espanyol de Barcelona
+朗斯|Racing Club de Lens
+巴列卡诺|Rayo Vallecano de Madrid
+皇家贝蒂斯|Real Betis Balompié
+皇家社会|Real Sociedad de Fútbol
+桑坦德竞技|Real Racing Club de Santander
+国际米兰|FC Internazionale Milano
+埃尔弗斯堡|SV 07 Elversberg
+本菲卡|Sport Lisboa e Benfica
+里斯本竞技|Sporting Clube de Portugal
+布拉加|Sporting Clube de Braga
+狼队|Wolverhampton Wanderers FC
+特温特|FC Twente '65
+威廉二世|Willem II Tilburg
+斯旺西|Swansea City AFC
+雷克瑟姆|Wrexham AFC
+坎布尔|SC Cambuur-Leeuwarden
+米内罗竞技|CA Mineiro
+巴拉纳竞技|CA Paranaense
+格雷米奥|Grêmio FBPA
+雷莫|Clube do Remo
+马德拉航海|CS Marítimo
+法马利康|FC Famalicão
+维塞乌学院|Académico de Viseu FC
 """
 
 # ---- 构建归一化查表 ----

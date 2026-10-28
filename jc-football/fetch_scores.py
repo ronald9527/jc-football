@@ -34,6 +34,7 @@ import math
 import urllib.request
 import urllib.error
 from datetime import datetime, timedelta
+import re as _RE  # 顶层导入，供历史补全/翻译复用
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(HERE, "fd_config.json")          # 仅读 api_key，不碰竞彩数据
@@ -882,6 +883,213 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
             "predOutcome": _m.get("predOutcome"), "actOutcome": None,
             "exactHit": None, "outcomeHit": None, "mae": None,
         })
+
+    # v1.7.57：历史竞彩日【全量】覆盖——把竞彩历史档案(history.json)的每一场都写入 dateIndex，
+    # 确保「日期回溯」区对任一历史竞彩日都不缺场次。此前 dateIndex 仅由「accuracy 回溯(hist) +
+    # 近9天 local-odds」构成，538/681 历史记录缺失 → 绝大多数历史日回溯空白（用户反馈「还有遗漏」）。
+    # 已存在的(id 命中 或 日期+队名 命中)不重复添加；实际赛果取 result/scoreActual，据 预测vs实际 算命中。
+    _seen_ids = set()
+    _seen_pairs = set()
+    for _d, _arr in date_index.items():
+        for _x in _arr:
+            if _x.get("id") is not None:
+                _seen_ids.add(_x.get("id"))
+            if _x.get("home") and _x.get("away"):
+                _seen_pairs.add((_d, _x.get("home"), _x.get("away")))
+    _hp_all = os.path.join(HERE, "history.json")
+    if os.path.exists(_hp_all):
+        try:
+            _hj_all = json.load(open(_hp_all, encoding="utf-8")) or {}
+            for _r in (_hj_all.get("records") or []):
+                _rid = _r.get("id")
+                _jh, _ja = _r.get("home", ""), _r.get("away", "")
+                _lg = _r.get("league", "")
+                _date = _r.get("date", "")
+                if not _jh or not _ja or not _date:
+                    continue
+                # v1.7.57：不再以 _seen_ids/_seen_pairs 提前跳过——local-odds/hist 已写入的中文
+                # 条目需要被本循环「就地升级」（补实际赛果+命中），否则会保留 null 实际导致空白。
+                # 改为：先算好 预测/实际/命中，再查是否已存在同名(中文)条目→就地升级，否则新增。
+                # 预测比分：优先 scoreRec.predicted（赛前预测），退路 1:1
+                _ph = _pa = None
+                _ps = ((_r.get("scoreRec") or {}).get("predicted") or "").strip()
+                if _ps:
+                    for _sep in (":", "：", "-"):
+                        if _sep in _ps:
+                            try:
+                                _ph, _pa = (int(v.strip()) for v in _ps.split(_sep))
+                            except Exception:
+                                _ph = _pa = None
+                            break
+                if _ph is None or _pa is None:
+                    _ph, _pa = 1, 1
+                # 实际赛果：result{home,away} 优先，退路 scoreActual / actH,actA
+                _ah = _aa = None
+                _res = _r.get("result")
+                if isinstance(_res, dict) and _res.get("score"):
+                    _ah, _aa = _res.get("home"), _res.get("away")
+                else:
+                    _sa = _r.get("scoreActual")
+                    if isinstance(_sa, str) and ":" in _sa:
+                        try:
+                            _ah, _aa = (int(v.strip()) for v in _sa.split(":"))
+                        except Exception:
+                            _ah = _aa = None
+                    else:
+                        _ah, _aa = _r.get("actH"), _r.get("actA")
+                # v1.7.57：本记录缺实际赛果时，尝试从同日已存在回溯(hist)条目借用——
+                # hist 条目用 FD 英文队名且常已回填真实赛果（如近期刚结算、history.json 尚未回填
+                # result 的比赛）。按「翻译后队名」匹配同日条目，命中则借用其 actH/actA，
+                # 使「预测 vs 实际」对近期比赛也完整（避免可见中文条目显示「-:-」而隐藏英文条目却有结果）。
+                if _ah is None and _aa is None:
+                    try:
+                        from team_map import TEAM_EN2ZH as _TME
+                        _PREF = r"\b(FC|CF|AC|AS|SC|SV|SK|NK|FK|UD|US|SS|RC|CD|BK|SD|JK|KF|GD|RJ|VfL|VfB|Calcio|Club|Clube|Futebol|Football|Fotboll)\b"
+                        def _tr(n):
+                            if not n:
+                                return n
+                            if n in _TME:
+                                return _TME[n]
+                            _t = _RE.sub(_PREF, "", n, flags=_RE.I)
+                            _t = _RE.sub(r"\b(1[89]\d{2}|20[0-2]\d)\b", "", _t)
+                            _t = _RE.sub(r"\s+", " ", _t).strip()
+                            if _t and _t in _TME:
+                                return _TME[_t]
+                            _t2 = _RE.sub(r"^\s*[A-Z]{1,3}\s+", "", _t).strip()
+                            if _t2 and _t2 in _TME:
+                                return _TME[_t2]
+                            return n
+                        for _e in date_index.get(_date, []):
+                            _eh, _ea = _tr(_e.get("home", "")), _tr(_e.get("away", ""))
+                            if (_eh == _jh and _ea == _ja) or (_eh == _ja and _ea == _jh):
+                                if _e.get("actH") is not None and _e.get("actA") is not None:
+                                    _ah, _aa = _e.get("actH"), _e.get("actA")
+                                    break
+                    except Exception:
+                        pass
+
+                # 命中判定（有实际赛果才算，否则置 None → 渲染显示「待定」而非「未中」）
+                _ex = _ou = None
+                if _ah is not None and _aa is not None:
+                    _ex = (int(_ph) == int(_ah) and int(_pa) == int(_aa))
+                    _po = _outcome_of(int(_ph), int(_pa))
+                    _ao = _outcome_of(int(_ah), int(_aa))
+                    _ou = (_po == _ao)
+                _mae = None
+                if _ah is not None and _aa is not None:
+                    _mae = (abs(int(_ph) - int(_ah)) + abs(int(_pa) - int(_aa))) / 2
+                # 查找是否已有同名(中文)条目（来自 local-odds 或 hist 循环），就地升级；否则新增
+                _existing = None
+                for _x in date_index.get(_date, []):
+                    if (_x.get("home") == _jh and _x.get("away") == _ja) or (_x.get("home") == _ja and _x.get("away") == _jh):
+                        _existing = _x
+                        break
+                if _existing is not None:
+                    # 用 history.json 赛前预测刷新预测比分，并补实际赛果+命中（若可借到）
+                    _existing["predH"], _existing["predA"] = _ph, _pa
+                    _existing["predOutcome"] = _outcome_of(int(_ph), int(_pa))
+                    if _ah is not None:
+                        _existing["actH"], _existing["actA"] = _ah, _aa
+                        _existing["actOutcome"] = _outcome_of(int(_ah), int(_aa))
+                        _existing["exactHit"] = _ex
+                        _existing["outcomeHit"] = _ou
+                        _existing["mae"] = _mae
+                    if _rid is not None:
+                        _seen_ids.add(_rid)
+                    continue
+                date_index.setdefault(_date, []).append({
+                    "id": _rid, "league": _lg, "home": _jh, "away": _ja,
+                    "predH": _ph, "predA": _pa,
+                    "actH": _ah, "actA": _aa,
+                    "predOutcome": _outcome_of(int(_ph), int(_pa)),
+                    "actOutcome": _outcome_of(int(_ah), int(_aa)) if _ah is not None else None,
+                    "exactHit": _ex, "outcomeHit": _ou, "mae": _mae,
+                })
+                if _rid is not None:
+                    _seen_ids.add(_rid)
+                _seen_pairs.add((_date, _jh, _ja))
+        except Exception as _he:
+            print("history.json 全量补 dateIndex 异常跳过：%s" % _he)
+
+    # v1.7.58：日期回溯索引清洗——根治「同一竞彩对阵出现重复卡片」。
+    # 根因：上面三个来源（① FD 精度回溯 hist ② local-odds ③ history.json 全量）对「同一场竞彩」
+    # 可能同时写入英文 FD 版与中文竞彩版两条记录；渲染层 spJcFilter 二者都通过（翻译后同属竞彩对阵）
+    # → 同一场显示两张卡片。此处按「翻译归一后的竞彩对阵」同日去重，并剔除非竞彩纯英文噪声。
+    try:
+        from team_map import TEAM_EN2ZH as _TME
+        _PREFX = r"\b(FC|CF|AC|AS|SC|SV|SK|NK|FK|UD|US|SS|RC|CD|BK|SD|JK|KF|GD|RJ|VfL|VfB|Calcio|Club|Clube|Futebol|Football|Fotboll)\b"
+        def _spzh2(n):
+            if not n:
+                return ""
+            if n in _TME:
+                return _TME[n]
+            t = _RE.sub(_PREFX, "", n, flags=_RE.I)
+            t = _RE.sub(r"\b(1[89]\d{2}|20[0-2]\d)\b", "", t)
+            t = _RE.sub(r"\s+", " ", t).strip()
+            if t and t in _TME:
+                return _TME[t]
+            t2 = _RE.sub(r"^\s*[A-Z]{1,3}\s+", "", t).strip()
+            if t2 and t2 in _TME:
+                return _TME[t2]
+            return n
+        # 归一化名：已是中文→原样(避免 TME 缩短映射如「阿斯顿维拉→维拉」「曼彻斯特城→曼城」
+        # 把存储中文名与英文翻出的中文名搞成两份导致去重/过滤对不上)；纯英文→翻译。
+        def _cname(n):
+            if not n:
+                return ""
+            if any('\u4e00' <= c <= '\u9fff' for c in n):
+                return n
+            return _spzh2(n)
+        # 竞彩对阵集合（与渲染层 spJcPairs 一致：当天赛程 matches.json + 竞彩历史档案 history.json）。
+        # 同时收录「原始名」与「归一化名」两种形态，规避 TME 缩短映射造成的漏匹配/误删。
+        _jcpairs = set()
+        _mj_path = os.path.join(HERE, "matches.json")
+        if os.path.exists(_mj_path):
+            try:
+                for _m in (json.load(open(_mj_path, encoding="utf-8")).get("matches") or []):
+                    if _m.get("home") and _m.get("away"):
+                        _jcpairs.add(frozenset([_m["home"], _m["away"]]))
+                        _jcpairs.add(frozenset([_cname(_m["home"]), _cname(_m["away"])]))
+            except Exception:
+                pass
+        _hj2_path = os.path.join(HERE, "history.json")
+        if os.path.exists(_hj2_path):
+            try:
+                for _r in (json.load(open(_hj2_path, encoding="utf-8")).get("records") or []):
+                    if _r.get("home") and _r.get("away"):
+                        _jcpairs.add(frozenset([_r["home"], _r["away"]]))
+                        _jcpairs.add(frozenset([_cname(_r["home"]), _cname(_r["away"])]))
+            except Exception:
+                pass
+        _cjk = lambda s: any('\u4e00' <= c <= '\u9fff' for c in (s or ""))
+        for _d in list(date_index.keys()):
+            _best = {}
+            for _x in date_index[_d]:
+                _zhh, _zha = _cname(_x.get("home", "")), _cname(_x.get("away", ""))
+                # 翻译后双方须含中文（纯英文且翻译失败 → 非竞彩噪声）→ 剔除
+                if not (_cjk(_zhh) and _cjk(_zha)):
+                    continue
+                if frozenset([_zhh, _zha]) not in _jcpairs:
+                    continue
+                _key = frozenset([_zhh, _zha])
+                _cur = _best.get(_key)
+                if _cur is None:
+                    _best[_key] = _x
+                else:
+                    # 保留更优：① 已结算(有实际赛果) ② 中文原名(竞彩版，避免英文源卡片)
+                    _nx = _x.get("actH") is not None
+                    _nc = _cur.get("actH") is not None
+                    if _nx and not _nc:
+                        _best[_key] = _x
+                    elif _nx == _nc:
+                        if _cjk(_x.get("home", "")) and not _cjk(_cur.get("home", "")):
+                            _best[_key] = _x
+            if _best:
+                date_index[_d] = list(_best.values())
+            else:
+                del date_index[_d]
+    except Exception as _de:
+        print("dateIndex 清洗(去重/去噪)异常跳过：%s" % _de)
 
     result = {
         **out_meta,
