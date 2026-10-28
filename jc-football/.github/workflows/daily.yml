@@ -1,0 +1,62 @@
+name: 每日自动刷新并部署
+
+# 目标：让 jc-football 完全无人值守——
+# 每天在多个北京时间点自动抓取各数据源、构建页面、部署到 Cloudflare Pages、
+# 并在线校验（verify_deploy.py）。任何一步失败都不影响其他天，且部署后校验
+# 不通过会自动重部署一次，彻底消除「以为部署了实际是旧数据」这类事故。
+on:
+  schedule:
+    # 北京时间(UTC+8) 每天 08 / 12 / 15 / 18 / 20 / 22 点刷新
+    # 对应 UTC：0 / 4 / 7 / 10 / 12 / 14
+    - cron: '0 0,4,7,10,12,14 * * *'
+  workflow_dispatch: {}      # 允许在 Actions 页面手动点「Run workflow」触发
+  push:
+    branches: [main]         # 推到 main 时也会跑一次（首次部署即自检）
+
+permissions:
+  contents: read             # 只需读代码，部署用 Cloudflare token(secret)，不回写 GitHub
+
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false  # 不取消进行中的运行，避免重叠部署
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      # 部署与抓取所需的密钥（在仓库 Settings → Secrets 中配置，见下方说明）
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      FD_API_KEY: ${{ secrets.FD_API_KEY }}
+      BSD_API_KEY: ${{ secrets.BSD_API_KEY }}
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      DAILY_BUDGET: "600"     # 给足抓取预算（沙箱里默认 480s，CI 调大）
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 安装 wrangler（部署用）
+        run: |
+          npm install -g wrangler@4
+          echo "$(npm bin -g)" >> "$GITHUB_PATH"
+
+      - name: 安装 Python 依赖
+        run: pip install -r requirements.txt
+
+      - name: 运行每日流水线（抓取 + 构建 + 部署 + 在线校验）
+        run: bash run_daily.sh deploy
+
+      - name: 部署后在线校验（门禁）
+        if: always()
+        run: python3 verify_deploy.py
