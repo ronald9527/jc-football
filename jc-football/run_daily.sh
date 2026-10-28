@@ -170,7 +170,11 @@ set -e
 log "==> 步骤1.88 WhoScored 人工预测比分 (fetch_whoscored.py)"
 set +e
 if have_time 120; then
-  "$PY" fetch_whoscored.py
+  # v1.7.61：按剩余流水线时间传预算（留 40s 给后续构建部署缓冲），竞彩在售
+  # 场次的源站预测比分必须在开球前抓到——预算不足会导致「未推荐」假象。
+  _ws_left=$(( BUDGET - $(elapsed) - 40 ))
+  [ "$_ws_left" -lt 110 ] && _ws_left=110
+  "$PY" fetch_whoscored.py --budget "$_ws_left"
 else
   log "!! 剩余时间不足，跳过 WhoScored 抓取（沿用上次数据），优先保证部署"
 fi

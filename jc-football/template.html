@@ -544,6 +544,9 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-label{font-size:10px;color:var(--weak);margin-bottom:2px}
 .sp-pred{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
 .sp-pred i{font-style:normal;color:var(--weak);margin:0 2px}
+/* v1.7.61：源站人工预测徽标 + 模型参考小字 */
+.sp-wstag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;vertical-align:4px;background:rgba(56,142,60,.18);color:#66bb6a;border:1px solid rgba(56,142,60,.45)}
+.sp-modelref{font-size:10px;color:var(--weak);opacity:.85}
 .sp-actual{font-size:18px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
 .sp-actual.sp-live{color:#faad14;font-size:13px}
 .sp-actual.sp-sched{color:var(--sub);font-size:12px;font-weight:600}
@@ -1396,7 +1399,7 @@ footer b{color:var(--sub)}
         <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
         <div class="sp-filters" id="wsDateBar"></div>
         <div id="wsList"></div>
-        <div class="sp-sub-head">🤖 自建 Poisson 模型参考<span class="tip">透明自动化模型，与 WhoScored 独立，仅作交叉参考</span></div>
+        <div class="sp-sub-head">🤖 自建 Poisson 模型参考<span class="tip">比分优先展示 WhoScored 人工预测（与源站 PREVIEWS 一致，带绿色徽标）；源站缺预测时用本模型兜底</span></div>
         <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="spSummary"></div>
         <div class="sp-reliable" id="spReliable"></div>
         <div class="sp-filters" id="spFilters"></div>
@@ -1634,8 +1637,21 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.60";
+const VERSION = "v1.7.62";
 const CHANGELOG = [
+  {
+    version: "v1.7.61",
+    date: "2026-10-28",
+    title: "预测比分与源站对齐：WhoScored 人工预测优先展示 + 竞彩场次开球前必抓",
+    fixes: [
+      "「预测比分跟源站不一样」根因修复：模型卡片的比分此前始终显示自建 Poisson 结果；现凡源站（WhoScored PREVIEWS）有人工预测比分的场次，卡片直接显示源站比分为主并挂绿色 WhoScored 徽标，自建模型比分降为底部「模型参考」小字——页面预测与源站完全一致",
+      "竞彩场次预测漏抓根治：竞彩编号匹配提前到预览抓取之前，竞彩在售且未来 36h 内开球的场次享受加长抓取预算（70s+140s）并最优先抓取——此前竞彩场次排在数百场未来比赛之后，预算耗尽后其源站预测永远抓不到（开球后 preview 页即封锁），造成大量「未推荐」假象",
+      "fetch_whoscored.py 整体预算 110s→300s，run_daily.sh 按剩余流水线时间动态传 --budget，保证竞彩热场次抓完仍留赛果回填窗口"
+    ],
+    features: [
+      "实测补齐当日竞彩源站预测：威尼斯 0:3 国米、AC米兰 2:1 博洛尼亚、帕尔马 1:1 乌迪内斯、蒙扎 1:2 那不勒斯、热那亚 1:2 尤文、利物浦 2:1 切尔西等，均与源站 PREVIEWS 一致"
+    ]
+  },
   {
     version: "v1.7.59",
     date: "2026-10-28",
@@ -5395,7 +5411,21 @@ function renderScorePred(){
   /* 只显示竞彩开出的比赛（用户要求）：按「竞彩队名组合」过滤——
      队名集合取自当天赛程 + 竞彩历史档案（BUILT_HISTORY），翻译用 spZh，
      主客顺序不敏感（home|away 与 away|home 都命中） */
-  const ms = spJcFilter(msAll);
+  let ms = spJcFilter(msAll);
+  /* v1.7.61 渲染层去重：接口记录（football-data，带赛果）与本地赔率基线可能
+     同时给出同一竞彩对阵（同编号+同两队），页面出现一「已结束」一「未开赛」
+     两张卡。这里按 竞彩编号|主队|客队 归并：同键保留一条——有赛果的优先，
+     其余保留先出现的 */
+  (function(){
+    const _best = {}, _order = [];
+    ms.forEach(m=>{
+      const _jn = spJcNumOf(m, m.date);
+      const k = (_jn ? "J" + _jn : "D" + (m.date || "")) + "|" + spZh(m.home) + "|" + spZh(m.away);
+      if(!(k in _best)){ _best[k] = m; _order.push(k); return; }
+      if(m.actH != null && _best[k].actH == null) _best[k] = m;
+    });
+    ms = _order.map(k=>_best[k]);
+  })();
   const summary = $("#spSummary");
   if(summary){
     const acc = sp.accuracy || {};
@@ -5455,6 +5485,11 @@ function renderScorePred(){
   /* ---- 比赛列表 ---- */
   const list = $("#spList");
   if(!list) return;
+  // v1.7.61：WhoScored 人工预测按竞彩编号索引——模型卡片上凡源站有人工预测的，
+  // 直接显示源站比分为主（与源站 PREVIEWS 完全一致），模型比分降为小字参考。
+  const _wsMs = (typeof BUILT_WHOSCORED!=="undefined" && BUILT_WHOSCORED) ? (BUILT_WHOSCORED.matches||[]) : [];
+  const wsByNumSp = {};
+  _wsMs.forEach(m=>{ if(m.jcNum){ (wsByNumSp[m.jcNum] = wsByNumSp[m.jcNum] || []).push(m); } });
   if(!ms.length){
     list.innerHTML = `<div class="empty">当日竞彩赛程中暂无自建 Poisson 模型覆盖的比赛${sp.note?("（"+sp.note+"）"):""}；非竞彩场次已按要求隐藏</div>`;
     return;
@@ -5476,8 +5511,19 @@ function renderScorePred(){
       const probBar = `<div class="sp-prob"><span class="sp-p sp-h" style="width:${pH}%">${pH}%</span>`
         + `<span class="sp-p sp-d" style="width:${pD}%">${pD}%</span>`
         + `<span class="sp-p sp-a" style="width:${pA}%">${pA}%</span></div>`;
-      // 比分展示
-      const predScore = `<span class="sp-pred">${m.predH} <i>:</i> ${m.predA}</span>`;
+      // 比分展示：v1.7.61 源站（WhoScored PREVIEWS）人工预测优先——按竞彩编号
+      // +日期±2天匹配，源站有人工预测的场次直接显示源站比分（与源站完全一致），
+      // 自建模型比分降为底部小字参考，杜绝「页面比分跟源站不一样」的困惑
+      const jcNum = spJcNumOf(m, m.date);
+      const wsm = (function(){
+        if(!jcNum) return null;
+        const zhH0 = spZh(m.home), zhA0 = spZh(m.away);
+        return wsJcCandidate({num:jcNum, date:m.date, home:zhH0, away:zhA0}, wsByNumSp);
+      })();
+      const hasWs = !!(wsm && wsm.predH != null);
+      const dispH = hasWs ? wsm.predH : m.predH, dispA = hasWs ? wsm.predA : m.predA;
+      const predScore = `<span class="sp-pred">${dispH} <i>:</i> ${dispA}</span>`
+        + (hasWs ? `<span class="sp-wstag" title="WhoScored 人工预测比分，与源站一致">WhoScored</span>` : ``);
       let actual = "";
       let hit = "";
       if(finished && m.actH!=null){
@@ -5494,7 +5540,6 @@ function renderScorePred(){
       }
       const statusCls = finished ? "sp-fin" : (live ? "sp-live" : "sp-sched");
       const zhH = spZh(m.home), zhA = spZh(m.away);
-      const jcNum = spJcNumOf(m, m.date);
       html += `<div class="sp-card ${statusCls}">
         <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
         ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
@@ -5503,7 +5548,7 @@ function renderScorePred(){
           <div class="sp-actwrap"><div class="sp-label">实际赛果</div>${actual}</div>
         </div>
         ${probBar}
-        <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${hit}</div>
+        <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${hasWs?`<span class="sp-modelref">模型参考 ${m.predH}:${m.predA}</span>`:""}${hit}</div>
       </div>`;
     });
     html += `</div>`;

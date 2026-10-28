@@ -80,7 +80,13 @@ FAIL_CACHE_TTL_S = 45
 _page_cache = {}               # url -> (ts, status, text)
 PREVIEW_BUDGET_S = 70          # 预览抓取阶段预算（秒）：必须给赛果回填留时间，
                                # 否则「预测×赛果」的历史累积永远排不上队
-TOTAL_BUDGET_S = 110           # 整体预算（秒）：调度器 have_time 120 门槛内收工
+# v1.7.61：竞彩在售场次（jcNum 已挂上的）单独加预算。竞彩比赛的源站预测一旦
+# 开球就拿不到了（preview 页只回硬封锁质询页），必须赶在开球前抓到——它们
+# 才是页面的主干内容；非竞彩场次（占 need 的绝大多数）保持原预算慢慢补。
+PREVIEW_HOT_BUDGET_S = 140     # 竞彩热场次追加预算（秒），与 PREVIEW_BUDGET_S 叠加
+TOTAL_BUDGET_S = 300           # 整体预算（秒）：v1.7.61 110→300——预览阶段
+                               # 70+140=240s 后仍需给赛果回填留出窗口；调用方可
+                               # 用 --budget N 按剩余流水线时间收紧
 EVAL_RESERVE_S = 8             # 赛果回填预留（秒）：留给循环退出后的历史累积+写文件
                                # （实测 <2s）。v1.7.28：15→8——收尾很快，预留过多
                                # 会白扔回填窗口（每轮少回填 3+ 场）
@@ -644,34 +650,45 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
               % (ls_added, fetched_ls))
 
     # ---- 抓预测比分（覆盖 previews + livescores 全部场次；带永久缓存，只补缺失）----
-    # 优先级：今天/明天的比赛最先抓。它们即将开球，/previews 一撤下就再也抓不到
-    # 预测比分（已开球 preview 页只返回硬封锁质询页），而未来日期的比赛会一直
-    # 挂在列表里，下一轮再抓也不迟。历史上「只有未来日期有预测、过去日期 0 预测」
-    # 的根因就是没按这个优先级抓 + 把带数据的软挑战页误判为封锁。
+    # 优先级（v1.7.61 重排）：①竞彩在售场次最优先（提前挂编号再排序）——它们是
+    # 页面主干，且开球后 preview 页再也拿不到预测；②其余按北京日期升序——今天/
+    # 明天的先抓，未来日期的比赛会一直挂在列表里，下轮再抓不迟。历史上「只有
+    # 未来日期有预测、过去日期 0 预测」的根因就是没按这个优先级抓。
+    try:
+        attach_jc_numbers(matches)     # 静默预挂（幂等），供下方优先级排序使用
+    except Exception as _e:
+        print("  [竞彩编号] 预排序挂载失败（不影响主流程）：%s" % _e)
     need = [x for x in matches
             if (x["id"] not in pc or pc[x["id"]].get("predH") is None)
             and not x.get("_finished") and not _kickoff_past(x)]
     _today_bj = (datetime.utcnow() + timedelta(seconds=BJ_OFFSET)).replace(
         hour=0, minute=0, second=0, microsecond=0)
 
-    def _prio(x):
+    def _bj_delta(x):
         d = x.get("date") or ""
         try:
-            delta = (datetime.strptime(d, "%Y-%m-%d") - _today_bj).days
+            return (datetime.strptime(d, "%Y-%m-%d") - _today_bj).days
         except Exception:
-            delta = 99
-        return (delta if delta >= 0 else -1, x.get("bjTime") or "")
+            return 99
+
+    def _prio(x):
+        d = _bj_delta(x)
+        return (0 if x.get("jcNum") else 1, d if d >= 0 else -1, x.get("bjTime") or "")
     need.sort(key=_prio)
     fetched = challenged = 0
+    hot_deadline = t_start + PREVIEW_BUDGET_S + PREVIEW_HOT_BUDGET_S
     for x in need:
         if fetched >= max_preview:
             break
-        # 时间预算：调度器整条流水线共 480s，本环节必须自律。
-        # 预览阶段只分到 PREVIEW_BUDGET_S，超了就停下轮再来（缓存只补缺失，不会漏），
-        # 把剩余时间留给赛果回填——没有赛果，预测再多也进不了历史。
-        if fetched and time.time() > preview_deadline:
-            print("  [预览抓取] 已达阶段预算 %ds，剩余 %d 场下轮补抓"
-                  % (PREVIEW_BUDGET_S, len(need) - fetched))
+        # 时间预算：竞彩在售且未来 36h 内开球的场次走加长预算（hot_deadline），
+        # 其余场次只分到 PREVIEW_BUDGET_S——把剩余时间留给赛果回填。
+        _d = _bj_delta(x)
+        _dl = hot_deadline if (x.get("jcNum") and _d <= 1) else preview_deadline
+        if fetched and time.time() > _dl:
+            print("  [预览抓取] 已达阶段预算（%s），剩余 %d 场下轮补抓"
+                  % ("竞彩热场次 %ds" % (PREVIEW_BUDGET_S + PREVIEW_HOT_BUDGET_S)
+                     if _dl is hot_deadline else "普通场次 %ds" % PREVIEW_BUDGET_S,
+                     len(need) - fetched))
             break
         st, html = _get(x["url"], BASE + "/previews")
         fetched += 1
@@ -1010,4 +1027,11 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
 
 
 if __name__ == "__main__":
-    fetch_whoscored()
+    import sys as _sys
+    _b = TOTAL_BUDGET_S
+    if "--budget" in _sys.argv:    # 用法：--budget N（秒），由 run_daily.sh 按剩余时间传入
+        try:
+            _b = max(60, int(_sys.argv[_sys.argv.index("--budget") + 1]))
+        except Exception:
+            pass
+    fetch_whoscored(budget_s=_b)
