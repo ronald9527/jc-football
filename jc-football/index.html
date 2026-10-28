@@ -633,6 +633,8 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 /* 队标加载失败：隐藏图片，保留队名（onerror 触发 .no-logo） */
 .sp-tcell.no-logo .sp-logo{display:none}
 .sp-tcell.no-logo{display:inline}
+/* 无队标时的首字母彩色徽章（确定性配色，与队名首字一致） */
+.sp-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;color:#fff;font-size:11px;font-weight:800;flex:0 0 auto;box-shadow:0 0 0 1px var(--line);line-height:1}
 .ws-jc{border-left:3px solid #faad14 !important}
 .ws-jcnum{display:inline-block;margin-left:auto;font-size:11px;font-weight:800;color:#5c3a00;background:linear-gradient(180deg,#ffd76b,#f0b429);border:1px solid #d99b1c;border-radius:10px;padding:2px 9px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .ws-jcnum.sm{font-size:9.5px;padding:1px 6px;margin-left:6px}
@@ -650,6 +652,7 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .ws-nopred{display:flex;align-items:center;gap:8px;margin:6px 0 2px;padding:8px 10px;border-radius:6px;background:var(--line);border-left:3px solid var(--weak);flex-wrap:wrap}
 .ws-nopred-tag{font-size:12px;font-weight:800;color:var(--sub);background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:2px 8px;white-space:nowrap}
 .ws-nopred-why{font-size:11px;color:var(--weak);line-height:1.5}
+.ws-odds{display:block;margin-top:4px;font-size:11px;color:var(--accent);font-weight:600}
 .ws-nopred.warn{border-left-color:#f7b733;background:rgba(247,183,51,.10)}
 .ws-nopred.warn .ws-nopred-tag{color:#8a5a00;border-color:#d99b1c;background:rgba(247,183,51,.18)}
 .ws-nopred.warn .ws-nopred-why{color:#a06a00}
@@ -4956,8 +4959,20 @@ function spCrest(n){
   return "";
 }
 
-/* 队名单元格：队标 + 队名（加载失败/无队标时仅显示队名）。
-   name 传原始名（英文或中文皆可），展示名用 spZh 取中文，保证一致且无需完美翻译。 */
+/* 队名首字母彩色徽章（无队标时智能回退，非空白纯文字）：按队名确定性取色 + 首字 */
+function spBadge(name){
+  const zh = spZh(name) || name || "?";
+  const ch = zh.trim() ? zh.trim()[0] : "?";
+  let h = 0;
+  for(let i=0;i<zh.length;i++) h = (h*31 + zh.charCodeAt(i)) >>> 0;
+  const palette = ["#e63946","#1d3557","#2a9d8f","#e76f51","#457b9d","#6a4c93",
+                   "#118ab2","#f4a261","#2d6a4f","#b5179e","#3a0ca3","#e85d04","#0077b6","#7209b7"];
+  const bg = palette[h % palette.length];
+  return `<span class="sp-badge" style="background:${bg}">${ch}</span>`;
+}
+
+/* 队名单元格：队标 + 队名（FD 源直接用英文名命中队标，无需翻译）。
+   无队标（如亚冠日韩泰队，FD 免费层无数据）则回退为确定性首字母彩色徽章。 */
 function spTeamCell(name, opts){
   opts = opts || {};
   const cr = spCrest(name);
@@ -4968,7 +4983,7 @@ function spTeamCell(name, opts){
       + `onerror="this.parentNode.classList.add('no-logo')">`
       + `<span class="${cls}">${zh}</span></span>`;
   }
-  return `<span class="${cls}">${zh}</span>`;
+  return `<span class="sp-tcell">${spBadge(name)}<span class="${cls}">${zh}</span></span>`;
 }
 
 /* 比分预测分区折叠 */
@@ -5124,7 +5139,9 @@ function renderWhoScored(){
             reason = `数据源未覆盖该联赛`;
           }
           predBlock = `<div class="ws-nopred${warn?" warn":""}"><span class="ws-nopred-tag">未推荐</span>`
-            + `<span class="ws-nopred-why">${reason}</span></div>`;
+            + `<span class="ws-nopred-why">${reason}</span>`
+            + (j.had && j.had.h!=null ? `<span class="ws-odds">竞彩赔率 胜 ${j.had.h} · 平 ${j.had.d} · 负 ${j.had.a}（参考）</span>` : ``)
+            + `</div>`;
         }
         // 赛后回填：WhoScored 评估出的实际比分 + 命中情况（无预测的场次只展示赛果）
         let res = "";
