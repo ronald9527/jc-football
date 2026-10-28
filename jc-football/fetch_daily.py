@@ -969,13 +969,31 @@ def main():
     # 实测约 1/15），带上该参数后空响应也会触发重试；重试后仍是合法空响应时
     # 走下方「官方暂无在售比赛」降级路径。
     calc = fetch(CALC_URL, must_contain="matchInfoList")
-    if not calc.get("success"):
-        raise RuntimeError("计算器接口失败: " + calc.get("errorMessage", ""))
-    blocks = calc.get("value", {}).get("matchInfoList", []) or []
-    if not blocks:
-        print("  官方暂无在售比赛（可能全部已开赛/停售），仅执行历史回填...", flush=True)
     matches = []
     match_ids = []
+    blocks = []
+    if not calc.get("success"):
+        # 官方接口不可用 -> 回退备用源 500.com。
+        # 背景：竞彩官方接口封锁海外 IP（GitHub Actions 机房在美国，稳定返回
+        # HTTP 567），而 500.com 竞彩页面海外实测可达（HTTP 200）且数据为服务端
+        # 渲染。回退后流水线在任何网络环境都能拿到竞彩赛程与赔率，不再整体中断。
+        print("  官方接口不可用（%s），回退备用源 500.com ..."
+              % (calc.get("errorMessage") or "无错误信息"), flush=True)
+        try:
+            from fetch_500 import fetch_jczq_500
+            _fb = fetch_jczq_500()
+        except Exception as _e:
+            print("  备用源异常: %s" % _e, flush=True)
+            _fb = None
+        if not _fb:
+            raise RuntimeError("计算器接口失败: " + str(calc.get("errorMessage", ""))
+                               + "（备用源 500.com 同样不可用）")
+        matches = _fb
+        print("  备用源 500.com 抓到 %d 场" % len(matches), flush=True)
+    else:
+        blocks = calc.get("value", {}).get("matchInfoList", []) or []
+        if not blocks:
+            print("  官方暂无在售比赛（可能全部已开赛/停售），仅执行历史回填...", flush=True)
     for block in blocks:
         date = block.get("businessDate", "")
         for m in block.get("subMatchList", []):
