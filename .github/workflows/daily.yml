@@ -1,0 +1,66 @@
+name: 每日自动刷新并部署
+
+# 无人值守：每天自动抓取各数据源 → 构建 → 部署 Cloudflare Pages → 在线校验，
+# 校验不通过自动重部署一次。跑在 GitHub 服务器上，不依赖任何本地机器。
+#
+# 注意：本仓库的项目代码在 jc-football/ 子目录下，
+# GitHub Actions 只识别仓库根目录的 .github/workflows/，所以本文件必须放这里。
+on:
+  schedule:
+    # 北京时间(UTC+8) 每天 08 / 12 / 15 / 18 / 20 / 22 点刷新
+    # 对应 UTC：0 / 4 / 7 / 10 / 12 / 14
+    - cron: '0 0,4,7,10,12,14 * * *'
+  workflow_dispatch: {}      # 允许在 Actions 页面手动点「Run workflow」触发
+  push:
+    branches: [main]         # 推到 main 也跑一次（即时自检）
+
+permissions:
+  contents: read             # 只读代码；部署用 Cloudflare token(secret)，不回写 GitHub
+
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false  # 不取消进行中的运行，避免重叠部署
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: jc-football   # 项目代码在子目录
+    env:
+      # 以下密钥在仓库 Settings → Secrets 中配置（已配好）
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      FD_API_KEY: ${{ secrets.FD_API_KEY }}
+      BSD_API_KEY: ${{ secrets.BSD_API_KEY }}
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      DAILY_BUDGET: "600"     # 抓取阶段预算（本地默认 480s，CI 给足）
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 安装 wrangler（部署用）
+        run: |
+          npm install -g wrangler@4
+          echo "$(npm bin -g)" >> "$GITHUB_PATH"
+
+      - name: 安装 Python 依赖
+        run: pip install -r requirements.txt
+
+      - name: 运行每日流水线（抓取 + 构建 + 部署 + 在线校验）
+        run: bash run_daily.sh deploy
+
+      - name: 部署后在线校验（门禁）
+        if: always()
+        run: python3 verify_deploy.py
