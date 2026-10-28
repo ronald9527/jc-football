@@ -993,7 +993,20 @@ def main():
     else:
         blocks = calc.get("value", {}).get("matchInfoList", []) or []
         if not blocks:
-            print("  官方暂无在售比赛（可能全部已开赛/停售），仅执行历史回填...", flush=True)
+            # 官方「成功但无在售」同样要兜底：竞彩在凌晨/停售时段会返回 0 场，
+            # 而 500.com 页面仍挂着当日未开赛的场次，取它可避免页面一片空白。
+            print("  官方暂无在售比赛（可能全部已开赛/停售），尝试备用源 500.com 补充...", flush=True)
+            try:
+                from fetch_500 import fetch_jczq_500
+                _fb2 = fetch_jczq_500()
+            except Exception as _e:
+                print("  备用源异常: %s" % _e, flush=True)
+                _fb2 = None
+            if _fb2:
+                matches = _fb2
+                print("  备用源 500.com 补充 %d 场" % len(matches), flush=True)
+            else:
+                print("  备用源同样无数据，仅执行历史回填...", flush=True)
     for block in blocks:
         date = block.get("businessDate", "")
         for m in block.get("subMatchList", []):
@@ -1584,11 +1597,28 @@ def main():
 
     print("[6/6] 输出...", flush=True)
     # 只保留当天开售的比赛，明天/后天的不展示
-    _today = time.strftime("%Y-%m-%d")
+    # 【必须按北京时间判定】沙箱与 GitHub Actions 的系统时区都是 UTC，直接用
+    # time.strftime 会在北京 00:00-08:00 算成前一天，导致当天竞彩场次被全部
+    # 过滤、页面一片空白。竞彩销售日本身就是按北京时间划分的。
+    import datetime as _dt
+    _today = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d")
     _before = len(matches)
     matches = [m for m in matches if m.get("date") == _today]
     if _before != len(matches):
         print(f"  日期过滤：{_before}场 -> {len(matches)}场（只保留{_today}当天）", flush=True)
+    # 过滤后为空也要兜底：凌晨/停售时段官方返回的常是「上一销售日」的场次，
+    # 日期与今天对不上，过滤完就归零。此时用备用源 500.com 补当天在售场次。
+    if not matches:
+        try:
+            from fetch_500 import fetch_jczq_500
+            _fb3 = fetch_jczq_500() or []
+        except Exception as _e:
+            print("  备用源异常: %s" % _e, flush=True)
+            _fb3 = []
+        _fb3 = [m for m in _fb3 if m.get("date") == _today]
+        if _fb3:
+            matches = _fb3
+            print(f"  过滤后为空，备用源 500.com 兜底 {len(matches)} 场（{_today}）", flush=True)
     out = os.path.join(HERE, "matches.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"updateTime": time.strftime("%Y-%m-%d %H:%M:%S"), "count": len(matches),
