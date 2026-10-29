@@ -1638,8 +1638,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.69";
+const VERSION = "v1.7.71";
 const CHANGELOG = [
+  {
+    version: "v1.7.71",
+    date: "2026-10-29",
+    title: "竞彩卡片比分预测兜底：WhoScored 未覆盖的场次直接显示模型预测比分",
+    fixes: [
+      "根因：v1.7.69 的模型兜底只加在了「比分预测」Tab，主竞彩卡片（人工预测视图）的渲染逻辑里 WhoScored 无预测时仍整块显示「未推荐」，比分预测一片空白（周五场次全部命中此情况：WhoScored 缓存只到周三，周五新开售场次不在其中）",
+      "修复：WhoScored 无人工预测但该场有模型预测（modelPred）时，卡片直接展示「模型预测比分」+ 橙色「模型」徽标，不再显示空白",
+      "顶部统计同步更新：有预测 = WhoScored + 模型兜底之和，未推荐只统计两种预测都没有的场次"
+    ]
+  },
   {
     version: "v1.7.69",
     date: "2026-10-29",
@@ -5143,8 +5153,12 @@ function renderWhoScored(){
     if(!view.length){
       list.innerHTML = `<div class="empty">该日期竞彩无比赛${state.wsOnlyHot?"（或没有高可信预测）":""}</div>`;
     } else {
-      const nPred = view.filter(x=>x.wm && x.wm.predH!=null).length;
-      const noPred = view.filter(x=>!(x.wm && x.wm.predH!=null));
+      // v1.7.70：模型兜底预测也计入「有预测」——WhoScored 未覆盖的场次不再算未推荐
+      const _hasWsPred = x=>x.wm && x.wm.predH!=null;
+      const _hasMp = x=>x.j && x.j.modelPred && x.j.modelPred.h!=null;
+      const nPred = view.filter(_hasWsPred).length;
+      const nModel = view.filter(x=>!_hasWsPred(x) && _hasMp(x)).length;
+      const noPred = view.filter(x=>!_hasWsPred(x) && !_hasMp(x));
       // 未推荐原因归类：同联赛有推荐 → 疑似漏匹配（待核对）；否则 → 数据源未覆盖
       const warnLgs = [], coverLgs = [];
       noPred.forEach(x=>{
@@ -5152,7 +5166,9 @@ function renderWhoScored(){
         if(s && s.p>0){ if(warnLgs.indexOf(x.j.league)<0) warnLgs.push(x.j.league); }
         else { if(coverLgs.indexOf(x.j.league)<0) coverLgs.push(x.j.league); }
       });
-      let html = `<div class="ws-jc-tip">本日竞彩 <b>${view.length}</b> 场 · 有预测 <b>${nPred}</b> 场 · 未推荐 <b>${noPred.length}</b> 场`
+      let html = `<div class="ws-jc-tip">本日竞彩 <b>${view.length}</b> 场 · 有预测 <b>${nPred+nModel}</b> 场`
+        + (nModel ? `（WhoScored ${nPred} · 模型兜底 ${nModel}）` : ``)
+        + ` · 未推荐 <b>${noPred.length}</b> 场`
         + (coverLgs.length ? `（${coverLgs.join("、")} 数据源暂无人工预测）` : ``)
         + (warnLgs.length ? ` · <span class="ws-namewarn">⚠️ ${warnLgs.join("、")} 有同联赛推荐却未匹配，请人工核对</span>` : ``)
         + `</div>`;
@@ -5178,6 +5194,17 @@ function renderWhoScored(){
             ${fin?``:wsConfHtml(wm)}
             ${(zhH!==wm.home||zhA!==wm.away)?`<div class="sp-enline">${wm.home||""} vs ${wm.away||""}</div>`:``}`;
         } else {
+          // v1.7.70：WhoScored 无人工预测时，若该场有模型兜底预测（modelPred），
+          // 直接展示模型预测比分（橙色「模型」徽标），不再整块显示「未推荐」空白
+          const mp = (!fin && j.modelPred && j.modelPred.h != null) ? j.modelPred : null;
+          if(mp){
+            predBlock = `<div class="ws-scoreline">
+                <div><div class="sp-label">模型预测比分<span class="sp-wstag sp-wstag-model" title="自建 Poisson 模型预测（WhoScored 缺失时兜底）">模型</span></div>
+                  <div class="ws-pred">${mp.h} <i>:</i> ${mp.a}</div></div>
+                <div class="ws-metawrap"><div class="sp-label">${j.league||""}</div>
+                  <div class="sp-meta">WhoScored 暂无人工预测，模型兜底</div></div>
+              </div>`;
+          } else {
           const s = lgStat[j.league];
           let reason, warn = false;
           if(wm){
@@ -5194,6 +5221,7 @@ function renderWhoScored(){
             + `<span class="ws-nopred-why">${reason}</span>`
             + (j.had && j.had.h!=null ? `<span class="ws-odds">竞彩赔率 胜 ${j.had.h} · 平 ${j.had.d} · 负 ${j.had.a}（参考）</span>` : ``)
             + `</div>`;
+          }
         }
         // 赛后回填：WhoScored 评估出的实际比分 + 命中情况（无预测的场次只展示赛果）
         let res = "";

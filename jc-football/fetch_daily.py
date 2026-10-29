@@ -982,6 +982,15 @@ def merge_model_predict(matches):
             return True
         return a.startswith(b) or b.startswith(a)
 
+    def _char_sim(a, b):
+        """队名字符集重合度（Jaccard）：捕捉非前缀简称（巴黎圣曼 vs 巴黎圣日耳曼、
+        埃沃斯堡 vs 埃尔沃斯堡、谢菲联 vs 谢菲尔德联——前缀匹配全部失手）。"""
+        if not a or not b:
+            return 0.0
+        sa, sb = set(a), set(b)
+        inter = len(sa & sb)
+        return inter / len(sa | sb) if (sa | sb) else 0.0
+
     try:
         import sys as _sys
         _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -1000,6 +1009,7 @@ def merge_model_predict(matches):
     _sps = _data.get("matches") or []
     _idx = {}        # 精确键 (h_norm, a_norm) -> rec
     _fuzzy = []      # (h_norm, a_norm, rec) 供模糊兜底扫描
+    _bydate = {}     # v1.7.71：日期 -> [(h_norm, a_norm, rec)]，同日字符重合兜底
     for _r in _sps:
         if _r.get("predH") is None:
             continue
@@ -1009,6 +1019,9 @@ def merge_model_predict(matches):
             continue
         _idx.setdefault((_h, _a), _r)   # 同一对阵首条优先（通常唯一）
         _fuzzy.append((_h, _a, _r))
+        _d = (_r.get("utcDate") or _r.get("date") or "")[:10]
+        if _d:
+            _bydate.setdefault(_d, []).append((_h, _a, _r))
     _n = 0
     for m in matches:
         if m.get("modelPred"):
@@ -1021,10 +1034,21 @@ def merge_model_predict(matches):
             continue
         _rec = _idx.get((_h, _a)) or _idx.get((_a, _h))
         if not _rec:
-            # 模糊兜底：竞彩简称 vs 标准全称（互为前缀）匹配
+            # 模糊兜底1：竞彩简称 vs 标准全称（互为前缀）匹配
             for (_fh, _fa, _r) in _fuzzy:
                 if (_name_sim(_h, _fh) and _name_sim(_a, _fa)) or \
                    (_name_sim(_h, _fa) and _name_sim(_a, _fh)):
+                    _rec = _r
+                    break
+        if not _rec:
+            # 模糊兜底2（v1.7.71）：同一场日 + 双方队名字符重合度≥0.6——
+            # 非前缀简称（巴黎圣曼/埃沃斯堡/谢菲联）自动命中；同日限定保证不会误配
+            _cands = _bydate.get((m.get("date") or "")) or []
+            for (_fh, _fa, _r) in _cands:
+                if _char_sim(_h, _fh) >= 0.6 and _char_sim(_a, _fa) >= 0.6:
+                    _rec = _r
+                    break
+                if _char_sim(_h, _fa) >= 0.6 and _char_sim(_a, _fh) >= 0.6:
                     _rec = _r
                     break
         if _rec:
