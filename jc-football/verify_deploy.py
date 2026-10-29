@@ -97,15 +97,17 @@ def live_counts(hay):
     except Exception:
         pass
     fb = 0
+    note = ""
     try:
         seg = extract_json(hay, "BUILT_WHOSCORED")
         if seg:
             d = json.loads(seg)
             fb = sum(1 for m in (d.get("matches") or [])
                      if m.get("jcNum") and m.get("predH") is not None)
+            note = d.get("note") or ""
     except Exception:
         pass
-    return ver, bk, fb
+    return ver, bk, fb, note
 
 
 def main():
@@ -137,16 +139,19 @@ def main():
             log(f"  轮{n} 抓取失败: {e}")
             time.sleep(SLEEP)
             continue
-        ver, bk, fb = live_counts(hay)
-        last = (ver, bk, fb)
-        ok = (ver == lv) and (bk >= lbk) and (fb >= lfb)
-        log(f"  轮{n} 线上: VERSION={ver} 篮球AI已赛={bk} 足球竞彩有预测={fb} -> {'OK' if ok else '不一致'}")
+        ver, bk, fb, note = live_counts(hay)
+        last = (ver, bk, fb, note)
+        # v1.7.68：线上 WhoScored 本轮真失败（被 Cloudflare 拦截/抓取失败）且未走
+        # 缓存保护时，视为部署未生效，触发重部署重试
+        real_fail = bool(note) and ("拦截" in note or "抓取失败" in note) and ("沿用" not in note)
+        ok = (ver == lv) and (bk >= lbk) and (fb >= lfb) and (not real_fail)
+        log(f"  轮{n} 线上: VERSION={ver} 篮球AI已赛={bk} 足球竞彩有预测={fb} -> {'OK' if ok else '不一致'}{' [源站失败]' if real_fail else ''}")
         if ok:
             print(f"[PASS] 线上数据与本地构建一致 (VERSION={ver}, 篮球AI已赛={bk}/{lbk}, 足球竞彩有预测={fb}/{lfb})")
             sys.exit(0)
         time.sleep(SLEEP)
 
-    ver, bk, fb = last or (None, 0, 0)
+    ver, bk, fb, note = last or (None, 0, 0, "")
     print(f"[FAIL] 线上数据与本地构建不一致，疑似部署未生效或功能校验未过")
     print(f"  本地期望: VERSION={lv} 篮球AI已赛={lbk} 足球竞彩有预测={lfb}")
     print(f"  线上实际: VERSION={ver} 篮球AI已赛={bk} 足球竞彩有预测={fb}")
