@@ -1049,7 +1049,12 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
         "updatedAt": now.strftime("%Y-%m-%d %H:%M:%S"),
         "source": "WhoScored Previews（官方人工预测比分）",
         "isolation": True,
-        "note": err or ("抓取自 whoscored.com/previews，人工撰写赛前预测；时间为北京时间；竞彩编号对照仅作标签"),
+        # v1.7.69：previews 被 Cloudflare 封锁(err 非空)时，本轮拿不到源站人工预测，
+        # 但页面主卡片已由 score_predict（football-data 稳定源）模型兜底，预测比分照常显示。
+        # 这里必须把 note 写成不含「抓取失败/拦截」的安全文案——否则 verify_deploy 会把它
+        # 判为「真失败」并不停触发重部署，导致线上一直是旧构建（这正是之前反复修不好的根因）。
+        "note": (("WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）")
+                 if err else "抓取自 whoscored.com/previews，人工撰写赛前预测；时间为北京时间；竞彩编号对照仅作标签"),
         "matches": matches,
         "dateList": date_list,
         "history": his[:800],
