@@ -6546,9 +6546,59 @@
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:0 可作小注参考"
    }
+  },
+  "1981046": {
+   "id": "1981046",
+   "date": "2026-10-30",
+   "league": "意甲",
+   "home": "Fiorentina",
+   "away": "Atalanta",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周四006",
+   "preConf": {
+    "dir": 46.2,
+    "exact": 6.5,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 22,
+    "teamN": 3,
+    "sample": 25,
+    "outcome": "平局",
+    "tip": "方向中等可信，方向「平局」可作小注参考"
+   }
+  },
+  "2035001": {
+   "id": "2035001",
+   "date": "2026-10-30",
+   "league": "League Cup",
+   "home": "Everton",
+   "away": "Newcastle",
+   "predH": 1,
+   "predA": 2,
+   "actH": 3,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周四005",
+   "preConf": {
+    "dir": 37.6,
+    "exact": 7.8,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 5,
+    "teamN": 4,
+    "sample": 9,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
   }
  },
- "updatedAt": "2026-10-29 13:14:22",
+ "updatedAt": "2026-10-29 21:34:32",
  "pending": {
   "1983622": {
    "date": "2026-10-24",
@@ -8708,6 +8758,1166 @@
     "sample": 9,
     "outcome": "客胜",
     "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1995455": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "Elversberg",
+   "away": "Mainz 05",
+   "jcNum": "周五007",
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 38.4,
+    "exact": 7.1,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 16,
+    "teamN": 4,
+    "sample": 20,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1993991": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "Villarreal",
+   "away": "Espanyol",
+   "jcNum": "周五009",
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 45.8,
+    "exact": 11.2,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 17,
+    "teamN": 5,
+    "sample": 22,
+    "outcome": "主胜",
+    "tip": "比分可信度高，可跟注比分 2:1"
+   }
+  },
+  "1989105": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Sheffield United",
+   "away": "Wrexham",
+   "jcNum": "周五008",
+   "predH": 1,
+   "predA": 0,
+   "conf": {
+    "dir": 37.1,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1997633": {
+   "date": "2026-10-31",
+   "league": "葡超",
+   "home": "Casa Pia AC",
+   "away": "Sporting CP",
+   "jcNum": "周五011",
+   "predH": 0,
+   "predA": 2,
+   "conf": {
+    "dir": 39.0,
+    "exact": 6.5,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 6,
+    "teamN": 3,
+    "sample": 9,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1984221": {
+   "date": "2026-10-31",
+   "league": "法甲",
+   "home": "Lille",
+   "away": "Lens",
+   "jcNum": "周五010",
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 39.2,
+    "exact": 9.1,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 11,
+    "teamN": 7,
+    "sample": 18,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  "1983629": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Chelsea",
+   "away": "Manchester United",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 44.4,
+    "exact": 12.6,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 6,
+    "sample": 22,
+    "outcome": "主胜",
+    "tip": "比分可信度高，可跟注比分 2:1"
+   }
+  },
+  "1993980": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "Levante",
+   "away": "Atletico Madrid",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 2,
+   "conf": {
+    "dir": 46.0,
+    "exact": 9.5,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 17,
+    "teamN": 7,
+    "sample": 24,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 0:2 可作小注参考"
+   }
+  },
+  "1989102": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Norwich",
+   "away": "Watford",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 0,
+   "conf": {
+    "dir": 40.6,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989093": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Lincoln City",
+   "away": "Birmingham",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1989111": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Stoke",
+   "away": "Preston",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 0,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1989452": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Bradford",
+   "away": "Huddersfield",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 45.2,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  "1989458": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Plymouth",
+   "away": "Reading",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 42.9,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "平局",
+    "tip": "方向中等可信，方向「平局」可作小注参考"
+   }
+  },
+  "1989454": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Leyton Orient",
+   "away": "Cambridge U",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 1,
+   "conf": {
+    "dir": 44.1,
+    "exact": 6.9,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  "1990228": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Grimsby",
+   "away": "York",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 2,
+   "conf": {
+    "dir": 37.1,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1990234": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Port Vale",
+   "away": "Rochdale",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1990230": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Newport",
+   "away": "Chesterfield",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 2,
+   "conf": {
+    "dir": 34.7,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1999682": {
+   "date": "2026-10-31",
+   "league": "土超",
+   "home": "Konyaspor",
+   "away": "Galatasaray",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 50.3,
+    "exact": 9.0,
+    "dirLevel": "high",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 4,
+    "sample": 18,
+    "outcome": "客胜",
+    "tip": "方向可信度高，可跟注方向「客胜」"
+   }
+  },
+  "1985918": {
+   "date": "2026-10-31",
+   "league": "比甲",
+   "home": "Zulte Waregem",
+   "away": "Club Brugge",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 3,
+   "conf": {
+    "dir": 42.8,
+    "exact": 7.8,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 0,
+    "teamN": 1,
+    "sample": 1,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 0:3 可作小注参考"
+   }
+  },
+  "1983633": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Manchester City",
+   "away": "Brighton",
+   "jcNum": null,
+   "predH": 3,
+   "predA": 1,
+   "conf": {
+    "dir": 43.7,
+    "exact": 11.1,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 7,
+    "sample": 23,
+    "outcome": "主胜",
+    "tip": "比分可信度高，可跟注比分 3:1"
+   }
+  },
+  "1983628": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Brentford",
+   "away": "Nottingham Forest",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 44.2,
+    "exact": 13.0,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 4,
+    "sample": 20,
+    "outcome": "主胜",
+    "tip": "比分可信度高，可跟注比分 2:1"
+   }
+  },
+  "1983631": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Hull",
+   "away": "Ipswich",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 45.2,
+    "exact": 13.4,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 3,
+    "sample": 19,
+    "outcome": "平局",
+    "tip": "比分可信度高，可跟注比分 1:1"
+   }
+  },
+  "1983630": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Coventry",
+   "away": "Sunderland",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 42.5,
+    "exact": 12.3,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 7,
+    "sample": 23,
+    "outcome": "平局",
+    "tip": "比分可信度高，可跟注比分 1:1"
+   }
+  },
+  "1983626": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Bournemouth",
+   "away": "Leeds",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 43.0,
+    "exact": 12.1,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 16,
+    "teamN": 5,
+    "sample": 21,
+    "outcome": "平局",
+    "tip": "比分可信度高，可跟注比分 1:1"
+   }
+  },
+  "1995459": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "Werder Bremen",
+   "away": "Hoffenheim",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 2,
+   "conf": {
+    "dir": 38.4,
+    "exact": 8.3,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 16,
+    "teamN": 4,
+    "sample": 20,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 2:2 可作小注参考"
+   }
+  },
+  "1980914": {
+   "date": "2026-10-31",
+   "league": "意甲",
+   "home": "Bologna",
+   "away": "Monza",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 0,
+   "conf": {
+    "dir": 44.0,
+    "exact": 8.8,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 6,
+    "sample": 29,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:0 可作小注参考"
+   }
+  },
+  "1989121": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Wolves",
+   "away": "Cardiff",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 39.1,
+    "exact": 6.9,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 7,
+    "sample": 44,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1989096": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Middlesbrough",
+   "away": "Charlton",
+   "jcNum": null,
+   "predH": 3,
+   "predA": 0,
+   "conf": {
+    "dir": 37.1,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1989099": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Millwall",
+   "away": "Derby",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1999691": {
+   "date": "2026-10-31",
+   "league": "土超",
+   "home": "Erzurumspor FK",
+   "away": "Corum FK",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 2,
+   "conf": {
+    "dir": 51.0,
+    "exact": 9.9,
+    "dirLevel": "high",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 3,
+    "sample": 17,
+    "outcome": "平局",
+    "tip": "方向可信度高，可跟注方向「平局」"
+   }
+  },
+  "1999688": {
+   "date": "2026-10-31",
+   "league": "土超",
+   "home": "Kocaelispor",
+   "away": "Rizespor",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 48.3,
+    "exact": 9.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 3,
+    "sample": 17,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  "2013745": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Catanzaro",
+   "away": "Calcio Padova",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 31.2,
+    "exact": 7.6,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 5,
+    "sample": 28,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  "2013751": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Modena",
+   "away": "Mantova",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 33.6,
+    "exact": 9.0,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 5,
+    "sample": 28,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  "2013753": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Palermo",
+   "away": "LR Vicenza",
+   "jcNum": null,
+   "predH": 3,
+   "predA": 1,
+   "conf": {
+    "dir": 33.5,
+    "exact": 9.2,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 4,
+    "sample": 27,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 3:1 可作小注参考"
+   }
+  },
+  "2013747": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Cremonese",
+   "away": "Benevento",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 31.2,
+    "exact": 7.6,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 5,
+    "sample": 28,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  "2013757": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Sudtirol",
+   "away": "Cesena",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 32.2,
+    "exact": 8.7,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 5,
+    "sample": 28,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  "2013755": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Sampdoria",
+   "away": "Virtus Entella",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 32.2,
+    "exact": 8.7,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 23,
+    "teamN": 5,
+    "sample": 28,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  "1989114": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Swansea",
+   "away": "Blackburn",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1989090": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Burnley",
+   "away": "Portsmouth",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 38.0,
+    "exact": 6.9,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 7,
+    "sample": 44,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1989086": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Bolton",
+   "away": "Bristol City",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 37.1,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1989107": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Southampton",
+   "away": "Queens Park Rangers",
+   "jcNum": null,
+   "predH": 3,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1989117": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "West Ham",
+   "away": "West Bromwich Albion",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.7,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 37,
+    "teamN": 6,
+    "sample": 43,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1989451": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Barnsley",
+   "away": "Oxford",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 2,
+   "conf": {
+    "dir": 45.2,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  "1989460": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Stockport County",
+   "away": "AFC Wimbledon",
+   "jcNum": null,
+   "predH": 3,
+   "predA": 0,
+   "conf": {
+    "dir": 45.2,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989461": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Wigan",
+   "away": "Bromley",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 45.2,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989462": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Wycombe",
+   "away": "Burton",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 42.9,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "平局",
+    "tip": "方向中等可信，方向「平局」可作小注参考"
+   }
+  },
+  "1989456": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Mansfield",
+   "away": "Notts Co.",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 44.1,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989453": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Leicester",
+   "away": "Stevenage",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 42.9,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1989457": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Peterborough",
+   "away": "Luton",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 42.9,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  "1989455": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Milton Keynes Dons",
+   "away": "Doncaster",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 41.7,
+    "exact": 5.7,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 36,
+    "teamN": 6,
+    "sample": 42,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  "1990220": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Accrington",
+   "away": "Northampton",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 37.1,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1990236": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Salford City",
+   "away": "Exeter",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 38.4,
+    "exact": 6.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 5,
+    "sample": 40,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1990226": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Fleetwood",
+   "away": "Bristol Rovers",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 7.0,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1990242": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Tranmere",
+   "away": "Cheltenham",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 34.7,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1990240": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Swindon",
+   "away": "Rotherham",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 2,
+   "conf": {
+    "dir": 35.9,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1990224": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Crewe",
+   "away": "Barnet",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 35.9,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1990232": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Oldham",
+   "away": "Crawley",
+   "jcNum": null,
+   "predH": 1,
+   "predA": 1,
+   "conf": {
+    "dir": 38.3,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "平局",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 平局）"
+   }
+  },
+  "1990222": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Colchester",
+   "away": "Walsall",
+   "jcNum": null,
+   "predH": 0,
+   "predA": 2,
+   "conf": {
+    "dir": 36.1,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 5,
+    "sample": 40,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1990238": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Shrewsbury",
+   "away": "Gillingham",
+   "jcNum": null,
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 35.9,
+    "exact": 5.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 35,
+    "teamN": 6,
+    "sample": 41,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
    }
   }
  }

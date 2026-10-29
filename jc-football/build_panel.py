@@ -156,6 +156,16 @@ def main():
         except Exception:
             pass
     js_ws = json.dumps(ws_data, ensure_ascii=False).replace("</", "<\\/")
+    # V站·呼死狗情报（中文原味源，免翻译；v1.7.75）
+    vz_data = {"updatedAt": "", "matches": []}
+    vzp = os.path.join(HERE, "vzhan_data.json")
+    if os.path.exists(vzp):
+        try:
+            with open(vzp, encoding="utf-8") as f:
+                vz_data = json.load(f)
+        except Exception:
+            pass
+    js_vz = json.dumps(vz_data, ensure_ascii=False).replace("</", "<\\/")
     # 竞彩篮球（独立源：官方 basketball 接口，与足球数据/模型零耦合，v1.7.29）
     bk_data = {"updatedAt": "", "matches": []}
     bkp = os.path.join(HERE, "basketball.json")
@@ -254,6 +264,7 @@ def main():
               .replace("__SP_TEAM_ZH_PLACEHOLDER__", js_sp_team_zh)
               .replace("__SP_TEAM_CREST_PLACEHOLDER__", js_sp_team_crest)
               .replace("__WHOSCORED_PLACEHOLDER__", js_ws)
+              .replace("__VZHAN_PLACEHOLDER__", js_vz)
               .replace("__BASKETBALL_PLACEHOLDER__", js_bk)
               .replace("__BASKETBALL_HISTORY_PLACEHOLDER__", js_bkh)
               .replace("__BASKETBALL_AI_PLACEHOLDER__", js_bkai)
@@ -268,7 +279,7 @@ def main():
                "__EXPERT_PLACEHOLDER__", "__EXPERT_HISTORY_PLACEHOLDER__", "__EXPERT_STATS_PLACEHOLDER__",
                "__ODDS_BSD_PLACEHOLDER__", "__FD_PLACEHOLDER__", "__BSD_PLACEHOLDER__",
                "__SCORE_PREDICT_PLACEHOLDER__", "__SP_TEAM_ZH_PLACEHOLDER__",
-               "__WHOSCORED_PLACEHOLDER__", "__BASKETBALL_PLACEHOLDER__",
+               "__WHOSCORED_PLACEHOLDER__", "__VZHAN_PLACEHOLDER__", "__BASKETBALL_PLACEHOLDER__",
                "__BASKETBALL_HISTORY_PLACEHOLDER__", "__BASKETBALL_AI_PLACEHOLDER__",
                "__BASKETBALL_PARLAY_PLACEHOLDER__", "__BASKETBALL_STATS_PLACEHOLDER__",
                "__BASKETBALL_AI_ACC_PLACEHOLDER__"):

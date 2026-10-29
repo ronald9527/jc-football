@@ -191,6 +191,18 @@ else
 fi
 set -e
 
+# ---------- 步骤1.886：V站·呼死狗 中文情报（独立源，v1.7.75；零翻译、竞彩编号直配）----------
+# 隔离设计：V站抓取失败只跳过本源（保留旧 vzhan_data.json），绝不影响 WhoScored/模型/部署；
+# 与 WhoScored 共用 have_time 门槛，超预算同样跳过，保证部署步骤一定被执行。
+log "==> 步骤1.886 V站·呼死狗情报 (fetch_vzhan.py)"
+set +e
+if have_time 90; then
+  "$PY" fetch_vzhan.py
+else
+  log "!! 剩余时间不足，跳过 V站 抓取（沿用上次数据），优先保证部署"
+fi
+set -e
+
 # ---------- 步骤1.887：模型 vs WhoScored 命中率 A/B 对比（独立分析，零耦合核心数据）----------
 # 把每日 matches.json(同场双预测) + 两套历史(带赛果) 按规范键合并到 ab_compare.json，
 # 算各源独立命中率 + 同场头对头(配对符号检验)。纯分析产物，不入部署指纹，不挤占部署预算。

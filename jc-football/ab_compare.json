@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-29 18:50:15",
+ "updatedAt": "2026-10-30 05:35:57",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -24645,8 +24645,13 @@
    "league": "英联赛杯",
    "home": "埃弗顿",
    "away": "纽卡斯尔",
-   "jcNum": null,
-   "ws": null,
+   "jcNum": "周四005",
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
    "model": {
     "h": 1,
     "a": 1,
@@ -24654,9 +24659,13 @@
     "outcomeHit": null,
     "mae": null
    },
-   "act": null,
+   "act": {
+    "h": 3,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "ws_hist"
    ]
   },
   "[\"2026-10-30\", \"佛罗伦萨\", \"亚特兰大\"]": {
@@ -24664,8 +24673,13 @@
    "league": "意甲",
    "home": "佛罗伦萨",
    "away": "亚特兰大",
-   "jcNum": null,
-   "ws": null,
+   "jcNum": "周四006",
+   "ws": {
+    "h": 2,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true
+   },
    "model": {
     "h": 1,
     "a": 1,
@@ -24673,9 +24687,13 @@
     "outcomeHit": null,
     "mae": null
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "ws_hist"
    ]
   },
   "[\"2026-10-30\", \"格雷米奥\", \"巴拉纳竞技\"]": {
@@ -24867,52 +24885,109 @@
    "sources": [
     "daily"
    ]
+  },
+  "[\"2026-10-31\", \"勒阿弗尔\", \"巴黎圣日耳曼\"]": {
+   "date": "2026-10-31",
+   "league": "法甲",
+   "home": "勒阿弗尔",
+   "away": "巴黎圣曼",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 3,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"埃尔沃斯堡\", \"美因茨\"]": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "埃沃斯堡",
+   "away": "美因茨",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"谢菲尔德联\", \"雷克斯汉姆\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "谢菲联",
+   "away": "雷克斯",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
   }
  },
  "stats": {
-  "paired_n": 13,
+  "paired_n": 15,
   "model": {
-   "n": 776,
+   "n": 778,
    "exact": 8.6,
-   "dir": 43.6,
+   "dir": 43.4,
    "dir_ci": [
-    40.1,
-    47.1
+    40.0,
+    47.0
    ],
    "exact_ci": [
-    6.9,
+    6.8,
     10.8
    ],
    "mae": 1.2
   },
   "ws": {
-   "n": 366,
-   "exact": 7.7,
+   "n": 368,
+   "exact": 7.9,
    "dir": 41.8,
    "dir_ci": [
     36.9,
     46.9
    ],
    "exact_ci": [
-    5.3,
-    10.8
+    5.5,
+    11.1
    ],
    "mae": null
   },
   "paired_dir": {
    "both_right": 0,
-   "both_wrong": 5,
+   "both_wrong": 6,
    "model_only": 4,
-   "ws_only": 4,
-   "model_dir": 30.8,
-   "ws_dir": 30.8,
+   "ws_only": 5,
+   "model_dir": 26.7,
+   "ws_dir": 33.3,
    "sign_p_dir": 1.0
   },
   "paired_exact": {
-   "model_exact": 15.4,
-   "ws_exact": 7.7,
+   "model_exact": 13.3,
+   "ws_exact": 13.3,
    "model_only": 2,
-   "ws_only": 1,
+   "ws_only": 2,
    "sign_p_exact": 1.0
   },
   "by_league": {
@@ -24963,9 +25038,25 @@
     "both": 0,
     "m_only": 0,
     "w_only": 0
+   },
+   "英联赛杯": {
+    "n": 1,
+    "m_oc": 0,
+    "w_oc": 0,
+    "both": 0,
+    "m_only": 0,
+    "w_only": 0
+   },
+   "意甲": {
+    "n": 1,
+    "m_oc": 0,
+    "w_oc": 1,
+    "both": 0,
+    "m_only": 0,
+    "w_only": 1
    }
   },
   "verdict": "无显著差异（打平）",
-  "total_records": 1145
+  "total_records": 1148
  }
 }
