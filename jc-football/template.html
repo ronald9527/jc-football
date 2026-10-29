@@ -546,6 +546,7 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-pred i{font-style:normal;color:var(--weak);margin:0 2px}
 /* v1.7.61：源站人工预测徽标 + 模型参考小字 */
 .sp-wstag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;vertical-align:4px;background:rgba(56,142,60,.18);color:#66bb6a;border:1px solid rgba(56,142,60,.45)}
+.sp-wstag-model{background:rgba(245,124,0,.16);color:#fb8c00;border-color:rgba(245,124,0,.45)}
 .sp-modelref{font-size:10px;color:var(--weak);opacity:.85}
 .sp-actual{font-size:18px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
 .sp-actual.sp-live{color:#faad14;font-size:13px}
@@ -5546,9 +5547,12 @@ function renderScorePred(){
         return wsJcCandidate({num:jcNum, date:m.date, home:zhH0, away:zhA0}, wsByNumSp);
       })();
       const hasWs = !!(wsm && wsm.predH != null);
-      const dispH = hasWs ? wsm.predH : m.predH, dispA = hasWs ? wsm.predA : m.predA;
+      const hasModel = !hasWs && m.modelPred && m.modelPred.h != null;
+      const dispH = hasWs ? wsm.predH : (hasModel ? m.modelPred.h : m.predH);
+      const dispA = hasWs ? wsm.predA : (hasModel ? m.modelPred.a : m.predA);
       const predScore = `<span class="sp-pred">${dispH} <i>:</i> ${dispA}</span>`
-        + (hasWs ? `<span class="sp-wstag" title="WhoScored 人工预测比分，与源站一致">WhoScored</span>` : ``);
+        + (hasWs ? `<span class="sp-wstag" title="WhoScored 人工预测比分，与源站一致">WhoScored</span>`
+           : (hasModel ? `<span class="sp-wstag sp-wstag-model" title="football-data 模型预测（WhoScored 缺失时兜底）">模型</span>` : ``));
       let actual = "";
       let hit = "";
       if(finished && m.actH!=null){
