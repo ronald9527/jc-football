@@ -139,6 +139,13 @@ def main():
         except Exception:
             pass
     js_scorepred = json.dumps(score_pred, ensure_ascii=False).replace("</", "<\\/")
+    # 模型 vs WhoScored 命中率 A/B 对比（accuracy_ab.py 每日累积，独立分析源）
+    _ab = {}
+    try:
+        _ab = json.load(open(os.path.join(HERE, "ab_compare.json"), encoding="utf-8")).get("stats", {})
+    except Exception:
+        pass
+    js_ab = json.dumps(_ab, ensure_ascii=False).replace("</", "<\\/")
     # WhoScored 人工预测比分（独立源，与核心数据/模型零耦合）
     ws_data = {"matches": [], "dateList": [], "history": [], "historyDateList": [], "reliable": {}}
     wsp = os.path.join(HERE, "whoscored_data.json")
@@ -252,7 +259,8 @@ def main():
               .replace("__BASKETBALL_AI_PLACEHOLDER__", js_bkai)
               .replace("__BASKETBALL_PARLAY_PLACEHOLDER__", js_bkpl)
               .replace("__BASKETBALL_STATS_PLACEHOLDER__", js_bkst)
-              .replace("__BASKETBALL_AI_ACC_PLACEHOLDER__", js_bkaiacc))
+              .replace("__BASKETBALL_AI_ACC_PLACEHOLDER__", js_bkaiacc)
+              .replace("__AB_STATS_PLACEHOLDER__", js_ab))
 
     for ph in ("__DATA_PLACEHOLDER__", "__HISTORY_PLACEHOLDER__", "__CONFIG_PLACEHOLDER__",
                "__BD_DATA_PLACEHOLDER__", "__BD_HISTORY_PLACEHOLDER__", "__HKMO_HISTORY_PLACEHOLDER__",

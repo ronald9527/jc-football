@@ -627,6 +627,38 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-sec.collapsed .sp-caret{transform:rotate(-90deg)}
 .sp-sec-body{padding:8px 10px 10px}
 .sp-sec.collapsed .sp-sec-body{display:none}
+/* ---- A/B 命中率对比面板（模型 vs WhoScored） ---- */
+.ab-wrap{margin:4px 0 8px}
+.ab-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ab-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.ab-card.ab-model{border-left:3px solid #f0883e}
+.ab-card.ab-ws{border-left:3px solid #3fb950}
+.ab-src{font-weight:800;font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px}
+.ab-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:7px;background:var(--line);color:var(--sub)}
+.ab-big{font-size:30px;font-weight:900;line-height:1.1;margin:4px 0 1px;color:var(--text)}
+.ab-model .ab-big{color:#f0883e}
+.ab-ws .ab-big{color:#3fb950}
+.ab-lbl{font-size:10.5px;color:var(--sub);margin-bottom:6px}
+.ab-bar{position:relative;height:16px;background:var(--line);border-radius:8px;overflow:hidden;margin:4px 0 8px}
+.ab-fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px}
+.ab-fill.m{background:linear-gradient(90deg,#f0883e,#ffb877)}
+.ab-fill.w{background:linear-gradient(90deg,#3fb950,#81c784)}
+.ab-val{position:absolute;right:6px;top:0;line-height:16px;font-size:10px;font-weight:700;color:var(--text)}
+.ab-row{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--sub);margin:3px 0}
+.ab-row b{color:var(--text);font-size:13px}
+.ab-ci{font-size:9.5px;color:var(--sub)}
+.ab-pair{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.ab-pair-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:8px}
+.ab-pair-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.ab-pc{text-align:center;background:var(--line);border-radius:8px;padding:6px 2px}
+.ab-pc-n{display:block;font-size:18px;font-weight:900;color:var(--text)}
+.ab-pc-n.ab-m{color:#f0883e}
+.ab-pc-n.ab-w{color:#3fb950}
+.ab-pc-l{font-size:9.5px;color:var(--sub)}
+.ab-pair-line{font-size:11.5px;color:var(--sub);margin:4px 0}
+.ab-pair-line b{color:var(--text)}
+.ab-verdict{margin-top:12px;font-size:12px;color:var(--text);background:rgba(77,163,255,.08);border:1px solid rgba(77,163,255,.3);border-radius:10px;padding:10px 12px;line-height:1.5}
+@media(max-width:520px){ .ab-cards{grid-template-columns:1fr} }
 .sp-sub-head{font-size:12px;font-weight:700;color:var(--text);margin:13px 0 5px;padding-left:8px;border-left:3px solid var(--accent)}
 .sp-sub-head:first-child{margin-top:2px}
 /* 队标 + 队名单元格（比分预测 Tab 统一使用，免去翻译依赖） */
@@ -1423,6 +1455,15 @@ footer b{color:var(--sub)}
         <div id="spDateList"></div>
       </div>
     </div>
+
+    <!-- 分区3：模型 vs WhoScored 命中率 A/B 对比（accuracy_ab.py 每日累积） -->
+    <div class="sp-sec">
+      <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>🥊 模型 vs WhoScored 命中率对比</span><span class="sp-caret">▾</span></div>
+      <div class="sp-sec-body">
+        <div class="sp-sub-head">双源同场回测<span class="tip">同一场比赛同时记录 Poisson 模型与 WhoScored 预测并对比赛果；区间为 Wilson 95% 置信区间，显著性为配对符号检验</span></div>
+        <div id="abPanel"></div>
+      </div>
+    </div>
   </div>
 
 </main>
@@ -1638,7 +1679,7 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.71";
+const VERSION = "v1.7.73";
 const CHANGELOG = [
   {
     version: "v1.7.71",
@@ -2721,6 +2762,7 @@ const BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
 const BUILT_BSD = __BSD_PLACEHOLDER__;
 const BUILT_FD = __FD_PLACEHOLDER__;
 const BUILT_SCOREPRED = __SCORE_PREDICT_PLACEHOLDER__;
+const AB_STATS = __AB_STATS_PLACEHOLDER__;
 const BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
 // 竞彩篮球（独立源：官方 basketball 接口，与足球数据/模型零耦合，v1.7.29）
 const BUILT_BASKETBALL = __BASKETBALL_PLACEHOLDER__;
@@ -5464,8 +5506,69 @@ function spJcNumOf(m, date){
   }catch(e){ return null; }
 }
 
+function renderAbStats(){
+  const el = $("#abPanel"); if(!el) return;
+  const S = AB_STATS || {};
+  const M = S.model || {}, W = S.ws || {};
+  if(!M.n){
+    el.innerHTML = `<div style="color:var(--sub);font-size:12px;padding:8px 0">暂无可对比数据（需要两边都预测且已完赛的比赛）。随每日运行自动累积，约 1–2 周后给出稳定结论。</div>`;
+    return;
+  }
+  const pct = x => x==null ? "—" : x.toFixed(1)+"%";
+  const ci = c => (c && c.length===2) ? `${c[0].toFixed(1)}–${c[1].toFixed(1)}%` : "—";
+  const bar = (val, cls) => {
+    const w = Math.max(2, Math.min(100, val||0));
+    return `<div class="ab-bar"><div class="ab-fill ${cls}" style="width:${w}%"></div><span class="ab-val">${pct(val)}</span></div>`;
+  };
+  const pd = S.paired_dir || {}, pe = S.paired_exact || {};
+  const pn = S.paired_n || 0;
+  let verdict;
+  if(M.dir!=null && W.dir!=null && Math.abs((M.dir||0)-(W.dir||0))<3){
+    verdict = "两源方向命中率高度接近、95% 置信区间大幅重叠，统计上打平；当前维持「WhoScored 优先 + 模型兜底」策略不变。";
+  } else if((M.dir||0) > (W.dir||0)){
+    verdict = "模型方向命中率略高，但精确命中与 WhoScored 相当，且 WhoScored 提供真实人工预测，维持双源并存。";
+  } else {
+    verdict = "WhoScored 方向命中率略高，维持其优先展示、模型兜底。";
+  }
+  let html = `<div class="ab-wrap"><div class="ab-cards">`;
+  html += `<div class="ab-card ab-model">
+      <div class="ab-src">🤖 自建模型 <span class="ab-tag">Poisson</span></div>
+      <div class="ab-big">${pct(M.dir)}</div>
+      <div class="ab-lbl">方向命中 · 95%CI ${ci(M.dir_ci)}</div>
+      ${bar(M.dir,"m")}
+      <div class="ab-row"><span>精确命中</span><b>${pct(M.exact)}</b><span class="ab-ci">${ci(M.exact_ci)}</span></div>
+      <div class="ab-row"><span>样本 / MAE</span><b>N=${M.n}</b><span class="ab-ci">${M.mae!=null?M.mae.toFixed(2):"—"}</span></div>
+    </div>`;
+  html += `<div class="ab-card ab-ws">
+      <div class="ab-src">🟢 WhoScored <span class="ab-tag">人工</span></div>
+      <div class="ab-big">${pct(W.dir)}</div>
+      <div class="ab-lbl">方向命中 · 95%CI ${ci(W.dir_ci)}</div>
+      ${bar(W.dir,"w")}
+      <div class="ab-row"><span>精确命中</span><b>${pct(W.exact)}</b><span class="ab-ci">${ci(W.exact_ci)}</span></div>
+      <div class="ab-row"><span>样本 / MAE</span><b>N=${W.n}</b><span class="ab-ci">—</span></div>
+    </div>`;
+  html += `</div>`;
+  if(pn>0){
+    const sigDir = pd.sign_p_dir!=null ? (pd.sign_p_dir>0.05 ? "无显著差异" : "显著差异") : "—";
+    html += `<div class="ab-pair">
+      <div class="ab-pair-title">🥊 同场对决（两边都预测且都完赛）：<b>N=${pn}</b> 场</div>
+      <div class="ab-pair-grid">
+        <div class="ab-pc"><span class="ab-pc-n">${pd.both_right||0}</span><span class="ab-pc-l">两者都对</span></div>
+        <div class="ab-pc"><span class="ab-pc-n ab-m">${pd.model_only||0}</span><span class="ab-pc-l">仅模型对</span></div>
+        <div class="ab-pc"><span class="ab-pc-n ab-w">${pd.ws_only||0}</span><span class="ab-pc-l">仅WS对</span></div>
+        <div class="ab-pc"><span class="ab-pc-n">${pd.both_wrong||0}</span><span class="ab-pc-l">都错</span></div>
+      </div>
+      <div class="ab-pair-line">方向命中：模型 <b>${pct(pd.model_dir)}</b> vs WhoScored <b>${pct(pd.ws_dir)}</b> · 配对符号检验 p=${pd.sign_p_dir!=null?pd.sign_p_dir.toFixed(2):"—"}（${sigDir}）</div>
+      <div class="ab-pair-line">精确命中：模型 <b>${pct(pe.model_exact)}</b> vs WhoScored <b>${pct(pe.ws_exact)}</b></div>
+    </div>`;
+  }
+  html += `<div class="ab-verdict">📌 ${verdict}</div></div>`;
+  el.innerHTML = html;
+}
+
 function renderScorePred(){
   try{ renderWhoScored(); }catch(e){}
+  try{ renderAbStats(); }catch(e){}
   const sp = BUILT_SCOREPRED || {matches:[], reliable:{}};
   const msAll = sp.matches || [];
   const rel = sp.reliable || {};

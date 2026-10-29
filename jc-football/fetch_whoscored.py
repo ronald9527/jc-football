@@ -50,11 +50,23 @@ RECENT_BACKFILL_DAYS = 4  # 回填窗口：今天往前 4 天（覆盖周末/节
 PENDING_KEEP_DAYS = 10
 
 BASE = "https://www.whoscored.com"
-# 指纹链：chrome124 / safari184 实测可完整拿到数据（含软挑战真实页）；
-# chrome131 会被 Cloudflare 403 硬封，排后面兜底。链的顺序影响硬封锁 URL 的
-# 重试成本（每个全封锁 URL ≈ 指纹数×请求耗时 + 退避），已知能用的放最前。
-IMPS = ["chrome124", "safari184", "chrome131", "chrome120"]
-DELAY = 0.4                    # 每次页面抓取间隔（秒）
+# 指纹链：Cloudflare 对 WhoScored 做【动态指纹封锁】——实测同一沙箱 IP 在数分钟
+# 内会从「chrome131/120 通」翻脸到「chrome12x/13x 全 403」，只放 Safari/Edge/
+# 老版 Chrome(99/110/116) 通过。因此：
+#   ① 把【当下稳定可用】的 Safari/Edge/老 Chrome 置顶，chrome12x/13x 全沉底兜底；
+#   ② 配合下方 _get 的「上次成功指纹优先」自适应——哪条指纹本轮通就优先复用，
+#      被 Cloudflare 顶封时自动退到同链里仍通的其它指纹，不再固定从 403 起手
+#      把整段 IP 顶到全封（这正是此前日常跑全线 403 的根因）。
+IMPS = ["safari18_0", "safari184", "safari17_0", "edge101", "edge99",
+        "chrome116", "chrome110", "chrome99",
+        "chrome120", "chrome131", "chrome124", "chrome133a", "chrome136"]
+# 上次成功指纹（进程内记忆，自适应优先复用）
+_last_good_imp = {"imp": None}
+# 复用会话：持久化 Cloudflare cf_clearance 等反爬 cookie，规避重复挑战
+_session = [None]
+DELAY = 1.5                    # 每次页面抓取间隔（秒）：WhoScored 对请求频率极敏感，
+                               # 太密会触发 Cloudflare 限流（实测 0.4s 时 60% 请求被挑战）；
+                               # 1.5s 把单轮请求量压在限流阈值下，封锁概率骤降
 MAX_PREVIEW_FETCH = 220        # 单次运行最多抓多少个 preview 页（首_run 全量约 140）
 MAX_RESULT_FETCH = 60          # 单次运行最多补多少个历史赛果（按 title）
 BJ_OFFSET = 8 * 3600           # 北京时间 = UTC + 8h
@@ -157,11 +169,14 @@ def _is_challenge(txt):
 
 
 def _get(url, referer=BASE + "/"):
-    """chrome 指纹链请求（2 次快速尝试，不做长退避）。
+    """指纹链请求（会话复用 + 自适应优先 + 单 URL 最多 3 指纹快速失败）。
 
-    为什么不做长退避：WhoScored 的封锁多为 IP 级限流（实测持续数小时），
-    秒级退避等不来解封，只会把时间预算烧光。快速失败 → 把时间让给同批次
-    其他 URL → 下轮调度（30 分钟）自然重试。软挑战真实页（带数据）直接放行。
+    为什么会话复用：Cloudflare 解挑战后会下发 cf_clearance cookie，复用同一
+    Session 能把该 cookie 带到后续请求，规避重复挑战；否则每请求都重新过挑战。
+    为什么单 URL 最多试 3 个指纹：实测 13 指纹全跑一遍（含多个已被动态封锁的
+    chrome12x/13x）既烧时间又把请求量顶到限流阈值、反而加剧封锁。3 个足够覆盖
+    「当前稳定可用」的 Safari/Edge/老 Chrome 集合；全失败即判定 IP 级封锁，
+    快速放弃把时间让给同批次其他 URL，下轮调度自然重试。软挑战真实页直接放行。
     同轮内重复 URL 走进程内缓存（PAGE_CACHE_TTL_S），只抓一次。
     返回 (status, text)。"""
     cached = _page_cache.get(url)
@@ -173,15 +188,27 @@ def _get(url, referer=BASE + "/"):
         from curl_cffi import requests as cr
     except Exception:
         return 0, ""
+    if _session[0] is None:
+        _session[0] = cr.Session()   # 懒初始化：复用会话持久化反爬 cookie
+    s = _session[0]
     last = (0, "")
-    for imp in IMPS:   # 全指纹链遍历：逐个尝试直到拿到真实页或全失败（快速失败，IP 级封锁不会因退避翻转）
+    # 自适应顺序：上次成功过的指纹排最前优先复用（对抗 Cloudflare 动态指纹封锁）。
+    # 该指纹本轮若被顶封，自动退到链里仍通的其它指纹；最多试 3 个后放弃。
+    lg = _last_good_imp["imp"]
+    order = IMPS if not (lg and lg in IMPS) else [lg] + [x for x in IMPS if x != lg]
+    tried = 0
+    for imp in order:   # 单 URL 最多 3 指纹：覆盖稳定可用集合，全失败即 IP 级封锁
+        if tried >= 3:
+            break
+        tried += 1
         try:
-            r = cr.get(url, impersonate=imp, timeout=HTTP_TIMEOUT_S,
-                       headers={"Referer": referer,
+            r = s.get(url, impersonate=imp, timeout=HTTP_TIMEOUT_S,
+                      headers={"Referer": referer,
                                 "Accept-Language": "en-US,en;q=0.9",
                                 "Accept": "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8"})
             txt = r.text or ""
             if r.status_code == 200 and not _is_challenge(txt):
+                _last_good_imp["imp"] = imp   # 记住本轮通的指纹，下个 URL 优先复用
                 _page_cache[url] = (time.time(), 200, txt)
                 return 200, txt
             last = (r.status_code, txt[:120])
@@ -627,6 +654,19 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
             except Exception:
                 m["date"], m["bjTime"] = "", ""
             matches.append(m)
+    else:
+        # v1.7.73：/previews 列表页被 Cloudflare 整页封锁（status!=200）时，
+        # 不再整体回退旧缓存导致整轮废掉。改用【上一轮成功缓存的 whoscored_data.json】
+        # 比赛清单（含未来竞彩场次的 preview URL）作为基础名单——实测 /matches/{id}/preview
+        # 单场页在 /previews 被封时仍返回 200，故仍能逐场补抓预测比分。竞彩未来场次
+        # 的源站预测因此始终可补，不会再出现「周四周五整片缺预测」。
+        _prev = _load(OUT_PATH, None) or {}
+        for _m in _prev.get("matches", []):
+            if _m.get("id") and _m.get("url"):
+                matches.append(dict(_m))
+        if matches:
+            print("  [previews] 列表页被封，改用上一轮缓存清单（%d 场）逐场补抓单场 preview 页"
+                  % len(matches))
 
     # ---- /livescores 今日场次并入：/previews 只列未开球比赛，开球后即撤下；
     #      这里把"今天"的完赛/在赛/今晚未开球场次补进来，保证当天竞彩比赛全天在列 ----
@@ -697,9 +737,6 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
         attach_jc_numbers(matches)     # 静默预挂（幂等），供下方优先级排序使用
     except Exception as _e:
         print("  [竞彩编号] 预排序挂载失败（不影响主流程）：%s" % _e)
-    need = [x for x in matches
-            if (x["id"] not in pc or pc[x["id"]].get("predH") is None)
-            and not x.get("_finished") and not _kickoff_past(x)]
     _today_bj = (datetime.utcnow() + timedelta(seconds=BJ_OFFSET)).replace(
         hour=0, minute=0, second=0, microsecond=0)
 
@@ -710,6 +747,15 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
         except Exception:
             return 99
 
+    # 抓取范围聚焦：只补【竞彩场次（全日期）】+【近 2 天非竞彩】的预测页。
+    # 竞彩是页面主干、用户刚需；非竞彩只留近 2 天以兼顾历史累积。把 700+ 远期/
+    # 非竞彩场次的请求量压下来，是避开 Cloudflare 限流（此前 0.4s 间隔 + 全量
+    # 抓取触发 60% 挑战、5 页就触预算）的关键。
+    need = [x for x in matches
+            if (x["id"] not in pc or pc[x["id"]].get("predH") is None)
+            and not x.get("_finished") and not _kickoff_past(x)
+            and (x.get("jcNum") or _bj_delta(x) <= 1)]
+    # 排序：竞彩场次最前（页面主干），其次按北京日期升序（今日/明日先抓）。
     def _prio(x):
         d = _bj_delta(x)
         return (0 if x.get("jcNum") else 1, d if d >= 0 else -1, x.get("bjTime") or "")
@@ -719,10 +765,10 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
     for x in need:
         if fetched >= max_preview:
             break
-        # 时间预算：竞彩在售且未来 36h 内开球的场次走加长预算（hot_deadline），
-        # 其余场次只分到 PREVIEW_BUDGET_S——把剩余时间留给赛果回填。
+        # 时间预算：竞彩在售且未来 3 天内开球的场次走加长预算（hot_deadline），
+        # 其余（近2天非竞彩）只分到 PREVIEW_BUDGET_S——把剩余时间留给赛果回填。
         _d = _bj_delta(x)
-        _dl = hot_deadline if (x.get("jcNum") and _d <= 1) else preview_deadline
+        _dl = hot_deadline if (x.get("jcNum") and _d <= 3) else preview_deadline
         if fetched and time.time() > _dl:
             print("  [预览抓取] 已达阶段预算（%s），剩余 %d 场下轮补抓"
                   % ("竞彩热场次 %ds" % (PREVIEW_BUDGET_S + PREVIEW_HOT_BUDGET_S)
