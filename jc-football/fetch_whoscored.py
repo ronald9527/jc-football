@@ -174,7 +174,7 @@ def _get(url, referer=BASE + "/"):
     except Exception:
         return 0, ""
     last = (0, "")
-    for imp in IMPS[:2]:   # chrome124 / safari184：实测可完整拿到数据
+    for imp in IMPS:   # 全指纹链遍历：逐个尝试直到拿到真实页或全失败（快速失败，IP 级封锁不会因退避翻转）
         try:
             r = cr.get(url, impersonate=imp, timeout=HTTP_TIMEOUT_S,
                        headers={"Referer": referer,
@@ -193,10 +193,29 @@ def _get(url, referer=BASE + "/"):
 
 
 def fetch_previews():
-    """解析 /previews 列表 → [{id, utcDate, leagueEn, home, away, url}]（时间为 UTC）。"""
-    st, html = _get(BASE + "/previews", BASE + "/")
-    if st != 200 or not html:
-        return [], f"previews 抓取失败 HTTP {st}"
+    """解析 /previews 列表 → [{id, utcDate, leagueEn, home, away, url}]（时间为 UTC）。
+    v1.7.68：加重试——WhoScored 列表页偶发被 Cloudflare 软/硬拦截（403 / 质询页），
+    单次失败就放弃会导致整轮预测数据丢空。这里最多重试 2 次（每次 _get 内部已遍历全指纹链），
+    中间留 1.2s 间隔，给边缘节点/CDN 一点缓冲。"""
+    last_err = "previews 抓取失败"
+    for attempt in range(3):
+        st, html = _get(BASE + "/previews", BASE + "/")
+        if st == 200 and html:
+            items, e = _parse_previews(html)
+            if not e:
+                if attempt:
+                    print("  [previews] 第 %d 次重试成功（%d 场）" % (attempt, len(items)))
+                return items, ""
+            last_err = e
+        else:
+            last_err = f"previews 抓取失败 HTTP {st}"
+        if attempt < 2:
+            time.sleep(1.2)
+    return [], last_err
+
+
+def _parse_previews(html):
+    """解析 /previews 列表 HTML → ([{id,utcDate,leagueEn,home,away,url}], err)。"""
     try:
         from bs4 import BeautifulSoup
     except Exception:
@@ -648,6 +667,26 @@ def fetch_whoscored(max_preview=MAX_PREVIEW_FETCH, max_result=MAX_RESULT_FETCH,
     if ls_added:
         print("  [livescores] 并入今日场次 %d 场（其中抓取 preview %d 页，补 /previews 已撤下的当天比赛）"
               % (ls_added, fetched_ls))
+
+    # ---- v1.7.68 整轮失败保护：previews 被 Cloudflare 拦截（err 非空）且本轮几乎没拿到
+    # 任何比赛（livescores 也失败/为空 → matches 极少）→ 直接沿用上一轮成功的
+    # whoscored_data.json，绝不用残缺数据覆盖，避免线上「比分预测」整块消失。
+    # 上一轮缓存通常已含近期竞彩场次的源站预测；本轮新开售、上一轮未抓到的场次，
+    # 由 fetch_daily 合并 score_predict（football-data 稳定源）做模型兜底。 ----
+    if err and len(matches) < 5:
+        _old = _load(OUT_PATH, None)
+        if _old and _old.get("matches"):
+            _n_old = sum(1 for _x in _old["matches"] if _x.get("predH") is not None)
+            _n_jc = sum(1 for _x in _old["matches"]
+                        if _x.get("jcNum") and _x.get("predH") is not None)
+            if _n_old > 0:
+                _old["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
+                _old["note"] = ("本轮 previews 被 Cloudflare 拦截（%s），沿用上一轮成功缓存预测"
+                                "（%d 场，含竞彩 %d 场）；下一轮成功抓到后自动更新"
+                                % (err, _n_old, _n_jc))
+                _save(OUT_PATH, _old)
+                print("WhoScored 本轮抓取失败，沿用上一轮缓存（保护历史预测，不覆盖）：%s" % err)
+                return _old
 
     # ---- 抓预测比分（覆盖 previews + livescores 全部场次；带永久缓存，只补缺失）----
     # 优先级（v1.7.61 重排）：①竞彩在售场次最优先（提前挂编号再排序）——它们是
