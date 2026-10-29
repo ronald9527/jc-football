@@ -964,13 +964,24 @@ def backfill_hkmo_history(matches):
     print(f"  港澳历史回填 {done} 场", flush=True)
 
 def merge_model_predict(matches):
-    """v1.7.68：把 score_predict.json（football-data 稳定源 + 自建 Poisson 模型）的竞彩场次
-    预测合并进每场竞彩 match 的 m['modelPred'] = {h, a}，作为 WhoScored 缺失时的兜底，
-    确保竞彩卡片永远有预测可看（WhoScored 优先，模型兜底）。
+    """v1.7.69：把 score_predict.json（football-data 稳定源 + 自建 Poisson 模型，
+    不受 Cloudflare 封锁影响）的预测合并进每场比赛的 m['modelPred'] = {h, a}，
+    作为 WhoScored 缺失时的兜底，确保【所有】比赛卡片在源站被封时仍有预测可看
+    （WhoScored 优先，模型兜底）。
 
-    匹配：竞彩中文队名经 zh_norm 归一 ↔ score_predict 英文队名经 en_to_zh 转中文后
-    再经 zh_norm 归一；主客对精确相等（同时兼容主客颠倒）。日期不加约束——
-    足球-data 与竞彩同一对阵就是同一真实比赛，同队同对手同日多场在职业足球中几乎不存在。"""
+    匹配：score_predict 中文队名(标准全称) ↔ matches 中文队名(竞彩简称) 经 zh_norm
+    归一后精确相等；不匹配时再用「互为前缀」模糊兜底（町田泽维⊂町田泽维亚 自动命中）。
+    不再限制只用 jcNum/num（竞彩），覆盖全部在售比赛；且只要该场已有 WhoScored
+    源站预测(predH)就跳过，避免重复。"""
+
+    def _name_sim(a, b):
+        """队名相容：完全相等，或互为前缀（竞彩简称 vs 标准全称，如 町田泽维⊂町田泽维亚）。"""
+        if not a or not b:
+            return False
+        if a == b:
+            return True
+        return a.startswith(b) or b.startswith(a)
+
     try:
         import sys as _sys
         _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -987,7 +998,8 @@ def merge_model_predict(matches):
     except Exception:
         return
     _sps = _data.get("matches") or []
-    _idx = {}
+    _idx = {}        # 精确键 (h_norm, a_norm) -> rec
+    _fuzzy = []      # (h_norm, a_norm, rec) 供模糊兜底扫描
     for _r in _sps:
         if _r.get("predH") is None:
             continue
@@ -996,20 +1008,30 @@ def merge_model_predict(matches):
         if not (_h and _a):
             continue
         _idx.setdefault((_h, _a), _r)   # 同一对阵首条优先（通常唯一）
+        _fuzzy.append((_h, _a, _r))
     _n = 0
     for m in matches:
-        if not (m.get("num") or m.get("jcNum")):
-            continue
         if m.get("modelPred"):
+            continue
+        if m.get("predH") is not None:   # 已有 WhoScored 源站预测，无需兜底
             continue
         _h = zh_norm(m.get("home") or "")
         _a = zh_norm(m.get("away") or "")
+        if not (_h and _a):
+            continue
         _rec = _idx.get((_h, _a)) or _idx.get((_a, _h))
+        if not _rec:
+            # 模糊兜底：竞彩简称 vs 标准全称（互为前缀）匹配
+            for (_fh, _fa, _r) in _fuzzy:
+                if (_name_sim(_h, _fh) and _name_sim(_a, _fa)) or \
+                   (_name_sim(_h, _fa) and _name_sim(_a, _fh)):
+                    _rec = _r
+                    break
         if _rec:
             m["modelPred"] = {"h": _rec.get("predH"), "a": _rec.get("predA")}
             _n += 1
     if _n:
-        print("  [模型兜底] %d 场竞彩合并 score_predict 预测（WhoScored 缺失时兜底显示）" % _n, flush=True)
+        print("  [模型兜底] %d 场合并 score_predict 预测（WhoScored 缺失时兜底显示）" % _n, flush=True)
 
 
 def main():
