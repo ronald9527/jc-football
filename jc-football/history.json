@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-29 09:12:15",
+ "updatedAt": "2026-10-29 14:21:07",
  "total": 731,
  "records": [
   {
@@ -4629,12 +4629,18 @@
     ]
    },
    "predAt": "2026-10-28 22:49",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": "",
-   "asianHit": "",
+   "result": {
+    "score": "2:2",
+    "had": "d",
+    "home": 2,
+    "away": 2,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "miss",
+   "asianHit": "n-a",
    "scoreHit": "hit",
-   "resultAt": "2026-10-29 15:05",
+   "resultAt": "2026-10-29 18:06",
    "hhadResult": "a",
    "scoreActual": "2:2",
    "halfFullResult": "dd",
@@ -4902,12 +4908,18 @@
     ]
    },
    "predAt": "2026-10-28 22:49",
-   "result": null,
-   "hitFlag": null,
-   "hhadHit": "",
-   "asianHit": "",
+   "result": {
+    "score": "2:1",
+    "had": "h",
+    "home": 2,
+    "away": 1,
+    "cancel": false
+   },
+   "hitFlag": "hit",
+   "hhadHit": "hit",
+   "asianHit": "hit",
    "scoreHit": "miss",
-   "resultAt": "2026-10-29 15:05",
+   "resultAt": "2026-10-29 18:06",
    "hhadResult": "d",
    "scoreActual": "2:1",
    "halfFullResult": "dh",
@@ -66319,7 +66331,7 @@
    "hhadHit": "hit",
    "asianHit": "miss",
    "scoreHit": "miss",
-   "resultAt": "2026-10-29 15:38",
+   "resultAt": "2026-10-29 21:12",
    "hhadResult": "a",
    "scoreActual": "3:0"
   },

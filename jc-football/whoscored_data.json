@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-10-29 07:39:06",
+ "updatedAt": "2026-10-29 13:14:22",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
- "note": "本轮 previews 被 Cloudflare 拦截（previews 抓取失败 HTTP 403），沿用上一轮成功缓存预测（35 场，含竞彩 17 场）；下一轮成功抓到后自动更新",
+ "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
  "matches": [
   {
    "id": "1953087",
@@ -9491,6 +9491,456 @@
  ],
  "history": [
   {
+   "id": "1981042",
+   "date": "2026-10-29",
+   "league": "意甲",
+   "home": "AC Milan",
+   "away": "Bologna",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 4,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三006",
+   "preConf": {
+    "dir": 42.2,
+    "exact": 6.8,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 17,
+    "teamN": 5,
+    "sample": 22,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  {
+   "id": "1981054",
+   "date": "2026-10-29",
+   "league": "意甲",
+   "home": "Parma Calcio 1913",
+   "away": "Udinese",
+   "predH": 1,
+   "predA": 1,
+   "actH": 0,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": "周三007",
+   "preConf": {
+    "dir": 42.6,
+    "exact": 6.9,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 17,
+    "teamN": 4,
+    "sample": 21,
+    "outcome": "平局",
+    "tip": "方向中等可信，方向「平局」可作小注参考"
+   }
+  },
+  {
+   "id": "2013725",
+   "date": "2026-10-29",
+   "league": "意乙",
+   "home": "Carrarese",
+   "away": "S.S. Arezzo",
+   "predH": 1,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 32.5,
+    "exact": 7.9,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 22,
+    "teamN": 3,
+    "sample": 25,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1982874",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "Dundee FC",
+   "away": "Kilmarnock",
+   "predH": 1,
+   "predA": 1,
+   "actH": 3,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 46.0,
+    "exact": 9.1,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 4,
+    "sample": 14,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1982880",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "St. Johnstone",
+   "away": "Motherwell",
+   "predH": 1,
+   "predA": 0,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 46.4,
+    "exact": 8.8,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 3,
+    "sample": 13,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 1:0 可作小注参考"
+   }
+  },
+  {
+   "id": "1982871",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "Celtic",
+   "away": "Dundee United",
+   "predH": 2,
+   "predA": 0,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 46.8,
+    "exact": 7.7,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 5,
+    "sample": 15,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:0 可作小注参考"
+   }
+  },
+  {
+   "id": "1982868",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "Aberdeen",
+   "away": "Falkirk",
+   "predH": 1,
+   "predA": 2,
+   "actH": 0,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": null,
+   "preConf": {
+    "dir": 47.3,
+    "exact": 7.8,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 4,
+    "sample": 14,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  {
+   "id": "1982882",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "St. Mirren",
+   "away": "Hibernian",
+   "predH": 2,
+   "predA": 1,
+   "actH": 1,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 45.6,
+    "exact": 8.0,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 3,
+    "sample": 13,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1982877",
+   "date": "2026-10-29",
+   "league": "Premiership",
+   "home": "Heart of Midlothian",
+   "away": "Rangers",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": null,
+   "preConf": {
+    "dir": 46.4,
+    "exact": 8.0,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 10,
+    "teamN": 3,
+    "sample": 13,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 2:2 可作小注参考"
+   }
+  },
+  {
+   "id": "2035728",
+   "date": "2026-10-29",
+   "league": "League Cup",
+   "home": "Manchester City",
+   "away": "Brighton",
+   "predH": 3,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": null,
+   "preConf": {
+    "dir": 43.5,
+    "exact": 7.0,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 0,
+    "teamN": 5,
+    "sample": 5,
+    "outcome": "主胜",
+    "tip": "方向中等可信，方向「主胜」可作小注参考"
+   }
+  },
+  {
+   "id": "2035005",
+   "date": "2026-10-29",
+   "league": "League Cup",
+   "home": "Fulham",
+   "away": "Crystal Palace",
+   "predH": 2,
+   "predA": 1,
+   "actH": 0,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三012",
+   "preConf": {
+    "dir": 40.3,
+    "exact": 7.1,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 0,
+    "teamN": 5,
+    "sample": 5,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "2035006",
+   "date": "2026-10-29",
+   "league": "League Cup",
+   "home": "Bournemouth",
+   "away": "Aston Villa",
+   "predH": 1,
+   "predA": 2,
+   "actH": 3,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三011",
+   "preConf": {
+    "dir": 40.4,
+    "exact": 6.8,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 0,
+    "teamN": 7,
+    "sample": 7,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  {
+   "id": "2035002",
+   "date": "2026-10-29",
+   "league": "League Cup",
+   "home": "Sunderland",
+   "away": "Brentford",
+   "predH": 0,
+   "predA": 1,
+   "actH": 3,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三010",
+   "preConf": {
+    "dir": 41.1,
+    "exact": 7.2,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 0,
+    "teamN": 4,
+    "sample": 4,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 0:1 可作小注参考"
+   }
+  },
+  {
+   "id": "2035003",
+   "date": "2026-10-29",
+   "league": "League Cup",
+   "home": "Liverpool",
+   "away": "Chelsea",
+   "predH": 2,
+   "predA": 1,
+   "actH": 1,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三015",
+   "preConf": {
+    "dir": 44.0,
+    "exact": 7.1,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 0,
+    "teamN": 5,
+    "sample": 5,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1980907",
+   "date": "2026-10-29",
+   "league": "意甲",
+   "home": "Venezia",
+   "away": "Inter",
+   "predH": 0,
+   "predA": 3,
+   "actH": 0,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": "周三005",
+   "preConf": {
+    "dir": 43.8,
+    "exact": 6.9,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 17,
+    "teamN": 4,
+    "sample": 21,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
+  {
+   "id": "1981052",
+   "date": "2026-10-29",
+   "league": "意甲",
+   "home": "Monza",
+   "away": "Napoli",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 4,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": "周三013",
+   "preConf": {
+    "dir": 43.2,
+    "exact": 7.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 17,
+    "teamN": 5,
+    "sample": 22,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  {
+   "id": "1981050",
+   "date": "2026-10-29",
+   "league": "意甲",
+   "home": "Genoa",
+   "away": "Juventus",
+   "predH": 1,
+   "predA": 2,
+   "actH": 2,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周三014",
+   "preConf": {
+    "dir": 43.4,
+    "exact": 8.5,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 17,
+    "teamN": 4,
+    "sample": 21,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  {
+   "id": "1953074",
+   "date": "2026-10-29",
+   "league": "美职联",
+   "home": "Charlotte FC",
+   "away": "CF Montreal",
+   "predH": 2,
+   "predA": 0,
+   "actH": 4,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": null,
+   "preConf": {
+    "dir": 42.4,
+    "exact": 8.7,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 33,
+    "teamN": 5,
+    "sample": 38,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:0 可作小注参考"
+   }
+  },
+  {
    "id": "2013723",
    "date": "2026-10-28",
    "league": "意乙",
@@ -15589,6 +16039,7 @@
   }
  ],
  "historyDateList": [
+  "2026-10-29",
   "2026-10-28",
   "2026-10-27",
   "2026-10-25",
@@ -15608,9 +16059,9 @@
  ],
  "reliable": {
   "overall": {
-   "n": 348,
-   "exactHit": 7.8,
-   "outcomeHit": 42.2
+   "n": 366,
+   "exactHit": 7.7,
+   "outcomeHit": 41.8
   },
   "leagues": [
    {
@@ -15638,28 +16089,28 @@
     "outcomeHit": 71.4
    },
    {
-    "league": "美职联",
-    "n": 33,
-    "exactHit": 12.1,
-    "outcomeHit": 42.4
-   },
-   {
     "league": "Premiership",
-    "n": 10,
-    "exactHit": 10.0,
-    "outcomeHit": 60.0
+    "n": 16,
+    "exactHit": 12.5,
+    "outcomeHit": 50.0
    },
    {
-    "league": "意乙",
-    "n": 22,
-    "exactHit": 9.1,
-    "outcomeHit": 13.6
+    "league": "美职联",
+    "n": 34,
+    "exactHit": 11.8,
+    "outcomeHit": 44.1
    },
    {
     "league": "Europa League",
     "n": 34,
     "exactHit": 8.8,
     "outcomeHit": 50.0
+   },
+   {
+    "league": "意乙",
+    "n": 23,
+    "exactHit": 8.7,
+    "outcomeHit": 13.0
    },
    {
     "league": "荷甲",
@@ -15675,9 +16126,9 @@
    },
    {
     "league": "意甲",
-    "n": 17,
-    "exactHit": 5.9,
-    "outcomeHit": 47.1
+    "n": 22,
+    "exactHit": 4.5,
+    "outcomeHit": 50.0
    },
    {
     "league": "英乙",
@@ -15708,6 +16159,12 @@
     "n": 6,
     "exactHit": 0.0,
     "outcomeHit": 33.3
+   },
+   {
+    "league": "League Cup",
+    "n": 5,
+    "exactHit": 0.0,
+    "outcomeHit": 0.0
    }
   ],
   "teams": [
@@ -15736,7 +16193,25 @@
     "outcomeHit": 66.7
    },
    {
+    "team": "Kilmarnock",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
     "team": "Villarreal",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
+    "team": "Rangers",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
+    "team": "Monza",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 66.7
@@ -15796,12 +16271,6 @@
     "outcomeHit": 33.3
    },
    {
-    "team": "Juventus",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
-   },
-   {
     "team": "Arsenal",
     "n": 4,
     "exactHit": 25.0,
@@ -15818,23 +16287,11 @@
     "n": 4,
     "exactHit": 25.0,
     "outcomeHit": 50.0
-   },
-   {
-    "team": "RB Leipzig",
-    "n": 4,
-    "exactHit": 0.0,
-    "outcomeHit": 100.0
-   },
-   {
-    "team": "Roma",
-    "n": 4,
-    "exactHit": 0.0,
-    "outcomeHit": 100.0
    }
   ],
   "baseline": {
-   "dir": 42.2,
-   "exact": 7.8
+   "dir": 41.8,
+   "exact": 7.7
   }
  }
 }
