@@ -35,7 +35,7 @@ _TEAM_SRC = """
 布莱顿|Brighton|Brighton & Hove Albion
 伯恩茅斯|Bournemouth|AFC Bournemouth
 富勒姆|Fulham
-布伦特福德|Brentford
+布伦特福德|布伦特|Brentford
 诺丁汉森林|Nottingham Forest
 伍尔弗汉普顿|Wolverhampton|Wolves
 莱斯特城|Leicester|Leicester City
@@ -1781,7 +1781,7 @@ KFUM奥斯陆|KFUM|KFUM Oslo|KFUM-Kameratene Oslo
 科林蒂安|Corinthians|SC Corinthians|Corinthians Paulista
 帕尔梅拉斯|Palmeiras|SE Palmeiras|Palmeiras SP
 弗拉门戈|Flamengo|CR Flamengo|Flamengo RJ
-弗鲁米嫩塞|Fluminense|Fluminense FC|FLU
+弗鲁米嫩塞|弗鲁米嫩|Fluminense|Fluminense FC|FLU
 瓦斯科达伽马|Vasco da Gama|Vasco|CR Vasco da Gama
 博塔弗戈|Botafogo|Botafogo FR|Bota
 桑托斯|Santos|Santos FC|Santos SP
@@ -2295,6 +2295,11 @@ _ZH_ALIAS = {
     "朴茨茅斯": "朴次茅斯",
     # 博多闪耀两种译名归一（同一俱乐部，竞彩官方名「博德闪耀」）
     "博多格林特": "博德闪耀",
+    # v1.7.68：竞彩常用简称 → 数据源全名，保证 score_predict（football-data 英文队名
+    # 经 en_to_zh 转中文后）能与竞彩简称精确归一，竞彩场次才能被模型预测兜底
+    "维拉": "阿斯顿维拉",
+    "弗鲁米嫩": "弗鲁米嫩塞",
+    "布伦特": "布伦特福德",
 }
 
 
