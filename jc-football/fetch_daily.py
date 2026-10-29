@@ -963,6 +963,55 @@ def backfill_hkmo_history(matches):
         json.dump(history, f, ensure_ascii=False, indent=1)
     print(f"  港澳历史回填 {done} 场", flush=True)
 
+def merge_model_predict(matches):
+    """v1.7.68：把 score_predict.json（football-data 稳定源 + 自建 Poisson 模型）的竞彩场次
+    预测合并进每场竞彩 match 的 m['modelPred'] = {h, a}，作为 WhoScored 缺失时的兜底，
+    确保竞彩卡片永远有预测可看（WhoScored 优先，模型兜底）。
+
+    匹配：竞彩中文队名经 zh_norm 归一 ↔ score_predict 英文队名经 en_to_zh 转中文后
+    再经 zh_norm 归一；主客对精确相等（同时兼容主客颠倒）。日期不加约束——
+    足球-data 与竞彩同一对阵就是同一真实比赛，同队同对手同日多场在职业足球中几乎不存在。"""
+    try:
+        import sys as _sys
+        _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from team_map import TEAM_EN2ZH, zh_norm
+    except Exception as _e:
+        print("  [模型兜底] team_map 导入失败，跳过：%s" % _e, flush=True)
+        return
+    _here = os.path.dirname(os.path.abspath(__file__))
+    _sp = os.path.join(_here, "score_predict.json")
+    if not os.path.exists(_sp):
+        return
+    try:
+        _data = json.load(open(_sp, encoding="utf-8"))
+    except Exception:
+        return
+    _sps = _data.get("matches") or []
+    _idx = {}
+    for _r in _sps:
+        if _r.get("predH") is None:
+            continue
+        _h = zh_norm(TEAM_EN2ZH.get(_r.get("home"), _r.get("home")) or "")
+        _a = zh_norm(TEAM_EN2ZH.get(_r.get("away"), _r.get("away")) or "")
+        if not (_h and _a):
+            continue
+        _idx.setdefault((_h, _a), _r)   # 同一对阵首条优先（通常唯一）
+    _n = 0
+    for m in matches:
+        if not (m.get("num") or m.get("jcNum")):
+            continue
+        if m.get("modelPred"):
+            continue
+        _h = zh_norm(m.get("home") or "")
+        _a = zh_norm(m.get("away") or "")
+        _rec = _idx.get((_h, _a)) or _idx.get((_a, _h))
+        if _rec:
+            m["modelPred"] = {"h": _rec.get("predH"), "a": _rec.get("predA")}
+            _n += 1
+    if _n:
+        print("  [模型兜底] %d 场竞彩合并 score_predict 预测（WhoScored 缺失时兜底显示）" % _n, flush=True)
+
+
 def main():
     print("[1/5] 抓取赛事与赔率...", flush=True)
     # must_contain：WAF 会概率性放行却返回空数据（success:true 但无 matchInfoList，
@@ -1639,6 +1688,9 @@ def main():
         if _fb3:
             matches = _fb3
             print(f"  过滤后为空，备用源 500.com 兜底 {len(matches)} 场", flush=True)
+    # v1.7.68：模型预测兜底合并（WhoScored 缺失时竞彩仍有预测可看）
+    merge_model_predict(matches)
+
     out = os.path.join(HERE, "matches.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"updateTime": time.strftime("%Y-%m-%d %H:%M:%S"), "count": len(matches),
