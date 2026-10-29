@@ -1596,18 +1596,38 @@ def main():
     hist_path = save_history(records)
 
     print("[6/6] 输出...", flush=True)
-    # 只保留当天开售的比赛，明天/后天的不展示
-    # 【必须按北京时间判定】沙箱与 GitHub Actions 的系统时区都是 UTC，直接用
-    # time.strftime 会在北京 00:00-08:00 算成前一天，导致当天竞彩场次被全部
-    # 过滤、页面一片空白。竞彩销售日本身就是按北京时间划分的。
+    # 只展示「当前在售、尚未开赛」的竞彩比赛。
+    # 竞彩一个销售期是跨天销售的：今天买的票里既有今晚的、也有明天/后天的比赛，
+    # 不能按「比赛日期==今天」硬砍，否则会把当前在售、尚未开赛的比赛误删
+    # （实测：500.com 在售 7 场，其中 6 场是明天开赛但当天可买，硬过滤只剩 1 场）。
+    # 正确标准：保留开赛时间晚于「现在(北京时间)」的比赛（竞彩开赛即停售）；
+    # 解析不到时间的场次不过滤，已开赛很久(>3h)的视为不在售剔除。
     import datetime as _dt
-    _today = (_dt.datetime.utcnow() + _dt.timedelta(hours=8)).strftime("%Y-%m-%d")
+    _now = _dt.datetime.utcnow() + _dt.timedelta(hours=8)   # 北京时间 now
     _before = len(matches)
-    matches = [m for m in matches if m.get("date") == _today]
+
+    def _kickoff_dt(m):
+        s = (m.get("kickoff") or "").strip()
+        for _f in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+            try:
+                return _dt.datetime.strptime(s, _f)
+            except Exception:
+                pass
+        d = (m.get("date") or "").strip()
+        try:
+            return _dt.datetime.strptime(d, "%Y-%m-%d")
+        except Exception:
+            return None
+
+    def _unsold(m):
+        k = _kickoff_dt(m)
+        return (k is None) or (k >= _now - _dt.timedelta(hours=3))
+
+    matches = [m for m in matches if _unsold(m)]
     if _before != len(matches):
-        print(f"  日期过滤：{_before}场 -> {len(matches)}场（只保留{_today}当天）", flush=True)
-    # 过滤后为空也要兜底：凌晨/停售时段官方返回的常是「上一销售日」的场次，
-    # 日期与今天对不上，过滤完就归零。此时用备用源 500.com 补当天在售场次。
+        print(f"  未开赛过滤：{_before}场 -> {len(matches)}场（剔除已开赛很久的）", flush=True)
+    # 过滤后为空兜底：凌晨/停售时段官方返回的常是「上一销售日」的场次，
+    # 已开赛很久被滤掉后归零。此时用备用源 500.com 补当前在售场次。
     if not matches:
         try:
             from fetch_500 import fetch_jczq_500
@@ -1615,10 +1635,10 @@ def main():
         except Exception as _e:
             print("  备用源异常: %s" % _e, flush=True)
             _fb3 = []
-        _fb3 = [m for m in _fb3 if m.get("date") == _today]
+        _fb3 = [m for m in _fb3 if _unsold(m)]
         if _fb3:
             matches = _fb3
-            print(f"  过滤后为空，备用源 500.com 兜底 {len(matches)} 场（{_today}）", flush=True)
+            print(f"  过滤后为空，备用源 500.com 兜底 {len(matches)} 场", flush=True)
     out = os.path.join(HERE, "matches.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"updateTime": time.strftime("%Y-%m-%d %H:%M:%S"), "count": len(matches),
