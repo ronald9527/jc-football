@@ -3767,8 +3767,8 @@
           "sameOddsHit": 70.1,
           "sameOddsN": 87,
           "fiveDim": 57.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "6:0",
+          "legHit": true,
           "hit": "hit"
         }
       ],
@@ -3906,8 +3906,8 @@
           "sameOddsHit": 70.1,
           "sameOddsN": 87,
           "fiveDim": 57.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "6:0",
+          "legHit": true,
           "hit": "hit"
         },
         {
@@ -4104,8 +4104,8 @@
           "sameOddsHit": 50.0,
           "sameOddsN": 8,
           "fiveDim": 43.8,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "1:2",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -7066,8 +7066,8 @@
           "sameOddsHit": 57.1,
           "sameOddsN": 84,
           "fiveDim": 41.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -7217,8 +7217,8 @@
           "sameOddsHit": 57.1,
           "sameOddsN": 84,
           "fiveDim": 41.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -7422,8 +7422,8 @@
           "sameOddsHit": 64.2,
           "sameOddsN": 109,
           "fiveDim": 46.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "3:0",
+          "legHit": true,
           "hit": "hit"
         },
         {
@@ -7450,8 +7450,8 @@
           "sameOddsHit": 57.1,
           "sameOddsN": 84,
           "fiveDim": 40.8,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -7681,8 +7681,8 @@
           "sameOddsHit": 66.4,
           "sameOddsN": 110,
           "fiveDim": 46.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "3:0",
+          "legHit": true,
           "hit": "hit"
         },
         {
@@ -7709,8 +7709,8 @@
           "sameOddsHit": 65.8,
           "sameOddsN": 111,
           "fiveDim": 40.8,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -7828,8 +7828,8 @@
           "sameOddsHit": 66.4,
           "sameOddsN": 110,
           "fiveDim": 46.1,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "3:0",
+          "legHit": true,
           "hit": "hit"
         },
         {
@@ -7856,8 +7856,8 @@
           "sameOddsHit": 65.8,
           "sameOddsN": 111,
           "fiveDim": 40.8,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -8389,8 +8389,8 @@
           "sameOddsHit": 55.0,
           "sameOddsN": 40,
           "fiveDim": 41.4,
-          "actualScore": "1:0",
-          "legHit": false,
+          "actualScore": "",
+          "legHit": null,
           "hit": "miss"
         },
         {
@@ -10529,7 +10529,155 @@
         "recommended": false
       },
       "checkedAt": "2026-10-26 09:43"
+    },
+    {
+      "date": "2026-10-28",
+      "type": "稳健2串1",
+      "totalOdds": 2.28,
+      "avgConfidence": 74.0,
+      "legs": [
+        {
+          "num": "周三004",
+          "league": "德国杯",
+          "home": "帕德博恩",
+          "away": "斯图加特",
+          "kickoff": "2026-10-29 01:00",
+          "play": "胜平负",
+          "playKey": "spf",
+          "dir": "a",
+          "label": "客胜",
+          "odds": 1.45,
+          "confidence": 78.6,
+          "stableIndex": 73.5,
+          "score": 114.0,
+          "reasons": [
+            "市场概率61%",
+            "反指3★(推平局)",
+            "客队状态83%"
+          ],
+          "techCount": 4,
+          "pTrue": 57.9,
+          "sameOddsHit": 67.4,
+          "sameOddsN": 43,
+          "fiveDim": 71.2,
+          "canon": 0.907,
+          "actualScore": "0:1",
+          "legHit": true,
+          "hit": "hit"
+        },
+        {
+          "num": "周三001",
+          "league": "亚冠精英",
+          "home": "大阪钢巴",
+          "away": "布里兰",
+          "kickoff": "2026-10-28 18:00",
+          "play": "胜平负",
+          "playKey": "spf",
+          "dir": "h",
+          "label": "主胜",
+          "odds": 1.57,
+          "confidence": 69.4,
+          "stableIndex": 49.1,
+          "score": 108.9,
+          "reasons": [
+            "市场概率57%",
+            "反指0★(推平局)"
+          ],
+          "techCount": 3,
+          "pTrue": 55.39,
+          "sameOddsHit": 60.3,
+          "sameOddsN": 131,
+          "fiveDim": 41.9,
+          "canon": 0.654,
+          "actualScore": "1:1",
+          "legHit": false,
+          "hit": "miss"
+        }
+      ],
+      "recommended": false,
+      "ev": -24.8,
+      "realEv": -14.4,
+      "result": "miss",
+      "savedAt": "2026-10-28 01:55:41",
+      "engineVer": "v1.7.53",
+      "snapshot": {
+        "type": "2串1",
+        "tier": "稳健",
+        "tierDesc": "2串1 · 稳胆哲学：信心主导选腿（同指≥65 加分、45-60 反向区间扣分），优先选联合命中率最高的组合，总赔2.2-4.5倍；历史命中率未达盈亏平衡线仍标观望",
+        "legs": [
+          {
+            "num": "周三004",
+            "league": "德国杯",
+            "home": "帕德博恩",
+            "away": "斯图加特",
+            "kickoff": "2026-10-29 01:00",
+            "play": "胜平负",
+            "playKey": "spf",
+            "dir": "a",
+            "label": "客胜",
+            "odds": 1.45,
+            "confidence": 78.6,
+            "stableIndex": 73.5,
+            "score": 114.0,
+            "reasons": [
+              "市场概率61%",
+              "反指3★(推平局)",
+              "客队状态83%"
+            ],
+            "techCount": 4,
+            "pTrue": 57.9,
+            "sameOddsHit": 67.4,
+            "sameOddsN": 43,
+            "fiveDim": 71.2,
+            "canon": 0.907
+          },
+          {
+            "num": "周三001",
+            "league": "亚冠精英",
+            "home": "大阪钢巴",
+            "away": "布里兰",
+            "kickoff": "2026-10-28 18:00",
+            "play": "胜平负",
+            "playKey": "spf",
+            "dir": "h",
+            "label": "主胜",
+            "odds": 1.57,
+            "confidence": 69.4,
+            "stableIndex": 49.1,
+            "score": 108.9,
+            "reasons": [
+              "市场概率57%",
+              "反指0★(推平局)"
+            ],
+            "techCount": 3,
+            "pTrue": 55.39,
+            "sameOddsHit": 60.3,
+            "sameOddsN": 131,
+            "fiveDim": 41.9,
+            "canon": 0.654
+          }
+        ],
+        "totalOdds": 2.28,
+        "oddsGate": 2.2,
+        "avgConfidence": 74.0,
+        "minOdds": 1.45,
+        "maxOdds": 1.57,
+        "playTypes": [
+          "胜平负"
+        ],
+        "isMixed": false,
+        "jointProb": 33.0,
+        "realHit": 37.6,
+        "ev": -24.8,
+        "realEv": -14.4,
+        "beHit": 43.9,
+        "suggestStake": 0.0,
+        "rake": 21.5,
+        "evNote": "明显负期望：历史同条件命中率仅 38%（需 44%），不建议下注",
+        "recommended": false
+      },
+      "checkedAt": "2026-10-28 21:03"
     }
   ],
-  "updatedAt": "2026-10-28 19:44:29"
+  "updatedAt": "2026-10-29 04:12:10"
 }
