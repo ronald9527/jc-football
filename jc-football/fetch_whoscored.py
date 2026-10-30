@@ -16,6 +16,14 @@ import json
 import os
 import re
 import sys
+
+# 强制北京时间（CI 容器为 UTC，时间戳必须用东八区）
+os.environ.setdefault("TZ", "Asia/Shanghai")
+try:
+    import time as _time
+    _time.tzset()
+except Exception:
+    pass
 import time
 from datetime import datetime, timedelta
 # 竞彩中文队名 ↔ 英文队名 权威映射（单一真相源），用于服务端精确匹配竞彩编号

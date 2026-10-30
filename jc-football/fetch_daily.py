@@ -10,6 +10,10 @@
 history.json 持久化每次判定的记录，比赛结束后自动回填赛果并标注命中/错误。
 """
 import json, time, urllib.request, urllib.parse, sys, os, re
+
+# 强制北京时间（CI 容器为 UTC，数据时间戳与"今日"判定必须用东八区）
+os.environ.setdefault("TZ", "Asia/Shanghai")
+time.tzset()
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from fetch_hkmo import fetch_and_match as fetch_hkmo_data

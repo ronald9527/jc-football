@@ -14,6 +14,10 @@
 """
 import json, time, os, re, urllib.request
 
+# 强制北京时间（CI 容器为 UTC，时间戳必须用东八区）
+os.environ.setdefault("TZ", "Asia/Shanghai")
+time.tzset()
+
 DIR = os.path.dirname(os.path.abspath(__file__))
 
 def load_json(name):

@@ -13,6 +13,11 @@ import json
 import time
 import datetime
 import urllib.request
+
+# 强制北京时间（CI 容器为 UTC，时间戳与完赛判定必须用东八区）
+import os as _os
+_os.environ.setdefault("TZ", "Asia/Shanghai")
+time.tzset()
 import urllib.parse
 
 BASE = "https://mapi.shemen365.com"

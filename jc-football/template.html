@@ -1705,8 +1705,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.78";
+const VERSION = "v1.7.80";
 const CHANGELOG = [
+  {
+    version: "v1.7.79",
+    date: "2026-10-30",
+    title: "修复数据批次时间戳时区 Bug（UTC→北京时间），根除「数据已过期」误报",
+    details: [
+      "根因：GitHub Actions 容器为 UTC 时区，fetch_daily.py 等用本地时间写 updateTime/日期判定，导致时间戳慢 8 小时——早上抓的今日数据被打上昨日日期，页面误报红色「数据已过期（非今日批次）」",
+      "修复：run_daily.sh 全局 export TZ=Asia/Shanghai；fetch_daily/fetch_vzhan/fetch_whoscored/fetch_bsd/fetch_expert/accuracy_ab/check_vzhan_gateway 七个入口脚本兜底强制东八区",
+      "连带修复：UTC 下 today=time.strftime 取错日期，会影响凌晨 0-8 点跑批的「今日赛事」筛选与历史归档键，本次一并根治",
+      "刷新后数据：竞彩 55 场（10-30 12 场/10-31 26 场/11-01 17 场），V站 24 场预测，全部时间戳已为北京时间"
+    ]
+  },
   {
     version: "v1.7.78",
     date: "2026-10-30",

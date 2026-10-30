@@ -35,6 +35,14 @@ import os
 import sys
 import json
 import math
+
+# 强制北京时间（CI 容器为 UTC，时间戳必须用东八区）
+os.environ.setdefault("TZ", "Asia/Shanghai")
+try:
+    import time as _time
+    _time.tzset()
+except Exception:
+    pass
 import time
 import argparse
 from collections import defaultdict

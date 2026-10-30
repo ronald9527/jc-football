@@ -12,6 +12,9 @@ cd "$(dirname "$0")"
 PY="${PYTHON:-python3}"
 MODE="${1:-build}"
 
+# 强制北京时间：CI 容器为 UTC，会让数据时间戳/日期判定慢 8 小时（v1.7.79 修复）
+export TZ=Asia/Shanghai
+
 log() { echo "[$(date '+%F %T')] $*"; }
 
 # ---------- 自检：只体检，不改数据 ----------
