@@ -1710,8 +1710,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.83";
+const VERSION = "v1.7.84";
 const CHANGELOG = [
+  {
+    version: "v1.7.84",
+    date: "2026-10-30",
+    title: "主力竞彩 Tab 接入 V站 置顶（此前只改了比分预测 Tab，遗漏本区块）",
+    details: [
+      "修复「主力竞彩列表（renderWhoScored）仍显示 WhoScored 旧文案」：该区块此前从未接入 V站，尼斯vs雷恩等 V站 已有预测的场次被误标「未推荐」或显示模型兜底",
+      "本 Tab 优先级改为：V站 第一（比分+联赛名+北京时间+🐶综合命中率徽标）→ 模型兜底第二 → 未推荐；WhoScored 赛前预测不再展示，仅完赛回填时保留命中回溯",
+      "「WhoScored 暂无人工预测，模型兜底」等旧文案全部替换为 V站 措辞；汇总条改为「V站 N · 模型兜底 M」"
+    ]
+  },
   {
     version: "v1.7.83",
     date: "2026-10-30",
@@ -5261,6 +5271,12 @@ function renderWhoScored(){
   const jcAll = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
   const wsByNum = {};
   wsMs.forEach(m=>{ if(m.jcNum){ (wsByNum[m.jcNum] = wsByNum[m.jcNum] || []).push(m); } });
+  // v1.7.84：V站·呼死狗 中文情报源接入主力 Tab（第一优先），WhoScored 预测不再展示（仅赛后回填用）
+  const vzMs = (typeof BUILT_VZHAN!=="undefined" && BUILT_VZHAN) ? (BUILT_VZHAN.matches||[]) : [];
+  const vzByNum = {};
+  vzMs.forEach(m=>{ if(m.jcNum && m.hasPred){ (vzByNum[m.jcNum] = vzByNum[m.jcNum] || []).push(m); } });
+  const vzAcc = (typeof AB_STATS!=="undefined" && AB_STATS && AB_STATS.vz) ? AB_STATS.vz : null;
+  const vzAccTxt = ()=> vzAcc ? (vzAcc.n ? `综合命中率 方向 ${vzAcc.dir}% / 精确 ${vzAcc.exact}% · 样本 ${vzAcc.n} 场` : `综合命中率 待积累（样本 0 场，完赛后自动统计）`) : "";
   const lgStat = wsLeagueStat(wsMs);
   // 日期选项 = 竞彩销售日（matches.json 即当天开售赛程）
   const jcDates = Array.from(new Set(jcAll.map(m=>m.date).filter(Boolean))).sort().reverse();
@@ -5284,12 +5300,14 @@ function renderWhoScored(){
     if(!view.length){
       list.innerHTML = `<div class="empty">该日期竞彩无比赛${state.wsOnlyHot?"（或没有高可信预测）":""}</div>`;
     } else {
-      // v1.7.70：模型兜底预测也计入「有预测」——WhoScored 未覆盖的场次不再算未推荐
-      const _hasWsPred = x=>x.wm && x.wm.predH!=null;
+      // v1.7.84：模型兜底预测也计入「有预测」；V站 优先计入
+      const _hasVzPred = x=>{ if(!x.j||!x.j.num) return false;
+        const arr=(vzByNum[x.j.num]||[]).filter(v=>!x.j.date||!v.date||Math.abs((new Date(v.date)-new Date(x.j.date))/86400000)<=2);
+        return !!(arr.length && arr[0].predH!=null); };
       const _hasMp = x=>x.j && x.j.modelPred && x.j.modelPred.h!=null;
-      const nPred = view.filter(_hasWsPred).length;
-      const nModel = view.filter(x=>!_hasWsPred(x) && _hasMp(x)).length;
-      const noPred = view.filter(x=>!_hasWsPred(x) && !_hasMp(x));
+      const nVz = view.filter(_hasVzPred).length;
+      const nModel = view.filter(x=>!_hasVzPred(x) && _hasMp(x)).length;
+      const noPred = view.filter(x=>!_hasVzPred(x) && !_hasMp(x));
       // 未推荐原因归类：同联赛有推荐 → 疑似漏匹配（待核对）；否则 → 数据源未覆盖
       const warnLgs = [], coverLgs = [];
       noPred.forEach(x=>{
@@ -5297,8 +5315,8 @@ function renderWhoScored(){
         if(s && s.p>0){ if(warnLgs.indexOf(x.j.league)<0) warnLgs.push(x.j.league); }
         else { if(coverLgs.indexOf(x.j.league)<0) coverLgs.push(x.j.league); }
       });
-      let html = `<div class="ws-jc-tip">本日竞彩 <b>${view.length}</b> 场 · 有预测 <b>${nPred+nModel}</b> 场`
-        + (nModel ? `（WhoScored ${nPred} · 模型兜底 ${nModel}）` : ``)
+      let html = `<div class="ws-jc-tip">本日竞彩 <b>${view.length}</b> 场 · 有预测 <b>${nVz+nModel}</b> 场`
+        + (nVz+nModel ? `（V站 ${nVz} · 模型兜底 ${nModel}）` : ``)
         + ` · 未推荐 <b>${noPred.length}</b> 场`
         + (coverLgs.length ? `（${coverLgs.join("、")} 数据源暂无人工预测）` : ``)
         + (warnLgs.length ? ` · <span class="ws-namewarn">⚠️ ${warnLgs.join("、")} 有同联赛推荐却未匹配，请人工核对</span>` : ``)
@@ -5314,15 +5332,29 @@ function renderWhoScored(){
         // 改展示实际赛果与命中情况，并把该场赛前标过的可信度徽章一并亮出。
         const hr = wm ? wsHistRec(wm) : null;
         const fin = !!hr || !!(wm && wm.evaluated && wm.actH!=null);
+        // v1.7.84：V站 优先（竞彩编号 + 日期±2天匹配），第二模型兜底；WhoScored 预测仅完赛回填时保留
+        const vzm = (function(){
+          const arr=(vzByNum[j.num]||[]).filter(v=>!j.date||!v.date||Math.abs((new Date(v.date)-new Date(j.date))/86400000)<=2);
+          return (arr.length && arr[0].predH!=null) ? arr[0] : null;
+        })();
+        const hasVz = !!vzm;
         let predBlock = "";
-        if(hasPred){
+        if(hasVz){
+          const vzKick = (vzm.match_time||"").slice(5,16);
           predBlock = `<div class="ws-scoreline">
-              <div><div class="sp-label">WhoScored 预测比分</div>
+              <div><div class="sp-label">预测比分<span class="sp-wstag sp-wstag-vz" title="V站·呼死狗 中文情报预测（海外爆料员第一手）">V站</span></div>
+                <div class="ws-pred">${vzm.predH} <i>:</i> ${vzm.predA}</div></div>
+              <div class="ws-metawrap"><div class="sp-label">${vzm.league||j.league||""}</div>
+                <div class="sp-meta">🕐 北京时间 ${vzKick||"时间待定"}</div>
+                ${vzAcc?`<span class="vz-acc ${vzAcc.n?"":"vz-acc-pending"}">🐶 ${vzAccTxt()}</span>`:``}</div>
+            </div>`;
+        } else if(hasPred && fin){
+          predBlock = `<div class="ws-scoreline">
+              <div><div class="sp-label">预测比分</div>
                 <div class="ws-pred">${wm.predH} <i>:</i> ${wm.predA}</div></div>
               <div class="ws-metawrap"><div class="sp-label">${wm.league||j.league||""}</div>
                 <div class="ws-meta">北京时间 ${wm.bjTime||j.time||"-"}</div></div>
             </div>
-            ${fin?``:wsConfHtml(wm)}
             ${(zhH!==wm.home||zhA!==wm.away)?`<div class="sp-enline">${wm.home||""} vs ${wm.away||""}</div>`:``}`;
         } else {
           // v1.7.70：WhoScored 无人工预测时，若该场有模型兜底预测（modelPred），
@@ -5330,10 +5362,10 @@ function renderWhoScored(){
           const mp = (!fin && j.modelPred && j.modelPred.h != null) ? j.modelPred : null;
           if(mp){
             predBlock = `<div class="ws-scoreline">
-                <div><div class="sp-label">模型预测比分<span class="sp-wstag sp-wstag-model" title="自建 Poisson 模型预测（WhoScored 缺失时兜底）">模型</span></div>
+                <div><div class="sp-label">模型预测比分<span class="sp-wstag sp-wstag-model" title="自建 Poisson 模型预测（V站 缺失时兜底）">模型</span></div>
                   <div class="ws-pred">${mp.h} <i>:</i> ${mp.a}</div></div>
                 <div class="ws-metawrap"><div class="sp-label">${j.league||""}</div>
-                  <div class="sp-meta">WhoScored 暂无人工预测，模型兜底</div></div>
+                  <div class="sp-meta">V站 暂无该场预测，模型兜底</div></div>
               </div>`;
           } else {
           const s = lgStat[j.league];
