@@ -152,6 +152,14 @@ main{max-width:1500px;margin:0 auto;padding:14px 16px 40px}
 .seg button{padding:6px 14px;font-size:12px;color:var(--sub);background:var(--panel)}
 .seg button+button{border-left:1px solid var(--line2)}
 .seg button.on{color:var(--accent);background:var(--accent-dim);font-weight:600}
+/* 高手推荐·专家文章流 */
+.exp-article-card{box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.exp-article-first{box-shadow:0 2px 10px rgba(56,142,60,.18)}
+.exp-article-new{font-size:9.5px;font-weight:700;color:#fff;background:var(--accent);padding:1px 7px;border-radius:9px;letter-spacing:.5px}
+.exp-pg-btn{padding:5px 11px;font-size:11.5px;color:var(--sub);background:var(--panel);border:1px solid var(--line2);border-radius:7px;cursor:pointer}
+.exp-pg-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent)}
+.exp-pg-btn.on{color:#fff;background:var(--accent);border-color:var(--accent);font-weight:600}
+.exp-pg-btn:disabled{opacity:.4;cursor:not-allowed}
 .upd{font-size:11px;color:var(--weak);margin-left:auto}
 /* 日期分组 */
 .day-group{margin-bottom:20px}
@@ -1372,6 +1380,7 @@ footer b{color:var(--sub)}
     <div class="fb-title">高手推荐 · 全网长期稳定高手精选<span class="tip">汇集全网公开足球预测高手/平台推荐，标明出处、高手名称、日期，支持历史战绩回溯复查</span></div>
     <div class="seg" style="margin:8px 0">
       <button data-expert-view="today" class="on">今日推荐</button>
+      <button data-expert-view="articles">专家文章</button>
       <button data-expert-view="history">历史战绩</button>
     </div>
     <!-- 专家排行榜 -->
@@ -1387,6 +1396,12 @@ footer b{color:var(--sub)}
     </div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="expertSummary"></div>
     <div id="expertList"></div>
+    <!-- 专家文章流（当天发表，按发布时间倒序，分页，自动定位第一篇） -->
+    <div id="expertArticlesWrap" style="display:none">
+      <div id="expertArticlesSummary" style="margin:4px 0 8px;font-size:11.5px;color:var(--sub)"></div>
+      <div id="expertArticlesList"></div>
+      <div id="expertArticlesPager" style="display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0;"></div>
+    </div>
   </div>
 
   <div class="fd-view" id="fdView" style="display:none">
@@ -1710,8 +1725,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.84";
+const VERSION = "v1.7.85";
 const CHANGELOG = [
+  {
+    version: "v1.7.85",
+    date: "2026-10-31",
+    title: "高手推荐·专家文章流改版（修复提取错误 + 当天文章倒序分页）",
+    details: [
+      "修复提取错误：专家名正则支持「中.誉」等含点号的名字；过滤 NBA/美职篮/篮球等非足球文章（不再污染足球推荐）",
+      "新增「专家文章」Tab：仅展示专家当天发表文章，按发布时间倒序（最新置顶），旧的自动往后翻页",
+      "进入文章流自动定点到第一篇（最新）专家文章并高亮「最新」徽标；支持分页（每页6篇）",
+      "后端 fetch_expert.py：todayArticles 只保留当天、去除历史 1624 篇堆积（文件 1.66MB→49KB），发布时间倒序入库"
+    ]
+  },
   {
     version: "v1.7.84",
     date: "2026-10-30",
@@ -2905,7 +2931,7 @@ const state = {
   bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   lastFbTab: "today",
-  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", parlayTier: "parlay2", parlayNegOpen: false,
+  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false,
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })()
 };
 /* 恢复主题偏好 */
@@ -6535,7 +6561,21 @@ function renderExpert(){
   } else if(rankList) {
     rankList.innerHTML = '<div style="padding:12px;text-align:center;font-size:11.5px;color:var(--sub);">📊 暂无专家战绩数据，今日比赛结束赛果回溯后自动更新排行榜</div>';
   }
-  if(rankWrap) rankWrap.style.display = "block";
+  if(rankWrap) rankWrap.style.display = (view==="articles") ? "none" : "block";
+  const artWrap = $("#expertArticlesWrap");
+  if(artWrap && view!=="articles") artWrap.style.display = "none";
+
+  // 专家文章流：当天发表，按发布时间倒序，分页，自动定位第一篇
+  if(view==="articles"){
+    const wrap = $("#expertArticlesWrap");
+    const list = $("#expertList");
+    const summary = $("#expertSummary");
+    if(list) list.innerHTML = "";
+    if(summary) summary.innerHTML = "";
+    if(wrap) wrap.style.display = "block";
+    renderExpertArticles();
+    return;
+  }
 
   if(view==="history"){
     const dates = Object.keys(expH).sort().reverse();
@@ -6630,6 +6670,109 @@ function renderExpert(){
     html += `</div>`;
   });
   if(list) list.innerHTML = html;
+}
+
+/* 高手推荐·专家文章流：当天发表，按发布时间倒序，分页，自动定位第一篇 */
+function renderExpertArticles(){
+  const exp = state.expert || {};
+  let arts = (exp.todayArticles || []).slice();
+  // 双重保险：确保按发布时间倒序（最新在前）
+  arts.sort((a,b)=> String(b.pubDateTime||b.pubDate||"").localeCompare(String(a.pubDateTime||a.pubDate||"")));
+  const perPage = state.expertArticlesPerPage || 6;
+  const total = arts.length;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  if(state.expertArticlesPage > pages) state.expertArticlesPage = pages;
+  if(state.expertArticlesPage < 1) state.expertArticlesPage = 1;
+  const page = state.expertArticlesPage;
+  const start = (page-1) * perPage;
+  const slice = arts.slice(start, start + perPage);
+
+  const summary = $("#expertArticlesSummary");
+  if(summary){
+    summary.innerHTML = `📝 专家当天发表文章 <b style="color:var(--accent)">${total}</b> 篇 · 按发布时间倒序（最新在前）· 第 ${page}/${pages} 页`;
+  }
+
+  const listBox = $("#expertArticlesList");
+  if(!listBox) return;
+  if(total===0){
+    listBox.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:var(--sub);">📭 今日暂无专家发表文章，请稍后刷新或查看「今日推荐」</div>';
+    $("#expertArticlesPager").innerHTML = "";
+    return;
+  }
+
+  let html = "";
+  slice.forEach((a, idx)=>{
+    const isFirst = (start + idx) === 0;  // 全局第一篇（最新）
+    const pub = a.pubDateTime || a.pubDate || "";
+    const recs = a.recommendations || [];
+    let recHtml = "";
+    recs.forEach(r=>{
+      recHtml += `<div style="margin-top:5px;padding:6px 8px;background:var(--panel2);border-radius:7px;font-size:11.5px;">
+        <span style="font-weight:700;color:var(--accent);font-size:13px;">${r.recommend||"-"}</span>
+        ${r.score ? `<span style="color:var(--sub);margin-left:8px;">比分 ${r.score}</span>` : ""}
+        ${r.playType ? `<span style="font-size:10px;color:var(--sub);margin-left:6px;border:1px solid var(--border);border-radius:4px;padding:0 4px;">${r.playType}</span>` : ""}
+      </div>`;
+    });
+    if(!recHtml){
+      recHtml = `<div style="margin-top:5px;font-size:11px;color:var(--sub);">该文未解析到明确推荐项</div>`;
+    }
+    const analysis = (recs[0] && recs[0].analysis) ? recs[0].analysis.slice(0, 120) : "";
+    html += `<div class="exp-article-card${isFirst ? ' exp-article-first' : ''}" style="margin:10px 0;padding:12px;background:var(--panel);border-radius:10px;border:1px solid var(--border);${isFirst ? 'border-color:var(--accent);' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${isFirst ? '<span class="exp-article-new">最新</span>' : ''}
+          <span style="font-size:13px;font-weight:700;color:var(--text);">👤 ${a.expert||"未知专家"}</span>
+          <span style="font-size:10.5px;color:#fff;background:var(--accent);padding:1px 7px;border-radius:9px;">${a.league||""}</span>
+        </div>
+        <span style="font-size:11px;color:var(--sub);">🕒 ${pub}</span>
+      </div>
+      <div style="margin-top:6px;font-size:12.5px;font-weight:600;color:var(--text);">${a.home||"?"} <span style="color:var(--sub);font-weight:400;">vs</span> ${a.away||"?"}</div>
+      ${recHtml}
+      ${analysis ? `<div style="margin-top:6px;font-size:11px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">📝 ${analysis}</div>` : ""}
+      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <a href="javascript:void(0)" onclick="openExpertArticle('${a.url||'#'}','92玩球')" style="color:var(--accent);text-decoration:underline;font-size:11.5px;">查看原文 ›</a>
+        <span style="font-size:10.5px;color:var(--sub);">92玩球 · ${a.id||""}</span>
+      </div>
+    </div>`;
+  });
+  listBox.innerHTML = html;
+
+  // 分页器
+  const pager = $("#expertArticlesPager");
+  if(pager){
+    if(pages <= 1){ pager.innerHTML = ""; }
+    else {
+      let p = `<button class="exp-pg-btn" ${page<=1?'disabled':''} onclick="gotoExpertArticlePage(${page-1})">‹ 上一页</button>`;
+      const win = 1; // 显示首尾+当前
+      let btns = [];
+      for(let i=1;i<=pages;i++){
+        if(i===1 || i===pages || Math.abs(i-page)<=win){
+          btns.push(i);
+        }
+      }
+      let prev = 0;
+      btns.forEach(i=>{
+        if(i - prev > 1) p += `<span style="color:var(--sub);font-size:11px;">…</span>`;
+        p += `<button class="exp-pg-btn ${i===page?'on':''}" onclick="gotoExpertArticlePage(${i})">${i}</button>`;
+        prev = i;
+      });
+      p += `<button class="exp-pg-btn" ${page>=pages?'disabled':''} onclick="gotoExpertArticlePage(${page+1})">下一页 ›</button>`;
+      pager.innerHTML = p;
+    }
+  }
+
+  // 自动定点到第一篇（最新）专家文章：滚到列表顶部并轻微高亮
+  try {
+    const wrapEl = document.getElementById("expertArticlesWrap");
+    if(wrapEl && wrapEl.offsetParent !== null){
+      wrapEl.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  } catch(e){}
+}
+
+function gotoExpertArticlePage(p){
+  state.expertArticlesPage = p;
+  renderExpertArticles();
 }
 
 /* 高手推荐原文查看（覆盖层+返回键） */

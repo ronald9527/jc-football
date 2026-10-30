@@ -31,6 +31,15 @@ def save_json(name, data):
     with open(os.path.join(DIR, name), 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
+# 非足球（篮球/NBA 等）文章关键词，避免污染足球高手推荐与文章流
+NON_FOOTBALL_KW = ("美职篮", "NBA", "篮球", "CBA", "西篮", "欧篮", "WNBA", "美职女篮", "NCAA")
+def is_non_football(league, title):
+    """判断是否为非足球（篮球等）文章，是则返回 True"""
+    if league and league in NON_FOOTBALL_KW:
+        return True
+    t = title or ""
+    return any(k in t for k in ("篮球", "NBA", "美职篮", "WNBA"))
+
 def fetch_92wq_articles():
     """从92玩球获取最新专家文章列表：
     1) 从第1页逐页往后翻，严格只保留当天日期发布的帖子
@@ -93,7 +102,7 @@ def fetch_92wq_articles():
             if '复盘' in title or vid in all_articles:
                 continue
             expert = ""
-            em = re.search(r'【([\u4e00-\u9fa5A-Za-z0-9·]{2,6})】分析', title)
+            em = re.search(r'【([\u4e00-\u9fa5A-Za-z0-9·.．]{2,6})】分析', title)
             if em:
                 expert = em.group(1)
             elif '今日解读' in title:
@@ -102,6 +111,9 @@ def fetch_92wq_articles():
             lm = re.search(r'【([\u4e00-\u9fa5A-Za-z]+)】', title)
             if lm and lm.group(1) not in ['今日解读', '冰岛超']:
                 league = lm.group(1)
+            # 排除篮球/NBA 等非足球文章，避免污染足球高手推荐与文章流
+            if is_non_football(league, title):
+                continue
             home = away = ""
             mm = re.search(r'([\u4e00-\u9fa5A-Za-z0-9·]{2,})VS([\u4e00-\u9fa5A-Za-z0-9·]{2,})', title)
             if mm:
@@ -112,11 +124,13 @@ def fetch_92wq_articles():
                         away = away[:-len(suffix)]
                     if home.endswith(suffix):
                         home = home[:-len(suffix)]
-            # 从li块提取日期（格式：2026-09-17 23:02:48）
+            # 从li块提取日期（格式：2026-09-17 23:02:48），同时抓取完整发布时间用于当日排序
             pub_date = ""
-            dm = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})\s+\d{1,2}:\d{2}', block)
+            pub_dt = ""
+            dm = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}:\d{2}(?::\d{2})?)', block)
             if dm:
                 pub_date = f"{dm.group(1)}-{int(dm.group(2)):02d}-{int(dm.group(3)):02d}"
+                pub_dt = f"{pub_date} {dm.group(4)}"
             else:
                 dm = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', block)
                 if dm:
@@ -131,7 +145,7 @@ def fetch_92wq_articles():
                 "id": vid, "title": title, "expert": expert,
                 "league": league, "home": home, "away": away,
                 "url": f"https://www.92wq.com/{vid}",
-                "pubDate": pub_date,
+                "pubDate": pub_date, "pubDateTime": pub_dt,
             }
             if vid not in seen_ids:
                 new_ids.append(vid)
@@ -196,7 +210,7 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
     # 提取专家名（支持多种格式）
     expert = expert_default
     # 格式1: 【专家名】分析
-    em = re.search(r'【([\u4e00-\u9fa5A-Za-z0-9·]{2,8})】分析', html)
+    em = re.search(r'【([\u4e00-\u9fa5A-Za-z0-9·.．]{2,8})】分析', html)
     if em:
         expert = em.group(1)
     else:
@@ -1719,10 +1733,26 @@ def main():
 
     # 5. 保存
     today = time.strftime("%Y-%m-%d")
+    # 仅保留当天文章，并按下单发布时间倒序（最新在前），用于「专家文章」流
+    seen_ids = set()
+    today_articles = []
+    for a in articles_data:
+        if a.get("pubDate") != today:
+            continue
+        # 双保险：剔除篮球/NBA 等非足球文章（避免历史旧数据残留）
+        if is_non_football(a.get("league", ""), a.get("title", "")):
+            continue
+        aid = a.get("id")
+        if aid in seen_ids:
+            continue
+        seen_ids.add(aid)
+        today_articles.append(a)
+    today_articles.sort(key=lambda a: a.get("pubDateTime") or a.get("pubDate") or "", reverse=True)
     out = {
         "updatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "sourceNote": "数据来源：92玩球(92wq.com)易红单平台真实专家推荐，已核查专家历史战绩，仅保留当天竞彩官方赛程比赛",
-        "articles": articles_data,
+        "articles": today_articles,
+        "todayArticles": today_articles,
         "recommendations": recs,
         "expertStats": expert_stats,
     }
