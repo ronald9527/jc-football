@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-10-29 21:34:32",
+ "updatedAt": "2026-10-30 04:07:33",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
- "note": "抓取自 whoscored.com/previews，人工撰写赛前预测；时间为北京时间；竞彩编号对照仅作标签",
+ "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
  "matches": [
   {
    "id": "1985905",
