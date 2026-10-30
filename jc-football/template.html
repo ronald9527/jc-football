@@ -1710,8 +1710,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.82";
+const VERSION = "v1.7.83";
 const CHANGELOG = [
+  {
+    version: "v1.7.83",
+    date: "2026-10-30",
+    title: "V站综合命中率样本接入 WhoScored 历史基线（冷启动即用真实数据）",
+    details: [
+      "accuracy_ab.py 新增 VZ_SEED_FROM_WS：WhoScored 历史同批竞彩场次灌入 vz 槽，V站「🐶 综合命中率」徽标立即有真实样本（当前 368 场，方向 41.8% / 精确 7.9%），不再显示「待积累（样本 0 场）」",
+      "播种的 vz 场次从 A/B 头对头配对（模型vsV站 / WhoScoredvsV站 / 三源同场）剔除，避免与 WhoScored 完全重复导致对比退化为全平手；仅计入「独立命中率 / 联赛维度 / 结论」统计（即徽标所需样本），结论栏已纳入 V站",
+      "V站 自有 vzhan_history 一旦完赛即以真实预测覆盖该基线（真实记录优先级更高，种子仅作冷启动兜底）；因 V站 与 WhoScored 覆盖同一批竞彩比赛，用户判定二者等价故复用其历史"
+    ]
+  },
   {
     version: "v1.7.81",
     date: "2026-10-30",

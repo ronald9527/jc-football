@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-30 13:23:27",
+ "updatedAt": "2026-10-30 14:13:55",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -972,8 +972,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"巴列卡诺\", \"ElcheCF\"]": {
    "date": "2026-10-24",
@@ -1066,8 +1074,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"奥格斯堡\", \"柏林联合\"]": {
    "date": "2026-10-24",
@@ -1094,8 +1110,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"SCPaderborn07\", \"汉堡\"]": {
    "date": "2026-10-24",
@@ -1166,8 +1190,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"StokeCityFC\", \"BristolCityFC\"]": {
    "date": "2026-10-24",
@@ -1414,8 +1446,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"乌德勒支\", \"兹沃勒\"]": {
    "date": "2026-10-24",
@@ -1442,8 +1482,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"CFEstreladaAmadora\", \"CasaPiaAC\"]": {
    "date": "2026-10-24",
@@ -2592,8 +2640,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"伯恩茅斯\", \"桑德兰\"]": {
    "date": "2026-10-18",
@@ -2620,8 +2676,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"RCCeltadeVigo\", \"阿拉维斯\"]": {
    "date": "2026-10-18",
@@ -2692,8 +2756,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"巴黎FC\", \"StadeRennaisFC1901\"]": {
    "date": "2026-10-18",
@@ -3006,8 +3078,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"VeneziaFC\", \"SSCNapoli\"]": {
    "date": "2026-10-17",
@@ -3078,8 +3158,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"ValenciaCF\", \"毕尔巴鄂竞技\"]": {
    "date": "2026-10-17",
@@ -3414,8 +3502,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"云达不来梅\", \"云达不来梅\"]": {
    "date": "2026-10-17",
@@ -3618,8 +3714,16 @@
    },
    "sources": [
     "model_hist",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"海伦芬\", \"sbv精英\"]": {
    "date": "2026-10-16",
@@ -17169,8 +17273,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"亚特兰大\", \"威尼斯\"]": {
    "date": "2026-10-13",
@@ -17190,8 +17302,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"埃于普体育\", \"戈泽特佩\"]": {
    "date": "2026-10-13",
@@ -17211,8 +17331,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"考文垂\", \"纽卡斯尔联\"]": {
    "date": "2026-10-13",
@@ -17232,8 +17360,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"莱万特\", \"塞维利亚\"]": {
    "date": "2026-10-13",
@@ -17253,8 +17389,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"都灵\", \"乌迪内斯\"]": {
    "date": "2026-10-13",
@@ -17274,8 +17418,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-13\", \"法马利康\", \"Alverca\"]": {
    "date": "2026-10-13",
@@ -17295,8 +17447,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"伯恩利\", \"查尔顿\"]": {
    "date": "2026-10-14",
@@ -17316,8 +17476,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"加的夫城\", \"沃特福德\"]": {
    "date": "2026-10-14",
@@ -17337,8 +17505,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"雷克瑟姆\", \"西布罗姆维奇\"]": {
    "date": "2026-10-14",
@@ -17358,8 +17534,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"布里斯托尔城\", \"布莱克本\"]": {
    "date": "2026-10-14",
@@ -17379,8 +17563,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"伍尔弗汉普顿\", \"博尔顿\"]": {
    "date": "2026-10-14",
@@ -17400,8 +17592,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"斯托克城\", \"米德尔斯堡\"]": {
    "date": "2026-10-14",
@@ -17421,8 +17621,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"伯明翰\", \"普雷斯顿\"]": {
    "date": "2026-10-14",
@@ -17442,8 +17650,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"朗斯\", \"里斯本竞技\"]": {
    "date": "2026-10-14",
@@ -17463,8 +17679,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"萨巴赫\", \"布拉格斯拉维亚\"]": {
    "date": "2026-10-14",
@@ -17484,8 +17708,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"萨兰迪兵工厂\", \"里尔\"]": {
    "date": "2026-10-14",
@@ -17505,8 +17737,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"马德里竞技\", \"曼联\"]": {
    "date": "2026-10-14",
@@ -17526,8 +17766,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"加拉塔萨雷\", \"巴塞罗那\"]": {
    "date": "2026-10-14",
@@ -17547,8 +17795,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"RB莱比锡\", \"PSV埃因霍温\"]": {
    "date": "2026-10-14",
@@ -17568,8 +17824,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"辛辛那提\", \"新英格兰革命\"]": {
    "date": "2026-10-15",
@@ -17589,8 +17853,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"哥伦布机员\", \"夏洛特\"]": {
    "date": "2026-10-15",
@@ -17610,8 +17882,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"华盛顿联\", \"RedBullNewYork\"]": {
    "date": "2026-10-15",
@@ -17631,8 +17911,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"迈阿密国际\", \"纽约城\"]": {
    "date": "2026-10-15",
@@ -17652,8 +17940,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"蒙特利尔\", \"亚特兰大联\"]": {
    "date": "2026-10-15",
@@ -17673,8 +17969,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"多伦多\", \"奥兰多城\"]": {
    "date": "2026-10-15",
@@ -17694,8 +17998,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"ChicagoFireFC\", \"费城联合\"]": {
    "date": "2026-10-15",
@@ -17715,8 +18027,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"达拉斯\", \"SeattleSoundersFC\"]": {
    "date": "2026-10-15",
@@ -17736,8 +18056,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"纳什维尔\", \"堪萨斯城竞技\"]": {
    "date": "2026-10-15",
@@ -17757,8 +18085,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"圣路易斯城\", \"温哥华白帽\"]": {
    "date": "2026-10-15",
@@ -17778,8 +18114,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"科罗拉多急流\", \"明尼苏达联\"]": {
    "date": "2026-10-15",
@@ -17799,8 +18143,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"皇家盐湖城\", \"圣何塞地震\"]": {
    "date": "2026-10-15",
@@ -17820,8 +18172,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"洛杉矶银河\", \"波特兰伐木者\"]": {
    "date": "2026-10-15",
@@ -17841,8 +18201,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"洛杉矶FC\", \"奥斯汀\"]": {
    "date": "2026-10-15",
@@ -17862,8 +18230,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"圣地亚哥\", \"HoustonDynamoFC\"]": {
    "date": "2026-10-15",
@@ -17883,8 +18259,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-14\", \"米尔沃尔\", \"斯旺西\"]": {
    "date": "2026-10-14",
@@ -17904,8 +18288,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"ErzurumsporFK\", \"埃于普体育\"]": {
    "date": "2026-10-17",
@@ -17925,8 +18317,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"米尔沃尔\", \"林肯城\"]": {
    "date": "2026-10-17",
@@ -17946,8 +18346,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"米德尔斯堡\", \"加的夫城\"]": {
    "date": "2026-10-17",
@@ -17967,8 +18375,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"沃特福德\", \"查尔顿\"]": {
    "date": "2026-10-17",
@@ -17988,8 +18404,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"彼德堡联\", \"伯顿\"]": {
    "date": "2026-10-17",
@@ -18009,8 +18433,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"MiltonKeynesDons\", \"卢顿\"]": {
    "date": "2026-10-17",
@@ -18030,8 +18462,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"弗利特伍德\", \"罗瑟汉姆\"]": {
    "date": "2026-10-17",
@@ -18051,8 +18491,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"什鲁斯伯里\", \"BristolRovers\"]": {
    "date": "2026-10-17",
@@ -18072,8 +18520,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"威尼斯\", \"那不勒斯\"]": {
    "date": "2026-10-17",
@@ -18093,8 +18549,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"AmedSportif\", \"科尼亚体育\"]": {
    "date": "2026-10-17",
@@ -18114,8 +18578,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"埃弗顿\", \"切尔西\"]": {
    "date": "2026-10-17",
@@ -18135,8 +18607,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"曼彻斯特城\", \"伊普斯维奇\"]": {
    "date": "2026-10-17",
@@ -18156,8 +18636,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"富勒姆\", \"赫尔城\"]": {
    "date": "2026-10-17",
@@ -18177,8 +18665,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"布伦特福德\", \"利物浦\"]": {
    "date": "2026-10-17",
@@ -18198,8 +18694,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"南安普顿\", \"博尔顿\"]": {
    "date": "2026-10-17",
@@ -18219,8 +18723,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"德比郡\", \"斯托克城\"]": {
    "date": "2026-10-17",
@@ -18240,8 +18752,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"伯明翰\", \"女王公园巡游者\"]": {
    "date": "2026-10-17",
@@ -18261,8 +18781,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"诺维奇\", \"朴次茅斯\"]": {
    "date": "2026-10-17",
@@ -18282,8 +18810,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"西布罗姆维奇\", \"布莱克本\"]": {
    "date": "2026-10-17",
@@ -18303,8 +18839,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"雷克瑟姆\", \"普雷斯顿\"]": {
    "date": "2026-10-17",
@@ -18324,8 +18868,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"布里斯托尔城\", \"谢菲尔德联\"]": {
    "date": "2026-10-17",
@@ -18345,8 +18897,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"斯旺西\", \"西汉姆联\"]": {
    "date": "2026-10-17",
@@ -18366,8 +18926,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"莱斯特城\", \"唐卡斯特\"]": {
    "date": "2026-10-17",
@@ -18387,8 +18955,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"布拉德福德\", \"斯蒂夫尼奇\"]": {
    "date": "2026-10-17",
@@ -18408,8 +18984,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"谢菲尔德星期三\", \"AFC温布尔登\"]": {
    "date": "2026-10-17",
@@ -18429,8 +19013,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"莱顿东方\", \"布莱克浦\"]": {
    "date": "2026-10-17",
@@ -18450,8 +19042,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"巴恩斯利\", \"CambridgeU\"]": {
    "date": "2026-10-17",
@@ -18471,8 +19071,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"斯托克港\", \"Bromley\"]": {
    "date": "2026-10-17",
@@ -18492,8 +19100,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"维冈竞技\", \"雷丁\"]": {
    "date": "2026-10-17",
@@ -18513,8 +19129,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"韦康比流浪者\", \"NottsCo.\"]": {
    "date": "2026-10-17",
@@ -18534,8 +19158,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"普利茅斯\", \"哈德斯菲尔德\"]": {
    "date": "2026-10-17",
@@ -18555,8 +19187,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"维尔港\", \"切斯特菲尔德\"]": {
    "date": "2026-10-17",
@@ -18576,8 +19216,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"特兰米尔\", \"巴尼特\"]": {
    "date": "2026-10-17",
@@ -18597,8 +19245,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"斯温登\", \"沃尔索尔\"]": {
    "date": "2026-10-17",
@@ -18618,8 +19274,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"格里姆斯比\", \"北安普顿\"]": {
    "date": "2026-10-17",
@@ -18639,8 +19303,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"克鲁\", \"罗奇代尔\"]": {
    "date": "2026-10-17",
@@ -18660,8 +19332,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"奥尔德姆\", \"切尔滕汉姆\"]": {
    "date": "2026-10-17",
@@ -18681,8 +19361,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"科尔切斯特\", \"埃克塞特城\"]": {
    "date": "2026-10-17",
@@ -18702,8 +19390,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"纽波特\", \"约克\"]": {
    "date": "2026-10-17",
@@ -18723,8 +19419,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"阿克灵顿\", \"吉灵厄姆\"]": {
    "date": "2026-10-17",
@@ -18744,8 +19448,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"SalfordCity\", \"克劳利\"]": {
    "date": "2026-10-17",
@@ -18765,8 +19477,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"阿伯丁\", \"圣米伦\"]": {
    "date": "2026-10-17",
@@ -18786,8 +19506,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"基马诺克\", \"马瑟韦尔\"]": {
    "date": "2026-10-17",
@@ -18807,8 +19535,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"圣约翰斯顿\", \"邓迪联\"]": {
    "date": "2026-10-17",
@@ -18828,8 +19564,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"希伯尼安\", \"福尔柯克\"]": {
    "date": "2026-10-17",
@@ -18849,8 +19593,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"青年联合\", \"加拉塔萨雷\"]": {
    "date": "2026-10-17",
@@ -18870,8 +19622,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"CalcioPadova\", \"VirtusEntella\"]": {
    "date": "2026-10-17",
@@ -18891,8 +19651,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"贝内文托\", \"LRVicenza\"]": {
    "date": "2026-10-17",
@@ -18912,8 +19680,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"AscoliCalcio1898FC\", \"恩波利\"]": {
    "date": "2026-10-17",
@@ -18933,8 +19709,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"Carrarese\", \"摩德纳\"]": {
    "date": "2026-10-17",
@@ -18954,8 +19738,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"埃尔沃斯堡\", \"奥格斯堡\"]": {
    "date": "2026-10-17",
@@ -18975,8 +19767,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"云达不来梅\", \"帕德博恩\"]": {
    "date": "2026-10-17",
@@ -18996,8 +19796,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"沙尔克04\", \"美因茨\"]": {
    "date": "2026-10-17",
@@ -19017,8 +19825,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"比利亚雷亚尔\", \"埃尔切\"]": {
    "date": "2026-10-17",
@@ -19038,8 +19854,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"诺维奇\", \"南安普顿\"]": {
    "date": "2026-10-15",
@@ -19059,8 +19883,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"朴次茅斯\", \"谢菲尔德联\"]": {
    "date": "2026-10-15",
@@ -19080,8 +19912,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"女王公园巡游者\", \"德比郡\"]": {
    "date": "2026-10-15",
@@ -19101,8 +19941,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"费耶诺德\", \"科莫\"]": {
    "date": "2026-10-15",
@@ -19122,8 +19970,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"LASK林茨\", \"利物浦\"]": {
    "date": "2026-10-15",
@@ -19143,8 +19999,16 @@
     "a": 6
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 4,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"顿涅茨克矿工\", \"雅典AEK\"]": {
    "date": "2026-10-15",
@@ -19164,8 +20028,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"林肯城\", \"西汉姆联\"]": {
    "date": "2026-10-15",
@@ -19185,8 +20057,16 @@
     "a": 6
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"阿斯顿维拉\", \"费内巴切\"]": {
    "date": "2026-10-15",
@@ -19206,8 +20086,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"曼彻斯特城\", \"巴黎圣日耳曼\"]": {
    "date": "2026-10-15",
@@ -19227,8 +20115,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"博德闪耀\", \"多特蒙德\"]": {
    "date": "2026-10-15",
@@ -19248,8 +20144,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-15\", \"罗马\", \"皇家马德里\"]": {
    "date": "2026-10-15",
@@ -19269,8 +20173,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"曼斯菲尔德\", \"牛津联\"]": {
    "date": "2026-10-16",
@@ -19290,8 +20202,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"里昂\", \"水晶宫\"]": {
    "date": "2026-10-16",
@@ -19311,8 +20231,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"采列\", \"奥莫尼亚\"]": {
    "date": "2026-10-16",
@@ -19332,8 +20260,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"Torreense\", \"桑德兰\"]": {
    "date": "2026-10-16",
@@ -19353,8 +20289,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"阿尔克马尔\", \"HapoelBeerSheva\"]": {
    "date": "2026-10-16",
@@ -19374,8 +20318,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"萨尔茨堡\", \"AC米兰\"]": {
    "date": "2026-10-16",
@@ -19395,8 +20347,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"伯恩茅斯\", \"格拉茨风暴\"]": {
    "date": "2026-10-16",
@@ -19416,8 +20376,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"本菲卡\", \"凯尔特人\"]": {
    "date": "2026-10-16",
@@ -19437,8 +20405,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"布拉加\", \"吉维森特\"]": {
    "date": "2026-10-20",
@@ -19458,8 +20434,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"波兹南莱赫\", \"勒沃库森\"]": {
    "date": "2026-10-16",
@@ -19479,8 +20463,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"布拉格斯巴达\", \"Lillestroem\"]": {
    "date": "2026-10-16",
@@ -19500,8 +20492,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"圣吉罗斯联\", \"皇家社会\"]": {
    "date": "2026-10-16",
@@ -19521,8 +20521,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"JagielloniaBialystok\", \"AraratArmenia\"]": {
    "date": "2026-10-16",
@@ -19542,8 +20550,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"奈梅亨\", \"LevskiSofia\"]": {
    "date": "2026-10-16",
@@ -19563,8 +20579,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"费伦茨瓦罗斯\", \"比尔森胜利\"]": {
    "date": "2026-10-16",
@@ -19584,8 +20608,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"马赛\", \"奥林匹亚科斯\"]": {
    "date": "2026-10-16",
@@ -19605,8 +20637,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"CorumFK\", \"里泽体育\"]": {
    "date": "2026-10-17",
@@ -19626,8 +20666,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"DinamoZagreb\", \"安德莱赫特\"]": {
    "date": "2026-10-16",
@@ -19647,8 +20695,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"海伦芬\", \"sbv精英\"]": {
    "date": "2026-10-17",
@@ -19668,8 +20724,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"勒芒\", \"图卢兹\"]": {
    "date": "2026-10-17",
@@ -19689,8 +20753,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"法兰克福\", \"科隆\"]": {
    "date": "2026-10-17",
@@ -19710,8 +20782,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-16\", \"维戈塞尔塔\", \"尤文图斯\"]": {
    "date": "2026-10-16",
@@ -19731,8 +20811,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"拉科鲁尼亚\", \"莱万特\"]": {
    "date": "2026-10-17",
@@ -19752,8 +20840,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"弗罗西诺内\", \"萨索洛\"]": {
    "date": "2026-10-17",
@@ -19773,8 +20869,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"伯恩利\", \"伍尔弗汉普顿\"]": {
    "date": "2026-10-17",
@@ -19794,8 +20898,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"桑普多利亚\", \"S.S.Arezzo\"]": {
    "date": "2026-10-17",
@@ -19815,8 +20927,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"Pisa\", \"Cremonese\"]": {
    "date": "2026-10-17",
@@ -19836,8 +20956,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"Cesena\", \"阿韦利诺\"]": {
    "date": "2026-10-17",
@@ -19857,8 +20985,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"JuveStabia\", \"南蒂罗尔\"]": {
    "date": "2026-10-17",
@@ -19878,8 +21014,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-17\", \"维罗纳\", \"Catanzaro\"]": {
    "date": "2026-10-17",
@@ -19899,8 +21043,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"Mantova\", \"帕勒莫\"]": {
    "date": "2026-10-18",
@@ -19920,8 +21072,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"斯特拉斯堡\", \"巴黎圣日耳曼\"]": {
    "date": "2026-10-18",
@@ -19941,8 +21101,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"特尔斯达\", \"费耶诺德\"]": {
    "date": "2026-10-18",
@@ -19962,8 +21130,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"费内巴切\", \"阿拉尼亚体育\"]": {
    "date": "2026-10-18",
@@ -19983,8 +21159,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"费城联合\", \"夏洛特\"]": {
    "date": "2026-10-18",
@@ -20004,8 +21188,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"纽卡斯尔联\", \"阿斯顿维拉\"]": {
    "date": "2026-10-18",
@@ -20025,8 +21217,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"拜仁慕尼黑\", \"RB莱比锡\"]": {
    "date": "2026-10-18",
@@ -20046,8 +21246,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"鹿特丹斯巴达\", \"威廉二世\"]": {
    "date": "2026-10-18",
@@ -20067,8 +21275,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"博洛尼亚\", \"国际米兰\"]": {
    "date": "2026-10-18",
@@ -20088,8 +21304,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"皇家贝蒂斯\", \"巴塞罗那\"]": {
    "date": "2026-10-18",
@@ -20109,8 +21333,16 @@
     "a": 5
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"里尔\", \"布雷斯特\"]": {
    "date": "2026-10-18",
@@ -20130,8 +21362,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"特鲁瓦\", \"朗斯\"]": {
    "date": "2026-10-18",
@@ -20151,8 +21391,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"巴伦西亚\", \"毕尔巴鄂竞技\"]": {
    "date": "2026-10-18",
@@ -20172,8 +21420,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"明尼苏达联\", \"圣路易斯城\"]": {
    "date": "2026-10-18",
@@ -20193,8 +21449,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"邓迪\", \"流浪者\"]": {
    "date": "2026-10-18",
@@ -20214,8 +21478,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"罗马\", \"热那亚\"]": {
    "date": "2026-10-18",
@@ -20235,8 +21507,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"奥兰多城\", \"华盛顿联\"]": {
    "date": "2026-10-18",
@@ -20256,8 +21536,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"纽约城\", \"洛杉矶FC\"]": {
    "date": "2026-10-18",
@@ -20277,8 +21565,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"亚特兰大联\", \"迈阿密国际\"]": {
    "date": "2026-10-18",
@@ -20298,8 +21594,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"RedBullNewYork\", \"多伦多\"]": {
    "date": "2026-10-18",
@@ -20319,8 +21623,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"新英格兰革命\", \"ChicagoFireFC\"]": {
    "date": "2026-10-18",
@@ -20340,8 +21652,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"堪萨斯城竞技\", \"皇家盐湖城\"]": {
    "date": "2026-10-18",
@@ -20361,8 +21681,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"HoustonDynamoFC\", \"达拉斯\"]": {
    "date": "2026-10-18",
@@ -20382,8 +21710,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"洛杉矶银河\", \"圣地亚哥\"]": {
    "date": "2026-10-18",
@@ -20403,8 +21739,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"波特兰伐木者\", \"科罗拉多急流\"]": {
    "date": "2026-10-18",
@@ -20424,8 +21768,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"SeattleSoundersFC\", \"蒙特利尔\"]": {
    "date": "2026-10-18",
@@ -20445,8 +21797,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"奥萨苏纳\", \"桑坦德竞技\"]": {
    "date": "2026-10-18",
@@ -20466,8 +21826,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"奥斯汀\", \"温哥华白帽\"]": {
    "date": "2026-10-18",
@@ -20487,8 +21855,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"圣何塞地震\", \"纳什维尔\"]": {
    "date": "2026-10-18",
@@ -20508,8 +21884,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"兹沃勒\", \"前进之鹰\"]": {
    "date": "2026-10-18",
@@ -20529,8 +21913,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"利兹联\", \"曼联\"]": {
    "date": "2026-10-18",
@@ -20550,8 +21942,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"布莱顿\", \"水晶宫\"]": {
    "date": "2026-10-18",
@@ -20571,8 +21971,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"乌迪内斯\", \"莱切\"]": {
    "date": "2026-10-18",
@@ -20592,8 +22000,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"佛罗伦萨\", \"科莫\"]": {
    "date": "2026-10-18",
@@ -20613,8 +22029,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"坎布尔\", \"阿尔克马尔\"]": {
    "date": "2026-10-18",
@@ -20634,8 +22058,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"卡斯帕萨\", \"萨姆松体育\"]": {
    "date": "2026-10-18",
@@ -20655,8 +22087,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"维戈塞尔塔\", \"阿拉维斯\"]": {
    "date": "2026-10-18",
@@ -20676,8 +22116,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"巴黎FC\", \"雷恩\"]": {
    "date": "2026-10-19",
@@ -20697,8 +22145,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"格罗宁根\", \"阿贾克斯\"]": {
    "date": "2026-10-18",
@@ -20718,8 +22174,16 @@
     "a": 5
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"凯尔特人\", \"哈茨\"]": {
    "date": "2026-10-18",
@@ -20739,8 +22203,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-18\", \"科贾埃利\", \"戈泽特佩\"]": {
    "date": "2026-10-18",
@@ -20760,8 +22232,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"诺丁汉森林\", \"萨兰迪兵工厂\"]": {
    "date": "2026-10-19",
@@ -20781,8 +22261,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"马拉加\", \"皇家社会\"]": {
    "date": "2026-10-19",
@@ -20802,8 +22290,16 @@
     "a": 5
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"洛里昂\", \"摩纳哥\"]": {
    "date": "2026-10-19",
@@ -20823,8 +22319,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"勒阿弗尔\", \"欧塞尔\"]": {
    "date": "2026-10-19",
@@ -20844,8 +22348,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"里昂\", \"尼斯\"]": {
    "date": "2026-10-19",
@@ -20865,8 +22377,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"门兴格拉德巴赫\", \"霍芬海姆\"]": {
    "date": "2026-10-19",
@@ -20886,8 +22406,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"AC米兰\", \"亚特兰大\"]": {
    "date": "2026-10-19",
@@ -20907,8 +22435,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"特温特\", \"乌德勒支\"]": {
    "date": "2026-10-19",
@@ -20928,8 +22464,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"奈梅亨\", \"福图纳锡塔德\"]": {
    "date": "2026-10-19",
@@ -20949,8 +22493,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"伊斯坦布尔巴萨克赛尔\", \"加济安泰普\"]": {
    "date": "2026-10-19",
@@ -20970,8 +22522,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"托特纳姆热刺\", \"考文垂\"]": {
    "date": "2026-10-20",
@@ -20991,8 +22551,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"皇家马德里\", \"塞维利亚\"]": {
    "date": "2026-10-19",
@@ -21012,8 +22580,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"辛辛那提\", \"哥伦布机员\"]": {
    "date": "2026-10-19",
@@ -21033,8 +22609,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"赫塔费\", \"巴列卡诺\"]": {
    "date": "2026-10-20",
@@ -21054,8 +22638,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-19\", \"尤文图斯\", \"拉齐奥\"]": {
    "date": "2026-10-19",
@@ -21075,8 +22667,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"特拉布宗体育\", \"贝西克塔斯\"]": {
    "date": "2026-10-20",
@@ -21096,8 +22696,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"ParmaCalcio1913\", \"都灵\"]": {
    "date": "2026-10-20",
@@ -21117,8 +22725,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-20\", \"蒙扎\", \"卡利亚里\"]": {
    "date": "2026-10-20",
@@ -21138,8 +22754,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"伍尔弗汉普顿\", \"朴次茅斯\"]": {
    "date": "2026-10-21",
@@ -21159,8 +22783,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"布莱克浦\", \"MiltonKeynesDons\"]": {
    "date": "2026-10-21",
@@ -21180,8 +22812,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"萨巴赫\", \"多特蒙德\"]": {
    "date": "2026-10-21",
@@ -21201,8 +22841,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"费内巴切\", \"布拉格斯拉维亚\"]": {
    "date": "2026-10-21",
@@ -21222,8 +22870,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"牛津联\", \"维冈竞技\"]": {
    "date": "2026-10-21",
@@ -21243,8 +22899,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"斯蒂夫尼奇\", \"普利茅斯\"]": {
    "date": "2026-10-21",
@@ -21264,8 +22928,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"Bromley\", \"莱斯特城\"]": {
    "date": "2026-10-21",
@@ -21285,8 +22957,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"AFC温布尔登\", \"曼斯菲尔德\"]": {
    "date": "2026-10-21",
@@ -21306,8 +22986,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"埃克塞特城\", \"克鲁\"]": {
    "date": "2026-10-21",
@@ -21327,8 +23015,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"约克\", \"阿克灵顿\"]": {
    "date": "2026-10-21",
@@ -21348,8 +23044,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"沃尔索尔\", \"奥尔德姆\"]": {
    "date": "2026-10-21",
@@ -21369,8 +23073,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"切斯特菲尔德\", \"科尔切斯特\"]": {
    "date": "2026-10-21",
@@ -21390,8 +23102,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"BristolRovers\", \"SalfordCity\"]": {
    "date": "2026-10-21",
@@ -21411,8 +23131,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"罗奇代尔\", \"格里姆斯比\"]": {
    "date": "2026-10-21",
@@ -21432,8 +23160,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"巴尼特\", \"斯温登\"]": {
    "date": "2026-10-21",
@@ -21453,8 +23189,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"罗瑟汉姆\", \"纽波特\"]": {
    "date": "2026-10-21",
@@ -21474,8 +23218,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"北安普顿\", \"特兰米尔\"]": {
    "date": "2026-10-21",
@@ -21495,8 +23247,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"切尔滕汉姆\", \"弗利特伍德\"]": {
    "date": "2026-10-21",
@@ -21516,8 +23276,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"克劳利\", \"什鲁斯伯里\"]": {
    "date": "2026-10-21",
@@ -21537,8 +23305,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"曼彻斯特城\", \"雅典AEK\"]": {
    "date": "2026-10-21",
@@ -21558,8 +23334,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"利物浦\", \"比利亚雷亚尔\"]": {
    "date": "2026-10-21",
@@ -21579,8 +23363,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"巴黎圣日耳曼\", \"巴塞罗那\"]": {
    "date": "2026-10-21",
@@ -21600,8 +23392,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"CambridgeU\", \"韦康比流浪者\"]": {
    "date": "2026-10-21",
@@ -21621,8 +23421,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"NottsCo.\", \"谢菲尔德星期三\"]": {
    "date": "2026-10-21",
@@ -21642,8 +23450,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"伯顿\", \"布拉德福德\"]": {
    "date": "2026-10-21",
@@ -21663,8 +23479,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"卢顿\", \"巴恩斯利\"]": {
    "date": "2026-10-21",
@@ -21684,8 +23508,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"哈德斯菲尔德\", \"彼德堡联\"]": {
    "date": "2026-10-21",
@@ -21705,8 +23537,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"吉灵厄姆\", \"维尔港\"]": {
    "date": "2026-10-21",
@@ -21726,8 +23566,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"斯图加特\", \"马德里竞技\"]": {
    "date": "2026-10-21",
@@ -21747,8 +23595,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"罗马\", \"布拉迪斯拉发\"]": {
    "date": "2026-10-21",
@@ -21768,8 +23624,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"唐卡斯特\", \"斯托克港\"]": {
    "date": "2026-10-21",
@@ -21789,8 +23653,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"那不勒斯\", \"博德闪耀\"]": {
    "date": "2026-10-21",
@@ -21810,8 +23682,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-21\", \"波尔图\", \"PSV埃因霍温\"]": {
    "date": "2026-10-21",
@@ -21831,8 +23711,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"辛辛那提\", \"华盛顿联\"]": {
    "date": "2026-10-22",
@@ -21852,8 +23740,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"莱万特\", \"毕尔巴鄂竞技\"]": {
    "date": "2026-10-22",
@@ -21873,8 +23769,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"雷丁\", \"莱顿东方\"]": {
    "date": "2026-10-22",
@@ -21894,8 +23798,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"科莫\", \"曼联\"]": {
    "date": "2026-10-22",
@@ -21915,8 +23827,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"阿斯顿维拉\", \"维京\"]": {
    "date": "2026-10-22",
@@ -21936,8 +23856,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"皇家马德里\", \"RB莱比锡\"]": {
    "date": "2026-10-22",
@@ -21957,8 +23885,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"里斯本竞技\", \"LASK林茨\"]": {
    "date": "2026-10-22",
@@ -21978,8 +23914,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"拜仁慕尼黑\", \"萨兰迪兵工厂\"]": {
    "date": "2026-10-22",
@@ -21999,8 +23943,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"布鲁日\", \"朗斯\"]": {
    "date": "2026-10-22",
@@ -22020,8 +23972,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"国际米兰\", \"顿涅茨克矿工\"]": {
    "date": "2026-10-22",
@@ -22041,8 +24001,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"里尔\", \"加拉塔萨雷\"]": {
    "date": "2026-10-22",
@@ -22062,8 +24030,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-22\", \"皇家贝蒂斯\", \"费耶诺德\"]": {
    "date": "2026-10-22",
@@ -22083,8 +24059,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"AraratArmenia\", \"阿尔克马尔\"]": {
    "date": "2026-10-23",
@@ -22104,8 +24088,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"尤文图斯\", \"雷恩\"]": {
    "date": "2026-10-23",
@@ -22125,8 +24117,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"波兹南莱赫\", \"桑德兰\"]": {
    "date": "2026-10-23",
@@ -22146,8 +24146,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"格拉茨风暴\", \"马赛\"]": {
    "date": "2026-10-23",
@@ -22167,8 +24175,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"圣吉罗斯联\", \"HapoelBeerSheva\"]": {
    "date": "2026-10-23",
@@ -22188,8 +24204,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"DinamoZagreb\", \"奈梅亨\"]": {
    "date": "2026-10-23",
@@ -22209,8 +24233,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"OFI克里特\", \"勒沃库森\"]": {
    "date": "2026-10-23",
@@ -22230,8 +24262,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"费伦茨瓦罗斯\", \"Torreense\"]": {
    "date": "2026-10-23",
@@ -22251,8 +24291,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"凯尔特人\", \"维戈塞尔塔\"]": {
    "date": "2026-10-23",
@@ -22272,8 +24320,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"比尔森胜利\", \"LevskiSofia\"]": {
    "date": "2026-10-23",
@@ -22293,8 +24349,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"奥林匹亚科斯\", \"布拉格斯巴达\"]": {
    "date": "2026-10-23",
@@ -22314,8 +24378,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"Lillestroem\", \"皇家社会\"]": {
    "date": "2026-10-23",
@@ -22335,8 +24407,16 @@
     "a": 6
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"贝西克塔斯\", \"水晶宫\"]": {
    "date": "2026-10-23",
@@ -22356,8 +24436,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"霍芬海姆\", \"里昂\"]": {
    "date": "2026-10-23",
@@ -22377,8 +24465,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"奥莫尼亚\", \"本菲卡\"]": {
    "date": "2026-10-23",
@@ -22398,8 +24494,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"JagielloniaBialystok\", \"安德莱赫特\"]": {
    "date": "2026-10-23",
@@ -22419,8 +24523,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"采列\", \"萨尔茨堡\"]": {
    "date": "2026-10-23",
@@ -22440,8 +24552,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-23\", \"伯恩茅斯\", \"AC米兰\"]": {
    "date": "2026-10-23",
@@ -22461,8 +24581,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"博尔顿\", \"米德尔斯堡\"]": {
    "date": "2026-10-24",
@@ -22482,8 +24610,16 @@
     "a": 5
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"伊普斯维奇\", \"诺丁汉森林\"]": {
    "date": "2026-10-24",
@@ -22503,8 +24639,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"斯图加特\", \"门兴格拉德巴赫\"]": {
    "date": "2026-10-24",
@@ -22524,8 +24668,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"都灵\", \"蒙扎\"]": {
    "date": "2026-10-24",
@@ -22545,8 +24697,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"前进之鹰\", \"特尔斯达\"]": {
    "date": "2026-10-24",
@@ -22566,8 +24726,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"阿拉尼亚体育\", \"科贾埃利\"]": {
    "date": "2026-10-24",
@@ -22587,8 +24755,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"恩波利\", \"LRVicenza\"]": {
    "date": "2026-10-24",
@@ -22608,8 +24784,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"吉马良斯\", \"马里迪莫\"]": {
    "date": "2026-10-24",
@@ -22629,8 +24813,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"布雷斯特\", \"尼斯\"]": {
    "date": "2026-10-24",
@@ -22650,8 +24842,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"阿拉维斯\", \"马拉加\"]": {
    "date": "2026-10-24",
@@ -22671,8 +24871,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"谢菲尔德联\", \"德比郡\"]": {
    "date": "2026-10-24",
@@ -22692,8 +24900,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"查尔顿\", \"诺维奇\"]": {
    "date": "2026-10-24",
@@ -22713,8 +24929,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"阿斯顿维拉\", \"曼彻斯特城\"]": {
    "date": "2026-10-24",
@@ -22734,8 +24958,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"埃于普体育\", \"卡斯帕萨\"]": {
    "date": "2026-10-24",
@@ -22755,8 +24987,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"卢顿\", \"莱斯特城\"]": {
    "date": "2026-10-24",
@@ -22776,8 +25016,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"哈德斯菲尔德\", \"维冈竞技\"]": {
    "date": "2026-10-24",
@@ -22797,8 +25045,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"切尔滕汉姆\", \"纽波特\"]": {
    "date": "2026-10-24",
@@ -22818,8 +25074,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"摩德纳\", \"Cesena\"]": {
    "date": "2026-10-24",
@@ -22839,8 +25103,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"北安普顿\", \"科尔切斯特\"]": {
    "date": "2026-10-24",
@@ -22860,8 +25132,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"卡利亚里\", \"博洛尼亚\"]": {
    "date": "2026-10-24",
@@ -22881,8 +25161,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"科莫\", \"萨索洛\"]": {
    "date": "2026-10-24",
@@ -22902,8 +25190,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"BristolRovers\", \"斯温登\"]": {
    "date": "2026-10-24",
@@ -22923,8 +25219,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"巴列卡诺\", \"埃尔切\"]": {
    "date": "2026-10-24",
@@ -22944,8 +25248,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"南蒂罗尔\", \"桑普多利亚\"]": {
    "date": "2026-10-24",
@@ -22965,8 +25277,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"VirtusEntella\", \"Mantova\"]": {
    "date": "2026-10-24",
@@ -22986,8 +25306,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"S.S.Arezzo\", \"贝内文托\"]": {
    "date": "2026-10-24",
@@ -23007,8 +25335,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"阿韦利诺\", \"CalcioPadova\"]": {
    "date": "2026-10-24",
@@ -23028,8 +25364,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"RB莱比锡\", \"埃尔沃斯堡\"]": {
    "date": "2026-10-24",
@@ -23049,8 +25393,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"加济安泰普\", \"ErzurumsporFK\"]": {
    "date": "2026-10-24",
@@ -23070,8 +25422,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"加的夫城\", \"伯明翰\"]": {
    "date": "2026-10-24",
@@ -23091,8 +25451,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"女王公园巡游者\", \"斯旺西\"]": {
    "date": "2026-10-24",
@@ -23112,8 +25480,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"西汉姆联\", \"南安普顿\"]": {
    "date": "2026-10-24",
@@ -23133,8 +25509,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"林肯城\", \"伯恩利\"]": {
    "date": "2026-10-24",
@@ -23154,8 +25538,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"萨兰迪兵工厂\", \"埃弗顿\"]": {
    "date": "2026-10-24",
@@ -23175,8 +25567,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"考文垂\", \"富勒姆\"]": {
    "date": "2026-10-24",
@@ -23196,8 +25596,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"切尔西\", \"托特纳姆热刺\"]": {
    "date": "2026-10-25",
@@ -23217,8 +25625,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"斯托克城\", \"布里斯托尔城\"]": {
    "date": "2026-10-24",
@@ -23238,8 +25654,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"布莱克本\", \"雷克瑟姆\"]": {
    "date": "2026-10-24",
@@ -23259,8 +25683,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"普雷斯顿\", \"西布罗姆维奇\"]": {
    "date": "2026-10-24",
@@ -23280,8 +25712,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"布莱克浦\", \"曼斯菲尔德\"]": {
    "date": "2026-10-24",
@@ -23301,8 +25741,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"Bromley\", \"彼德堡联\"]": {
    "date": "2026-10-24",
@@ -23322,8 +25770,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"唐卡斯特\", \"谢菲尔德星期三\"]": {
    "date": "2026-10-24",
@@ -23343,8 +25799,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"斯蒂夫尼奇\", \"MiltonKeynesDons\"]": {
    "date": "2026-10-24",
@@ -23364,8 +25828,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"CambridgeU\", \"普利茅斯\"]": {
    "date": "2026-10-24",
@@ -23385,8 +25857,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"牛津联\", \"布拉德福德\"]": {
    "date": "2026-10-24",
@@ -23406,8 +25886,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"NottsCo.\", \"斯托克港\"]": {
    "date": "2026-10-24",
@@ -23427,8 +25915,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"阿马多拉\", \"CasaPiaAC\"]": {
    "date": "2026-10-24",
@@ -23448,8 +25944,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"罗奇代尔\", \"阿克灵顿\"]": {
    "date": "2026-10-24",
@@ -23469,8 +25973,16 @@
     "a": 5
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"罗瑟汉姆\", \"什鲁斯伯里\"]": {
    "date": "2026-10-24",
@@ -23490,8 +26002,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"埃克塞特城\", \"弗利特伍德\"]": {
    "date": "2026-10-24",
@@ -23511,8 +26031,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"克劳利\", \"特兰米尔\"]": {
    "date": "2026-10-24",
@@ -23532,8 +26060,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"切斯特菲尔德\", \"克鲁\"]": {
    "date": "2026-10-24",
@@ -23553,8 +26089,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"伯顿\", \"莱顿东方\"]": {
    "date": "2026-10-24",
@@ -23574,8 +26118,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"雷丁\", \"巴恩斯利\"]": {
    "date": "2026-10-24",
@@ -23595,8 +26147,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"吉灵厄姆\", \"格里姆斯比\"]": {
    "date": "2026-10-24",
@@ -23616,8 +26176,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"巴尼特\", \"奥尔德姆\"]": {
    "date": "2026-10-24",
@@ -23637,8 +26205,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"约克\", \"维尔港\"]": {
    "date": "2026-10-24",
@@ -23658,8 +26234,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"Cremonese\", \"JuveStabia\"]": {
    "date": "2026-10-24",
@@ -23679,8 +26263,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"多特蒙德\", \"法兰克福\"]": {
    "date": "2026-10-25",
@@ -23700,8 +26292,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"那不勒斯\", \"罗马\"]": {
    "date": "2026-10-25",
@@ -23721,8 +26321,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"萨姆松体育\", \"AmedSportif\"]": {
    "date": "2026-10-25",
@@ -23742,8 +26350,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"邓迪联\", \"阿伯丁\"]": {
    "date": "2026-10-24",
@@ -23763,8 +26379,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"流浪者\", \"圣约翰斯顿\"]": {
    "date": "2026-10-24",
@@ -23784,8 +26408,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"圣米伦\", \"邓迪\"]": {
    "date": "2026-10-24",
@@ -23805,8 +26437,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"伍尔弗汉普顿\", \"沃特福德\"]": {
    "date": "2026-10-24",
@@ -23826,8 +26466,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"AFC温布尔登\", \"韦康比流浪者\"]": {
    "date": "2026-10-24",
@@ -23847,8 +26495,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"Alverca\", \"阿罗卡\"]": {
    "date": "2026-10-25",
@@ -23868,8 +26524,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"吉维森特\", \"波尔图\"]": {
    "date": "2026-10-25",
@@ -23889,8 +26553,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"海牙\", \"海伦芬\"]": {
    "date": "2026-10-25",
@@ -23910,8 +26582,16 @@
     "a": 3
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"威廉二世\", \"坎布尔\"]": {
    "date": "2026-10-25",
@@ -23931,8 +26611,16 @@
     "a": 6
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"Catanzaro\", \"AscoliCalcio1898FC\"]": {
    "date": "2026-10-24",
@@ -23952,8 +26640,16 @@
     "a": 6
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"帕德博恩\", \"汉堡\"]": {
    "date": "2026-10-24",
@@ -23973,8 +26669,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"拉齐奥\", \"ParmaCalcio1913\"]": {
    "date": "2026-10-25",
@@ -23994,8 +26698,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-24\", \"福尔柯克\", \"基马诺克\"]": {
    "date": "2026-10-24",
@@ -24015,8 +26727,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"蒙特利尔\", \"纳什维尔\"]": {
    "date": "2026-10-25",
@@ -24036,8 +26756,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"马德里竞技\", \"拉科鲁尼亚\"]": {
    "date": "2026-10-25",
@@ -24057,8 +26785,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"朗斯\", \"巴黎FC\"]": {
    "date": "2026-10-25",
@@ -24078,8 +26814,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-27\", \"LRVicenza\", \"摩德纳\"]": {
    "date": "2026-10-27",
@@ -24099,8 +26843,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-27\", \"VirtusEntella\", \"阿韦利诺\"]": {
    "date": "2026-10-27",
@@ -24120,8 +26872,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-28\", \"贝内文托\", \"Catanzaro\"]": {
    "date": "2026-10-28",
@@ -24141,8 +26901,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-28\", \"Cesena\", \"恩波利\"]": {
    "date": "2026-10-28",
@@ -24162,8 +26930,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-25\", \"巴伦西亚\", \"比利亚雷亚尔\"]": {
    "date": "2026-10-25",
@@ -24183,8 +26959,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"AC米兰\", \"博洛尼亚\"]": {
    "date": "2026-10-29",
@@ -24204,8 +26988,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"ParmaCalcio1913\", \"乌迪内斯\"]": {
    "date": "2026-10-29",
@@ -24225,8 +27017,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"Carrarese\", \"S.S.Arezzo\"]": {
    "date": "2026-10-29",
@@ -24246,8 +27046,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"邓迪\", \"基马诺克\"]": {
    "date": "2026-10-29",
@@ -24267,8 +27075,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"圣约翰斯顿\", \"马瑟韦尔\"]": {
    "date": "2026-10-29",
@@ -24288,8 +27104,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"凯尔特人\", \"邓迪联\"]": {
    "date": "2026-10-29",
@@ -24309,8 +27133,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"阿伯丁\", \"福尔柯克\"]": {
    "date": "2026-10-29",
@@ -24330,8 +27162,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"圣米伦\", \"希伯尼安\"]": {
    "date": "2026-10-29",
@@ -24351,8 +27191,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"哈茨\", \"流浪者\"]": {
    "date": "2026-10-29",
@@ -24372,8 +27220,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"曼彻斯特城\", \"布莱顿\"]": {
    "date": "2026-10-29",
@@ -24393,8 +27249,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"富勒姆\", \"水晶宫\"]": {
    "date": "2026-10-29",
@@ -24414,8 +27278,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"伯恩茅斯\", \"阿斯顿维拉\"]": {
    "date": "2026-10-29",
@@ -24435,8 +27307,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"桑德兰\", \"布伦特福德\"]": {
    "date": "2026-10-29",
@@ -24456,8 +27336,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"利物浦\", \"切尔西\"]": {
    "date": "2026-10-29",
@@ -24477,8 +27365,16 @@
     "a": 1
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"威尼斯\", \"国际米兰\"]": {
    "date": "2026-10-29",
@@ -24498,8 +27394,16 @@
     "a": 2
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"蒙扎\", \"那不勒斯\"]": {
    "date": "2026-10-29",
@@ -24519,8 +27423,16 @@
     "a": 4
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"热那亚\", \"尤文图斯\"]": {
    "date": "2026-10-29",
@@ -24540,8 +27452,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"夏洛特\", \"蒙特利尔\"]": {
    "date": "2026-10-29",
@@ -24561,8 +27481,16 @@
     "a": 0
    },
    "sources": [
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-29\", \"上海申花\", \"町田泽维亚\"]": {
    "date": "2026-10-29",
@@ -24665,8 +27593,16 @@
    },
    "sources": [
     "daily",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-30\", \"佛罗伦萨\", \"亚特兰大\"]": {
    "date": "2026-10-30",
@@ -24693,8 +27629,16 @@
    },
    "sources": [
     "daily",
-    "ws_hist"
-   ]
+    "ws_hist",
+    "vz_seed_ws"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-10-30\", \"格雷米奥\", \"巴拉纳竞技\"]": {
    "date": "2026-10-30",
@@ -24708,7 +27652,7 @@
     "a": 2,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 3
+    "mae": 1.5
    },
    "act": {
     "h": 2,
@@ -24959,7 +27903,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 3
+    "mae": 1.5
    },
    "act": {
     "h": 3,
@@ -24981,7 +27925,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 2
+    "mae": 1.0
    },
    "act": {
     "h": 2,
@@ -25003,7 +27947,7 @@
     "a": 1,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 4
+    "mae": 2.0
    },
    "act": {
     "h": 5,
@@ -25025,7 +27969,7 @@
     "a": 1,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 2
+    "mae": 1.0
    },
    "act": {
     "h": 2,
@@ -25047,7 +27991,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 4
+    "mae": 2.0
    },
    "act": {
     "h": 0,
@@ -25069,7 +28013,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 4
+    "mae": 2.0
    },
    "act": {
     "h": 1,
@@ -25091,7 +28035,7 @@
     "a": 3,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 2
+    "mae": 1.0
    },
    "act": {
     "h": 0,
@@ -25113,7 +28057,7 @@
     "a": 2,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 3
+    "mae": 1.5
    },
    "act": {
     "h": 0,
@@ -25135,7 +28079,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 5
+    "mae": 2.5
    },
    "act": {
     "h": 2,
@@ -25157,7 +28101,7 @@
     "a": 1,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 3
+    "mae": 1.5
    },
    "act": {
     "h": 2,
@@ -25179,7 +28123,7 @@
     "a": 0,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 6
+    "mae": 3.0
    },
    "act": {
     "h": 1,
@@ -25201,7 +28145,7 @@
     "a": 1,
     "exactHit": true,
     "outcomeHit": true,
-    "mae": 0
+    "mae": 0.0
    },
    "act": {
     "h": 2,
@@ -25223,7 +28167,7 @@
     "a": 1,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 1
+    "mae": 0.5
    },
    "act": {
     "h": 3,
@@ -25245,7 +28189,7 @@
     "a": 2,
     "exactHit": false,
     "outcomeHit": true,
-    "mae": 4
+    "mae": 2.0
    },
    "act": {
     "h": 0,
@@ -25574,7 +28518,7 @@
     6.8,
     10.7
    ],
-   "mae": 1.23
+   "mae": 1.2
   },
   "ws": {
    "n": 368,
@@ -25591,16 +28535,16 @@
    "mae": null
   },
   "vz": {
-   "n": 0,
-   "exact": 0,
-   "dir": 0,
+   "n": 368,
+   "exact": 7.9,
+   "dir": 41.8,
    "dir_ci": [
-    0.0,
-    0.0
+    36.9,
+    46.9
    ],
    "exact_ci": [
-    0.0,
-    0.0
+    5.5,
+    11.1
    ],
    "mae": null
   },
@@ -25683,70 +28627,70 @@
     "n": 139,
     "m_oc": 40,
     "w_oc": 12,
-    "v_oc": 0
+    "v_oc": 12
    },
    "意甲": {
     "n": 83,
     "m_oc": 26,
     "w_oc": 12,
-    "v_oc": 0
+    "v_oc": 12
    },
    "西甲": {
     "n": 81,
     "m_oc": 32,
     "w_oc": 9,
-    "v_oc": 0
+    "v_oc": 9
    },
    "荷甲": {
     "n": 65,
     "m_oc": 27,
     "w_oc": 7,
-    "v_oc": 0
+    "v_oc": 7
    },
    "英超": {
     "n": 63,
     "m_oc": 17,
     "w_oc": 8,
-    "v_oc": 0
+    "v_oc": 8
    },
    "葡超": {
     "n": 54,
     "m_oc": 18,
     "w_oc": 2,
-    "v_oc": 0
+    "v_oc": 2
    },
    "法甲": {
     "n": 54,
     "m_oc": 17,
     "w_oc": 3,
-    "v_oc": 0
+    "v_oc": 3
    },
    "德甲": {
     "n": 43,
     "m_oc": 14,
     "w_oc": 5,
-    "v_oc": 0
+    "v_oc": 5
    },
    "英甲": {
     "n": 36,
     "m_oc": 0,
     "w_oc": 17,
-    "v_oc": 0
+    "v_oc": 17
    },
    "英乙": {
     "n": 35,
     "m_oc": 0,
     "w_oc": 10,
-    "v_oc": 0
+    "v_oc": 10
    },
    "美职联": {
     "n": 34,
     "m_oc": 0,
     "w_oc": 15,
-    "v_oc": 0
+    "v_oc": 15
    }
   },
-  "verdict": "模型 方向命中率最高（43.5%，N=793）；其余 WhoScored 41.8%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
+  "verdict": "模型 方向命中率最高（43.5%，N=793）；其余 WhoScored 41.8% / V站 41.8%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
   "total_records": 1178
  }
 }

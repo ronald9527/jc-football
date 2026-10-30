@@ -58,6 +58,14 @@ WS_HIST = os.path.join(HERE, "whoscored_history.json")
 VZ_HIST = os.path.join(HERE, "vzhan_history.json")
 MATCHES = os.path.join(HERE, "matches.json")
 
+# v1.7.83：V站 冷启动期自身完赛历史为 0，用户要求用「之前 WhoScored 历史数据」
+# 作为 V站 命中率样本基线（V站 与 WhoScored 覆盖同一批竞彩比赛，视为等价）。
+# 开启后：WhoScored 历史同批场次同时灌入 vz 槽，使「综合命中率」徽标立即有真实样本
+# 可显示；V站 自有 vzhan_history 一旦完赛即以真实预测覆盖该基线（后者优先级更高）。
+# 注意：播种的 vz 场次带 seeded=True，仅用于「独立命中率/联赛维度/结论」统计（即徽标
+# 要的样本），从「头对头配对对比」中剔除——否则 vz≡ws 会让 A/B 对比退化为全平手。
+VZ_SEED_FROM_WS = True
+
 
 # ----------------------------- 规范键 -----------------------------
 def canon(t):
@@ -113,9 +121,15 @@ def sign_test_p(k_more, k_less):
 
 
 def _pairwise(recs, sa, sb):
-    """两源同场头对头：两源都有预测且已完赛的场次，统计谁更准。"""
-    paired = [r for r in recs.values()
-              if r.get(sa) and r.get(sb) and r.get("act")
+    """两源同场头对头：两源都有预测且已完赛的场次，统计谁更准。
+    若对比涉及 vz，则剔除「由 WhoScored 历史播种」的 vz 场次——其 vz≡ws，
+    会令头对头退化为全平手，无统计意义（播种场次仅用于独立命中率/联赛维度）。"""
+    def _ok(r):
+        if "vz" in (sa, sb) and r.get("vz") and r["vz"].get("seeded"):
+            return False
+        return True
+    paired = [r for r in recs.values() if _ok(r)
+              and r.get(sa) and r.get(sb) and r.get("act")
               and r["act"].get("h") is not None
               and r[sa].get("exactHit") is not None
               and r[sb].get("exactHit") is not None]
@@ -238,9 +252,17 @@ def ingest_histories(store):
         r = recs.get(k) or {"date": x.get("date"), "league": x.get("league"),
                             "home": x.get("home"), "away": x.get("away"),
                             "jcNum": x.get("jcNum"), "ws": None, "model": None,
-                            "act": None, "sources": []}
+                            "vz": None, "act": None, "sources": []}
         r["ws"] = {"h": x.get("predH"), "a": x.get("predA"),
                    "exactHit": x.get("exactHit"), "outcomeHit": x.get("outcomeHit")}
+        # v1.7.83：把同一批 WhoScored 历史场次灌入 vz 槽作为 V站 样本基线
+        # （ seeding 仅当该场尚无真实 V站 记录；真实 vzhan_history 完赛后覆盖）
+        if VZ_SEED_FROM_WS and r.get("vz") is None:
+            r["vz"] = {"h": x.get("predH"), "a": x.get("predA"),
+                       "exactHit": x.get("exactHit"), "outcomeHit": x.get("outcomeHit"),
+                       "seeded": True}
+            if "vz_seed_ws" not in r["sources"]:
+                r["sources"].append("vz_seed_ws")
         if x.get("jcNum"):
             r["jcNum"] = x.get("jcNum")
         _merge_act(r, x.get("actH"), x.get("actA"))
@@ -365,11 +387,12 @@ def compute(store):
     pair_mw = _pairwise(recs, "model", "ws")
     pair_mv = _pairwise(recs, "model", "vz")
     pair_wv = _pairwise(recs, "ws", "vz")
-    # 三源同场（三者皆有预测且完赛）
+    # 三源同场（三者皆有预测且完赛；播种 vz 场次剔除，避免退化）
     trip = [r for r in recs.values()
             if r.get("model") and r.get("ws") and r.get("vz") and r.get("act")
             and r["act"].get("h") is not None
-            and all(r[s].get("exactHit") is not None for s in ("model", "ws", "vz"))]
+            and all(r[s].get("exactHit") is not None for s in ("model", "ws", "vz"))
+            and not (r.get("vz") and r["vz"].get("seeded"))]
     trip_n = len(trip)
 
     # 联赛维度（三源方向命中累加，v1.7.77 含 V站）
