@@ -548,6 +548,11 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-wstag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;vertical-align:4px;background:rgba(56,142,60,.18);color:#66bb6a;border:1px solid rgba(56,142,60,.45)}
 .sp-wstag-model{background:rgba(245,124,0,.16);color:#fb8c00;border-color:rgba(245,124,0,.45)}
 .sp-wstag-vz{background:rgba(211,47,47,.18);color:#ef5350;border-color:rgba(211,47,47,.5)}
+/* v1.7.81：V站卡片联赛名 + 开赛时间行 + 综合命中率可信度 */
+.sp-metaline{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--sub);margin:-2px 0 8px}
+.sp-league-tag{font-size:10px;font-weight:700;color:#ef5350;background:rgba(211,47,47,.14);border:1px solid rgba(211,47,47,.4);border-radius:7px;padding:1px 7px;white-space:nowrap}
+.vz-acc{display:inline-block;font-size:10px;font-weight:700;color:#ef5350;background:rgba(211,47,47,.1);border:1px solid rgba(211,47,47,.32);border-radius:8px;padding:2px 8px;margin-left:6px}
+.vz-acc.vz-acc-pending{color:var(--sub);background:var(--line);border-color:var(--line)}
 .vz-news{margin-top:6px;display:flex;flex-direction:column;gap:4px}
 .vz-li{font-size:12px;line-height:1.55;color:var(--sub);display:flex;gap:6px;align-items:flex-start}
 .vz-tag{flex:0 0 auto;display:inline-block;width:16px;height:16px;line-height:16px;text-align:center;border-radius:4px;font-size:10px;font-weight:700;color:#fff;margin-top:1px}
@@ -1705,8 +1710,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.80";
+const VERSION = "v1.7.82";
 const CHANGELOG = [
+  {
+    version: "v1.7.81",
+    date: "2026-10-30",
+    title: "比分预测改版：V站置顶第一、移除 WhoScored、补联赛名/开赛时间与综合命中率",
+    details: [
+      "来源优先级精简为 两源：V站·呼死狗（第一优先，红徽标）> 模型（兜底，橙徽标），彻底移除 WhoScored",
+      "V站卡片补中文联赛名 + 开赛时间行（取自 V站 自有数据，中文原味）；模型卡片保留联赛 + kickoff",
+      "V站比分旁新增「🐶 综合命中率 方向X%/精确Y% · 样本N场」可信度徽标：数据来自 accuracy_ab 三源统计 AB_STATS.vz，完赛后自动累积（当前样本0显示「待积累」）",
+      "V站独立分区（renderVzhan）补联赛名称；分组内 V站 场次自动排到顶部，方便一眼查看"
+    ]
+  },
   {
     version: "v1.7.79",
     date: "2026-10-30",
@@ -5684,7 +5700,7 @@ function renderVzhan(){
       .concat((m.forecasts||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-mid">测</span>${t}</div>`));
     const kick = (m.match_time||"").slice(5,16);
     return `<div class="sp-card">
-      <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${m.jcNum?`<span class="sp-jcnum" title="V站直接给出的竞彩编号">竞彩 ${m.jcNum}</span>`:``}</div>
+      <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${(m.league?`<span class="sp-league-tag">${m.league}</span>`:"")}${m.jcNum?`<span class="sp-jcnum" title="V站直接给出的竞彩编号">竞彩 ${m.jcNum}</span>`:``}</div>
       <div class="sp-scoreline">
         <div class="sp-predwrap"><div class="sp-label">比分预测</div>${pred}</div>
         <div class="sp-actwrap"><div class="sp-label">开赛</div><span class="sp-actual sp-sched">${kick||"-"}</span></div>
@@ -5790,6 +5806,16 @@ function renderScorePred(){
   const _vzMs = (typeof BUILT_VZHAN!=="undefined" && BUILT_VZHAN) ? (BUILT_VZHAN.matches||[]) : [];
   const vzByNumSp = {};
   _vzMs.forEach(m=>{ if(m.jcNum && m.hasPred){ (vzByNumSp[m.jcNum] = vzByNumSp[m.jcNum] || []).push(m); } });
+  // v1.7.81：V站综合命中率（来自 accuracy_ab 三源统计 AB_STATS.vz），用于比分卡可信度
+  const vzAcc = (typeof AB_STATS!=="undefined" && AB_STATS && AB_STATS.vz) ? AB_STATS.vz : null;
+  const vzAccText = () => {
+    if(!vzAcc) return "";
+    if(!vzAcc.n) return `综合命中率 待积累（样本 0 场，完赛后自动统计）`;
+    return `综合命中率 方向 ${vzAcc.dir}% / 精确 ${vzAcc.exact}% · 样本 ${vzAcc.n} 场`;
+  };
+  // v1.7.81：有 V站 预测的竞彩编号集合（用于把 V站 场次排到分组顶部）
+  const vzNumsSet = new Set();
+  Object.keys(vzByNumSp).forEach(n=>{ if((vzByNumSp[n]||[]).some(x=>x.predH!=null)) vzNumsSet.add(n); });
   if(!ms.length){
     list.innerHTML = `<div class="empty">当日竞彩赛程中暂无自建 Poisson 模型覆盖的比赛${sp.note?("（"+sp.note+"）"):""}；非竞彩场次已按要求隐藏</div>`;
     return;
@@ -5800,6 +5826,15 @@ function renderScorePred(){
   const outName = {H:"主胜", D:"平局", A:"客胜"};
   const groups = {};
   view.forEach(m=>{ const k=m.league||"其他"; (groups[k]=groups[k]||[]).push(m); });
+  // v1.7.81：分组内把 V站 预测场次排到顶部（其次按开球时间）
+  Object.keys(groups).forEach(lg=>{
+    groups[lg].sort((a,b)=>{
+      const va = vzNumsSet.has(spJcNumOf(a,a.date)) ? 1 : 0;
+      const vb = vzNumsSet.has(spJcNumOf(b,b.date)) ? 1 : 0;
+      if(va!==vb) return vb - va;
+      return (a.kickoff||"").localeCompare(b.kickoff||"");
+    });
+  });
   let html = "";
   Object.keys(groups).forEach(lg=>{
     html += `<div class="sp-group"><div class="sp-group-title">${lg}（${groups[lg].length}）</div>`;
@@ -5826,14 +5861,14 @@ function renderScorePred(){
         return !!(arr.length && arr[0].predH != null);
       })();
       const vzm = hasVz ? (vzByNumSp[jcNum]||[])[0] : null;
-      const hasWs = !hasVz && !!(wsm && wsm.predH != null);
-      const hasModel = !hasVz && !hasWs && m.modelPred && m.modelPred.h != null;
-      const dispH = hasVz ? vzm.predH : (hasWs ? wsm.predH : (hasModel ? m.modelPred.h : m.predH));
-      const dispA = hasVz ? vzm.predA : (hasWs ? wsm.predA : (hasModel ? m.modelPred.a : m.predA));
+      // v1.7.81：移除 WhoScored，仅保留 V站(第一优先) / 模型(兜底) 两源
+      const hasWs = false;
+      const hasModel = !hasVz && m.modelPred && m.modelPred.h != null;
+      const dispH = hasVz ? vzm.predH : (hasModel ? m.modelPred.h : m.predH);
+      const dispA = hasVz ? vzm.predA : (hasModel ? m.modelPred.a : m.predA);
       const predScore = `<span class="sp-pred">${dispH} <i>:</i> ${dispA}</span>`
         + (hasVz ? `<span class="sp-wstag sp-wstag-vz" title="V站·呼死狗 中文情报预测（海外爆料员第一手）">V站</span>`
-           : (hasWs ? `<span class="sp-wstag" title="WhoScored 人工预测比分，与源站一致">WhoScored</span>`
-           : (hasModel ? `<span class="sp-wstag sp-wstag-model" title="football-data 模型预测（V站/WhoScored 均缺失时兜底）">模型</span>` : ``)));
+           : (hasModel ? `<span class="sp-wstag sp-wstag-model" title="football-data 模型预测（V站缺失时兜底）">模型</span>` : ``));
       let actual = "";
       let hit = "";
       if(finished && m.actH!=null){
@@ -5850,15 +5885,22 @@ function renderScorePred(){
       }
       const statusCls = finished ? "sp-fin" : (live ? "sp-live" : "sp-sched");
       const zhH = spZh(m.home), zhA = spZh(m.away);
+      // v1.7.81：V站卡显示其自有中文联赛名 + 开赛时间；模型卡显示 football-data 联赛 + kickoff
+      const vzKick = vzm ? (vzm.match_time||"").slice(5,16) : "";
+      const metaLine = hasVz
+        ? `<div class="sp-metaline"><span class="sp-league-tag">${vzm.league||""}</span>🕐 ${vzKick||"时间待定"}</div>`
+        : (m.league||m.kickoff ? `<div class="sp-metaline"><span class="sp-league-tag" style="color:var(--sub);background:var(--line);border-color:var(--line)">${m.league||""}</span>🕐 ${m.kickoff?m.kickoff.slice(5,16):(m.date||"")}</div>` : ``);
+      const vzAccLine = (hasVz && vzAcc) ? `<span class="vz-acc ${vzAcc.n?'':'vz-acc-pending'}">🐶 ${vzAccText()}</span>` : "";
       html += `<div class="sp-card ${statusCls}">
         <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
         ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
+        ${metaLine}
         <div class="sp-scoreline">
           <div class="sp-predwrap"><div class="sp-label">预测比分</div>${predScore}</div>
           <div class="sp-actwrap"><div class="sp-label">实际赛果</div>${actual}</div>
         </div>
         ${probBar}
-        <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${hasWs?`<span class="sp-modelref">模型参考 ${m.predH}:${m.predA}</span>`:""}${hit}</div>
+        <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${vzAccLine}${hit}</div>
       </div>`;
     });
     html += `</div>`;
