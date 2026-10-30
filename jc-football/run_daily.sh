@@ -203,6 +203,22 @@ else
 fi
 set -e
 
+# ---------- 步骤1.8865：V站网关稳定性探活（监控，v1.7.77；不阻断部署）----------
+# 隔离设计：网关探活失败只记录 vzhan_gateway_status.json + 可选告警，
+# 绝不中断流水线、绝不影响部署（静默停更是最隐蔽的事故，故独立监控）。
+log "==> 步骤1.8865 V站网关探活 (check_vzhan_gateway.py)"
+set +e
+if have_time 30; then
+  "$PY" check_vzhan_gateway.py
+  _gw_rc=$?
+  if [ "$_gw_rc" -ne 0 ]; then
+    log "!! V站网关探活失败（详情见上方 [网关] 行 / vzhan_gateway_status.json）；已记录，不阻断部署"
+  fi
+else
+  log "!! 剩余时间不足，跳过 V站网关探活（沿用上次状态），优先保证部署"
+fi
+set -e
+
 # ---------- 步骤1.887：模型 vs WhoScored 命中率 A/B 对比（独立分析，零耦合核心数据）----------
 # 把每日 matches.json(同场双预测) + 两套历史(带赛果) 按规范键合并到 ab_compare.json，
 # 算各源独立命中率 + 同场头对头(配对符号检验)。纯分析产物，不入部署指纹，不挤占部署预算。

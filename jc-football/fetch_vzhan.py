@@ -57,6 +57,39 @@ def _txt_list(v):
     return out
 
 
+def _outcome(h, a):
+    """比分方向：主胜 H / 平 D / 客胜 A。"""
+    if h is None or a is None:
+        return None
+    return "H" if h > a else ("A" if a > h else "D")
+
+
+def _final_from_mi(mi, kickoff):
+    """从 report/info 的 match_info 读真实完赛比分；未完赛返回 (None, None)。
+
+    判定「已完赛」：开球时间须已过至少 3 小时(比赛必结束)，避免把未开赛
+    初始化的 0-0 误当赛果。完赛后 V站 的 home_team_score/away_team_score
+    即为真实结果，零跨文件对齐。
+    """
+    if not isinstance(mi, dict) or not kickoff:
+        return None, None
+    try:
+        kt = datetime.datetime.strptime(str(kickoff)[:19], "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return None, None
+    if (datetime.datetime.now() - kt).total_seconds() < 3 * 3600:
+        return None, None
+    hs, aw = mi.get("home_team_score"), mi.get("away_team_score")
+    if hs in (None, "") or aw in (None, ""):
+        return None, None
+    if not str(hs).strip().lstrip("-").isdigit() or not str(aw).strip().lstrip("-").isdigit():
+        return None, None
+    try:
+        return int(hs), int(aw)
+    except Exception:
+        return None, None
+
+
 def fetch_all():
     days = _get("/choose/match/football") or []
     matches = []
@@ -106,6 +139,10 @@ def fetch_all():
                     note = pi.get("analysis") or pi.get("analysi") or ""
                     if note:
                         m["injury_note"] = str(note).strip()[:400]
+                # v1.7.77：原生赛果回填——从 report/info 的 match_info 读真实比分
+                fH, fA = _final_from_mi(rep.get("match_info"), m.get("match_time"))
+                if fH is not None:
+                    m["finalH"], m["finalA"] = fH, fA
             tag = "V站有预测" if m["hasPred"] else "V站无预测"
             print("  %s %s vs %s | %s" % (m["jcNum"], m["home"], m["away"], tag))
             matches.append(m)
@@ -122,7 +159,7 @@ def load_json(path, default):
 
 
 def update_history(matches):
-    """完赛且有预测的场次归档, 供 A/B 命中率统计"""
+    """完赛且有预测的场次归档(含精确命中/方向命中), 供 accuracy_ab 三源对比"""
     hist = load_json(HIST, {"updatedAt": "", "matches": {}})
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     added = 0
@@ -132,45 +169,24 @@ def update_history(matches):
         key = "%s|%s|%s" % (m.get("jcNum") or m.get("date"), m["home"], m["away"])
         if key in hist["matches"]:
             continue
+        fh, fa = m["finalH"], m["finalA"]
+        exact = (m["predH"] == fh and m["predA"] == fa)
+        oc = _outcome(m["predH"], m["predA"]) == _outcome(fh, fa)
         hist["matches"][key] = {
             "jcNum": m.get("jcNum"), "date": m.get("date"),
+            "league": m.get("league"),
             "home": m["home"], "away": m["away"],
             "predH": m["predH"], "predA": m["predA"],
-            "finalH": m.get("finalH"), "finalA": m.get("finalA"),
+            "finalH": fh, "finalA": fa,
+            "exactHit": bool(exact), "outcomeHit": bool(oc),
         }
         added += 1
     hist["updatedAt"] = now
     with open(HIST, "w", encoding="utf-8") as f:
         json.dump(hist, f, ensure_ascii=False, indent=1)
     if added:
-        print("  历史归档 +%d 场 (共 %d)" % (added, len(hist["matches"])))
-
-
-def merge_final_scores(matches):
-    """从 matches.json 读完赛比分, 标记到本场列表(供历史归档)"""
-    try:
-        with open("matches.json", encoding="utf-8") as f:
-            mj = json.load(f)
-        ms = mj.get("matches") if isinstance(mj, dict) else mj
-        idx = {}
-        for it in (ms or []):
-            jc = str(it.get("jcNum") or it.get("num") or "")
-            h = str(it.get("home") or it.get("homeName") or "")
-            a = str(it.get("away") or it.get("awayName") or "")
-            idx[(jc, h, a)] = it
-            idx[(jc,)] = it
-        for m in matches:
-            it = idx.get((m["jcNum"], m["home"], m["away"])) or idx.get((m["jcNum"],))
-            if not it:
-                continue
-            for fh, fa, st in (("finalH", "finalA", "status"), ("homeScore", "awayScore", None)):
-                hv, av = it.get(fh), it.get(fa)
-                if hv is not None and av is not None:
-                    if st is None or str(it.get(st) or "").lower() in ("finished", "end", "完场", "已完赛"):
-                        m["finalH"], m["finalA"] = int(hv), int(av)
-                        break
-    except Exception as e:
-        print("  [warn] 合并完赛比分失败:", str(e)[:80])
+        nh = sum(1 for v in hist["matches"].values() if v.get("exactHit"))
+        print("  历史归档 +%d 场 (共 %d，精确命中 %d)" % (added, len(hist["matches"]), nh))
 
 
 def main():
@@ -178,7 +194,6 @@ def main():
     print("== V站(呼死狗) 竞彩情报抓取 ==")
     matches, total = fetch_all()
     withpred = sum(1 for m in matches if m["hasPred"])
-    merge_final_scores(matches)
     update_history(matches)
     out = {
         "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

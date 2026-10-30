@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-30 05:35:57",
+ "updatedAt": "2026-10-30 12:40:10",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -24974,6 +24974,20 @@
    ],
    "mae": null
   },
+  "vz": {
+   "n": 0,
+   "exact": 0,
+   "dir": 0,
+   "dir_ci": [
+    0.0,
+    0.0
+   ],
+   "exact_ci": [
+    0.0,
+    0.0
+   ],
+   "mae": null
+  },
   "paired_dir": {
    "both_right": 0,
    "both_wrong": 6,
@@ -24990,73 +25004,133 @@
    "ws_only": 2,
    "sign_p_exact": 1.0
   },
+  "pair_mw": {
+   "a": "模型",
+   "b": "WhoScored",
+   "n": 13,
+   "a_dir": 30.8,
+   "b_dir": 30.8,
+   "a_exact": 15.4,
+   "b_exact": 7.7,
+   "both_right": 0,
+   "both_wrong": 5,
+   "a_only_dir": 4,
+   "b_only_dir": 4,
+   "a_only_exact": 2,
+   "b_only_exact": 1,
+   "sign_p_dir": 1.0,
+   "sign_p_exact": 1.0
+  },
+  "pair_mv": {
+   "a": "模型",
+   "b": "V站",
+   "n": 0,
+   "a_dir": 0,
+   "b_dir": 0,
+   "a_exact": 0,
+   "b_exact": 0,
+   "both_right": 0,
+   "both_wrong": 0,
+   "a_only_dir": 0,
+   "b_only_dir": 0,
+   "a_only_exact": 0,
+   "b_only_exact": 0,
+   "sign_p_dir": 1.0,
+   "sign_p_exact": 1.0
+  },
+  "pair_wv": {
+   "a": "WhoScored",
+   "b": "V站",
+   "n": 0,
+   "a_dir": 0,
+   "b_dir": 0,
+   "a_exact": 0,
+   "b_exact": 0,
+   "both_right": 0,
+   "both_wrong": 0,
+   "a_only_dir": 0,
+   "b_only_dir": 0,
+   "a_only_exact": 0,
+   "b_only_exact": 0,
+   "sign_p_dir": 1.0,
+   "sign_p_exact": 1.0
+  },
+  "three_way_n": 0,
   "by_league": {
-   "德甲": {
-    "n": 6,
-    "m_oc": 1,
-    "w_oc": 1,
-    "both": 0,
-    "m_only": 1,
-    "w_only": 1
-   },
-   "西甲": {
-    "n": 2,
-    "m_oc": 1,
-    "w_oc": 1,
-    "both": 0,
-    "m_only": 1,
-    "w_only": 1
-   },
-   "荷甲": {
-    "n": 2,
-    "m_oc": 0,
-    "w_oc": 2,
-    "both": 0,
-    "m_only": 0,
-    "w_only": 2
+   "巴甲": {
+    "n": 289,
+    "m_oc": 135,
+    "w_oc": 0,
+    "v_oc": 0
    },
    "英冠": {
-    "n": 1,
-    "m_oc": 1,
-    "w_oc": 0,
-    "both": 0,
-    "m_only": 1,
-    "w_only": 0
+    "n": 139,
+    "m_oc": 40,
+    "w_oc": 12,
+    "v_oc": 0
    },
-   "英超": {
-    "n": 1,
-    "m_oc": 1,
-    "w_oc": 0,
-    "both": 0,
-    "m_only": 1,
-    "w_only": 0
-   },
-   "法甲": {
-    "n": 1,
-    "m_oc": 0,
-    "w_oc": 0,
-    "both": 0,
-    "m_only": 0,
-    "w_only": 0
-   },
-   "英联赛杯": {
-    "n": 1,
-    "m_oc": 0,
-    "w_oc": 0,
-    "both": 0,
-    "m_only": 0,
-    "w_only": 0
+   "西甲": {
+    "n": 81,
+    "m_oc": 32,
+    "w_oc": 9,
+    "v_oc": 0
    },
    "意甲": {
-    "n": 1,
+    "n": 76,
+    "m_oc": 24,
+    "w_oc": 12,
+    "v_oc": 0
+   },
+   "荷甲": {
+    "n": 65,
+    "m_oc": 27,
+    "w_oc": 7,
+    "v_oc": 0
+   },
+   "英超": {
+    "n": 63,
+    "m_oc": 17,
+    "w_oc": 8,
+    "v_oc": 0
+   },
+   "葡超": {
+    "n": 54,
+    "m_oc": 18,
+    "w_oc": 2,
+    "v_oc": 0
+   },
+   "法甲": {
+    "n": 54,
+    "m_oc": 17,
+    "w_oc": 3,
+    "v_oc": 0
+   },
+   "德甲": {
+    "n": 43,
+    "m_oc": 14,
+    "w_oc": 5,
+    "v_oc": 0
+   },
+   "英甲": {
+    "n": 36,
     "m_oc": 0,
-    "w_oc": 1,
-    "both": 0,
-    "m_only": 0,
-    "w_only": 1
+    "w_oc": 17,
+    "v_oc": 0
+   },
+   "英乙": {
+    "n": 35,
+    "m_oc": 0,
+    "w_oc": 10,
+    "v_oc": 0
+   },
+   "美职联": {
+    "n": 34,
+    "m_oc": 0,
+    "w_oc": 15,
+    "v_oc": 0
    }
   },
-  "verdict": "无显著差异（打平）",
+  "verdict": "模型 方向命中率最高（43.4%，N=778）；其余 WhoScored 41.8%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
   "total_records": 1148
  }
 }

@@ -47,6 +47,7 @@ from team_map import TEAM_EN2ZH, zh_norm  # noqa: E402
 STORE = os.path.join(HERE, "ab_compare.json")
 MODEL_HIST = os.path.join(HERE, "score_predict_accuracy.json")
 WS_HIST = os.path.join(HERE, "whoscored_history.json")
+VZ_HIST = os.path.join(HERE, "vzhan_history.json")
 MATCHES = os.path.join(HERE, "matches.json")
 
 
@@ -103,6 +104,54 @@ def sign_test_p(k_more, k_less):
                            alternative="two-sided").pvalue)
 
 
+def _pairwise(recs, sa, sb):
+    """两源同场头对头：两源都有预测且已完赛的场次，统计谁更准。"""
+    paired = [r for r in recs.values()
+              if r.get(sa) and r.get(sb) and r.get("act")
+              and r["act"].get("h") is not None
+              and r[sa].get("exactHit") is not None
+              and r[sb].get("exactHit") is not None]
+    n = len(paired)
+    a_ex = a_oc = b_ex = b_oc = 0
+    both_right = both_wrong = a_only_dir = b_only_dir = 0
+    a_ex_only = b_ex_only = 0
+    for r in paired:
+        ah = r[sa].get("outcomeHit"); bh = r[sb].get("outcomeHit")
+        ae = r[sa].get("exactHit"); be = r[sb].get("exactHit")
+        a_oc += 1 if ah else 0
+        b_oc += 1 if bh else 0
+        a_ex += 1 if ae else 0
+        b_ex += 1 if be else 0
+        if ah and bh:
+            both_right += 1
+        elif (not ah) and (not bh):
+            both_wrong += 1
+        elif ah and not bh:
+            a_only_dir += 1
+        elif bh and not ah:
+            b_only_dir += 1
+        if ae and not be:
+            a_ex_only += 1
+        elif be and not ae:
+            b_ex_only += 1
+    p_dir = sign_test_p(a_only_dir, b_only_dir)
+    p_ex = sign_test_p(a_ex_only, b_ex_only)
+    lab = {"model": "模型", "ws": "WhoScored", "vz": "V站"}
+    return {
+        "a": lab.get(sa, sa), "b": lab.get(sb, sb),
+        "n": n,
+        "a_dir": round(100 * a_oc / n, 1) if n else 0,
+        "b_dir": round(100 * b_oc / n, 1) if n else 0,
+        "a_exact": round(100 * a_ex / n, 1) if n else 0,
+        "b_exact": round(100 * b_ex / n, 1) if n else 0,
+        "both_right": both_right, "both_wrong": both_wrong,
+        "a_only_dir": a_only_dir, "b_only_dir": b_only_dir,
+        "a_only_exact": a_ex_only, "b_only_exact": b_ex_only,
+        "sign_p_dir": round(p_dir, 4) if p_dir is not None else None,
+        "sign_p_exact": round(p_ex, 4) if p_ex is not None else None,
+    }
+
+
 # ----------------------------- 库读写 -----------------------------
 def load_store():
     try:
@@ -137,7 +186,7 @@ def _merge_act(rec, ah, aa):
     act = rec.get("act") or {}
     if act.get("h") is None and ah is not None:
         rec["act"] = {"h": ah, "a": aa}
-        for src in ("ws", "model"):
+        for src in ("ws", "model", "vz"):
             _eval_source(rec, src)
 
 
@@ -189,6 +238,29 @@ def ingest_histories(store):
         _merge_act(r, x.get("actH"), x.get("actA"))
         if "ws_hist" not in r["sources"]:
             r["sources"].append("ws_hist")
+        recs[k] = r
+        added += 1
+
+    # --- V站·呼死狗 历史（v1.7.77 新增第三源）---
+    try:
+        vh = json.load(open(VZ_HIST, encoding="utf-8")).get("matches", {})
+    except Exception:
+        vh = {}
+    for x in vh.values():
+        if x.get("finalH") is None:
+            continue
+        k = kstr(x.get("date"), x.get("home"), x.get("away"))
+        r = recs.get(k) or {"date": x.get("date"), "league": x.get("league"),
+                            "home": x.get("home"), "away": x.get("away"),
+                            "jcNum": x.get("jcNum"), "ws": None, "model": None,
+                            "vz": None, "act": None, "sources": []}
+        r["vz"] = {"h": x.get("predH"), "a": x.get("predA"),
+                   "exactHit": x.get("exactHit"), "outcomeHit": x.get("outcomeHit")}
+        if x.get("jcNum"):
+            r["jcNum"] = x.get("jcNum")
+        _merge_act(r, x.get("finalH"), x.get("finalA"))
+        if "vz_hist" not in r["sources"]:
+            r["sources"].append("vz_hist")
         recs[k] = r
         added += 1
     return added
@@ -247,7 +319,11 @@ def compute(store):
                 "exact_ci": [round(lo_e, 1), round(hi_e, 1)],
                 "mae": round(sum(maes) / len(maes), 2) if maes else None}
 
-    # 同场配对
+    model = per_source("model")
+    ws = per_source("ws")
+    vz = per_source("vz")
+
+    # 同场配对（模型 vs WhoScored，保留向后兼容）
     paired = [r for r in recs.values()
               if r.get("ws") and r.get("model") and r.get("act")
               and r["act"].get("h") is not None]
@@ -277,38 +353,52 @@ def compute(store):
     p_dir = sign_test_p(model_only, ws_only)
     p_ex = sign_test_p(m_ex_only, w_ex_only)
 
-    # 联赛维度（配对子集）
-    by_league = defaultdict(lambda: {"n": 0, "m_oc": 0, "w_oc": 0,
-                                     "both": 0, "m_only": 0, "w_only": 0})
-    for r in paired:
+    # 三源两两配对（v1.7.77 新增 V站）
+    pair_mw = _pairwise(recs, "model", "ws")
+    pair_mv = _pairwise(recs, "model", "vz")
+    pair_wv = _pairwise(recs, "ws", "vz")
+    # 三源同场（三者皆有预测且完赛）
+    trip = [r for r in recs.values()
+            if r.get("model") and r.get("ws") and r.get("vz") and r.get("act")
+            and r["act"].get("h") is not None
+            and all(r[s].get("exactHit") is not None for s in ("model", "ws", "vz"))]
+    trip_n = len(trip)
+
+    # 联赛维度（三源方向命中累加，v1.7.77 含 V站）
+    by_league = defaultdict(lambda: {"n": 0, "m_oc": 0, "w_oc": 0, "v_oc": 0})
+    for r in recs.values():
+        if not (r.get("act") and r["act"].get("h") is not None):
+            continue
         lg = r.get("league") or "未知"
         d = by_league[lg]
         d["n"] += 1
-        mh = r["model"].get("outcomeHit"); wh_ = r["ws"].get("outcomeHit")
-        d["m_oc"] += 1 if mh else 0
-        d["w_oc"] += 1 if wh_ else 0
-        if mh and wh_:
-            d["both"] += 1
-        elif mh and not wh_:
-            d["m_only"] += 1
-        elif wh_ and not mh:
-            d["w_only"] += 1
+        if r.get("model") and r["model"].get("outcomeHit"):
+            d["m_oc"] += 1
+        if r.get("ws") and r["ws"].get("outcomeHit"):
+            d["w_oc"] += 1
+        if r.get("vz") and r["vz"].get("outcomeHit"):
+            d["v_oc"] += 1
 
-    # 结论
-    if n and p_dir is not None:
-        if model_only > ws_only and p_dir < 0.05:
-            verdict = "模型显著更优"
-        elif ws_only > model_only and p_dir < 0.05:
-            verdict = "WhoScored 显著更优"
-        else:
-            verdict = "无显著差异（打平）"
+    # 结论（三源方向命中率对比，配对符号检验判定显著性）
+    rates = [("模型", model["dir"], model["n"]),
+             ("WhoScored", ws["dir"], ws["n"]),
+             ("V站", vz["dir"], vz["n"])]
+    valid = [x for x in rates if x[2] >= 10]
+    if not valid:
+        verdict = "样本不足（各源需≥10场完赛对比才能下结论）"
     else:
-        verdict = "样本不足"
+        best = max(valid, key=lambda x: x[1])
+        others = " / ".join("%s %.1f%%" % (o[0], o[1])
+                            for o in valid if o[0] != best[0])
+        verdict = ("%s 方向命中率最高（%.1f%%，N=%d）；其余 %s。"
+                   "显著性以配对符号检验 p 值判定，详见下方三两配对。"
+                   % (best[0], best[1], best[2], others))
 
     return {
         "paired_n": n,
-        "model": per_source("model"),
-        "ws": per_source("ws"),
+        "model": model,
+        "ws": ws,
+        "vz": vz,
         "paired_dir": {
             "both_right": both_right, "both_wrong": both_wrong,
             "model_only": model_only, "ws_only": ws_only,
@@ -322,6 +412,8 @@ def compute(store):
             "model_only": m_ex_only, "ws_only": w_ex_only,
             "sign_p_exact": round(p_ex, 4) if p_ex is not None else None,
         },
+        "pair_mw": pair_mw, "pair_mv": pair_mv, "pair_wv": pair_wv,
+        "three_way_n": trip_n,
         "by_league": {k: v for k, v in sorted(
             by_league.items(), key=lambda kv: -kv[1]["n"])[:12]},
         "verdict": verdict,
@@ -337,22 +429,25 @@ def report(store):
         return
     line = "=" * 64
     print(line)
-    print("       模型 vs WhoScored  命中率 A/B 对比")
+    print("       模型 vs WhoScored vs V站  命中率 A/B/C 对比")
     print("       更新时间 %s | 累加库总场次 %d" % (store.get("updatedAt"),
                                                   s.get("total_records", 0)))
     print(line)
-    m, w = s["model"], s["ws"]
+    m, w, v = s["model"], s["ws"], s["vz"]
     print("\n【各源独立命中率】（带赛果场次）")
     print("  %-10s %8s %10s %10s %12s" % ("数据源", "样本N", "方向命中", "精确命中", "平均MAE"))
     print("  %-10s %8d %9.1f%% %9.1f%% %12s" %
           ("模型", m["n"], m["dir"], m["exact"], (str(m["mae"]) if m["mae"] else "-")))
     print("  %-10s %8d %9.1f%% %9.1f%% %12s" %
           ("WhoScored", w["n"], w["dir"], w["exact"], "-"))
-    print("  方向95%%CI  模型[%s]  WS[%s]" %
-          (",".join(map(str, m["dir_ci"])), ",".join(map(str, w["dir_ci"]))))
+    print("  %-10s %8d %9.1f%% %9.1f%% %12s" %
+          ("V站·呼死狗", v["n"], v["dir"], v["exact"], "-"))
+    print("  方向95%%CI  模型[%s]  WS[%s]  V站[%s]" %
+          (",".join(map(str, m["dir_ci"])), ",".join(map(str, w["dir_ci"])),
+           ",".join(map(str, v["dir_ci"]))))
 
     pd = s["paired_dir"]
-    print("\n【同场头对头】（两源都有预测且已完赛，N=%d）" % s["paired_n"])
+    print("\n【同场头对头 模型 vs WhoScored】（两源都有预测且已完赛，N=%d）" % s["paired_n"])
     print("  模型方向命中 %.1f%% | WhoScored方向命中 %.1f%%" %
           (pd["model_dir"], pd["ws_dir"]))
     print("  两者都对 %d | 都错 %d | 仅模型对 %d | 仅WS对 %d" %
@@ -363,13 +458,30 @@ def report(store):
           (pe["model_exact"], pe["ws_exact"], pe["model_only"], pe["ws_only"],
            pe["sign_p_exact"]))
 
-    print("\n【联赛维度（配对方向命中）】")
+    def _pp(title, p):
+        if not p.get("n"):
+            print("\n【%s】 样本不足（N=0）" % title)
+            return
+        print("\n【%s】（N=%d）" % (title, p["n"]))
+        print("  %s方向命中 %.1f%% | %s方向命中 %.1f%%" %
+              (p["a"], p["a_dir"], p["b"], p["b_dir"]))
+        print("  两者都对 %d | 都错 %d | 仅%s对 %d | 仅%s对 %d" %
+              (p["both_right"], p["both_wrong"], p["a"], p["a_only_dir"],
+               p["b"], p["b_only_dir"]))
+        print("  方向差异符号检验 p=%s" % p["sign_p_dir"])
+
+    _pp("同场头对头 模型 vs V站", s["pair_mv"])
+    _pp("同场头对头 WhoScored vs V站", s["pair_wv"])
+    if s.get("three_way_n"):
+        print("  三源同场都有预测且完赛：%d 场" % s["three_way_n"])
+
+    print("\n【联赛维度（方向命中）】")
     for lg, d in s.get("by_league", {}).items():
         if d["n"] < 3:
             continue
-        print("  %-8s N=%-3d 模型%.0f%% WS%.0f%%  都对%d/仅模%d/仅WS%d" %
+        print("  %-8s N=%-3d 模型%.0f%% WS%.0f%% V站%.0f%%" %
               (lg, d["n"], 100 * d["m_oc"] / d["n"], 100 * d["w_oc"] / d["n"],
-               d["both"], d["m_only"], d["w_only"]))
+               100 * d["v_oc"] / d["n"]))
 
     print("\n【结论】 %s" % s["verdict"])
     print(line)
