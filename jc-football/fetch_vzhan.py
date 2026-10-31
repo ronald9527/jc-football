@@ -69,6 +69,64 @@ def _outcome(h, a):
     return "H" if h > a else ("A" if a > h else "D")
 
 
+# 高信心口径（与前端 vzConfidence 完全一致）：V站 预测方向 == 模型(Poisson) 预测方向。
+# V站接口本身无「信心/星级」字段，故采用多源共识；该标记在「赛果回填」时一并
+# 归档，使赛后回溯能还原「这场当时是否高信心」，对高信心场次的命中率做独立验证。
+_MODEL_PREDS = None  # 懒加载缓存：[(jcNum, home, away, (h,a))]
+
+
+def _load_model_preds():
+    """从竞彩 matches.json 读取模型预测，供高信心判定（fetch_vzhan 在 fetch_daily
+    之后运行，matches.json 已含 modelPred）。"""
+    global _MODEL_PREDS
+    if _MODEL_PREDS is not None:
+        return _MODEL_PREDS
+    out = []
+    try:
+        with open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                               "matches.json"), encoding="utf-8") as f:
+            data = json.load(f)
+        for m in data.get("matches", []):
+            mp = m.get("modelPred") or {}
+            if mp.get("h") is None or mp.get("a") is None:
+                continue
+            out.append((m.get("num"), m.get("home"), m.get("away"),
+                        (int(mp["h"]), int(mp["a"]))))
+    except Exception as e:
+        print("  [warn] 读取 matches.json 模型预测失败: %s" % e)
+    _MODEL_PREDS = out
+    return out
+
+
+def _match_model_pred(jc_num, home, away):
+    """按竞彩编号优先、队名兜底匹配模型预测，返回 (h,a) 或 None。"""
+    preds = _load_model_preds()
+    for jn, h, a, pa in preds:
+        if jc_num and jn and jn == jc_num:
+            return pa
+    for jn, h, a, pa in preds:
+        if h and a and home and away and (h == home and a == away):
+            return pa
+    return None
+
+
+def vz_high_conf(pred_h, pred_a, final_h, final_a, jc_num, home, away):
+    """判定该 V站 预测当时是否「高信心」（多源共识）。
+
+    返回 (bool_high, why)。仅当 V站 与模型 方向一致时为真；方向与赛果无关，
+    因此即使尚未完赛也可判定（回填时即此刻快照）。"""
+    vo = _outcome(pred_h, pred_a)
+    if vo is None:
+        return False, ""
+    mp = _match_model_pred(jc_num, home, away)
+    if not mp:
+        return False, ""
+    mo = _outcome(mp[0], mp[1])
+    if mo and mo == vo:
+        return True, "V站·模型 方向共识"
+    return False, ""
+
+
 def _final_from_mi(mi, kickoff):
     """从 report/info 的 match_info 读真实完赛比分；未完赛返回 (None, None)。
 
@@ -177,6 +235,8 @@ def update_history(matches):
         fh, fa = m["finalH"], m["finalA"]
         exact = (m["predH"] == fh and m["predA"] == fa)
         oc = _outcome(m["predH"], m["predA"]) == _outcome(fh, fa)
+        hc, why = vz_high_conf(m["predH"], m["predA"], fh, fa,
+                               m.get("jcNum"), m["home"], m["away"])
         hist["matches"][key] = {
             "jcNum": m.get("jcNum"), "date": m.get("date"),
             "league": m.get("league"),
@@ -184,6 +244,7 @@ def update_history(matches):
             "predH": m["predH"], "predA": m["predA"],
             "finalH": fh, "finalA": fa,
             "exactHit": bool(exact), "outcomeHit": bool(oc),
+            "highConf": bool(hc), "confWhy": why,
         }
         added += 1
     hist["updatedAt"] = now
