@@ -1,18 +1,18 @@
 {
-  "updatedAt": "2026-10-30 19:04:20",
+  "updatedAt": "2026-10-31 12:13:24",
   "stats": {
     "史密斯": {
       "expert": "史密斯",
       "total": 2,
-      "judged": 1,
+      "judged": 2,
       "hits": 1,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 100.0,
-      "recent10Rate": 100.0,
-      "streak": 1,
-      "score": 12,
-      "streakBonus": 2,
+      "miss": 1,
+      "pending": 0,
+      "hitRate": 50.0,
+      "recent10Rate": 50.0,
+      "streak": 0,
+      "score": 7,
+      "streakBonus": 0,
       "isNew": true,
       "recent": [
         {
@@ -20,8 +20,8 @@
           "home": "尼斯",
           "away": "雷恩",
           "recommend": "客胜",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "5:2"
         },
         {
           "date": "2026-10-27",
@@ -36,15 +36,15 @@
     "工体博哥": {
       "expert": "工体博哥",
       "total": 2,
-      "judged": 1,
-      "hits": 0,
+      "judged": 2,
+      "hits": 1,
       "miss": 1,
-      "pending": 1,
-      "hitRate": 0.0,
-      "recent10Rate": 0.0,
-      "streak": 0,
-      "score": -3,
-      "streakBonus": 0,
+      "pending": 0,
+      "hitRate": 50.0,
+      "recent10Rate": 50.0,
+      "streak": 1,
+      "score": 9,
+      "streakBonus": 2,
       "isNew": true,
       "recent": [
         {
@@ -52,8 +52,8 @@
           "home": "博德闪耀",
           "away": "维京",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "3:2"
         },
         {
           "date": "2026-10-27",
@@ -68,15 +68,15 @@
     "布海东": {
       "expert": "布海东",
       "total": 2,
-      "judged": 1,
-      "hits": 1,
+      "judged": 2,
+      "hits": 2,
       "miss": 0,
-      "pending": 1,
+      "pending": 0,
       "hitRate": 100.0,
       "recent10Rate": 100.0,
-      "streak": 1,
-      "score": 12,
-      "streakBonus": 2,
+      "streak": 2,
+      "score": 24,
+      "streakBonus": 4,
       "isNew": true,
       "recent": [
         {
@@ -84,8 +84,8 @@
           "home": "勒阿弗尔",
           "away": "巴黎圣日尔曼",
           "recommend": "客胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "1:5"
         },
         {
           "date": "2026-10-27",
@@ -100,14 +100,14 @@
     "航哥": {
       "expert": "航哥",
       "total": 2,
-      "judged": 1,
+      "judged": 2,
       "hits": 0,
-      "miss": 1,
-      "pending": 1,
+      "miss": 2,
+      "pending": 0,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
-      "score": -3,
+      "score": -6,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
@@ -116,8 +116,8 @@
           "home": "比利亚雷亚尔",
           "away": "西班牙人",
           "recommend": "让胜",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "0:1"
         },
         {
           "date": "2026-10-27",
@@ -236,15 +236,15 @@
     "宋昭毅": {
       "expert": "宋昭毅",
       "total": 2,
-      "judged": 1,
+      "judged": 2,
       "hits": 1,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 100.0,
-      "recent10Rate": 100.0,
-      "streak": 1,
-      "score": 12,
-      "streakBonus": 2,
+      "miss": 1,
+      "pending": 0,
+      "hitRate": 50.0,
+      "recent10Rate": 50.0,
+      "streak": 0,
+      "score": 7,
+      "streakBonus": 0,
       "isNew": true,
       "recent": [
         {
@@ -252,8 +252,8 @@
           "home": "谢菲尔德联",
           "away": "雷克斯汉姆",
           "recommend": "客胜/平局",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "1:0"
         },
         {
           "date": "2026-10-27",
@@ -396,14 +396,14 @@
     "中.誉": {
       "expert": "中.誉",
       "total": 1,
-      "judged": 0,
+      "judged": 1,
       "hits": 0,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 0,
-      "recent10Rate": 0,
+      "miss": 1,
+      "pending": 0,
+      "hitRate": 0.0,
+      "recent10Rate": 0.0,
       "streak": 0,
-      "score": 0,
+      "score": -3,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
@@ -412,46 +412,22 @@
           "home": "福伦丹",
           "away": "格拉夫夏普",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
-        }
-      ]
-    },
-    "王子星": {
-      "expert": "王子星",
-      "total": 1,
-      "judged": 0,
-      "hits": 0,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 0,
-      "recent10Rate": 0,
-      "streak": 0,
-      "score": 0,
-      "streakBonus": 0,
-      "isNew": true,
-      "recent": [
-        {
-          "date": "2026-10-30",
-          "home": "福伦丹",
-          "away": "格拉夫夏普",
-          "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "1:2"
         }
       ]
     },
     "绿茵七号位": {
       "expert": "绿茵七号位",
       "total": 1,
-      "judged": 0,
+      "judged": 1,
       "hits": 0,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 0,
-      "recent10Rate": 0,
+      "miss": 1,
+      "pending": 0,
+      "hitRate": 0.0,
+      "recent10Rate": 0.0,
       "streak": 0,
-      "score": 0,
+      "score": -3,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
@@ -460,23 +436,23 @@
           "home": "里尔",
           "away": "朗斯",
           "recommend": "让负",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "1:0"
         }
       ]
     },
     "罗辑": {
       "expert": "罗辑",
       "total": 1,
-      "judged": 0,
-      "hits": 0,
+      "judged": 1,
+      "hits": 1,
       "miss": 0,
-      "pending": 1,
-      "hitRate": 0,
-      "recent10Rate": 0,
-      "streak": 0,
-      "score": 0,
-      "streakBonus": 0,
+      "pending": 0,
+      "hitRate": 100.0,
+      "recent10Rate": 100.0,
+      "streak": 1,
+      "score": 12,
+      "streakBonus": 2,
       "isNew": true,
       "recent": [
         {
@@ -484,8 +460,8 @@
           "home": "科林蒂安",
           "away": "米拉索尔",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:0"
         }
       ]
     }

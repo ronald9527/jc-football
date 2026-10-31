@@ -1751,9 +1751,10 @@ def main():
                   f, ensure_ascii=False, indent=1)
     print(f"  已写入 {out}（{len(matches)} 场）与 {hist_path}（{len(records)} 条）", flush=True)
 
-    # [7/6] 高手推荐生成（仅16:00-21:00抓取，其他时间跳过）
-    _now_hour = time.localtime().tm_hour
-    if 16 <= _now_hour <= 21:
+    # [7/6] 高手推荐生成（北京时间 08:00-23:00 抓取，覆盖专家白天发文；深夜跳过）
+    # 注意：CI runner 时区为 UTC，必须用 gmtime+8 算北京时间，不能依赖 time.localtime()
+    _now_hour = (time.gmtime().tm_hour + 8) % 24
+    if 8 <= _now_hour <= 23:
         try:
             print("[7/6] 高手推荐生成...", flush=True)
             import fetch_expert
@@ -1761,7 +1762,7 @@ def main():
         except Exception as e:
             print(f"  高手推荐生成失败：{e}", flush=True)
     else:
-        print(f"[7/6] 高手推荐跳过（当前{_now_hour}点，仅16:00-21:00抓取）", flush=True)
+        print(f"[7/6] 高手推荐跳过（当前北京时间{_now_hour}点，仅08:00-23:00抓取）", flush=True)
 
     return matches
 
@@ -5221,9 +5222,9 @@ if __name__ == "__main__":
         traceback.print_exc()
         print(f"\n[致命] fetch_daily.py 执行异常: {e}", flush=True)
         sys.exit(1)
-    # 抓取高手推荐（92玩球易红单）：仅16:00-21:00每小时抓取
-    current_hour = time.localtime().tm_hour
-    if 16 <= current_hour <= 21:
+    # 抓取高手推荐（92玩球易红单）：北京时间 08:00-23:00 抓取（CI 为 UTC，用 gmtime+8）
+    current_hour = (time.gmtime().tm_hour + 8) % 24
+    if 8 <= current_hour <= 23:
         print("\n[7/7] 抓取高手推荐...", flush=True)
         try:
             from fetch_expert import main as expert_main
@@ -5231,4 +5232,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"  高手推荐抓取失败: {e}", flush=True)
     else:
-        print(f"\n[7/7] 跳过高手推荐抓取（当前{current_hour}:00，仅16:00-21:00抓取）", flush=True)
+        print(f"\n[7/7] 跳过高手推荐抓取（当前北京时间{current_hour}:00，仅08:00-23:00抓取）", flush=True)

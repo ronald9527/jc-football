@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-30 14:13:55",
+ "updatedAt": "2026-10-31 12:14:25",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -28473,8 +28473,8 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 2,
+    "h": 1,
+    "a": 1,
     "exactHit": null,
     "outcomeHit": null,
     "mae": null
@@ -28489,6 +28489,443 @@
    "league": "德甲",
    "home": "法兰克福",
    "away": "汉堡",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"冈山绿雉\", \"东京FC\"]": {
+   "date": "2026-10-31",
+   "league": "日职",
+   "home": "冈山绿雉",
+   "away": "东京FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"仙台七夕\", \"大宫松鼠RB\"]": {
+   "date": "2026-10-31",
+   "league": "日乙",
+   "home": "仙台七夕",
+   "away": "大宫松鼠RB",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"柏太阳神\", \"浦和红钻\"]": {
+   "date": "2026-10-31",
+   "league": "日职",
+   "home": "柏太阳神",
+   "away": "浦和红钻",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"光州FC\", \"金泉尚武\"]": {
+   "date": "2026-10-31",
+   "league": "韩职",
+   "home": "光州FC",
+   "away": "金泉尚武",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"麦克阿瑟FC\", \"西悉尼流浪者\"]": {
+   "date": "2026-10-31",
+   "league": "澳超",
+   "home": "麦克阿瑟FC",
+   "away": "西悉尼漫步者",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-10-31\", \"切尔西\", \"曼联\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "切尔西",
+   "away": "曼彻斯特联",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"长崎航海\", \"东京绿茵\"]": {
+   "date": "2026-11-01",
+   "league": "日职",
+   "home": "长崎航海",
+   "away": "东京绿茵",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"首尔FC\", \"仁川联\"]": {
+   "date": "2026-11-01",
+   "league": "韩职",
+   "home": "首尔FC",
+   "away": "仁川联",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"珀斯光荣\", \"阿德莱德联\"]": {
+   "date": "2026-11-01",
+   "league": "澳超",
+   "home": "珀斯光荣",
+   "away": "阿德莱德联",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"兹沃勒\", \"海牙\"]": {
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "兹沃勒",
+   "away": "海牙",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"科莫\", \"威尼斯\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "科莫",
+   "away": "威尼斯",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"赫塔费\", \"塞维利亚\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "赫塔费",
+   "away": "塞维利亚",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"SBV精英\", \"特温特\"]": {
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "SBV精英",
+   "away": "特温特",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"拉齐奥\", \"卡利亚里\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "拉齐奥",
+   "away": "卡利亚里",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"格罗宁根\", \"鹿特丹斯巴达\"]": {
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "格罗宁根",
+   "away": "鹿特丹斯巴达",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"利物浦\", \"阿森纳\"]": {
+   "date": "2026-11-01",
+   "league": "英超",
+   "home": "利物浦",
+   "away": "阿森纳",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"埃尔切\", \"巴伦西亚\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "埃尔切",
+   "away": "巴伦西亚",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"维塞乌\", \"里奥阿维\"]": {
+   "date": "2026-11-01",
+   "league": "葡超",
+   "home": "维塞乌",
+   "away": "里奥阿维",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"尤文图斯\", \"那不勒斯\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "尤文图斯",
+   "away": "那不勒斯",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"马赛\", \"图卢兹\"]": {
+   "date": "2026-11-01",
+   "league": "法甲",
+   "home": "马赛",
+   "away": "图卢兹",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-01\", \"毕尔巴鄂竞技\", \"皇家社会\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "毕尔巴鄂竞技",
+   "away": "皇家社会",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"国际图尔库\", \"赫尔辛基火花\"]": {
+   "date": "2026-11-02",
+   "league": "芬超",
+   "home": "国际图尔库",
+   "away": "赫尔辛基火花",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"纽卡斯尔联\", \"埃弗顿\"]": {
+   "date": "2026-11-02",
+   "league": "英超",
+   "home": "纽卡斯尔联",
+   "away": "埃弗顿",
    "jcNum": null,
    "ws": null,
    "model": {
@@ -28691,6 +29128,6 @@
    }
   },
   "verdict": "模型 方向命中率最高（43.5%，N=793）；其余 WhoScored 41.8% / V站 41.8%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
-  "total_records": 1178
+  "total_records": 1201
  }
 }
