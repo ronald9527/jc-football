@@ -134,6 +134,12 @@ header{
 }
 .hbtn:hover{color:var(--text);border-color:var(--accent)}
 .hbtn.on{color:var(--accent);border-color:var(--accent);background:var(--accent-dim)}
+/* 手动「重新抓取」按钮：醒目琥珀色，区别于只重载本页的「最新数据」 */
+.hbtn-repull{color:#1a1300;background:#ffb300;border-color:#ffb300;font-weight:700;box-shadow:0 0 0 1px rgba(255,179,0,.4)}
+.hbtn-repull:hover{color:#1a1300;border-color:#ffca28;background:#ffc107}
+.hbtn-repull[disabled]{opacity:.65;cursor:progress}
+.hbtn-repull .spin{display:inline-block;animation:jcspin 1s linear infinite}
+@keyframes jcspin{to{transform:rotate(360deg)}}
 /* ============ 主区 ============ */
 main{max-width:1500px;margin:0 auto;padding:14px 16px 40px}
 .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
@@ -1275,6 +1281,10 @@ footer b{color:var(--sub)}
         <svg class="ico" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>最新数据</span>
       </button>
+      <button class="hbtn hbtn-repull" id="rePullBtn" title="手动触发云端重新抓取全部数据并重新部署（真正刷新，非仅重载本页）">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>重新抓取</span>
+      </button>
       <button class="hbtn" id="themeBtn" title="切换深浅主题">
         <svg class="ico" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         <span>主题</span>
@@ -1729,8 +1739,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.87";
+const VERSION = "v1.7.89";
 const CHANGELOG = [
+  {
+    version: "v1.7.88",
+    date: "2026-10-31",
+    title: "手动「重新抓取」按钮（真正刷新，自动→手动可控）",
+    details: [
+      "顶部新增醒目琥珀色「重新抓取」按钮：点击即触发云端流水线重新抓取全部数据源（竞彩/V站/高手推荐/赔率/赛果）并重新部署，解决「一直不自动刷新」的痛点",
+      "实现：前端按钮 → Cloudflare Pages 函数 /api/refresh（服务端持有 GitHub PAT，不进前端/代码）→ 触发 GitHub Actions daily.yml 工作流 → 完整 fetch+构建+部署",
+      "点击后实时轮询任务进度（抓取中 Ns → 完成），成功后自动重载页面拿到新数据；失败/超时给出明确提示可重试",
+      "与原有「最新数据」按钮区分：后者仅重载本页已部署数据，前者才是真正拉新；PAT 以 Pages 项目密钥(secret)安全注入，浏览器端不可见"
+    ]
+  },
   {
     version: "v1.7.86",
     date: "2026-10-31",
@@ -7282,6 +7303,72 @@ $("#freshBtn").addEventListener("click", ()=>{
   try{ if(window.AndroidSync && AndroidSync.syncNow) AndroidSync.syncNow(bust); }catch(e){}
   refreshRealtimeData(true);
 });
+/* ---------- 手动「重新抓取全部数据」：触发云端流水线 ---------- */
+function jcToast(msg, ms, bad){
+  const t = document.getElementById("toast");
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add("show");
+  if(bad) t.style.borderColor = "var(--bad)";
+  clearTimeout(window.__jcToastT);
+  window.__jcToastT = setTimeout(()=>{ t.classList.remove("show"); t.style.borderColor=""; }, ms||3500);
+}
+var __rePullTimer = null;
+function triggerRePull(){
+  const btn = document.getElementById("rePullBtn");
+  if(!btn || btn.disabled) return;
+  const orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⟳</span><span>触发中…</span>';
+  jcToast("正在触发云端重新抓取…", 2500);
+  fetch("/api/refresh", {method:"POST", cache:"no-store"})
+    .then(r=>r.json().then(d=>({status:r.status, d})))
+    .then(({status, d})=>{
+      if(!d.ok){
+        btn.disabled=false; btn.innerHTML=orig;
+        jcToast("触发失败：" + (d.error||("HTTP "+status)) + "（可重试）", 6000, true);
+        return;
+      }
+      const runId = d.runId, started = Date.now();
+      jcToast("✅ 已触发！云端正在重新抓取并部署（约1-4分钟，完成自动重载）", 7000);
+      if(!runId){
+        setTimeout(()=>location.reload(), 240000);
+        return;
+      }
+      const next = ()=>{
+        if(Date.now()-started > 8*60*1000){
+          btn.disabled=false; btn.innerHTML=orig;
+          jcToast("抓取耗时较长，请手动刷新本页查看结果", 7000, true);
+          return;
+        }
+        __rePullTimer = setTimeout(poll, 12000);
+      };
+      const poll = ()=>{
+        fetch("/api/refresh?run_id="+encodeURIComponent(runId)+"&_t="+Date.now(), {cache:"no-store"})
+          .then(r=>r.json()).then(s=>{
+            if(!s.ok){ next(); return; }
+            if(s.status==="completed"){
+              if(s.conclusion==="success"){
+                jcToast("🎉 抓取完成，正在重新加载…", 3000);
+                setTimeout(()=>location.reload(), 1200);
+                return;
+              }
+              btn.disabled=false; btn.innerHTML=orig;
+              jcToast("云端任务失败("+s.conclusion+")，请稍后重试", 7000, true);
+              return;
+            }
+            btn.innerHTML = '<span class="spin">⟳</span><span>抓取中 '+Math.floor((Date.now()-started)/1000)+'s</span>';
+            next();
+          }).catch(()=>next());
+      };
+      next();
+    })
+    .catch(()=>{
+      btn.disabled=false; btn.innerHTML=orig;
+      jcToast("无法连接刷新服务，请检查网络后重试", 6000, true);
+    });
+}
+$("#rePullBtn").addEventListener("click", triggerRePull);
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
 $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("#freshMask").classList.remove("show"); });
 /* 每2分钟实时刷新数据（直接fetch matches.json，不刷新页面）；每5分钟检测版本 */
