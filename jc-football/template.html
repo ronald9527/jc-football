@@ -561,6 +561,10 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-league-tag{font-size:10px;font-weight:700;color:#ef5350;background:rgba(211,47,47,.14);border:1px solid rgba(211,47,47,.4);border-radius:7px;padding:1px 7px;white-space:nowrap}
 .vz-acc{display:inline-block;font-size:10px;font-weight:700;color:#ef5350;background:rgba(211,47,47,.1);border:1px solid rgba(211,47,47,.32);border-radius:8px;padding:2px 8px;margin-left:6px}
 .vz-acc.vz-acc-pending{color:var(--sub);background:var(--line);border-color:var(--line)}
+/* v1.7.86：V站「高信心」标识（多源共识：V站·模型方向一致） */
+.vz-hot{border-color:#ffb300 !important;border-left:3px solid #ffb300 !important;background:rgba(255,179,0,.08) !important}
+.vz-conf{display:inline-block;margin-left:6px;font-size:10px;font-weight:800;color:#1a1300;background:#ffb300;border-radius:8px;padding:1px 7px;vertical-align:middle;letter-spacing:.3px}
+.vz-conf-why{font-size:10.5px;color:#c98a00;margin-top:3px}
 .vz-news{margin-top:6px;display:flex;flex-direction:column;gap:4px}
 .vz-li{font-size:12px;line-height:1.55;color:var(--sub);display:flex;gap:6px;align-items:flex-start}
 .vz-tag{flex:0 0 auto;display:inline-block;width:16px;height:16px;line-height:16px;text-align:center;border-radius:4px;font-size:10px;font-weight:700;color:#fff;margin-top:1px}
@@ -1725,8 +1729,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.85";
+const VERSION = "v1.7.87";
 const CHANGELOG = [
+  {
+    version: "v1.7.86",
+    date: "2026-10-31",
+    title: "V站比分推荐·高信心提示（多源共识口径）",
+    details: [
+      "新增「🔥高信心」标识：V站 预测方向 与 模型预测方向一致时标为高信心（数据源 report/info 仅返回比分、无信心字段，且 V站 综合方向命中率仅~41.8% 近随机，故采用多源共识口径）",
+      "主力竞彩 Tab 的 V站 比分卡：高信心加 🔥高信心 徽标 + 金色高亮边框，并注明依据（V站·模型 方向共识）",
+      "V站·呼死狗情报独立分区：高信心比赛自动置顶，新增「🔥只看高信心(N)」过滤按钮，每张高信心卡加徽标+金色高亮",
+      "置信函数 vzConfidence()/vzModelPred() 复用现有 AB_STATS 与 BUILT_DATA，零新增数据源"
+    ]
+  },
   {
     version: "v1.7.85",
     date: "2026-10-31",
@@ -2932,7 +2947,8 @@ const state = {
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   lastFbTab: "today",
   histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false,
-  autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })()
+  autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })(),
+  vzOnlyHot: false
 };
 /* 恢复主题偏好 */
 (function(){
@@ -5364,15 +5380,20 @@ function renderWhoScored(){
           return (arr.length && arr[0].predH!=null) ? arr[0] : null;
         })();
         const hasVz = !!vzm;
+        // v1.7.86：V站「高信心」判定（多源共识：V站·模型方向一致）
+        const _vzMp = (j.modelPred && j.modelPred.h!=null && j.modelPred.a!=null) ? j.modelPred : null;
+        const _vzConf = hasVz ? vzConfidence(vzm, _vzMp) : {level:"normal", why:""};
+        const _cardHot = hasVz && _vzConf.level==="high";
         let predBlock = "";
         if(hasVz){
           const vzKick = (vzm.match_time||"").slice(5,16);
           predBlock = `<div class="ws-scoreline">
-              <div><div class="sp-label">预测比分<span class="sp-wstag sp-wstag-vz" title="V站·呼死狗 中文情报预测（海外爆料员第一手）">V站</span></div>
+              <div><div class="sp-label">预测比分<span class="sp-wstag sp-wstag-vz" title="V站·呼死狗 中文情报预测（海外爆料员第一手）">V站</span>${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>
                 <div class="ws-pred">${vzm.predH} <i>:</i> ${vzm.predA}</div></div>
               <div class="ws-metawrap"><div class="sp-label">${vzm.league||j.league||""}</div>
                 <div class="sp-meta">🕐 北京时间 ${vzKick||"时间待定"}</div>
                 ${vzAcc?`<span class="vz-acc ${vzAcc.n?"":"vz-acc-pending"}">🐶 ${vzAccTxt()}</span>`:``}</div>
+              ${_cardHot?`<div class="vz-conf-why">🔥高信心：${_vzConf.why}</div>`:``}
             </div>`;
         } else if(hasPred && fin){
           predBlock = `<div class="ws-scoreline">
@@ -5428,7 +5449,7 @@ function renderWhoScored(){
           const stt = wsJcStatusText(j);
           if(stt) res = `<div class="ws-res"><span class="sp-dact" style="color:var(--weak)">${stt}</span></div>`;
         }
-        html += `<div class="sp-card ws-jc ${fin?"sp-fin":""}">
+        html += `<div class="sp-card ws-jc ${fin?"sp-fin":""}${_cardHot?" vz-hot":""}">
           <div class="sp-teams">${spTeamCell(j.home)}<span class="sp-vs">vs</span>${spTeamCell(j.away)}
             <span class="ws-jcnum">竞彩 ${j.num}</span></div>
           <div class="sp-enline">${j.league||""} · 开球 ${j.time||""}${nameMismatch?` · <span class="ws-namewarn">⚠️队名待核对：${zhH} vs ${zhA}</span>`:``}</div>
@@ -5538,6 +5559,26 @@ function renderWhoScored(){
 
 /* 该场预测是否"高可信"（比分或方向任一达到高） */
 function wsIsHot(m){ return !!(m && m.conf && (m.conf.exactLevel==="high" || m.conf.dirLevel==="high")); }
+// v1.7.86：V站「高信心」判定（多源共识口径）
+// 数据源 report/info 仅返回预测比分，无信心/星级字段；V站 综合方向命中率仅 ~41.8%（近随机），
+// 故以「V站 预测方向 == 模型预测方向」作为共识高信心（命中率口径在当前数据下几乎无高信心场次）。
+function _vzOc(h,a){ return (h==null||a==null) ? null : (h>a ? "H" : (a>h ? "A" : "D")); }
+function vzConfidence(vzm, mp){
+  const vo = _vzOc(vzm.predH, vzm.predA);
+  if(vo==null) return {level:"normal", why:""};
+  const mo = (mp && mp.h!=null && mp.a!=null) ? _vzOc(mp.h, mp.a) : null;
+  if(mo && mo===vo) return {level:"high", why:"V站·模型 方向共识"};
+  return {level:"normal", why:""};
+}
+// 取某 V站 场次对应的模型预测（按竞彩编号/队名匹配 BUILT_DATA）
+function vzModelPred(vzm){
+  const bd = (typeof BUILT_DATA!=="undefined" && BUILT_DATA) ? (BUILT_DATA.matches||[]) : [];
+  let j = null;
+  if(vzm.jcNum) j = bd.find(x=>x.num===vzm.jcNum);
+  if(!j && vzm.home && vzm.away) j = bd.find(x=> spZh(x.home)===vzm.home && spZh(x.away)===vzm.away);
+  if(!j) j = bd.find(x=> ((spZh(x.home)===vzm.home||spZh(x.away)===vzm.home)) && ((spZh(x.home)===vzm.away||spZh(x.away)===vzm.away)) && (spZh(x.home)!==spZh(x.away)));
+  return (j && j.modelPred) ? j.modelPred : null;
+}
 
 /* v1.7.40：赛前可信度档位（赛后回溯用）。preConf 是 fetch_whoscored 在比赛
    开赛前算好、评估时搬进历史记录的存档——赛后据此还原「这场赛前标过什么」。
@@ -5756,9 +5797,20 @@ function renderVzhan(){
       gw = ` · 网关 <span class="vzgw" style="background:var(--line);color:var(--sub);border:1px solid var(--line)">未探活</span>`;
     }
   }
-  if(sum) sum.innerHTML = `竞彩 <b style="color:var(--text)">${ms.length}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
+  if(sum){
+    sum.innerHTML = `竞彩 <b style="color:var(--text)">${ms.length}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
+    const _hotMs = ms.filter(m=>m.hasPred && vzConfidence(m, vzModelPred(m)).level==="high");
+    sum.innerHTML += ` <button class="sp-chip ${state.vzOnlyHot?"on":""}" id="vzHotBtn">🔥只看高信心${_hotMs.length?`(${_hotMs.length})`:""}</button>`;
+    const _hb = document.getElementById("vzHotBtn");
+    if(_hb) _hb.onclick = ()=>{ state.vzOnlyHot = !state.vzOnlyHot; renderVzhan(); };
+  }
   if(!ms.length){ list.innerHTML = `<div class="empty">暂无 V站 情报（每日自动抓取）</div>`; return; }
-  list.innerHTML = ms.map(m=>{
+  // v1.7.86：高信心（V站·模型方向共识）置顶；「只看高信心」过滤
+  let view = ms.map(m=>({m, _conf: (m.hasPred ? vzConfidence(m, vzModelPred(m)) : {level:"normal", why:""})}));
+  if(state.vzOnlyHot) view = view.filter(x=>x._conf.level==="high");
+  view.sort((a,b)=> ((a._conf.level==="high"?0:1) - (b._conf.level==="high"?0:1)) || (a.m.match_time||"").localeCompare(b.m.match_time||""));
+  list.innerHTML = view.map(({m,_conf})=>{
+    const _hot = _conf.level==="high";
     const pred = m.hasPred
       ? `<span class="sp-pred">${m.predH} <i>:</i> ${m.predA}</span><span class="sp-wstag sp-wstag-vz" title="呼死狗爆料员比分预测">V站</span>`
       : `<span class="vz-none">呼死狗本场未给比分预测</span>`;
@@ -5767,10 +5819,10 @@ function renderVzhan(){
       .concat((m.away_news||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-away">客</span>${t}</div>`))
       .concat((m.forecasts||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-mid">测</span>${t}</div>`));
     const kick = (m.match_time||"").slice(5,16);
-    return `<div class="sp-card">
+    return `<div class="sp-card${_hot?" vz-hot":""}">
       <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${(m.league?`<span class="sp-league-tag">${m.league}</span>`:"")}${m.jcNum?`<span class="sp-jcnum" title="V站直接给出的竞彩编号">竞彩 ${m.jcNum}</span>`:``}</div>
       <div class="sp-scoreline">
-        <div class="sp-predwrap"><div class="sp-label">比分预测</div>${pred}</div>
+        <div class="sp-predwrap"><div class="sp-label">比分预测${_hot?`<span class="vz-conf" title="${_conf.why}">🔥高信心</span>`:""}</div>${pred}</div>
         <div class="sp-actwrap"><div class="sp-label">开赛</div><span class="sp-actual sp-sched">${kick||"-"}</span></div>
       </div>
       ${news.length?`<div class="vz-news">${news.join("")}</div>`:`<div class="vz-none" style="margin-top:6px">本场暂无情报文字</div>`}
