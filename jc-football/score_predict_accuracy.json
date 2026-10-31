@@ -433,6 +433,22 @@
    "mae": 1.5
   },
   {
+   "id": 558542,
+   "league": "意甲",
+   "home": "Udinese Calcio",
+   "away": "AS Roma",
+   "date": "2026-10-31",
+   "predH": 0,
+   "predA": 2,
+   "actH": 2,
+   "actA": 5,
+   "predOutcome": "A",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 2.5
+  },
+  {
    "id": 555066,
    "league": "巴甲",
    "home": "Grêmio FBPA",
@@ -13201,6 +13217,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-11-01 02:09:23",
+ "updatedAt": "2026-11-01 03:02:44",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
