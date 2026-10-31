@@ -420,6 +420,11 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                     sep_used = mm.group(1) if mm else None
                     if sep_used in [":", "："] and len(str(s[1])) >= 2:
                         continue
+                    # 历史语境排除：比分前 20 字内出现往绩/回顾关键词则视为已发生，跳过
+                    _start = mm.start() if mm else 0
+                    _pre = text[max(0, _start - 20):_start]
+                    if is_history_context(_pre):
+                        continue
                     key = f"{s[0]}-{s[1]}"
                     if key not in seen:
                         seen.add(key)
@@ -434,6 +439,16 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
             if not found:
                 for idx in range(len(seg_texts)-1, max(-1, len(seg_texts)-9), -1):
                     t = seg_texts[idx]
+                    # 格式0: 让球胜/让球平/让球负（最高优先级，带"球"字，避免丢让球语义）
+                    m0 = re.search(r'让球\s*(胜|平|负)(?!\w)', t)
+                    if m0:
+                        rec = {"胜": "让胜", "平": "让平", "负": "让负"}[m0.group(1)]
+                        score = extract_scores_local(t)
+                        for j in range(idx+1, min(idx+3, len(seg_texts))):
+                            if not score: score = extract_scores_local(seg_texts[j])
+                        analysis = t[:300]
+                        found = True
+                        break
                     # 格式1: 竞彩/推荐/方向/观点：让胜/让平/让负
                     m = re.search(r'(?:竞彩|竞足|单选|推荐|方向|观点|我的观点|最终观点|个人观点)[^：:]*[：:]\s*(让胜|让平|让负)', t)
                     if m:
@@ -491,15 +506,20 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                         found = True
                         break
                 # 格式4: 推荐/方向/结论/最终/观点/我的观点：主胜/客胜/平局/负/胜/平
-                m = re.search(r'(?:推荐|方向|结论|最终|观点|我的观点|个人观点|最终观点)[^：:，。；]*[：:]?\s*(?:竞彩)?\s*(主胜|客胜|平局|主队不败|客队不败|负|胜|平)', t)
+                m = re.search(r'(?:推荐|方向|结论|最终|观点|我的观点|个人观点|最终观点)[^：:，。；]*[：:]?\s*(?:竞彩)?\s*(让球\s*)?(主胜|客胜|平局|主队不败|客队不败|负|胜|平)', t)
                 if m:
-                    raw = m.group(1)
-                    if raw == "负": rec = "客胜"
-                    elif raw == "胜": rec = "主胜"
-                    elif raw == "平": rec = "平局"
-                    elif "不败" in raw:
-                        rec = "主胜/平局" if "主" in raw else "客胜/平局"
-                    else: rec = raw
+                    _pref = preferred_direction(t)
+                    if _pref:
+                        rec = _pref
+                    else:
+                        _let_prefix = m.group(1)
+                        raw = m.group(2)
+                        if _let_prefix:
+                            rec = {"主胜": "让胜", "客胜": "让负", "平局": "让平",
+                                   "负": "让负", "胜": "让胜", "平": "让平"}.get(raw, raw)
+                        else:
+                            _d, _is_let = classify_let(raw)
+                            rec = _d if _is_let else to_standard_dir(raw)
                     score = extract_scores_local(t)
                     for j in range(idx+1, min(idx+4, len(seg_texts))):
                         if not score: score = extract_scores_local(seg_texts[j])
@@ -697,6 +717,11 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                 # 足球比分后数一般为0-9单数字（如2:0、2:1），两位数后数视为时间
                 if sep_used in [":", "："] and len(str(s[1])) >= 2:
                     continue
+                # 历史语境排除：比分前 20 字内出现往绩/回顾关键词则视为已发生，跳过
+                _start = mm.start() if mm else 0
+                _pre = text[max(0, _start - 20):_start]
+                if is_history_context(_pre):
+                    continue
                 key = f"{s[0]}-{s[1]}"
                 if key not in seen:
                     seen.add(key)
@@ -716,6 +741,18 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
             has_had_rec = bool(re.search(r'(不败|主胜|客胜|平局|主队胜|客队胜|打平|单[310])', tail_for_check))
             for idx in range(len(clean_texts)-1, max(-1, len(clean_texts)-9), -1):
                 t = clean_texts[idx]
+                # 格式0: 让球胜/让球平/让球负（最高优先级，带"球"字，避免丢让球语义）
+                m0 = re.search(r'让球\s*(胜|平|负)(?!\w)', t)
+                if m0:
+                    rec = {"胜": "让胜", "平": "让平", "负": "让负"}[m0.group(1)]
+                    score = extract_scores(t)
+                    for j in range(idx+1, min(idx+3, len(clean_texts))):
+                        if not score: score = extract_scores(clean_texts[j])
+                    analysis = t[:300]
+                    if idx+1 < len(clean_texts) and '比分' in clean_texts[idx+1]:
+                        analysis += " " + clean_texts[idx+1][:100]
+                    found = True
+                    break
                 # 格式1: 竞彩/竞足/单选/推荐/方向/观点/我的观点：让胜/让平/让负（明确官方语法，最高优先级）
                 m = re.search(r'(?:竞彩|竞足|单选|推荐|方向|观点|我的观点|最终观点|个人观点)[^：:]*[：:]\s*(让胜|让平|让负)', t)
                 if m:
@@ -820,13 +857,22 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                     found = True
                     break
             # 推荐：X / 方向：X / 观点：X 格式（支持"推荐：竞彩客胜"、"个人观点：胜"）
-            m = re.search(r'(?:推荐|方向|结论|最终|观点)[^：:，。；]*[：:]?\s*(?:竞彩)?\s*(主胜|客胜|平局|主队不败|客队不败|负|胜|平)', t)
+            m = re.search(r'(?:推荐|方向|结论|最终|观点)[^：:，。；]*[：:]?\s*(?:竞彩)?\s*(让球\s*)?(主胜|客胜|平局|主队不败|客队不败|负|胜|平)', t)
             if m:
-                raw = m.group(1)
-                if raw == "负": rec = "客胜"
-                elif raw == "胜": rec = "主胜"
-                elif raw == "平": rec = "平局"
-                else: rec = raw
+                # 优先采用「带限定词的真实倾向」：如"小胜概率略大"→主胜，避免抓到"或平局"里的平局
+                pref = preferred_direction(t)
+                if pref:
+                    rec = pref
+                else:
+                    _let_prefix = m.group(1)
+                    raw = m.group(2)
+                    if _let_prefix:
+                        # 让球前缀：让球负→让负、让球胜→让胜、让球平→让平（不丢让球语义）
+                        rec = {"主胜": "让胜", "客胜": "让负", "平局": "让平",
+                               "负": "让负", "胜": "让胜", "平": "让平"}.get(raw, raw)
+                    else:
+                        _d, _is_let = classify_let(raw)
+                        rec = _d if _is_let else to_standard_dir(raw)
                 score = extract_scores(t)
                 for j in range(idx+1, min(idx+3, len(clean_texts))):
                     if not score: score = extract_scores(clean_texts[j])
@@ -846,15 +892,30 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                     score = sc
                     # 从该段或前一段找推荐方向（支持多种表达方式）
                     for seg in [t] + ([clean_texts[clean_texts.index(t)-1]] if clean_texts.index(t) > 0 else []):
-                        # 明确方向词（排除"平局拉高"、"胜赔"等描述性用法）
-                        dm = re.search(r'(?<!拉高)(?<!压低)(?<!升)(?<!降)(主胜|客胜|平局|主队胜|客队胜|打平|主队赢|客队赢|主队不败|客队不败|主队取胜|客队取胜)', seg)
+                        # 移除「半全场」玩法描述（如"半全场平胜、胜胜"）避免被误读为赛果方向
+                        seg_scan = re.sub(r'半全场[^。！？]*', '', seg)
+                        # 优先采用「带限定词的真实倾向」：如"小胜概率略大"→主胜
+                        _pref = preferred_direction(seg_scan)
+                        if _pref:
+                            rec = _pref
+                            analysis = seg[:300]
+                            found = True
+                            break
+                        # 明确方向词（排除"平局拉高"、"胜赔"等描述性用法，及历史往绩语境）
+                        dm = re.search(r'(?<!拉高)(?<!压低)(?<!升)(?<!降)(主胜|客胜|平局|主队胜|客队胜|打平|主队赢|客队赢|主队不败|客队不败|主队取胜|客队取胜|不败)', seg_scan)
                         # 额外排除：平局拉高/压低等赔率描述
-                        if dm and re.search(r'平(局|赔|盘)(拉高|压低|升|降)', seg):
+                        if dm and re.search(r'平(局|赔|盘)(拉高|压低|升|降)', seg_scan):
+                            dm = None
+                        # 额外排除：历史往绩语境中的方向词（如"过往交锋平局偏多"指往绩非预测）
+                        if dm and is_history_context(seg_scan[max(0, dm.start() - 25):dm.start() + 6]):
+                            dm = None
+                        # 额外排除：描述性「平局较多/平局偏多」等非推荐用法
+                        if dm and dm.group(1) in ("平局", "打平") and re.search(r'平局[较多偏]', seg_scan):
                             dm = None
                         if dm:
                             raw = dm.group(1)
-                            if "不败" in raw:
-                                rec = "主胜/平局" if "主" in raw else "客胜/平局"
+                            if raw == "不败" or "不败" in raw:
+                                rec = "主胜/平局" if ("主" in raw or "主" in seg_scan[:dm.start()]) else "客胜/平局"
                             elif "赢" in raw or "取胜" in raw:
                                 rec = "主胜" if "主" in raw else "客胜"
                             elif raw in ["客胜", "客队胜"]:
@@ -867,7 +928,7 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
                             found = True
                             break
                         # "看好主队/客队" 格式
-                        dm2 = re.search(r'(?:看好|推荐|支持|搏|博)[^。！？]{0,10}?(主队|客队)', seg)
+                        dm2 = re.search(r'(?:看好|推荐|支持|搏|博)[^。！？]{0,10}?(主队|客队)', seg_scan)
                         if dm2:
                             team = dm2.group(1)
                             rec = "主胜" if team == "主队" else "客胜"
@@ -1082,6 +1143,83 @@ def parse_article_92wq(url, expert_default="", home_default="", away_default="")
             })
 
     return recommendations, track_record
+
+# ---------- 方向判定的通用辅助（v1.7.90 提升逐字准确度）----------
+
+# 历史/回顾语境关键词：出现则其中比分/赛果为「已发生」，不可当作本场预测
+_HISTORY_CTX = re.compile(
+    r'(上轮|上赛季|上届|近\d+场|交锋|过往|此前|历史|上次|首回合|已经|已赛|'
+    r'上场|复盘|回顾|昨天|昨日|前一场|近况|近期|近\d+轮|联赛积|积\d+分|'
+    r'打出\d|战绩|连红|红单|中\d|命中|不负|难求一胜|难求一败)'
+)
+
+def is_history_context(text):
+    """判断一段文字是否在讲「已经发生的赛果/往绩」，而非本场预测。"""
+    return bool(_HISTORY_CTX.search(text or ""))
+
+
+def preferred_direction(text):
+    """从一段文字提取『作者真正倾向』的方向（带限定词的句子优先级最高）。
+    处理『小胜概率略大 / 主胜更看好 / 首选主胜 / 倾向平局』这类表达，
+    返回标准方向字符串或 ''。"""
+    if not text:
+        return ""
+    # 1) X + 概率略大/更高/更大/居多/占优/看好  -> X
+    m = re.search(r'(主胜|客胜|平局|小胜|主队胜|客队胜)[概率更略多占优看好大]', text)
+    if not m:
+        m = re.search(r'(主胜|客胜|平局|小胜|主队胜|客队胜)\s*(略大|更高|更大|居多|占优|更值得|更被看好|概率更大)', text)
+    if m:
+        d = m.group(1)
+        if d in ("主胜", "主队胜", "小胜"):
+            return "主胜"
+        if d in ("客胜", "客队胜"):
+            return "客胜"
+        return "平局"
+    # 2) 更看好/首选/倾向/重点看 X
+    m = re.search(r'(更看好|首选|倾向|更值得|重点看|坚定看)\s*(主胜|客胜|平局|小胜)', text)
+    if m:
+        d = m.group(2)
+        return "主胜" if d in ("主胜", "小胜") else ("客胜" if d == "客胜" else "平局")
+    return ""
+
+
+def classify_let(raw):
+    """若方向文本含『让球/让盘/竞足/受让』玩法标记，把裸 胜/平/负 规范为让胜/让平/让负。
+    返回 (direction, is_let)。例：让球负 -> ('让负', True)；让胜 -> ('让胜', True)。"""
+    s = raw or ""
+    if re.search(r'让球|让盘|竞足|让球盘|受让', s):
+        for token, d in (("让胜", "让胜"), ("让平", "让平"), ("让负", "让负")):
+            if token in s:
+                return d, True
+        m = re.search(r'让球?\s*(胜|平|负)', s)
+        if m:
+            return {"胜": "让胜", "平": "让平", "负": "让负"}[m.group(1)], True
+    if "让胜" in s:
+        return "让胜", True
+    if "让负" in s:
+        return "让负", True
+    if "让平" in s:
+        return "让平", True
+    return s, False
+
+
+def to_standard_dir(raw):
+    """把裸 负/胜/平 或 主胜/客胜/平局 转标准方向（不带让球语义）。"""
+    s = raw or ""
+    if s in ("主胜", "主队胜", "小胜"):
+        return "主胜"
+    if s in ("客胜", "客队胜"):
+        return "客胜"
+    if s in ("平局", "打平"):
+        return "平局"
+    if s == "负":
+        return "客胜"
+    if s == "胜":
+        return "主胜"
+    if s == "平":
+        return "平局"
+    return s
+
 
 def normalize_recommend(rec_text):
     """将推荐文本转为标准方向"""
