@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-31 18:47:59",
+ "updatedAt": "2026-10-31 19:01:09",
  "source": "football-data.org",
  "enabled": true,
  "dateFrom": "2026-10-30",
@@ -23,19 +23,6 @@
   {
    "competition": "FL1",
    "league": "法甲",
-   "home": "Le Havre AC",
-   "away": "Paris Saint-Germain FC",
-   "utcDate": "2026-10-30T18:00:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 1,
-    "away": 5
-   },
-   "winner": "AWAY_TEAM"
-  },
-  {
-   "competition": "FL1",
-   "league": "法甲",
    "home": "OGC Nice",
    "away": "Stade Rennais FC 1901",
    "utcDate": "2026-10-30T18:00:00Z",
@@ -45,6 +32,19 @@
     "away": 2
    },
    "winner": "HOME_TEAM"
+  },
+  {
+   "competition": "FL1",
+   "league": "法甲",
+   "home": "Le Havre AC",
+   "away": "Paris Saint-Germain FC",
+   "utcDate": "2026-10-30T18:00:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 1,
+    "away": 5
+   },
+   "winner": "AWAY_TEAM"
   },
   {
    "competition": "BL1",
@@ -125,10 +125,24 @@
    "winner": "HOME_TEAM"
   },
   {
+   "competition": "PL",
+   "league": "英超",
+   "home": "Chelsea FC",
+   "away": "Manchester United FC",
+   "utcDate": "2026-10-31T12:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null,
+   "num": "周六006"
+  },
+  {
    "competition": "ELC",
    "league": "英冠",
-   "home": "Norwich City FC",
-   "away": "Watford FC",
+   "home": "Stoke City FC",
+   "away": "Preston North End FC",
    "utcDate": "2026-10-31T12:30:00Z",
    "status": "TIMED",
    "score": {
@@ -140,8 +154,8 @@
   {
    "competition": "ELC",
    "league": "英冠",
-   "home": "Stoke City FC",
-   "away": "Preston North End FC",
+   "home": "Norwich City FC",
+   "away": "Watford FC",
    "utcDate": "2026-10-31T12:30:00Z",
    "status": "TIMED",
    "score": {
@@ -162,20 +176,6 @@
     "away": null
    },
    "winner": null
-  },
-  {
-   "competition": "PL",
-   "league": "英超",
-   "home": "Chelsea FC",
-   "away": "Manchester United FC",
-   "utcDate": "2026-10-31T12:30:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null,
-   "num": "周六006"
   },
   {
    "competition": "PD",
@@ -245,19 +245,6 @@
   {
    "competition": "BL1",
    "league": "德甲",
-   "home": "FC Schalke 04",
-   "away": "RB Leipzig",
-   "utcDate": "2026-10-31T14:30:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "BL1",
-   "league": "德甲",
    "home": "FC Augsburg",
    "away": "SC Freiburg",
    "utcDate": "2026-10-31T14:30:00Z",
@@ -269,24 +256,11 @@
    "winner": null
   },
   {
-   "competition": "PL",
-   "league": "英超",
-   "home": "Hull City AFC",
-   "away": "Ipswich Town FC",
-   "utcDate": "2026-10-31T15:00:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "ELC",
-   "league": "英冠",
-   "home": "West Ham United FC",
-   "away": "West Bromwich Albion FC",
-   "utcDate": "2026-10-31T15:00:00Z",
+   "competition": "BL1",
+   "league": "德甲",
+   "home": "FC Schalke 04",
+   "away": "RB Leipzig",
+   "utcDate": "2026-10-31T14:30:00Z",
    "status": "TIMED",
    "score": {
     "home": null,
@@ -297,8 +271,8 @@
   {
    "competition": "PL",
    "league": "英超",
-   "home": "Coventry City FC",
-   "away": "Sunderland AFC",
+   "home": "Brentford FC",
+   "away": "Nottingham Forest FC",
    "utcDate": "2026-10-31T15:00:00Z",
    "status": "TIMED",
    "score": {
@@ -336,32 +310,6 @@
   {
    "competition": "PL",
    "league": "英超",
-   "home": "Manchester City FC",
-   "away": "Brighton & Hove Albion FC",
-   "utcDate": "2026-10-31T15:00:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "ELC",
-   "league": "英冠",
-   "home": "Wolverhampton Wanderers FC",
-   "away": "Cardiff City FC",
-   "utcDate": "2026-10-31T15:00:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "PL",
-   "league": "英超",
    "home": "AFC Bournemouth",
    "away": "Leeds United FC",
    "utcDate": "2026-10-31T15:00:00Z",
@@ -375,8 +323,8 @@
   {
    "competition": "ELC",
    "league": "英冠",
-   "home": "Middlesbrough FC",
-   "away": "Charlton Athletic FC",
+   "home": "West Ham United FC",
+   "away": "West Bromwich Albion FC",
    "utcDate": "2026-10-31T15:00:00Z",
    "status": "TIMED",
    "score": {
@@ -388,8 +336,8 @@
   {
    "competition": "PL",
    "league": "英超",
-   "home": "Brentford FC",
-   "away": "Nottingham Forest FC",
+   "home": "Coventry City FC",
+   "away": "Sunderland AFC",
    "utcDate": "2026-10-31T15:00:00Z",
    "status": "TIMED",
    "score": {
@@ -429,6 +377,58 @@
    "league": "英冠",
    "home": "Bolton Wanderers FC",
    "away": "Bristol City FC",
+   "utcDate": "2026-10-31T15:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "PL",
+   "league": "英超",
+   "home": "Manchester City FC",
+   "away": "Brighton & Hove Albion FC",
+   "utcDate": "2026-10-31T15:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "ELC",
+   "league": "英冠",
+   "home": "Wolverhampton Wanderers FC",
+   "away": "Cardiff City FC",
+   "utcDate": "2026-10-31T15:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "PL",
+   "league": "英超",
+   "home": "Hull City AFC",
+   "away": "Ipswich Town FC",
+   "utcDate": "2026-10-31T15:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "ELC",
+   "league": "英冠",
+   "home": "Middlesbrough FC",
+   "away": "Charlton Athletic FC",
    "utcDate": "2026-10-31T15:00:00Z",
    "status": "TIMED",
    "score": {
@@ -490,6 +490,19 @@
    "winner": null
   },
   {
+   "competition": "PD",
+   "league": "西甲",
+   "home": "Real Betis Balompié",
+   "away": "Málaga CF",
+   "utcDate": "2026-10-31T17:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
    "competition": "BL1",
    "league": "德甲",
    "home": "FC Bayern München",
@@ -507,19 +520,6 @@
    "league": "英超",
    "home": "Tottenham Hotspur FC",
    "away": "Crystal Palace FC",
-   "utcDate": "2026-10-31T17:30:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "PD",
-   "league": "西甲",
-   "home": "Real Betis Balompié",
-   "away": "Málaga CF",
    "utcDate": "2026-10-31T17:30:00Z",
    "status": "TIMED",
    "score": {
@@ -594,19 +594,6 @@
    "winner": null
   },
   {
-   "competition": "PD",
-   "league": "西甲",
-   "home": "FC Barcelona",
-   "away": "Deportivo Alavés",
-   "utcDate": "2026-10-31T20:00:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
    "competition": "DED",
    "league": "荷甲",
    "home": "AFC Ajax",
@@ -619,6 +606,19 @@
    },
    "winner": null,
    "num": "周六028"
+  },
+  {
+   "competition": "PD",
+   "league": "西甲",
+   "home": "FC Barcelona",
+   "away": "Deportivo Alavés",
+   "utcDate": "2026-10-31T20:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
   },
   {
    "competition": "PL",
@@ -740,8 +740,8 @@
   {
    "competition": "SA",
    "league": "意甲",
-   "home": "SS Lazio",
-   "away": "Cagliari Calcio",
+   "home": "Frosinone Calcio",
+   "away": "Torino FC",
    "utcDate": "2026-11-01T14:00:00Z",
    "status": "TIMED",
    "score": {
@@ -753,8 +753,8 @@
   {
    "competition": "SA",
    "league": "意甲",
-   "home": "Frosinone Calcio",
-   "away": "Torino FC",
+   "home": "SS Lazio",
+   "away": "Cagliari Calcio",
    "utcDate": "2026-11-01T14:00:00Z",
    "status": "TIMED",
    "score": {
@@ -987,10 +987,10 @@
    "winner": null
   },
   {
-   "competition": "SA",
-   "league": "意甲",
-   "home": "Atalanta BC",
-   "away": "Parma Calcio 1913",
+   "competition": "FL1",
+   "league": "法甲",
+   "home": "FC Lorient",
+   "away": "Stade Brestois 29",
    "utcDate": "2026-11-02T19:45:00Z",
    "status": "TIMED",
    "score": {
@@ -1000,10 +1000,10 @@
    "winner": null
   },
   {
-   "competition": "FL1",
-   "league": "法甲",
-   "home": "FC Lorient",
-   "away": "Stade Brestois 29",
+   "competition": "SA",
+   "league": "意甲",
+   "home": "Atalanta BC",
+   "away": "Parma Calcio 1913",
    "utcDate": "2026-11-02T19:45:00Z",
    "status": "TIMED",
    "score": {
@@ -1106,19 +1106,6 @@
   {
    "competition": "ELC",
    "league": "英冠",
-   "home": "Queens Park Rangers FC",
-   "away": "Burnley FC",
-   "utcDate": "2026-11-03T19:45:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "ELC",
-   "league": "英冠",
    "home": "Blackburn Rovers FC",
    "away": "Stoke City FC",
    "utcDate": "2026-11-03T19:45:00Z",
@@ -1160,6 +1147,19 @@
    "league": "英冠",
    "home": "Watford FC",
    "away": "Lincoln City FC",
+   "utcDate": "2026-11-03T19:45:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "ELC",
+   "league": "英冠",
+   "home": "Queens Park Rangers FC",
+   "away": "Burnley FC",
    "utcDate": "2026-11-03T19:45:00Z",
    "status": "TIMED",
    "score": {
@@ -1247,19 +1247,6 @@
    "winner": null
   },
   {
-   "competition": "CL",
-   "league": "CL",
-   "home": "Villarreal CF",
-   "away": "Paris Saint-Germain FC",
-   "utcDate": "2026-11-03T20:00:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
    "competition": "ELC",
    "league": "英冠",
    "home": "Birmingham City FC",
@@ -1303,6 +1290,19 @@
    "league": "英冠",
    "home": "West Bromwich Albion FC",
    "away": "Southampton FC",
+   "utcDate": "2026-11-03T20:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "CL",
+   "league": "CL",
+   "home": "Villarreal CF",
+   "away": "Paris Saint-Germain FC",
    "utcDate": "2026-11-03T20:00:00Z",
    "status": "TIMED",
    "score": {
@@ -1366,19 +1366,6 @@
   {
    "competition": "ELC",
    "league": "英冠",
-   "home": "Cardiff City FC",
-   "away": "West Ham United FC",
-   "utcDate": "2026-11-04T19:45:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "ELC",
-   "league": "英冠",
    "home": "Wrexham AFC",
    "away": "Middlesbrough FC",
    "utcDate": "2026-11-04T19:45:00Z",
@@ -1390,11 +1377,11 @@
    "winner": null
   },
   {
-   "competition": "CL",
-   "league": "CL",
-   "home": "Borussia Dortmund",
-   "away": "Real Betis Balompié",
-   "utcDate": "2026-11-04T20:00:00Z",
+   "competition": "ELC",
+   "league": "英冠",
+   "home": "Cardiff City FC",
+   "away": "West Ham United FC",
+   "utcDate": "2026-11-04T19:45:00Z",
    "status": "TIMED",
    "score": {
     "home": null,
@@ -1444,8 +1431,8 @@
   {
    "competition": "CL",
    "league": "CL",
-   "home": "FC Porto",
-   "away": "SSC Napoli",
+   "home": "Borussia Dortmund",
+   "away": "Real Betis Balompié",
    "utcDate": "2026-11-04T20:00:00Z",
    "status": "TIMED",
    "score": {
@@ -1485,6 +1472,19 @@
    "league": "CL",
    "home": "PSV",
    "away": "Club Brugge KV",
+   "utcDate": "2026-11-04T20:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "CL",
+   "league": "CL",
+   "home": "FC Porto",
+   "away": "SSC Napoli",
    "utcDate": "2026-11-04T20:00:00Z",
    "status": "TIMED",
    "score": {
