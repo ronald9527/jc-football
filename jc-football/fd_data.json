@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-01 12:03:35",
+ "updatedAt": "2026-11-01 12:23:07",
  "source": "football-data.org",
  "enabled": true,
  "dateFrom": "2026-10-31",
@@ -88,19 +88,6 @@
   {
    "competition": "BL1",
    "league": "德甲",
-   "home": "Borussia Mönchengladbach",
-   "away": "SC Paderborn 07",
-   "utcDate": "2026-10-31T14:30:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 0,
-    "away": 0
-   },
-   "winner": "DRAW"
-  },
-  {
-   "competition": "BL1",
-   "league": "德甲",
    "home": "SV Werder Bremen",
    "away": "TSG 1899 Hoffenheim",
    "utcDate": "2026-10-31T14:30:00Z",
@@ -110,6 +97,19 @@
     "away": 0
    },
    "winner": "HOME_TEAM"
+  },
+  {
+   "competition": "BL1",
+   "league": "德甲",
+   "home": "Borussia Mönchengladbach",
+   "away": "SC Paderborn 07",
+   "utcDate": "2026-10-31T14:30:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 0,
+    "away": 0
+   },
+   "winner": "DRAW"
   },
   {
    "competition": "BL1",
@@ -372,19 +372,6 @@
    "winner": "AWAY_TEAM"
   },
   {
-   "competition": "BL1",
-   "league": "德甲",
-   "home": "FC Bayern München",
-   "away": "Borussia Dortmund",
-   "utcDate": "2026-10-31T17:30:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 2,
-    "away": 2
-   },
-   "winner": "DRAW"
-  },
-  {
    "competition": "PD",
    "league": "西甲",
    "home": "Real Betis Balompié",
@@ -396,6 +383,19 @@
     "away": 1
    },
    "winner": "HOME_TEAM"
+  },
+  {
+   "competition": "BL1",
+   "league": "德甲",
+   "home": "FC Bayern München",
+   "away": "Borussia Dortmund",
+   "utcDate": "2026-10-31T17:30:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 2,
+    "away": 2
+   },
+   "winner": "DRAW"
   },
   {
    "competition": "PL",
@@ -700,19 +700,6 @@
   {
    "competition": "FL1",
    "league": "法甲",
-   "home": "Olympique Lyonnais",
-   "away": "Angers SCO",
-   "utcDate": "2026-11-01T16:15:00Z",
-   "status": "TIMED",
-   "score": {
-    "home": null,
-    "away": null
-   },
-   "winner": null
-  },
-  {
-   "competition": "FL1",
-   "league": "法甲",
    "home": "Paris FC",
    "away": "AS Monaco FC",
    "utcDate": "2026-11-01T16:15:00Z",
@@ -724,11 +711,11 @@
    "winner": null
   },
   {
-   "competition": "BL1",
-   "league": "德甲",
-   "home": "Eintracht Frankfurt",
-   "away": "Hamburger SV",
-   "utcDate": "2026-11-01T16:30:00Z",
+   "competition": "FL1",
+   "league": "法甲",
+   "home": "Olympique Lyonnais",
+   "away": "Angers SCO",
+   "utcDate": "2026-11-01T16:15:00Z",
    "status": "TIMED",
    "score": {
     "home": null,
@@ -749,6 +736,19 @@
    },
    "winner": null,
    "num": "周日016"
+  },
+  {
+   "competition": "BL1",
+   "league": "德甲",
+   "home": "Eintracht Frankfurt",
+   "away": "Hamburger SV",
+   "utcDate": "2026-11-01T16:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
   },
   {
    "competition": "SA",
@@ -779,8 +779,8 @@
   {
    "competition": "PPL",
    "league": "葡超",
-   "home": "CS Marítimo",
-   "away": "CD Santa Clara",
+   "home": "Académico de Viseu FC",
+   "away": "Rio Ave FC",
    "utcDate": "2026-11-01T18:00:00Z",
    "status": "TIMED",
    "score": {
@@ -792,8 +792,8 @@
   {
    "competition": "PPL",
    "league": "葡超",
-   "home": "Académico de Viseu FC",
-   "away": "Rio Ave FC",
+   "home": "CS Marítimo",
+   "away": "CD Santa Clara",
    "utcDate": "2026-11-01T18:00:00Z",
    "status": "TIMED",
    "score": {
