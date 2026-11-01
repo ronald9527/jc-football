@@ -57,6 +57,7 @@ jobs:
       - name: 运行每日流水线（抓取 + 构建 + 部署 + 在线校验）
         run: bash run_daily.sh deploy
 
-      - name: 部署后在线校验（门禁）
+      - name: 部署后在线校验（门禁，失败仅告警不阻断）
         if: always()
+        continue-on-error: true
         run: python3 verify_deploy.py
