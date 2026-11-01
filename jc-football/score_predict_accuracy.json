@@ -193,6 +193,38 @@
    "mae": 1.0
   },
   {
+   "id": 559642,
+   "league": "法甲",
+   "home": "Paris FC",
+   "away": "AS Monaco FC",
+   "date": "2026-11-01",
+   "predH": 1,
+   "predA": 0,
+   "actH": 3,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.5
+  },
+  {
+   "id": 559640,
+   "league": "法甲",
+   "home": "Olympique Lyonnais",
+   "away": "Angers SCO",
+   "date": "2026-11-01",
+   "predH": 4,
+   "predA": 0,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.0
+  },
+  {
    "id": 561908,
    "league": "英冠",
    "home": "Stoke City FC",
@@ -13633,6 +13665,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-11-02 01:49:39",
+ "updatedAt": "2026-11-02 02:21:06",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
