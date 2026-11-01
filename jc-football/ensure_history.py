@@ -68,6 +68,15 @@ HIST_FILES = [
     # 本地 10-20 vs 线上 10-22）。纳入对账后，部署前自动拉回线上更新快照。
     "whoscored_data.json",          # WhoScored 人工预测比分（updatedAt）
     "expert_recommendations.json",  # 92玩球专家推荐（updatedAt）
+    # v1.7.97 补充：以下均为中国源（GitHub Actions 美国 IP 抓不到），
+    # 必须由沙箱（中国 IP）抓取并部署到 Pages；Actions 跑时本地是 git 旧版，
+    # 若不加保护会被旧版覆盖、把沙箱部署的最新数据抹掉。纳入对账后，
+    # Actions 部署前自动从 Pages 拉回最新，竞彩/V站/专家链路不被破坏。
+    "vzhan_data.json",              # V站·呼死狗情报（中国源，updatedAt 滚动快照）
+    "vzhan_history.json",           # V站完赛归档（跨轮累积，含 highConf）
+    "vzhan_gateway_status.json",    # V站网关探活状态（中国源）
+    "expert_history.json",          # 92玩球专家战绩（中国源，按日期累积）
+    "expert_stats.json",            # 专家统计（中国源，updatedAt）
 ]
 
 # 各文件的真实记录数提取方式（默认 records_count 按 list/records-list 处理，
@@ -139,6 +148,14 @@ def _count_expert_recommendations(obj):
     return 0
 
 
+def _count_expert_stats(obj):
+    """专家统计：真实条数是 stats（各专家统计 dict）长度。"""
+    if isinstance(obj, dict):
+        s = obj.get("stats")
+        return len(s) if isinstance(s, dict) else 0
+    return 0
+
+
 COUNT_FN = {
     "whoscored_history.json": _count_whoscored_history,
     "basketball_history.json": _count_basketball_history,
@@ -149,6 +166,9 @@ COUNT_FN = {
     "hkmo_cache.json": _count_matches_list,
     "whoscored_data.json": _count_whoscored_data,
     "expert_recommendations.json": _count_expert_recommendations,
+    "vzhan_data.json": _count_matches_list,
+    "vzhan_history.json": _count_matches_list,   # matches 为 dict，len 取累积键数
+    "expert_stats.json": _count_expert_stats,
 }
 
 # 时间戳优先判定的文件（v1.7.38 起）：条数非单调或语义为「快照」——在售赛程每天进出、
@@ -158,7 +178,9 @@ COUNT_FN = {
 # 条数仅作同刻并列时的补充。
 TS_FILES = {"basketball.json", "basketball_history.json", "score_predict.json",
             "matches.json", "hkmo_cache.json", "odds_bsd.json", "fd_data.json",
-            "whoscored_data.json", "expert_recommendations.json"}
+            "whoscored_data.json", "expert_recommendations.json",
+            "vzhan_data.json", "vzhan_history.json",
+            "vzhan_gateway_status.json", "expert_stats.json"}
 
 
 def load_json(path):
