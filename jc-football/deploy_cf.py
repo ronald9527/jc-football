@@ -316,7 +316,14 @@ def main():
                       # 更新数据覆盖回旧值（2026-10-22 实测：本地 10-20 vs
                       # 线上 10-22）。上 Pages 后 ensure_history 可按时间戳
                       # 把线上更新快照拉回，杜绝回归。
-                      "whoscored_data.json", "expert_recommendations.json"]:
+                      "whoscored_data.json", "expert_recommendations.json",
+                      # v1.7.93：V站三件套 + 专家战绩/历史 上云端，供页面端
+                      # 「刷新数据」按钮运行时拉取（之前只烤进 index.html，
+                      # 永远不更新）。vzhan_history 为完赛归档（含 highConf），
+                      # 跨轮累积，需随部署上传做云端副本。
+                      "vzhan_data.json", "vzhan_history.json",
+                      "vzhan_gateway_status.json",
+                      "expert_history.json", "expert_stats.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
@@ -379,6 +386,9 @@ def main():
         "whoscored_history.json", "history.json", "parlay_history.json",
         "hkmo_history.json", "strongweak_history.json", "half_full_history.json",
         "smart_model.json", "matches.json", "whoscored_data.json",
+        # v1.7.93：V站完赛归档（含 highConf）跨轮累积，同理须排除出自举包，
+        # 由生产端累积，冷启动从 Pages 副本恢复。
+        "vzhan_history.json",
         # 比分预测球队缓存（v1.7.39）：任务沙箱跨轮累积（165 支球队 × 近 60 场），
         # 免费 API 限速 10/min，全量重建要十几分钟——必须由生产端自己累积，
         # 不能被本地快照重置；沙箱重置时 ensure_history 从 Pages 副本拉回。

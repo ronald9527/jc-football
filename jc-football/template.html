@@ -1289,9 +1289,9 @@ footer b{color:var(--sub)}
         <svg class="ico" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>最新数据</span>
       </button>
-      <button class="hbtn hbtn-repull" id="rePullBtn" title="手动触发云端重新抓取全部数据并重新部署（真正刷新，非仅重载本页）">
+      <button class="hbtn hbtn-repull" id="rePullBtn" title="一键拉取云端最新数据（V站/高手推荐/比分预测/篮球等全部重拉并即时刷新，无需等待）">
         <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>重新抓取</span>
+        <span>刷新数据</span>
       </button>
       <button class="hbtn" id="themeBtn" title="切换深浅主题">
         <svg class="ico" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -1748,7 +1748,7 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.92";
+const VERSION = "v1.7.94";
 const CHANGELOG = [
   {
     version: "v1.7.91",
@@ -2925,35 +2925,35 @@ const dname = d => d==="h"?"主胜":d==="d"?"平局":"客胜";
 const norm = x => x == null ? null : x;
 
 /* ---------- 数据（由构建脚本注入，勿手改） ---------- */
-const BUILT_DATA = __DATA_PLACEHOLDER__;
-const BUILT_HISTORY = __HISTORY_PLACEHOLDER__;
-const BUILT_CONFIG = __CONFIG_PLACEHOLDER__;
-const BUILT_BD = __BD_DATA_PLACEHOLDER__;
-const BUILT_BDH = __BD_HISTORY_PLACEHOLDER__;
-const BUILT_HKMOH = __HKMO_HISTORY_PLACEHOLDER__;
-const BUILT_SWH = __STRONGWEAK_HISTORY_PLACEHOLDER__;
-const BUILT_EXPERT = __EXPERT_PLACEHOLDER__;
-const BUILT_EXPORTH = __EXPERT_HISTORY_PLACEHOLDER__;
-const BUILT_EXPERTSTATS = __EXPERT_STATS_PLACEHOLDER__;
+let BUILT_DATA = __DATA_PLACEHOLDER__;
+let BUILT_HISTORY = __HISTORY_PLACEHOLDER__;
+let BUILT_CONFIG = __CONFIG_PLACEHOLDER__;
+let BUILT_BD = __BD_DATA_PLACEHOLDER__;
+let BUILT_BDH = __BD_HISTORY_PLACEHOLDER__;
+let BUILT_HKMOH = __HKMO_HISTORY_PLACEHOLDER__;
+let BUILT_SWH = __STRONGWEAK_HISTORY_PLACEHOLDER__;
+let BUILT_EXPERT = __EXPERT_PLACEHOLDER__;
+let BUILT_EXPORTH = __EXPERT_HISTORY_PLACEHOLDER__;
+let BUILT_EXPERTSTATS = __EXPERT_STATS_PLACEHOLDER__;
 /* 独立数据源（不写回核心 matches / history / 模型，仅供页面独立展示与核对） */
-const BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
-const BUILT_BSD = __BSD_PLACEHOLDER__;
-const BUILT_FD = __FD_PLACEHOLDER__;
-const BUILT_SCOREPRED = __SCORE_PREDICT_PLACEHOLDER__;
+let BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
+let BUILT_BSD = __BSD_PLACEHOLDER__;
+let BUILT_FD = __FD_PLACEHOLDER__;
+let BUILT_SCOREPRED = __SCORE_PREDICT_PLACEHOLDER__;
 const AB_STATS = __AB_STATS_PLACEHOLDER__;
-const BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
-const BUILT_VZHAN = __VZHAN_PLACEHOLDER__;
-const BUILT_VZGW = __VZGW_PLACEHOLDER__;
-const BUILT_VZHAN_HISTORY = __VZHAN_HISTORY_PLACEHOLDER__;
+let BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
+let BUILT_VZHAN = __VZHAN_PLACEHOLDER__;
+let BUILT_VZGW = __VZGW_PLACEHOLDER__;
+let BUILT_VZHAN_HISTORY = __VZHAN_HISTORY_PLACEHOLDER__;
 // 竞彩篮球（独立源：官方 basketball 接口，与足球数据/模型零耦合，v1.7.29）
-const BUILT_BASKETBALL = __BASKETBALL_PLACEHOLDER__;
-const BUILT_BASKETBALL_HISTORY = __BASKETBALL_HISTORY_PLACEHOLDER__;
+let BUILT_BASKETBALL = __BASKETBALL_PLACEHOLDER__;
+let BUILT_BASKETBALL_HISTORY = __BASKETBALL_HISTORY_PLACEHOLDER__;
 // 篮球 AI 预测 / 串关 / 历史统计（v1.7.44，独立源，与足球零耦合）
-const BUILT_BASKETBALL_AI = __BASKETBALL_AI_PLACEHOLDER__;
-const BUILT_BASKETBALL_PARLAY = __BASKETBALL_PARLAY_PLACEHOLDER__;
-const BUILT_BASKETBALL_STATS = __BASKETBALL_STATS_PLACEHOLDER__;
+let BUILT_BASKETBALL_AI = __BASKETBALL_AI_PLACEHOLDER__;
+let BUILT_BASKETBALL_PARLAY = __BASKETBALL_PARLAY_PLACEHOLDER__;
+let BUILT_BASKETBALL_STATS = __BASKETBALL_STATS_PLACEHOLDER__;
 // 篮球 AI 预测回溯库（v1.7.46，对齐足球 score_predict_accuracy）
-const BUILT_BASKETBALL_AI_ACC = __BASKETBALL_AI_ACC_PLACEHOLDER__;
+let BUILT_BASKETBALL_AI_ACC = __BASKETBALL_AI_ACC_PLACEHOLDER__;
 const ODDS_BSD = {};
 (BUILT_ODDS_BSD.matches || []).forEach(x => { if (x && x.num) ODDS_BSD[x.num] = x; });
 const FD = {};
@@ -7328,6 +7328,65 @@ function refreshRealtimeData(showTip){
   });
 }
 
+/* ---------- 真·一键刷新：运行时从云端拉取最新数据并覆盖 BUILT_ 与 state.* ---------- */
+/* 旧版「重新抓取」按钮触发 GitHub CI，但本地代码未上 GitHub + CI 在海外抓不到
+   中国竞彩接口，导致按钮无效甚至回滚旧版本。现改为：直接拉取云端已部署的
+   /<name>.json（v1.7.93 起这些文件随每次部署上传），覆盖内存数据并即时重渲染，
+   按钮点击即拿到最新数据，无需等待 CI。 */
+async function loadLiveDatasets(showTip){
+  if(window.__liveLoading){ if(showTip) jcToast("正在拉取中，请稍候…", 2000); return; }
+  window.__liveLoading = true;
+  const bust = __cacheBust();
+  const get = (f)=> fetch(f+"?"+bust, {cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
+  try{
+    const [vz, vzgw, vzh, ws, ex, exh, exs, bk, bkh, bka, bkp, bks, bkaa] = await Promise.all([
+      get("vzhan_data.json"), get("vzhan_gateway_status.json"), get("vzhan_history.json"),
+      get("whoscored_data.json"), get("expert_recommendations.json"), get("expert_history.json"),
+      get("expert_stats.json"), get("basketball.json"), get("basketball_history.json"),
+      get("basketball_ai.json"), get("basketball_parlay_history.json"),
+      get("basketball_stats.json"), get("basketball_ai_accuracy.json")
+    ]);
+    if(vz) BUILT_VZHAN = vz;
+    if(vzgw) BUILT_VZGW = vzgw;
+    if(vzh) BUILT_VZHAN_HISTORY = vzh;
+    if(ws) BUILT_WHOSCORED = ws;
+    const exStats = (exs && exs.stats) || {};
+    if(ex){
+      // 忠实复刻 build_panel.py：把战绩合并进每条推荐，保证展示一致
+      (ex.recommendations||[]).forEach(r=>{
+        const st = exStats[r.expertName];
+        if(st) r.expertStats = st;
+        (r.otherExperts||[]).forEach(o=>{ const os=exStats[o.expertName]; if(os){ o.hitRate=os.hitRate; o.judged=os.judged; o.isNew=os.isNew; } });
+      });
+      BUILT_EXPERT = ex; if(state) state.expert = JSON.parse(JSON.stringify(ex));
+    }
+    if(exh){ BUILT_EXPORTH = exh; if(state) state.expertHistory = exh; }
+    if(exs){ BUILT_EXPERTSTATS = exStats; if(state) state.expertStats = exStats; }
+    if(bk){ BUILT_BASKETBALL = bk; if(state) state.basketball = JSON.parse(JSON.stringify(bk)); }
+    if(bkh){ BUILT_BASKETBALL_HISTORY = bkh; if(state) state.basketballHist = JSON.parse(JSON.stringify(bkh)); }
+    if(bka){ BUILT_BASKETBALL_AI = bka; if(state) state.basketballAi = JSON.parse(JSON.stringify(bka)); }
+    if(bkp){ BUILT_BASKETBALL_PARLAY = bkp; if(state) state.basketballParlay = JSON.parse(JSON.stringify(bkp)); }
+    if(bks){ BUILT_BASKETBALL_STATS = bks; if(state) state.basketballStats = JSON.parse(JSON.stringify(bks)); }
+    if(bkaa){ BUILT_BASKETBALL_AI_ACC = bkaa; if(state) state.basketballAiAcc = JSON.parse(JSON.stringify(bkaa)); }
+    // 以云端 version.json 的时间戳作为「数据更新于」
+    try{
+      const v = await get("version.json");
+      if(v && v.updateTime && state && state.meta) state.meta.updateTime = v.updateTime;
+    }catch(e){}
+    // 重渲染：render() 覆盖当前 tab；renderScorePred() 覆盖 V站/比分预测/赛后回溯/AB
+    try{ render(); }catch(e){}
+    try{ renderScorePred(); }catch(e){}
+    window.__liveLoading = false;
+    if(showTip){
+      const upd = (state && state.meta && state.meta.updateTime) || "";
+      jcToast("✅ 已拉取最新数据" + (upd?("（更新于 "+upd.slice(5,16)+"）"):""), 4000);
+    }
+  }catch(e){
+    window.__liveLoading = false;
+    if(showTip) jcToast("拉取失败：" + (e && e.message ? e.message : e), 4000, true);
+  }
+}
+
 function checkNewVersion(showTip){
   if(!window.fetch) return;
   fetch("version.json?"+__cacheBust(), {cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(v=>{
@@ -7335,8 +7394,8 @@ function checkNewVersion(showTip){
     const cur = state.meta.updateTime || "";
     const newer = v.updateTime && v.updateTime > cur;
     if(newer){
-      // 有新版本，直接实时刷新数据，不刷新页面
-      refreshRealtimeData(false);
+      // 有新版本，拉取全部最新数据并即时刷新，不刷新页面
+      loadLiveDatasets(false);
       if(showTip){
         const t=$("#toast"); t.textContent="检测到新数据，已自动更新"; t.classList.add("show");
         clearTimeout(window.__toastT); window.__toastT=setTimeout(()=>t.classList.remove("show"),4000);
@@ -7369,7 +7428,7 @@ $("#freshBtn").addEventListener("click", ()=>{
   // App 内：通知原生壳立即拉一次线上数据与页面（网页端无此对象，自动忽略）
   const bust = __cacheBust();
   try{ if(window.AndroidSync && AndroidSync.syncNow) AndroidSync.syncNow(bust); }catch(e){}
-  refreshRealtimeData(true);
+  loadLiveDatasets(true);
 });
 /* ---------- 手动「重新抓取全部数据」：触发云端流水线 ---------- */
 function jcToast(msg, ms, bad){
@@ -7436,7 +7495,7 @@ function triggerRePull(){
       jcToast("无法连接刷新服务，请检查网络后重试", 6000, true);
     });
 }
-$("#rePullBtn").addEventListener("click", triggerRePull);
+$("#rePullBtn").addEventListener("click", ()=>{ loadLiveDatasets(true); });
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
 $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("#freshMask").classList.remove("show"); });
 /* 每2分钟实时刷新数据（直接fetch matches.json，不刷新页面）；每5分钟检测版本 */
@@ -7535,6 +7594,9 @@ if(checkLogin()){
 }
 // 初始化即渲染「比分预测」区块（含徽章数量），避免未点击标签前徽章恒显「0」、被误认为没有预测
 try{ renderScorePred(); }catch(e){}
+// v1.7.93：页面加载即拉取云端已部署的最新数据覆盖内存（V站/高手推荐/比分预测/篮球等），
+// 使首屏即最新，且「刷新数据」按钮一键重拉——彻底摆脱旧版「重新抓取」按钮触发 CI 回滚旧版的陷阱。
+try{ loadLiveDatasets(false); }catch(e){}
 </script>
 <!-- 高手推荐原文覆盖层 -->
 <div id="expertArticleOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:var(--bg);flex-direction:column;">
