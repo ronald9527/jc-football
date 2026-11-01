@@ -1748,7 +1748,7 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.94";
+const VERSION = "v1.7.96";
 const CHANGELOG = [
   {
     version: "v1.7.91",
@@ -7379,7 +7379,13 @@ async function loadLiveDatasets(showTip){
     window.__liveLoading = false;
     if(showTip){
       const upd = (state && state.meta && state.meta.updateTime) || "";
-      jcToast("✅ 已拉取最新数据" + (upd?("（更新于 "+upd.slice(5,16)+"）"):""), 4000);
+      let staleHrs = 0;
+      try{ if(upd){ const t=new Date(upd.replace(/-/g,"/")); staleHrs=(Date.now()-t.getTime())/3600000; } }catch(e){}
+      if(staleHrs > 2){
+        jcToast("⚠ 数据较旧（更新于 "+upd.slice(5,16)+"，已 "+Math.floor(staleHrs)+" 小时前）— 可能需让我重新抓取", 6000, true);
+      }else{
+        jcToast("✅ 已拉取最新数据" + (upd?("（更新于 "+upd.slice(5,16)+"）"):""), 4000);
+      }
     }
   }catch(e){
     window.__liveLoading = false;

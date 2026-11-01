@@ -514,7 +514,7 @@ def main():
     try:
         r = subprocess.run([wrangler, "pages", "deploy", dist,
                             "--project-name", project, "--branch", "main"],
-                           env=env, capture_output=True, text=True, timeout=180)
+                           env=env, capture_output=True, text=True, timeout=600)
     except Exception as e:
         print("! wrangler 执行异常：%s" % e)
         print("DEPLOY_SKIPPED 离线包已就绪：%s" % dist)
