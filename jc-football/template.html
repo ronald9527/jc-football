@@ -1748,7 +1748,7 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.96";
+const VERSION = "v1.7.98";
 const CHANGELOG = [
   {
     version: "v1.7.91",
@@ -5826,6 +5826,7 @@ function renderVzhan(){
   const sum = $("#vzSummary"), list = $("#vzList");
   if(!list) return;
   const np = ms.filter(m=>m.hasPred).length;
+  const ni = ms.filter(m=>m.hasPred || (m.vz_reports&&m.vz_reports.length) || (m.forecasts&&m.forecasts.length) || ((m.home_news||[]).length+(m.away_news||[]).length)).length;
   // v1.7.77：网关稳定性徽标
   let gw = "";
   if(gws && gws.status){
@@ -5839,7 +5840,7 @@ function renderVzhan(){
     }
   }
   if(sum){
-    sum.innerHTML = `竞彩 <b style="color:var(--text)">${ms.length}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
+    sum.innerHTML = `竞彩 <b style="color:var(--text)">${ms.length}</b> 场 · 带情报 <b style="color:var(--text)">${ni}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
     const _hotMs = ms.filter(m=>m.hasPred && vzConfidence(m, vzModelPred(m)).level==="high");
     sum.innerHTML += ` <button class="sp-chip ${state.vzOnlyHot?"on":""}" id="vzHotBtn">🔥只看高信心${_hotMs.length?`(${_hotMs.length})`:""}</button>`;
     const _hb = document.getElementById("vzHotBtn");
@@ -5859,7 +5860,8 @@ function renderVzhan(){
     const news = []
       .concat((m.home_news||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-home">主</span>${t}</div>`))
       .concat((m.away_news||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-away">客</span>${t}</div>`))
-      .concat((m.forecasts||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-mid">测</span>${t}</div>`));
+      .concat((m.forecasts||[]).map(t=>`<div class="vz-li"><span class="vz-tag vz-mid">测</span>${t}</div>`))
+      .concat((m.vz_reports||[]).map(r=>`<div class="vz-li"><span class="vz-tag vz-${r.side}">${r.side==="home"?"主":r.side==="away"?"客":"情"}</span>${r.title}</div>`));
     const kick = (m.match_time||"").slice(5,16);
     // v1.7.91：赛果回填——完赛场显示实际比分 + 命中徽标 + 🔥高信心（与预测时同一口径）
     let actHtml = `<div class="sp-actwrap"><div class="sp-label">开赛</div><span class="sp-actual sp-sched">${kick||"-"}</span></div>`;

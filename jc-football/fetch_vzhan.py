@@ -62,6 +62,23 @@ def _txt_list(v):
     return out
 
 
+def _wonderful(v):
+    """解析 V站 wonderful_report：对无比分预测的场也给出中文情报标题
+    （伤停/阵容/状态）。belong_team: '1'=主队 '2'=客队 其余=综合。
+    注意 content 是「请下载最新版」引流文案，无实质，仅取 title。"""
+    out = []
+    for it in (v or []):
+        if not isinstance(it, dict):
+            continue
+        t = (it.get("title") or "").strip()
+        if not t:
+            continue
+        side = it.get("belong_team")
+        s = "home" if side == "1" else ("away" if side == "2" else "mid")
+        out.append({"side": s, "title": t})
+    return out
+
+
 def _outcome(h, a):
     """比分方向：主胜 H / 平 D / 客胜 A。"""
     if h is None or a is None:
@@ -182,6 +199,7 @@ def fetch_all():
                 "forecasts": [],
                 "injury_note": "",
                 "hasPred": False,
+                "vz_reports": [],
             }
             rep = _get("/new-article/report/info", {"sport_id": 1, "match_id": mid})
             if rep:
@@ -197,6 +215,10 @@ def fetch_all():
                 m["home_news"] = _txt_list(rep.get("home_news_list"))
                 m["away_news"] = _txt_list(rep.get("away_news_list"))
                 m["forecasts"] = _txt_list(rep.get("match_forecast_list"))
+                # v1.7.98：wonderful_report 是 V站 对"无比分预测场"也给的
+                # 中文情报标题（伤停/阵容/状态），此前完全漏抓，导致大量
+                # 有情报的场在网页被判成"未给预测"。补抓并随前端渲染。
+                m["vz_reports"] = _wonderful(rep.get("wonderful_report"))
                 pi = rep.get("player_injury")
                 if isinstance(pi, dict):
                     note = pi.get("analysis") or pi.get("analysi") or ""
