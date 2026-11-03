@@ -725,9 +725,9 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-sub-head{font-size:12px;font-weight:700;color:var(--text);margin:13px 0 5px;padding-left:8px;border-left:3px solid var(--accent)}
 .sp-sub-head:first-child{margin-top:2px}
 /* 队标 + 队名单元格（比分预测 Tab 统一使用，免去翻译依赖） */
-.sp-tcell{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.sp-tcell{display:inline-flex;align-items:center;gap:6px;min-width:0;flex:1 1 0}
 .sp-logo{width:20px;height:20px;object-fit:contain;flex:0 0 auto;border-radius:3px;background:#fff;box-shadow:0 0 0 1px var(--line);vertical-align:middle}
-.sp-tname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-tname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1 1 auto}
 .sp-tname.dim{color:var(--sub)}
 /* 队标加载失败：隐藏图片，保留队名（onerror 触发 .no-logo） */
 .sp-tcell.no-logo .sp-logo{display:none}
@@ -1760,8 +1760,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.105";
+const VERSION = "v1.7.106";
 const CHANGELOG = [
+  {
+    version: "v1.7.106",
+    date: "2026-11-04",
+    title: "修复比分预测卡片队名消失",
+    details: [
+      "问题：手机窄屏下比分预测卡片队名不显示——根因是『竞彩编号 + 🐶V站预测芯片 + 🔥高信心』被塞进队名行，与两支队名+队徽+vs 挤在约298px内，队名被 flex 压缩到接近0宽且 overflow 裁切",
+      "连带发现致命 bug：上一版把 _cardHot 引用误植入 metaLine 模板，而 metaLine 定义在 const _cardHot 声明之前，触发 TDZ 报错『Cannot access _cardHot before initialization』，导致整段 renderScorePred 崩溃、卡片全不渲染",
+      "修复：①队名行只保留『队名 vs 队名』，竞彩编号/V站芯片/高信心徽标全部移到下方元信息行；②metaLine 定义顺序后移，置于 _vzConf/_cardHot 声明之后消除 TDZ；③.sp-tcell/.sp-tname 设 flex 平分+min-width:0，队名不再被压没"
+    ]
+  },
   {
     version: "v1.7.105",
     date: "2026-11-04",
@@ -6172,14 +6182,14 @@ function renderScorePred(){
       const zhH = spZh(m.home), zhA = spZh(m.away);
       // v1.7.81：V站卡显示其自有中文联赛名 + 开赛时间；模型卡显示 football-data 联赛 + kickoff
       const vzKick = vzm ? (vzm.match_time||"").slice(5,16) : "";
-      const metaLine = hasVz
-        ? `<div class="sp-metaline"><span class="sp-league-tag">${vzm.league||""}</span>🕐 ${vzKick||"时间待定"}</div>`
-        : (m.league||m.kickoff ? `<div class="sp-metaline"><span class="sp-league-tag" style="color:var(--sub);background:var(--line);border-color:var(--line)">${m.league||""}</span>🕐 ${m.kickoff?m.kickoff.slice(5,16):(m.date||"")}</div>` : ``);
       const vzAccLine = (hasVz && vzAcc) ? `<span class="vz-acc ${vzAcc.n?'':'vz-acc-pending'}">🐶 ${vzAccText()}</span>` : "";
       const _vzConf = (hasVz && vzm) ? vzConfidence(vzm, (m.modelPred && m.modelPred.h!=null) ? m.modelPred : null) : {level:"normal", why:""};
       const _cardHot = _vzConf.level === "high";
+      const metaLine = hasVz
+        ? `<div class="sp-metaline"><span class="sp-league-tag">${vzm.league||""}</span>🕐 ${vzKick||"时间待定"}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}<span class="vz-chip" title="V站·呼死狗 已给出本场比分预测">🐶V站预测</span>${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>`
+        : (m.league||m.kickoff ? `<div class="sp-metaline"><span class="sp-league-tag" style="color:var(--sub);background:var(--line);border-color:var(--line)">${m.league||""}</span>🕐 ${m.kickoff?m.kickoff.slice(5,16):(m.date||"")}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>` : ``);
       html += `<div class="sp-card ${statusCls}${hasVz?" vz-has":""}${_cardHot?" vz-hot":""}">
-        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}${hasVz?`<span class="vz-chip" title="V站·呼死狗 已给出本场比分预测">🐶V站预测</span>`:``}${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>
+        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}</div>
         ${metaLine}
         <div class="sp-scoreline">
           <div class="sp-predwrap"><div class="sp-label${hasVz?" sp-label-vz":""}">${hasVz?"V站预测比分":"预测比分"}</div>${predScore}</div>
