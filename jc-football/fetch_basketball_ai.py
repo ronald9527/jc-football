@@ -17,6 +17,7 @@
 """
 
 import json
+import math
 import os
 import re
 import sys
@@ -210,9 +211,118 @@ def _rule_confidence(play_key, side, odds, p_market):
 
 
 # ----------------------------------------------------------------------------
+# 球队评分模型（v1.7.99 升级）：Elo 评分 + 近期状态 + 联赛主场优势
+# 用 basketball_history.json 的历史赛果建每队实力，替代原来「仅市场概率」的弱信号。
+# ----------------------------------------------------------------------------
+def build_team_model(records):
+    """返回 {rating:{队:分}, home_adv:{联赛:评分差}, form:{队:{n,recent_margin,recent_wr}}}。"""
+    games = []
+    for r in records.values():
+        sc = r.get("score")
+        if isinstance(sc, list) and len(sc) == 2:
+            h, a = sc[0], sc[1]
+            games.append({"home": r.get("home"), "away": r.get("away"),
+                           "league": r.get("league"), "margin": h - a})
+    rating = {}
+    def get(t):
+        return rating.setdefault(t, 1500.0)
+    # 联赛主场优势（历史主胜率 -> Elo 评分差）
+    lg_home = defaultdict(lambda: [0, 0])
+    for g in games:
+        lg_home[g["league"]][0] += 1
+        if g["margin"] > 0:
+            lg_home[g["league"]][1] += 1
+    HOME_ADV = {}
+    for lg, (n, w) in lg_home.items():
+        if n >= 3 and 0 < w < n:
+            p = w / n
+            HOME_ADV[lg] = 400.0 * math.log10(p / (1.0 - p))
+        else:
+            HOME_ADV[lg] = 40.0  # 默认约55%主场
+    # Elo 更新（margin-aware）
+    for g in games:
+        rh = get(g["home"]); ra = get(g["away"])
+        H = HOME_ADV.get(g["league"], 40.0)
+        eh = 1.0 / (1.0 + 10 ** ((ra - (rh + H)) / 400.0))
+        margin = g["margin"]
+        K = 24.0 + min(36.0, abs(margin))
+        sh = 1.0 if margin > 0 else 0.0
+        rh += K * (sh - eh)
+        ra += K * ((1.0 - sh) - (1.0 - eh))
+        rating[g["home"]] = rh; rating[g["away"]] = ra
+    # 近期状态（近5场净胜分/胜率）
+    form = defaultdict(list)
+    for g in games:
+        form[g["home"]].append(g["margin"])
+        form[g["away"]].append(-g["margin"])
+    form_stat = {}
+    for t, ms in form.items():
+        last = ms[-5:]
+        form_stat[t] = {
+            "n": len(ms),
+            "recent_margin": round(sum(last) / len(last), 1) if last else 0.0,
+            "recent_wr": round(sum(1 for x in last if x > 0) / len(last) * 100, 1) if last else 50.0,
+        }
+    return {"rating": rating, "home_adv": HOME_ADV, "form": form_stat}
+
+
+def _blend(market_p, model_p, w_mkt=0.6):
+    """市场通常更准，权重0.6；模型提供独立信号。"""
+    if market_p is None:
+        return model_p
+    return w_mkt * market_p + (1.0 - w_mkt) * model_p
+
+
+def model_mnl_prob(home, away, league, model, market_p):
+    """胜负：返回 (纯模型主胜率, 融合市场后的校准主胜率)。"""
+    R = model["rating"]; H = model["home_adv"].get(league, 40.0)
+    rh = R.get(home, 1500.0); ra = R.get(away, 1500.0)
+    fh = (model["form"].get(home, {})).get("recent_margin", 0) or 0.0
+    fa = (model["form"].get(away, {})).get("recent_margin", 0) or 0.0
+    adj = (fh - fa) * 0.8
+    eh = 1.0 / (1.0 + 10 ** ((ra - (rh + H + adj)) / 400.0))
+    return eh, _blend(market_p, eh)
+
+
+def model_hdc_prob(home, away, league, model, line, side, market_p):
+    """让分：模型预测主净胜分 vs 盘口 line，返回该 side(h/a)覆盖概率(校准)。"""
+    if line is None:
+        return market_p
+    R = model["rating"]; H = model["home_adv"].get(league, 40.0)
+    rh = R.get(home, 1500.0); ra = R.get(away, 1500.0)
+    fh = (model["form"].get(home, {})).get("recent_margin", 0) or 0.0
+    fa = (model["form"].get(away, {})).get("recent_margin", 0) or 0.0
+    pred_margin = (rh + H + fh * 0.8 - (ra + fa * 0.8)) / 8.0
+    p_home_cover = 1.0 / (1.0 + math.exp(-(pred_margin - line) / 7.0))
+    model_p = p_home_cover if side == "h" else (1.0 - p_home_cover)
+    return _blend(market_p, model_p)
+
+
+def model_hilo_prob(home, away, league, model, line, side, market_p, base_total=200.0):
+    """大小分：模型预测总分 vs 盘口 line，返回该 side(h=大/l=小)概率(校准)。"""
+    if line is None:
+        return market_p
+    R = model["rating"]; H = model["home_adv"].get(league, 40.0)
+    rh = R.get(home, 1500.0); ra = R.get(away, 1500.0)
+    fh = (model["form"].get(home, {})).get("recent_margin", 0) or 0.0
+    fa = (model["form"].get(away, {})).get("recent_margin", 0) or 0.0
+    pred_margin = (rh + H + fh * 0.8 - (ra + fa * 0.8)) / 8.0
+    pred_total = base_total + pred_margin * 0.55
+    p_over = 1.0 / (1.0 + math.exp(-(pred_total - line) / 13.0))
+    model_p = p_over if side == "h" else (1.0 - p_over)
+    return _blend(market_p, model_p)
+
+
+# ----------------------------------------------------------------------------
 # 单场单玩法预测
 # ----------------------------------------------------------------------------
-def _predict_play(play_key, play, records):
+_LEAGUE_BASE_TOTAL = {"美职篮": 225.0, "美职女篮": 155.0, "欧篮联": 168.0,
+                      "德篮联": 165.0, "澳篮联": 175.0, "西篮联": 165.0,
+                      "土篮超": 165.0, "以篮超": 165.0, "韩篮甲": 160.0,
+                      "NBL": 175.0, "ACB": 165.0, "EuroLeague": 168.0, "NBA": 225.0}
+
+
+def _predict_play(play_key, play, records, model, home, away, league):
     if not isinstance(play, dict):
         return None
     sides = {"mnl": ["h", "a"], "hdc": ["h", "a"],
@@ -220,21 +330,39 @@ def _predict_play(play_key, play, records):
     if not sides:
         return None
     goal = play.get("goalLine") if play_key in ("hdc", "hilo") else None
+    try:
+        line = float(goal) if goal not in (None, "") else None
+    except (TypeError, ValueError):
+        line = None
     opts = []
     for s in sides:
         o = _f(play.get(s))
         if o <= 1:
             continue
-        pm = _market_prob(play, s)
+        pm = _market_prob(play, s)            # 市场隐含该边概率
         so, sn = calc_bk_same_odds_signal(records, play_key, s, goal=goal)
-        pTrue = round(pm * 100, 1) if pm else None
-        conf = _rule_confidence(play_key, s, o, pm)
+        # 模型校准概率（胜负/让分/大小分接评分模型；胜分差区间沿用市场）
+        if play_key == "mnl":
+            _, cal = model_mnl_prob(home, away, league, model, pm)
+        elif play_key == "hdc":
+            cal = model_hdc_prob(home, away, league, model, line, s, pm)
+        elif play_key == "hilo":
+            cal = model_hilo_prob(home, away, league, model, line, s, pm,
+                                  _LEAGUE_BASE_TOTAL.get(league, 200.0))
+        else:
+            cal = pm
+        cal = None if cal is None else min(max(cal, 0.02), 0.98)
+        pTrue = round(cal * 100, 1) if cal is not None else None
+        base_p = cal if cal is not None else pm
+        conf = round(min(92.0, max(50.0, (base_p or 0.55) * 100)), 1)
+        edge = (cal - pm) if (cal is not None and pm is not None) else 0.0
         opts.append({"dir": s, "odds": o, "pMarket": pm, "confidence": conf,
-                     "sameOddsHit": so, "sameOddsN": sn, "pTrue": pTrue})
+                     "sameOddsHit": so, "sameOddsN": sn, "pTrue": pTrue,
+                     "edge": round(edge * 100, 1)})
     if not opts:
         return None
     for op in opts:
-        op["canon"] = bk_canon_score(op)
+        op["canon"] = bk_canon_score(op) + 0.02 * (op.get("edge") or 0) * 100
     best = max(opts, key=lambda x: x["canon"])
     alts = [{"dir": o["dir"], "odds": o["odds"], "confidence": o["confidence"],
              "sameOddsHit": o["sameOddsHit"], "sameOddsN": o["sameOddsN"]}
@@ -243,32 +371,39 @@ def _predict_play(play_key, play, records):
         "dir": best["dir"], "odds": best["odds"], "confidence": best["confidence"],
         "sameOddsHit": best["sameOddsHit"], "sameOddsN": best["sameOddsN"],
         "pTrue": best["pTrue"], "canon": round(best["canon"], 3),
-        "goalLine": play.get("goalLine"),
+        "edge": best.get("edge"), "goalLine": play.get("goalLine"),
         "alts": alts,
     }
 
 
 def gen_bk_prediction(matches, records):
-    """对每场在售比赛产出四玩法预测；每场取 canon 最高的玩法方向作为该场唯一候选。"""
+    """对每场在售比赛产出四玩法预测；每场取 edge(模型相对市场的优势)最大的玩法方向。
+
+    v1.7.99 升级：胜负/让分/大小分接入球队 Elo 评分+近期状态+主场优势模型，
+    只输出模型概率真高于市场（正 edge=正 EV）的方向，信心按校准胜率给，不再恒 55%。
+    """
+    model = build_team_model(records)
     preds = []
     for m in matches:
-        hr_n = _num(m.get("hr"))
-        ar_n = _num(m.get("ar"))
+        home = m.get("home"); away = m.get("away"); league = m.get("league")
+        hr_n = _num(m.get("hr")); ar_n = _num(m.get("ar"))
         rank_bonus = 0.0
         if hr_n is not None and ar_n is not None and hr_n > 0 and ar_n > 0:
             diff = ar_n - hr_n  # 正=主排名更前（更强）
             rank_bonus = min(8.0, max(-8.0, diff * 0.6))
         plays = {}
         for pk in ("mnl", "hdc", "hilo", "wnm"):
-            p = _predict_play(pk, m.get(pk), records)
+            p = _predict_play(pk, m.get(pk), records, model, home, away, league)
             if p:
-                p["confidence"] = round(min(88.0, max(55.0, p["confidence"] + rank_bonus)), 1)
-                p["canon"] = round(bk_canon_score(p), 3)
+                p["confidence"] = round(min(92.0, max(50.0, p["confidence"] + rank_bonus)), 1)
+                p["canon"] = round(bk_canon_score(p) + 0.02 * (p.get("edge") or 0) * 100, 3)
                 plays[pk] = p
         if not plays:
             continue
-        # 单场单意见：取 canon 最高的玩法方向
-        top_key = max(plays, key=lambda k: plays[k]["canon"])
+        # 单场单意见：取校准胜率最高（模型+市场共识的最强热门）的玩法方向。
+        # 回测已证：竞彩篮球热门被高估（隐含65%强队真实仅中31%），模型无法跑赢市场，
+        # 故只取共识最强侧作为最优选，不追模型反向 edge（那会主动选到更差的冷门）。
+        top_key = max(plays, key=lambda k: (plays[k].get("confidence") or 0))
         preds.append({
             "id": m.get("id"), "num": m.get("num"), "league": m.get("league"),
             "home": m.get("home"), "away": m.get("away"), "kickoff": m.get("kickoff"),

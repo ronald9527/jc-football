@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-02 20:00:41",
+ "updatedAt": "2026-11-03 19:03:53",
  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主",
  "predictions": [
   {
@@ -15,17 +15,18 @@
     "mnl": {
      "dir": "a",
      "odds": 1.95,
-     "confidence": 55.6,
+     "confidence": 50.6,
      "sameOddsHit": 57.8,
      "sameOddsN": 45,
-     "pTrue": 43.5,
-     "canon": 0.442,
+     "pTrue": 49.4,
+     "canon": 12.399,
+     "edge": 6.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "h",
        "odds": 1.5,
-       "confidence": 55.0,
+       "confidence": 57.3,
        "sameOddsHit": 42.2,
        "sameOddsN": 45
       }
@@ -34,36 +35,38 @@
     "hdc": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 55.6,
+     "confidence": 62.7,
      "sameOddsHit": null,
      "sameOddsN": 1,
-     "pTrue": 50.0,
-     "canon": 0.542,
+     "pTrue": 62.1,
+     "canon": 24.826,
+     "edge": 12.1,
      "goalLine": "-2.5",
      "alts": [
       {
        "dir": "a",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 1
       }
      ]
     },
     "hilo": {
-     "dir": "h",
-     "odds": 1.66,
-     "confidence": 55.6,
+     "dir": "l",
+     "odds": 1.74,
+     "confidence": 58.2,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 51.2,
-     "canon": 0.542,
+     "pTrue": 57.6,
+     "canon": 18.178,
+     "edge": 8.8,
      "goalLine": "+180.5",
      "alts": [
       {
-       "dir": "l",
-       "odds": 1.74,
-       "confidence": 55.0,
+       "dir": "h",
+       "odds": 1.66,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 0
       }
@@ -72,45 +75,46 @@
     "wnm": {
      "dir": "l6",
      "odds": 36.0,
-     "confidence": 55.6,
+     "confidence": 50.6,
      "sameOddsHit": 5.0,
      "sameOddsN": 20,
      "pTrue": 4.4,
-     "canon": 0.436,
+     "canon": 0.386,
+     "edge": 0.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "l1",
        "odds": 4.9,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 30.0,
        "sameOddsN": 20
       },
       {
        "dir": "l2",
        "odds": 5.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 25.0,
        "sameOddsN": 20
       },
       {
        "dir": "l3",
        "odds": 9.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 10.0,
        "sameOddsN": 20
       },
       {
        "dir": "l4",
        "odds": 18.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l5",
        "odds": 27.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       }
@@ -130,38 +134,40 @@
    "ar": "美职篮3",
    "plays": {
     "mnl": {
-     "dir": "a",
-     "odds": 1.19,
-     "confidence": 64.1,
-     "sameOddsHit": 57.8,
+     "dir": "h",
+     "odds": 2.95,
+     "confidence": 50.0,
+     "sameOddsHit": 42.2,
      "sameOddsN": 45,
-     "pTrue": 71.3,
-     "canon": 0.527,
+     "pTrue": 40.5,
+     "canon": 23.956,
+     "edge": 11.8,
      "goalLine": "",
      "alts": [
       {
-       "dir": "h",
-       "odds": 2.95,
-       "confidence": 55.0,
-       "sameOddsHit": 42.2,
+       "dir": "a",
+       "odds": 1.19,
+       "confidence": 66.0,
+       "sameOddsHit": 57.8,
        "sameOddsN": 45
       }
      ]
     },
     "hdc": {
-     "dir": "a",
-     "odds": 1.65,
-     "confidence": 55.0,
+     "dir": "h",
+     "odds": 1.75,
+     "confidence": 50.0,
      "sameOddsHit": null,
      "sameOddsN": 1,
-     "pTrue": 51.5,
-     "canon": 0.536,
+     "pTrue": 48.6,
+     "canon": 0.686,
+     "edge": 0.1,
      "goalLine": "+7.5",
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.75,
-       "confidence": 55.0,
+       "dir": "a",
+       "odds": 1.65,
+       "confidence": 51.4,
        "sameOddsHit": null,
        "sameOddsN": 1
       }
@@ -170,17 +176,18 @@
     "hilo": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 55.0,
+     "confidence": 51.3,
      "sameOddsHit": null,
      "sameOddsN": 1,
-     "pTrue": 50.0,
-     "canon": 0.536,
+     "pTrue": 54.9,
+     "canon": 10.304,
+     "edge": 4.9,
      "goalLine": "+222.5",
      "alts": [
       {
        "dir": "l",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 1
       }
@@ -189,52 +196,53 @@
     "wnm": {
      "dir": "l4",
      "odds": 7.2,
-     "confidence": 55.0,
+     "confidence": 50.0,
      "sameOddsHit": 15.0,
      "sameOddsN": 20,
      "pTrue": 13.8,
-     "canon": 0.395,
+     "canon": 0.345,
+     "edge": 0.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "l1",
        "odds": 4.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 30.0,
        "sameOddsN": 20
       },
       {
        "dir": "l2",
        "odds": 4.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 25.0,
        "sameOddsN": 20
       },
       {
        "dir": "l3",
        "odds": 5.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 10.0,
        "sameOddsN": 20
       },
       {
        "dir": "l5",
        "odds": 10.5,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l6",
        "odds": 9.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 5.0,
        "sameOddsN": 20
       }
      ]
     }
    },
-   "topPlay": "hdc"
+   "topPlay": "hilo"
   },
   {
    "id": "2042476",
@@ -247,20 +255,21 @@
    "ar": "美职篮15",
    "plays": {
     "mnl": {
-     "dir": "h",
-     "odds": 1.33,
-     "confidence": 63.0,
-     "sameOddsHit": 42.2,
+     "dir": "a",
+     "odds": 2.34,
+     "confidence": 52.4,
+     "sameOddsHit": 57.8,
      "sameOddsN": 45,
-     "pTrue": 63.8,
-     "canon": 0.466,
+     "pTrue": 40.8,
+     "canon": 9.417,
+     "edge": 4.5,
      "goalLine": "",
      "alts": [
       {
-       "dir": "a",
-       "odds": 2.34,
-       "confidence": 55.0,
-       "sameOddsHit": 57.8,
+       "dir": "h",
+       "odds": 1.33,
+       "confidence": 57.3,
+       "sameOddsHit": 42.2,
        "sameOddsN": 45
       }
      ]
@@ -268,36 +277,38 @@
     "hdc": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 57.4,
+     "confidence": 55.8,
      "sameOddsHit": 20.0,
      "sameOddsN": 5,
-     "pTrue": 50.0,
-     "canon": 0.56,
+     "pTrue": 53.4,
+     "canon": 7.348,
+     "edge": 3.4,
      "goalLine": "-4.5",
      "alts": [
       {
        "dir": "a",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 80.0,
        "sameOddsN": 5
       }
      ]
     },
     "hilo": {
-     "dir": "h",
+     "dir": "l",
      "odds": 1.7,
-     "confidence": 57.4,
+     "confidence": 59.5,
      "sameOddsHit": null,
      "sameOddsN": 3,
-     "pTrue": 50.0,
-     "canon": 0.56,
+     "pTrue": 57.1,
+     "canon": 14.789,
+     "edge": 7.1,
      "goalLine": "+233.5",
      "alts": [
       {
-       "dir": "l",
+       "dir": "h",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 3
       }
@@ -306,52 +317,53 @@
     "wnm": {
      "dir": "l3",
      "odds": 13.0,
-     "confidence": 57.4,
+     "confidence": 52.4,
      "sameOddsHit": 10.0,
      "sameOddsN": 20,
      "pTrue": 14.2,
-     "canon": 0.47,
+     "canon": 0.42,
+     "edge": 0.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "l1",
        "odds": 5.6,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 30.0,
        "sameOddsN": 20
       },
       {
        "dir": "l2",
        "odds": 6.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 25.0,
        "sameOddsN": 20
       },
       {
        "dir": "l4",
        "odds": 19.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l5",
        "odds": 27.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l6",
        "odds": 34.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 5.0,
        "sameOddsN": 20
       }
      ]
     }
    },
-   "topPlay": "hdc"
+   "topPlay": "hilo"
   },
   {
    "id": "2042477",
@@ -366,55 +378,58 @@
     "mnl": {
      "dir": "a",
      "odds": 2.15,
-     "confidence": 56.8,
+     "confidence": 51.8,
      "sameOddsHit": 57.8,
      "sameOddsN": 45,
-     "pTrue": 39.4,
-     "canon": 0.454,
+     "pTrue": 36.7,
+     "canon": -5.199,
+     "edge": -2.8,
      "goalLine": "",
      "alts": [
       {
        "dir": "h",
        "odds": 1.4,
-       "confidence": 57.5,
+       "confidence": 50.0,
        "sameOddsHit": 42.2,
        "sameOddsN": 45
       }
      ]
     },
     "hdc": {
-     "dir": "h",
+     "dir": "a",
      "odds": 1.7,
-     "confidence": 56.8,
+     "confidence": 65.9,
      "sameOddsHit": null,
      "sameOddsN": 2,
-     "pTrue": 50.0,
-     "canon": 0.554,
+     "pTrue": 64.1,
+     "canon": 28.858,
+     "edge": 14.1,
      "goalLine": "-3.5",
      "alts": [
       {
-       "dir": "a",
+       "dir": "h",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 2
       }
      ]
     },
     "hilo": {
-     "dir": "h",
+     "dir": "l",
      "odds": 1.7,
-     "confidence": 56.8,
+     "confidence": 55.7,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 50.0,
-     "canon": 0.554,
+     "pTrue": 53.9,
+     "canon": 8.347,
+     "edge": 3.9,
      "goalLine": "+221.5",
      "alts": [
       {
-       "dir": "l",
+       "dir": "h",
        "odds": 1.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 0
       }
@@ -423,45 +438,46 @@
     "wnm": {
      "dir": "l4",
      "odds": 18.0,
-     "confidence": 56.8,
+     "confidence": 51.8,
      "sameOddsHit": 15.0,
      "sameOddsN": 20,
      "pTrue": 9.6,
-     "canon": 0.457,
+     "canon": 0.407,
+     "edge": 0.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "l1",
        "odds": 5.45,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 30.0,
        "sameOddsN": 20
       },
       {
        "dir": "l2",
        "odds": 5.7,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 25.0,
        "sameOddsN": 20
       },
       {
        "dir": "l3",
        "odds": 10.5,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 10.0,
        "sameOddsN": 20
       },
       {
        "dir": "l5",
        "odds": 26.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l6",
        "odds": 30.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 5.0,
        "sameOddsN": 20
       }
@@ -483,17 +499,18 @@
     "mnl": {
      "dir": "a",
      "odds": 2.25,
-     "confidence": 55.6,
+     "confidence": 50.6,
      "sameOddsHit": 57.8,
      "sameOddsN": 45,
-     "pTrue": 37.7,
-     "canon": 0.442,
+     "pTrue": 42.4,
+     "canon": 9.999,
+     "edge": 4.8,
      "goalLine": "",
      "alts": [
       {
        "dir": "h",
        "odds": 1.36,
-       "confidence": 59.2,
+       "confidence": 57.2,
        "sameOddsHit": 42.2,
        "sameOddsN": 45
       }
@@ -502,37 +519,39 @@
     "hdc": {
      "dir": "h",
      "odds": 1.65,
-     "confidence": 55.6,
+     "confidence": 55.9,
      "sameOddsHit": null,
      "sameOddsN": 2,
-     "pTrue": 51.5,
-     "canon": 0.542,
+     "pTrue": 55.3,
+     "canon": 8.149,
+     "edge": 3.8,
      "goalLine": "-3.5",
      "alts": [
       {
        "dir": "a",
        "odds": 1.75,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 2
       }
      ]
     },
     "hilo": {
-     "dir": "h",
+     "dir": "l",
      "odds": 1.7,
-     "confidence": 55.6,
-     "sameOddsHit": 60.0,
+     "confidence": 54.2,
+     "sameOddsHit": 40.0,
      "sameOddsN": 5,
-     "pTrue": 50.0,
-     "canon": 0.542,
+     "pTrue": 53.6,
+     "canon": 7.732,
+     "edge": 3.6,
      "goalLine": "+229.5",
      "alts": [
       {
-       "dir": "l",
+       "dir": "h",
        "odds": 1.7,
-       "confidence": 55.0,
-       "sameOddsHit": 40.0,
+       "confidence": 50.0,
+       "sameOddsHit": 60.0,
        "sameOddsN": 5
       }
      ]
@@ -540,45 +559,46 @@
     "wnm": {
      "dir": "l6",
      "odds": 28.0,
-     "confidence": 55.6,
+     "confidence": 50.6,
      "sameOddsHit": 5.0,
      "sameOddsN": 20,
      "pTrue": 5.8,
-     "canon": 0.439,
+     "canon": 0.389,
+     "edge": 0.0,
      "goalLine": "",
      "alts": [
       {
        "dir": "l1",
        "odds": 5.3,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 30.0,
        "sameOddsN": 20
       },
       {
        "dir": "l2",
        "odds": 5.55,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 25.0,
        "sameOddsN": 20
       },
       {
        "dir": "l3",
        "odds": 10.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 10.0,
        "sameOddsN": 20
       },
       {
        "dir": "l4",
        "odds": 14.5,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       },
       {
        "dir": "l5",
        "odds": 22.0,
-       "confidence": 55.0,
+       "confidence": 50.0,
        "sameOddsHit": 15.0,
        "sameOddsN": 20
       }
