@@ -1760,8 +1760,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.107";
+const VERSION = "v1.7.108";
 const CHANGELOG = [
+  {
+    version: "v1.7.107",
+    date: "2026-11-04",
+    title: "修复比分预测历史赛果不回填（周一等已结束比赛）",
+    details: [
+      "现象：已结束比赛（如周一 11-02 竞彩）在比分预测板块显示『未开赛』，无实际赛果",
+      "根因：同一场竞彩被双写成两条——football-data 英文版(带 FINISHED+actH 赛果) 与 竞彩历史中文版(无状态)。spJcFilter 只显示含中文的版本→只见到无赛果的中文镜像；且原去重 key 依赖 m.date(为空) 与部分队名 spZh 翻译失败，中英文双写永远匹不上，去重失效",
+      "修复：①新增 dedupeMatches 先按(utcDate+翻译队名)归并全量，优先保留有赛果/有状态的版本、显示名优先取中文，再交 spJcFilter 显示；②补 team_map 拉科鲁尼亚(RC Deportivo La Coruña)、阿尔维卡(FC Alverca) 的 FD 形态翻译；③过滤 status 空且无 actH 的脏残留项",
+      "结果：周一 11-02 竞彩 6 场(萨索洛2:4佛罗伦萨、亚特兰大0:3帕尔马、纽卡0:1埃弗顿、拉科2:1奥萨苏纳、本菲卡1:0阿尔维卡、布拉干蒂诺2:1桑托斯)全部正确回填 FINISHED+赛果"
+    ]
+  },
   {
     version: "v1.7.106",
     date: "2026-11-04",
@@ -5981,6 +5992,26 @@ function renderVzBackfill(){
   box.innerHTML = html;
 }
 
+/* v1.7.107 修复「同一比赛双写导致赛果不显示」：
+   FD 英文版(带 FINISHED+赛果) 与 竞彩历史中文版(无状态) 对同一场竞彩同时存在，
+   spJcFilter 只显示含中文的版本 → 只见到无赛果的中文镜像。
+   此处先按 (utcDate + 翻译队名) 归并：优先保留有赛果/有状态的版本，
+   显示名优先取含中文的版本，再交给 spJcFilter 显示。 */
+function dedupeMatches(list){
+  const _best={}, _order=[];
+  (list||[]).forEach(m=>{
+    const d=((m.utcDate||m.date||"")||"").slice(0,10);
+    const h=spZh(m.home), a=spZh(m.away);
+    const k=d+"|"+h+"|"+a;
+    if(!(k in _best)){ _best[k]={...m}; _order.push(k); return; }
+    const b=_best[k];
+    if(b.actH==null && m.actH!=null){ b.actH=m.actH; b.actA=m.actA; b.status=m.status; }
+    if((!b.status) && m.status){ b.status=m.status; }
+    if(!/[一-龥]/.test(b.home||"") && /[一-龥]/.test(m.home||"")){ b.home=m.home; b.away=m.away; }
+  });
+  return _order.map(k=>_best[k]).filter(m=> (m.status && m.status!=="") || m.actH!=null);
+}
+
 function renderScorePred(){
   try{ renderWhoScored(); }catch(e){}
   try{ renderVzhan(); }catch(e){}
@@ -5994,7 +6025,7 @@ function renderScorePred(){
   /* 只显示竞彩开出的比赛（用户要求）：按「竞彩队名组合」过滤——
      队名集合取自当天赛程 + 竞彩历史档案（BUILT_HISTORY），翻译用 spZh，
      主客顺序不敏感（home|away 与 away|home 都命中） */
-  let ms = spJcFilter(msAll);
+  let ms = spJcFilter(dedupeMatches(msAll));
   /* v1.7.61 渲染层去重：接口记录（football-data，带赛果）与本地赔率基线可能
      同时给出同一竞彩对阵（同编号+同两队），页面出现一「已结束」一「未开赛」
      两张卡。这里按 竞彩编号|主队|客队 归并：同键保留一条——有赛果的优先，

@@ -166,7 +166,8 @@ AFC温布尔登|AFC温布尔登
 毕尔巴鄂竞技|Athletic Club|Athletic Bilbao
 皇家社会|Real Sociedad
 皇家贝蒂斯|Real Betis
-拉科鲁尼亚|Deportivo|Deportivo La Coruna|Deportivo de A Coruna
+拉科鲁尼亚|Deportivo|Deportivo La Coruna|Deportivo de A Coruna|RC Deportivo La Coruña|Deportivo La Coruña
+阿尔维卡|FC Alverca|Alverca
 西班牙人|Espanyol
 赫塔费|Getafe
 阿拉维斯|Alaves|Deportivo Alaves
