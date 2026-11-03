@@ -1,7 +1,1017 @@
 {
- "updatedAt": "2026-11-03 05:56:42",
- "total": 810,
+ "updatedAt": "2026-11-03 13:52:58",
+ "total": 823,
  "records": [
+  {
+   "id": "1480052",
+   "num": "周三005",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "莱红牛",
+   "away": "曼城",
+   "goal": "+1",
+   "odds": {
+    "h": 5.02,
+    "d": 4.75,
+    "a": 1.37
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "29",
+   "ar": "10",
+   "hrn": 29,
+   "arn": 10,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1479949",
+   "num": "周三006",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "波尔图",
+   "away": "那不勒斯",
+   "goal": "-1",
+   "odds": {
+    "h": 1.88,
+    "d": 3.45,
+    "a": 3.15
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "34",
+   "ar": "22",
+   "hrn": 34,
+   "arn": 22,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1480047",
+   "num": "周三007",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "埃因霍温",
+   "away": "布鲁日",
+   "goal": "-1",
+   "odds": {
+    "h": 1.92,
+    "d": 3.85,
+    "a": 2.79
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "18",
+   "ar": "11",
+   "hrn": 18,
+   "arn": 11,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1479940",
+   "num": "周三008",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "多特蒙德",
+   "away": "贝蒂斯",
+   "goal": "-1",
+   "odds": {
+    "h": 1.6,
+    "d": 3.95,
+    "a": 3.82
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "13",
+   "ar": "5",
+   "hrn": 13,
+   "arn": 5,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1480118",
+   "num": "周三009",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "维京",
+   "away": "萨巴赫",
+   "goal": "-1",
+   "odds": {
+    "h": 1.28,
+    "d": 5.05,
+    "a": 6.25
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "33",
+   "ar": "25",
+   "hrn": 33,
+   "arn": 25,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1479998",
+   "num": "周三010",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "朗斯",
+   "away": "科莫",
+   "goal": "+1",
+   "odds": {
+    "h": 3.13,
+    "d": 3.7,
+    "a": 1.82
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "27",
+   "ar": "9",
+   "hrn": 27,
+   "arn": 9,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1480083",
+   "num": "周三011",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 04:00",
+   "league": "欧冠",
+   "home": "斯拉维亚",
+   "away": "阿森纳",
+   "goal": "+2",
+   "odds": {
+    "h": 10.25,
+    "d": 5.8,
+    "a": 1.15
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "32",
+   "ar": "7",
+   "hrn": 32,
+   "arn": 7,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+2"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.8,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.8·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球2球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1479953",
+   "num": "周三004",
+   "date": "2026-11-05",
+   "kickoff": "2026-11-05 01:45",
+   "league": "欧冠",
+   "home": "费内巴切",
+   "away": "利物浦",
+   "goal": "+1",
+   "odds": {
+    "h": 5.0,
+    "d": 4.45,
+    "a": 1.4
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "31",
+   "ar": "3",
+   "hrn": 31,
+   "arn": 3,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1473921",
+   "num": "周三002",
+   "date": "2026-11-04",
+   "kickoff": "2026-11-04 20:15",
+   "league": "亚冠",
+   "home": "布里兰",
+   "away": "鹿岛鹿角",
+   "goal": "+1",
+   "odds": {
+    "h": 3.55,
+    "d": 3.5,
+    "a": 1.75
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "12",
+   "ar": "1",
+   "hrn": 12,
+   "arn": 1,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1473947",
+   "num": "周三001",
+   "date": "2026-11-04",
+   "kickoff": "2026-11-04 18:00",
+   "league": "亚冠",
+   "home": "浦项制铁",
+   "away": "大阪钢巴",
+   "goal": "+1",
+   "odds": {
+    "h": 2.85,
+    "d": 3.25,
+    "a": 2.08
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "14",
+   "ar": "3",
+   "hrn": 14,
+   "arn": 3,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
   {
    "id": "2042499",
    "num": "周二005",
@@ -1964,6 +2974,309 @@
     ]
    },
    "predAt": "2026-11-03 05:25",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1473915",
+   "num": "周二003",
+   "date": "2026-11-03",
+   "kickoff": "2026-11-03 20:15",
+   "league": "亚冠",
+   "home": "曼谷港务",
+   "away": "北京国安",
+   "goal": "+1",
+   "odds": {
+    "h": 3.67,
+    "d": 3.95,
+    "a": 1.63
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "15",
+   "ar": "5",
+   "hrn": 15,
+   "arn": 5,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1474001",
+   "num": "周二002",
+   "date": "2026-11-03",
+   "kickoff": "2026-11-03 18:00",
+   "league": "亚冠",
+   "home": "柏太阳神",
+   "away": "大田市民",
+   "goal": "-1",
+   "odds": {
+    "h": 1.37,
+    "d": 4.3,
+    "a": 5.65
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "7",
+   "ar": "9",
+   "hrn": 7,
+   "arn": 9,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 40,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率0%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
+   "result": null,
+   "hitFlag": null,
+   "hhadHit": null,
+   "asianHit": null,
+   "scoreHit": null
+  },
+  {
+   "id": "1473883",
+   "num": "周二001",
+   "date": "2026-11-03",
+   "kickoff": "2026-11-03 15:45",
+   "league": "亚冠",
+   "home": "纽喷气机",
+   "away": "上海海港",
+   "goal": "+1",
+   "odds": {
+    "h": 3.61,
+    "d": 4.08,
+    "a": 1.62
+   },
+   "prob": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "sup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hr": "16",
+   "ar": "8",
+   "hrn": 16,
+   "arn": 8,
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "kellyDiff": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "+1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "2:1",
+    "alternatives": [
+     "1:0",
+     "1:1",
+     "1:2"
+    ],
+    "confidence": 40,
+    "expHome": 1.5,
+    "expAway": 1.2,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.5·客队预期进球1.2",
+     "热门方向主胜概率0%",
+     "竞彩让球1球调整"
+    ]
+   },
+   "predAt": "2026-11-03 13:06",
    "result": null,
    "hitFlag": null,
    "hhadHit": null,
