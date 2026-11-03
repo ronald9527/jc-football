@@ -1486,20 +1486,15 @@ footer b{color:var(--sub)}
     <div class="sp-sec">
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>⚽ 今日竞彩预测比分</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
-        <div class="sp-sub-head">WhoScored 人工预测 · 竞彩赛程对照<span class="tip">以当天竞彩开出的比赛为主干；有预测挂比分，无预测标未推荐；完赛后回填实际赛果与命中</span></div>
-        <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="wsSummary"></div>
-        <div class="sp-filters" id="wsDateBar"></div>
-        <div id="wsList"></div>
-        <div class="sp-sub-head">🤖 自建 Poisson 模型参考<span class="tip">比分优先展示 WhoScored 人工预测（与源站 PREVIEWS 一致，带绿色徽标）；源站缺预测时用本模型兜底</span></div>
+        <div class="sp-sub-head">🤖 今日竞彩比分预测<span class="tip">以当天竞彩开出的比赛为主干；V站·呼死狗 情报优先（红标），其次自建 Poisson 模型兜底；完赛自动回填实际赛果与命中</span></div>
         <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="spSummary"></div>
-        <div class="sp-reliable" id="spReliable"></div>
         <div class="sp-filters" id="spFilters"></div>
         <div id="spList"></div>
       </div>
     </div>
 
     <!-- 分区1.5：V站·呼死狗情报（中文原味，v1.7.75） -->
-    <div class="sp-sec">
+    <div class="sp-sec collapsed">
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>🐶 V站·呼死狗情报（中文原味）</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
         <div class="sp-sub-head">V站 App「呼死狗」海外爆料员第一手情报<span class="tip">伤停/阵容/状态/渊源全中文直出，无需翻译；比分预测为呼死狗爆料员给出，与卡片「V站」徽标同源</span></div>
@@ -1513,6 +1508,7 @@ footer b{color:var(--sub)}
     <div class="sp-sec collapsed">
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>📅 历史回溯与命中统计</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
+        <div class="sp-reliable" id="spReliable"></div>
         <div class="sp-sub-head">📅 WhoScored 赛后回溯<span class="tip">预测 vs 实际比分，按日期回看验证准确与否（赛前🔥高可信场次带同款徽章）</span></div>
         <div class="sp-filters" id="wsHistBar"></div>
         <div id="wsHistList"></div>
@@ -1526,7 +1522,7 @@ footer b{color:var(--sub)}
     </div>
 
     <!-- 分区3：模型 vs WhoScored 命中率 A/B 对比（accuracy_ab.py 每日累积） -->
-    <div class="sp-sec">
+    <div class="sp-sec collapsed">
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>🥊 模型 vs WhoScored 命中率对比</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
         <div class="sp-sub-head">双源同场回测<span class="tip">同一场比赛同时记录 Poisson 模型与 WhoScored 预测并对比赛果；区间为 Wilson 95% 置信区间，显著性为配对符号检验</span></div>
@@ -1748,8 +1744,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.99";
+const VERSION = "v1.7.102";
 const CHANGELOG = [
+  {
+    version: "v1.7.101",
+    date: "2026-11-04",
+    title: "比分预测板块精简重构（去重 + 折叠 + 卡片瘦身）",
+    details: [
+      "去除分区1内重复的『WhoScored 人工预测』列表：原板块把同一批竞彩比赛列两遍（WhoScored列表 + 自建模型列表），是『乱糟糟』主因；现仅保留一份今日列表（V站优先、模型兜底），🔥高信心信号通过 vzConfidence 复用保留",
+      "首屏只展开『今日竞彩预测比分』；V站情报 / 历史回溯 / A-B命中率对比 三个分区默认折叠，点击标题展开，首屏滚动大幅缩短",
+      "『可靠参考』三卡面板从首屏移入折叠的『历史回溯』区，首屏只留核心预测列表",
+      "今日卡片瘦身：去掉冗余英文队名行、压缩元信息；预测/实际比分 + 方向 + 概率条 + 🔥高信心 一行不缺"
+    ]
+  },
   {
     version: "v1.7.91",
     date: "2026-11-01",
@@ -5350,7 +5357,7 @@ function renderWhoScored(){
       + ` · 更新 ${ws.updatedAt||"-"}`;
   }
   const bar = $("#wsDateBar"), list = $("#wsList");
-  if(!bar || !list) return;
+  const _wsMain = !!(bar && list);
   const jcAll = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.matches) ? BUILT_DATA.matches : [];
   const wsByNum = {};
   wsMs.forEach(m=>{ if(m.jcNum){ (wsByNum[m.jcNum] = wsByNum[m.jcNum] || []).push(m); } });
@@ -5363,6 +5370,7 @@ function renderWhoScored(){
   const lgStat = wsLeagueStat(wsMs);
   // 日期选项 = 竞彩销售日（matches.json 即当天开售赛程）
   const jcDates = Array.from(new Set(jcAll.map(m=>m.date).filter(Boolean))).sort().reverse();
+  if(_wsMain){
   if(!jcDates.length){
     bar.innerHTML = `<div class="empty">暂无竞彩赛程数据（每日自动更新）</div>`;
     list.innerHTML = "";
@@ -5500,6 +5508,7 @@ function renderWhoScored(){
       });
       list.innerHTML = html;
     }
+  }
   }
   /* 赛后回溯：只显示对应竞彩的场次（编号由服务端持久档案补挂，赛后自动纳入） */
   const hb = $("#wsHistBar"), hl = $("#wsHistList");
@@ -6102,9 +6111,10 @@ function renderScorePred(){
         ? `<div class="sp-metaline"><span class="sp-league-tag">${vzm.league||""}</span>🕐 ${vzKick||"时间待定"}</div>`
         : (m.league||m.kickoff ? `<div class="sp-metaline"><span class="sp-league-tag" style="color:var(--sub);background:var(--line);border-color:var(--line)">${m.league||""}</span>🕐 ${m.kickoff?m.kickoff.slice(5,16):(m.date||"")}</div>` : ``);
       const vzAccLine = (hasVz && vzAcc) ? `<span class="vz-acc ${vzAcc.n?'':'vz-acc-pending'}">🐶 ${vzAccText()}</span>` : "";
-      html += `<div class="sp-card ${statusCls}">
-        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}</div>
-        ${(zhH!==m.home||zhA!==m.away)?`<div class="sp-enline">${m.home||""} vs ${m.away||""}</div>`:``}
+      const _vzConf = (hasVz && vzm) ? vzConfidence(vzm, (m.modelPred && m.modelPred.h!=null) ? m.modelPred : null) : {level:"normal", why:""};
+      const _cardHot = _vzConf.level === "high";
+      html += `<div class="sp-card ${statusCls}${_cardHot?" vz-hot":""}">
+        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>
         ${metaLine}
         <div class="sp-scoreline">
           <div class="sp-predwrap"><div class="sp-label">预测比分</div>${predScore}</div>
