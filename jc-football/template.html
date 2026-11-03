@@ -567,12 +567,13 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-vs{color:var(--weak);font-size:10px;font-weight:400}
 .sp-scoreline{display:flex;gap:18px;align-items:center;margin-bottom:8px}
 .sp-label{font-size:10px;color:var(--weak);margin-bottom:2px}
+.sp-label-vz{color:#d32f2f;font-weight:800}
 .sp-pred{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
 .sp-pred i{font-style:normal;color:var(--weak);margin:0 2px}
 /* v1.7.61：源站人工预测徽标 + 模型参考小字 */
 .sp-wstag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700;vertical-align:4px;background:rgba(56,142,60,.18);color:#66bb6a;border:1px solid rgba(56,142,60,.45)}
 .sp-wstag-model{background:rgba(245,124,0,.16);color:#fb8c00;border-color:rgba(245,124,0,.45)}
-.sp-wstag-vz{background:rgba(211,47,47,.18);color:#ef5350;border-color:rgba(211,47,47,.5)}
+.sp-wstag-vz{background:#d32f2f;color:#fff;border-color:#d32f2f;font-size:11px;padding:2px 8px;font-weight:800;vertical-align:middle}
 /* v1.7.81：V站卡片联赛名 + 开赛时间行 + 综合命中率可信度 */
 .sp-metaline{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--sub);margin:-2px 0 8px}
 .sp-league-tag{font-size:10px;font-weight:700;color:#ef5350;background:rgba(211,47,47,.14);border:1px solid rgba(211,47,47,.4);border-radius:7px;padding:1px 7px;white-space:nowrap}
@@ -582,6 +583,10 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .vz-hot{border-color:#ffb300 !important;border-left:3px solid #ffb300 !important;background:rgba(255,179,0,.08) !important}
 .vz-conf{display:inline-block;margin-left:6px;font-size:10px;font-weight:800;color:#1a1300;background:#ffb300;border-radius:8px;padding:1px 7px;vertical-align:middle;letter-spacing:.3px}
 .vz-conf-why{font-size:10.5px;color:#c98a00;margin-top:3px}
+/* v1.7.105：有 V站 预测的卡片整体高亮（红色左边框 + 淡红底），并在队名行加醒目红芯片 */
+.vz-has{border-left:3px solid #d32f2f !important;background:rgba(211,47,47,.07) !important}
+.vz-chip{display:inline-block;margin-left:6px;font-size:10px;font-weight:800;color:#fff;background:#d32f2f;border-radius:9px;padding:2px 8px;white-space:nowrap;box-shadow:0 1px 3px rgba(211,47,47,.4)}
+.vz-has .sp-wstag-vz{margin-left:8px}
 /* v1.7.91：赛果回填命中徽标（精确/方向/未命中）+ 赛后回溯区 */
 .vz-hit{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:800;border-radius:8px;padding:1px 8px;vertical-align:middle}
 .vz-hit-exact{color:#fff;background:#3fb950;border:1px solid rgba(63,185,80,.6)}
@@ -1755,8 +1760,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.104";
+const VERSION = "v1.7.106";
 const CHANGELOG = [
+  {
+    version: "v1.7.105",
+    date: "2026-11-04",
+    title: "V站预测比分标识强化 + 周二预测补抓上线",
+    details: [
+      "补抓：手动重跑 fetch_vzhan.py，V站 数据从 2026-11-02 19:03 的陈旧版刷新，新增『周二005-011』共 15 场 V站 有预测（马竞vs拜仁、巴萨vs维拉、曼联vs罗马等）已部署上线",
+      "根因：2026-11-02 后自动抓取未运行（沙箱休眠/定时任务未触发），导致周二预测一直没进系统；非脚本跳过（fetch_vzhan 在流水线中无条件调用）",
+      "V站有预测比分的提醒强化：①『V站』小字标改为实心红徽章；②有 V站预测的整张卡片加红色左边框+淡红底(vz-has)；③队名行新增醒目『🐶V站预测』红芯片；④比分标签在有预测时变红加粗显示『V站预测比分』"
+    ]
+  },
   {
     version: "v1.7.103",
     date: "2026-11-04",
@@ -6163,11 +6178,11 @@ function renderScorePred(){
       const vzAccLine = (hasVz && vzAcc) ? `<span class="vz-acc ${vzAcc.n?'':'vz-acc-pending'}">🐶 ${vzAccText()}</span>` : "";
       const _vzConf = (hasVz && vzm) ? vzConfidence(vzm, (m.modelPred && m.modelPred.h!=null) ? m.modelPred : null) : {level:"normal", why:""};
       const _cardHot = _vzConf.level === "high";
-      html += `<div class="sp-card ${statusCls}${_cardHot?" vz-hot":""}">
-        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>
+      html += `<div class="sp-card ${statusCls}${hasVz?" vz-has":""}${_cardHot?" vz-hot":""}">
+        <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${jcNum?`<span class="sp-jcnum" title="对应竞彩赛程编号">竞彩 ${jcNum}</span>`:``}${hasVz?`<span class="vz-chip" title="V站·呼死狗 已给出本场比分预测">🐶V站预测</span>`:``}${_cardHot?`<span class="vz-conf" title="${_vzConf.why}">🔥高信心</span>`:``}</div>
         ${metaLine}
         <div class="sp-scoreline">
-          <div class="sp-predwrap"><div class="sp-label">预测比分</div>${predScore}</div>
+          <div class="sp-predwrap"><div class="sp-label${hasVz?" sp-label-vz":""}">${hasVz?"V站预测比分":"预测比分"}</div>${predScore}</div>
           <div class="sp-actwrap"><div class="sp-label">实际赛果</div>${actual}</div>
         </div>
         ${probBar}
