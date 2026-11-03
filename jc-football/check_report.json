@@ -1,15 +1,15 @@
 {
-  "checkTime": "2026-10-28 22:50:41",
-  "integrity_issues": [],
+  "checkTime": "2026-11-02 18:41:25",
+  "integrity_issues": [
+    "history.json 存在 2 条重复记录(date+num)"
+  ],
   "consistency_issues": [],
   "freshness_issues": [],
-  "code_issues": [
-    "template.html 缺少tab: halffull"
-  ],
+  "code_issues": [],
   "rules_issues": [],
   "integrity_fixed": 0,
-  "consistency_fixed": 17,
+  "consistency_fixed": 84,
   "marks_cleared": 0,
-  "total_fixed": 17,
+  "total_fixed": 84,
   "total_issues": 1
 }

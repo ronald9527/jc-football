@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-31 12:14:25",
+ "updatedAt": "2026-11-02 18:45:32",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -27763,38 +27763,72 @@
    "league": "西甲",
    "home": "比利亚雷",
    "away": "西班牙人",
-   "jcNum": null,
-   "ws": null,
+   "jcNum": "周五009",
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
    "model": {
     "h": 2,
     "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
    },
-   "act": null,
+   "act": {
+    "h": 0,
+    "a": 1
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "vz_seed_ws",
+    "ws_hist"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-31\", \"里尔\", \"朗斯\"]": {
    "date": "2026-10-31",
    "league": "法甲",
    "home": "里尔",
    "away": "朗斯",
-   "jcNum": null,
-   "ws": null,
+   "jcNum": "周五010",
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
    "model": {
     "h": 1,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 0
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "vz_seed_ws",
+    "ws_hist"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   }
   },
   "[\"2026-10-31\", \"卡萨皮亚\", \"里斯本竞技\"]": {
    "date": "2026-10-31",
@@ -28342,13 +28376,17 @@
    "model": {
     "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-30\", \"卡萨皮亚\", \"里斯本竞技\"]": {
@@ -28380,13 +28418,17 @@
    "model": {
     "h": 2,
     "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 4
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-31\", \"沙尔克04\", \"RB莱比锡\"]": {
@@ -28399,13 +28441,17 @@
    "model": {
     "h": 0,
     "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 0,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-31\", \"奥格斯堡\", \"弗赖堡\"]": {
@@ -28418,13 +28464,17 @@
    "model": {
     "h": 1,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-31\", \"皇家贝蒂斯\", \"马拉加\"]": {
@@ -28437,13 +28487,17 @@
    "model": {
     "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-31\", \"AC米兰\", \"国际米兰\"]": {
@@ -28454,15 +28508,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 3,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
    },
-   "act": null,
+   "act": {
+    "h": 3,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-01\", \"柏林联合\", \"科隆\"]": {
@@ -28473,15 +28531,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 1,
+    "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-01\", \"法兰克福\", \"汉堡\"]": {
@@ -28492,15 +28554,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
+    "h": 4,
     "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 3,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-10-31\", \"冈山绿雉\", \"东京FC\"]": {
@@ -28603,19 +28669,36 @@
    "league": "英超",
    "home": "切尔西",
    "away": "曼彻斯特联",
-   "jcNum": null,
-   "ws": null,
+   "jcNum": "周六006",
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
    "model": {
     "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 0
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "vz_seed_ws",
+    "ws_hist"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   }
   },
   "[\"2026-11-01\", \"长崎航海\", \"东京绿茵\"]": {
    "date": "2026-11-01",
@@ -28682,15 +28765,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 1,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-01\", \"科莫\", \"威尼斯\"]": {
@@ -28777,15 +28864,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 4,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 3
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-01\", \"利物浦\", \"阿森纳\"]": {
@@ -28872,15 +28963,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 3,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-01\", \"毕尔巴鄂竞技\", \"皇家社会\"]": {
@@ -28891,15 +28986,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 1,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-02\", \"国际图尔库\", \"赫尔辛基火花\"]": {
@@ -28911,7 +29010,7 @@
    "ws": null,
    "model": {
     "h": 2,
-    "a": 2,
+    "a": 0,
     "exactHit": null,
     "outcomeHit": null,
     "mae": null
@@ -28939,64 +29038,2980 @@
    "sources": [
     "daily"
    ]
+  },
+  "[\"2026-11-01\", \"Como1907\", \"VeneziaFC\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "Como 1907",
+   "away": "Venezia FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"GetafeCF\", \"塞维利亚\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "Getafe CF",
+   "away": "Sevilla FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"Telstar1963\", \"乌德勒支\"]": {
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "Telstar 1963",
+   "away": "FC Utrecht",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 4,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"sbv精英\", \"特温特\"]": {
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "SBV Excelsior",
+   "away": "FC Twente '65",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 4,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 6
+   },
+   "act": {
+    "h": 0,
+    "a": 9
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"FrosinoneCalcio\", \"都灵\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "Frosinone Calcio",
+   "away": "Torino FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"RCStrasbourgAlsace\", \"欧塞尔\"]": {
+   "date": "2026-11-01",
+   "league": "法甲",
+   "home": "RC Strasbourg Alsace",
+   "away": "AJ Auxerre",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 5,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"SSLazio\", \"CagliariCalcio\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "SS Lazio",
+   "away": "Cagliari Calcio",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"桑坦德竞技\", \"RealMadridCF\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "Real Racing Club de Santander",
+   "away": "Real Madrid CF",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 0,
+    "a": 3
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"阿罗卡\", \"国民队\"]": {
+   "date": "2026-11-01",
+   "league": "葡超",
+   "home": "FC Arouca",
+   "away": "CD Nacional",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"里昂\", \"昂热\"]": {
+   "date": "2026-11-01",
+   "league": "法甲",
+   "home": "Olympique Lyonnais",
+   "away": "Angers SCO",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"巴黎FC\", \"ASMonacoFC\"]": {
+   "date": "2026-11-01",
+   "league": "法甲",
+   "home": "Paris FC",
+   "away": "AS Monaco FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"LiverpoolFC\", \"ArsenalFC\"]": {
+   "date": "2026-11-01",
+   "league": "英超",
+   "home": "Liverpool FC",
+   "away": "Arsenal FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"USLecce\", \"热那亚\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "US Lecce",
+   "away": "Genoa CFC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"ElcheCF\", \"ValenciaCF\"]": {
+   "date": "2026-11-01",
+   "league": "西甲",
+   "home": "Elche CF",
+   "away": "Valencia CF",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"马德拉航海\", \"CDSantaClara\"]": {
+   "date": "2026-11-01",
+   "league": "葡超",
+   "home": "CS Marítimo",
+   "away": "CD Santa Clara",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"维塞乌学院\", \"RioAveFC\"]": {
+   "date": "2026-11-01",
+   "league": "葡超",
+   "home": "Académico de Viseu FC",
+   "away": "Rio Ave FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"JuventusFC\", \"SSCNapoli\"]": {
+   "date": "2026-11-01",
+   "league": "意甲",
+   "home": "Juventus FC",
+   "away": "SSC Napoli",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"布拉加\", \"法马利康\"]": {
+   "date": "2026-11-01",
+   "league": "葡超",
+   "home": "Sporting Clube de Braga",
+   "away": "FC Famalicão",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"StokeCityFC\", \"PrestonNorthEndFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Stoke City FC",
+   "away": "Preston North End FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"ChelseaFC\", \"ManchesterUnitedFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Chelsea FC",
+   "away": "Manchester United FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"NorwichCityFC\", \"沃特福德\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Norwich City FC",
+   "away": "Watford FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 3,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"LincolnCityFC\", \"BirminghamCityFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Lincoln City FC",
+   "away": "Birmingham City FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"LevanteUD\", \"马德里竞技\"]": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "Levante UD",
+   "away": "Club Atlético de Madrid",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"BolognaFC1909\", \"ACMonza\"]": {
+   "date": "2026-10-31",
+   "league": "意甲",
+   "home": "Bologna FC 1909",
+   "away": "AC Monza",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"门兴格拉德巴赫\", \"SCPaderborn07\"]": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "Borussia Mönchengladbach",
+   "away": "SC Paderborn 07",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 5
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"云达不来梅\", \"TSG1899Hoffenheim\"]": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "SV Werder Bremen",
+   "away": "TSG 1899 Hoffenheim",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"伯恩茅斯\", \"LeedsUnitedFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "AFC Bournemouth",
+   "away": "Leeds United FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"BurnleyFC\", \"朴次茅斯\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Burnley FC",
+   "away": "Portsmouth FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"BrentfordFC\", \"NottinghamForestFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Brentford FC",
+   "away": "Nottingham Forest FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"南安普顿\", \"QueensParkRangersFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Southampton FC",
+   "away": "Queens Park Rangers FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"WestHamUnitedFC\", \"WestBromwichAlbionFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "West Ham United FC",
+   "away": "West Bromwich Albion FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"MiddlesbroughFC\", \"CharltonAthleticFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Middlesbrough FC",
+   "away": "Charlton Athletic FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"斯旺西\", \"BlackburnRoversFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Swansea City AFC",
+   "away": "Blackburn Rovers FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"赫尔城\", \"IpswichTownFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Hull City AFC",
+   "away": "Ipswich Town FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"CoventryCityFC\", \"桑德兰\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Coventry City FC",
+   "away": "Sunderland AFC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"米尔沃尔\", \"DerbyCountyFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Millwall FC",
+   "away": "Derby County FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 3
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"BoltonWanderersFC\", \"BristolCityFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Bolton Wanderers FC",
+   "away": "Bristol City FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 5
+   },
+   "act": {
+    "h": 2,
+    "a": 3
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"狼队\", \"CardiffCityFC\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Wolverhampton Wanderers FC",
+   "away": "Cardiff City FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"ManchesterCityFC\", \"Brighton&HoveAlbionFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Manchester City FC",
+   "away": "Brighton & Hove Albion FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"巴列卡诺\", \"RCCeltadeVigo\"]": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "RC Celta de Vigo",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"MoreirenseFC\", \"CFEstreladaAmadora\"]": {
+   "date": "2026-10-31",
+   "league": "葡超",
+   "home": "Moreirense FC",
+   "away": "CF Estrela da Amadora",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"费耶诺德\", \"福图纳锡塔德\"]": {
+   "date": "2026-10-31",
+   "league": "荷甲",
+   "home": "Feyenoord Rotterdam",
+   "away": "Fortuna Sittard",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"UdineseCalcio\", \"罗马\"]": {
+   "date": "2026-10-31",
+   "league": "意甲",
+   "home": "Udinese Calcio",
+   "away": "AS Roma",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 5
+   },
+   "act": {
+    "h": 2,
+    "a": 5
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"FCBayernMünchen\", \"多特蒙德\"]": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "FC Bayern München",
+   "away": "Borussia Dortmund",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"TottenhamHotspurFC\", \"CrystalPalaceFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Tottenham Hotspur FC",
+   "away": "Crystal Palace FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"PSV埃因霍温\", \"威廉二世\"]": {
+   "date": "2026-10-31",
+   "league": "荷甲",
+   "home": "PSV",
+   "away": "Willem II Tilburg",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 6
+   },
+   "act": {
+    "h": 7,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"海伦芬\", \"奈梅亨\"]": {
+   "date": "2026-10-31",
+   "league": "荷甲",
+   "home": "SC Heerenveen",
+   "away": "NEC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"科里蒂巴\", \"ECVitória\"]": {
+   "date": "2026-10-31",
+   "league": "巴甲",
+   "home": "Coritiba FBC",
+   "away": "EC Vitória",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"ESTroyesAC\", \"LeMansFC\"]": {
+   "date": "2026-10-31",
+   "league": "法甲",
+   "home": "ES Troyes AC",
+   "away": "Le Mans FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"FCBarcelona\", \"阿拉维斯\"]": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "FC Barcelona",
+   "away": "Deportivo Alavés",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 4
+   },
+   "act": {
+    "h": 6,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"AstonVillaFC\", \"FulhamFC\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Aston Villa FC",
+   "away": "Fulham FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"AFCAjax\", \"阿尔克马尔\"]": {
+   "date": "2026-10-31",
+   "league": "荷甲",
+   "home": "AFC Ajax",
+   "away": "AZ",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"坎布尔\", \"前进之鹰\"]": {
+   "date": "2026-10-31",
+   "league": "荷甲",
+   "home": "SC Cambuur-Leeuwarden",
+   "away": "Go Ahead Eagles",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 3,
+    "a": 4,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 5
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"波尔图\", \"GDEstorilPraia\"]": {
+   "date": "2026-10-31",
+   "league": "葡超",
+   "home": "FC Porto",
+   "away": "GD Estoril Praia",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"LeHavreAC\", \"ParisSaint-GermainFC\"]": {
+   "date": "2026-10-30",
+   "league": "法甲",
+   "home": "Le Havre AC",
+   "away": "Paris Saint-Germain FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 4
+   },
+   "act": {
+    "h": 1,
+    "a": 5
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"尼斯\", \"StadeRennaisFC1901\"]": {
+   "date": "2026-10-30",
+   "league": "法甲",
+   "home": "OGC Nice",
+   "away": "Stade Rennais FC 1901",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 5
+   },
+   "act": {
+    "h": 5,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"埃尔弗斯堡\", \"美因茨\"]": {
+   "date": "2026-10-30",
+   "league": "德甲",
+   "home": "SV 07 Elversberg",
+   "away": "1. FSV Mainz 05",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 4,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 5
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"VillarrealCF\", \"西班牙人\"]": {
+   "date": "2026-10-30",
+   "league": "西甲",
+   "home": "Villarreal CF",
+   "away": "RCD Espanyol de Barcelona",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"CasaPiaAC\", \"里斯本竞技\"]": {
+   "date": "2026-10-30",
+   "league": "葡超",
+   "home": "Casa Pia AC",
+   "away": "Sporting Clube de Portugal",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 4,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"SCCorinthiansPaulista\", \"MirassolFC\"]": {
+   "date": "2026-10-30",
+   "league": "巴甲",
+   "home": "SC Corinthians Paulista",
+   "away": "Mirassol FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-30\", \"SheffieldUnitedFC\", \"雷克瑟姆\"]": {
+   "date": "2026-10-30",
+   "league": "英冠",
+   "home": "Sheffield United FC",
+   "away": "Wrexham AFC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"ErzurumsporFK\", \"CorumFK\"]": {
+   "date": "2026-10-31",
+   "league": "土超",
+   "home": "Erzurumspor FK",
+   "away": "Corum FK",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"科贾埃利\", \"里泽体育\"]": {
+   "date": "2026-10-31",
+   "league": "土超",
+   "home": "Kocaelispor",
+   "away": "Rizespor",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"伯恩茅斯\", \"利兹联\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Bournemouth",
+   "away": "Leeds",
+   "jcNum": "周六016",
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"布伦特福德\", \"诺丁汉森林\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Brentford",
+   "away": "Nottingham Forest",
+   "jcNum": "周六018",
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"考文垂\", \"桑德兰\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Coventry",
+   "away": "Sunderland",
+   "jcNum": "周六015",
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"赫尔城\", \"伊普斯维奇\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Hull",
+   "away": "Ipswich",
+   "jcNum": "周六017",
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"曼彻斯特城\", \"布莱顿\"]": {
+   "date": "2026-10-31",
+   "league": "英超",
+   "home": "Manchester City",
+   "away": "Brighton",
+   "jcNum": null,
+   "ws": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"林肯城\", \"伯明翰\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Lincoln City",
+   "away": "Birmingham",
+   "jcNum": "周六007",
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"诺维奇\", \"沃特福德\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Norwich",
+   "away": "Watford",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"斯托克城\", \"普雷斯顿\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Stoke",
+   "away": "Preston",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"博尔顿\", \"布里斯托尔城\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Bolton",
+   "away": "Bristol City",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"伯恩利\", \"朴次茅斯\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Burnley",
+   "away": "Portsmouth",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"米德尔斯堡\", \"查尔顿\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Middlesbrough",
+   "away": "Charlton",
+   "jcNum": null,
+   "ws": {
+    "h": 3,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"米尔沃尔\", \"德比郡\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Millwall",
+   "away": "Derby",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"南安普顿\", \"女王公园巡游者\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Southampton",
+   "away": "Queens Park Rangers",
+   "jcNum": null,
+   "ws": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 3,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"斯旺西\", \"布莱克本\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Swansea",
+   "away": "Blackburn",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"西汉姆联\", \"西布罗姆维奇\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "West Ham",
+   "away": "West Bromwich Albion",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"伍尔弗汉普顿\", \"加的夫城\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Wolves",
+   "away": "Cardiff",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"布拉德福德\", \"哈德斯菲尔德\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Bradford",
+   "away": "Huddersfield",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"莱顿东方\", \"CambridgeU\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Leyton Orient",
+   "away": "Cambridge U",
+   "jcNum": null,
+   "ws": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"普利茅斯\", \"雷丁\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Plymouth",
+   "away": "Reading",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"巴恩斯利\", \"牛津联\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Barnsley",
+   "away": "Oxford",
+   "jcNum": null,
+   "ws": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"莱斯特城\", \"斯蒂夫尼奇\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Leicester",
+   "away": "Stevenage",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"MiltonKeynesDons\", \"唐卡斯特\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Milton Keynes Dons",
+   "away": "Doncaster",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 6,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"曼斯菲尔德\", \"NottsCo.\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Mansfield",
+   "away": "Notts Co.",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"彼德堡联\", \"卢顿\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Peterborough",
+   "away": "Luton",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"斯托克港\", \"AFC温布尔登\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Stockport County",
+   "away": "AFC Wimbledon",
+   "jcNum": null,
+   "ws": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 3,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"维冈竞技\", \"Bromley\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Wigan",
+   "away": "Bromley",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"韦康比流浪者\", \"伯顿\"]": {
+   "date": "2026-10-31",
+   "league": "英甲",
+   "home": "Wycombe",
+   "away": "Burton",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"格里姆斯比\", \"约克\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Grimsby",
+   "away": "York",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 5,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"维尔港\", \"罗奇代尔\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Port Vale",
+   "away": "Rochdale",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 4,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"阿克灵顿\", \"北安普顿\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Accrington",
+   "away": "Northampton",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"科尔切斯特\", \"沃尔索尔\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Colchester",
+   "away": "Walsall",
+   "jcNum": null,
+   "ws": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 3
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"克鲁\", \"巴尼特\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Crewe",
+   "away": "Barnet",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"弗利特伍德\", \"BristolRovers\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Fleetwood",
+   "away": "Bristol Rovers",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"奥尔德姆\", \"克劳利\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Oldham",
+   "away": "Crawley",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"SalfordCity\", \"埃克塞特城\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Salford City",
+   "away": "Exeter",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"什鲁斯伯里\", \"吉灵厄姆\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Shrewsbury",
+   "away": "Gillingham",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"斯温登\", \"罗瑟汉姆\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Swindon",
+   "away": "Rotherham",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"特兰米尔\", \"切尔滕汉姆\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Tranmere",
+   "away": "Cheltenham",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"莱万特\", \"马德里竞技\"]": {
+   "date": "2026-10-31",
+   "league": "西甲",
+   "home": "Levante",
+   "away": "Atletico Madrid",
+   "jcNum": "周六008",
+   "ws": {
+    "h": 0,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"Cremonese\", \"贝内文托\"]": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Cremonese",
+   "away": "Benevento",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"摩德纳\", \"Mantova\"]": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Modena",
+   "away": "Mantova",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"南蒂罗尔\", \"Cesena\"]": {
+   "date": "2026-10-31",
+   "league": "意乙",
+   "home": "Sudtirol",
+   "away": "Cesena",
+   "jcNum": null,
+   "ws": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 1,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"Catanzaro\", \"CalcioPadova\"]": {
+   "date": "2026-11-01",
+   "league": "意乙",
+   "home": "Catanzaro",
+   "away": "Calcio Padova",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-11-01\", \"桑普多利亚\", \"VirtusEntella\"]": {
+   "date": "2026-11-01",
+   "league": "意乙",
+   "home": "Sampdoria",
+   "away": "Virtus Entella",
+   "jcNum": null,
+   "ws": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"博洛尼亚\", \"蒙扎\"]": {
+   "date": "2026-10-31",
+   "league": "意甲",
+   "home": "Bologna",
+   "away": "Monza",
+   "jcNum": "周六009",
+   "ws": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"云达不来梅\", \"霍芬海姆\"]": {
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "Werder Bremen",
+   "away": "Hoffenheim",
+   "jcNum": "周六014",
+   "ws": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"谢菲尔德联\", \"雷克瑟姆\"]": {
+   "date": "2026-10-31",
+   "league": "英冠",
+   "home": "Sheffield United",
+   "away": "Wrexham",
+   "jcNum": "周五008",
+   "ws": {
+    "h": 1,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 1,
+    "a": 0,
+    "exactHit": true,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"纽波特\", \"切斯特菲尔德\"]": {
+   "date": "2026-10-31",
+   "league": "英乙",
+   "home": "Newport",
+   "away": "Chesterfield",
+   "jcNum": null,
+   "ws": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "seeded": true
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-10-31\", \"瓦勒海姆\", \"布鲁日\"]": {
+   "date": "2026-10-31",
+   "league": "比甲",
+   "home": "Zulte Waregem",
+   "away": "Club Brugge",
+   "jcNum": null,
+   "ws": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true
+   },
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 3,
+    "exactHit": false,
+    "outcomeHit": true,
+    "seeded": true
+   },
+   "act": {
+    "h": 2,
+    "a": 4
+   },
+   "sources": [
+    "vz_seed_ws",
+    "ws_hist"
+   ]
+  },
+  "[\"2026-11-02\", \"哥德堡盖斯\", \"AIK索尔纳\"]": {
+   "date": "2026-11-02",
+   "league": "瑞超",
+   "home": "哥德堡盖斯",
+   "away": "AIK索尔纳",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"圣旺红星\", \"南锡\"]": {
+   "date": "2026-11-02",
+   "league": "法乙",
+   "home": "圣旺红星",
+   "away": "南锡",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"拉科鲁尼亚\", \"奥萨苏纳\"]": {
+   "date": "2026-11-02",
+   "league": "西甲",
+   "home": "拉科鲁尼亚",
+   "away": "奥萨苏纳",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"本菲卡\", \"阿尔维卡\"]": {
+   "date": "2026-11-02",
+   "league": "葡超",
+   "home": "本菲卡",
+   "away": "阿尔维卡",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-02\", \"布拉干蒂诺RB\", \"桑托斯\"]": {
+   "date": "2026-11-02",
+   "league": "巴甲",
+   "home": "布拉干蒂诺RB",
+   "away": "桑托斯",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 3,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
   }
  },
  "stats": {
-  "paired_n": 15,
+  "paired_n": 18,
   "model": {
-   "n": 793,
-   "exact": 8.6,
-   "dir": 43.5,
+   "n": 869,
+   "exact": 8.5,
+   "dir": 44.4,
    "dir_ci": [
-    40.1,
-    47.0
+    41.1,
+    47.7
    ],
    "exact_ci": [
     6.8,
-    10.7
+    10.6
    ],
-   "mae": 1.2
+   "mae": 1.31
   },
   "ws": {
-   "n": 368,
-   "exact": 7.9,
-   "dir": 41.8,
+   "n": 422,
+   "exact": 8.3,
+   "dir": 42.9,
    "dir_ci": [
-    36.9,
-    46.9
+    38.3,
+    47.7
    ],
    "exact_ci": [
-    5.5,
-    11.1
+    6.0,
+    11.3
    ],
    "mae": null
   },
   "vz": {
-   "n": 368,
-   "exact": 7.9,
-   "dir": 41.8,
+   "n": 422,
+   "exact": 8.3,
+   "dir": 42.9,
    "dir_ci": [
-    36.9,
-    46.9
+    38.3,
+    47.7
    ],
    "exact_ci": [
-    5.5,
-    11.1
+    6.0,
+    11.3
    ],
    "mae": null
   },
   "paired_dir": {
-   "both_right": 0,
-   "both_wrong": 6,
+   "both_right": 1,
+   "both_wrong": 8,
    "model_only": 4,
    "ws_only": 5,
-   "model_dir": 26.7,
+   "model_dir": 27.8,
    "ws_dir": 33.3,
    "sign_p_dir": 1.0
   },
   "paired_exact": {
-   "model_exact": 13.3,
-   "ws_exact": 13.3,
+   "model_exact": 11.1,
+   "ws_exact": 11.1,
    "model_only": 2,
    "ws_only": 2,
    "sign_p_exact": 1.0
@@ -29004,13 +32019,13 @@
   "pair_mw": {
    "a": "模型",
    "b": "WhoScored",
-   "n": 13,
-   "a_dir": 30.8,
-   "b_dir": 30.8,
-   "a_exact": 15.4,
-   "b_exact": 7.7,
-   "both_right": 0,
-   "both_wrong": 5,
+   "n": 16,
+   "a_dir": 31.2,
+   "b_dir": 31.2,
+   "a_exact": 12.5,
+   "b_exact": 6.2,
+   "both_right": 1,
+   "both_wrong": 7,
    "a_only_dir": 4,
    "b_only_dir": 4,
    "a_only_exact": 2,
@@ -29055,70 +32070,70 @@
   "three_way_n": 0,
   "by_league": {
    "巴甲": {
-    "n": 297,
-    "m_oc": 140,
+    "n": 299,
+    "m_oc": 141,
     "w_oc": 0,
     "v_oc": 0
    },
    "英冠": {
-    "n": 139,
-    "m_oc": 40,
-    "w_oc": 12,
-    "v_oc": 12
+    "n": 163,
+    "m_oc": 48,
+    "w_oc": 21,
+    "v_oc": 21
    },
    "意甲": {
-    "n": 83,
-    "m_oc": 26,
-    "w_oc": 12,
-    "v_oc": 12
+    "n": 92,
+    "m_oc": 32,
+    "w_oc": 13,
+    "v_oc": 13
    },
    "西甲": {
-    "n": 81,
-    "m_oc": 32,
-    "w_oc": 9,
-    "v_oc": 9
+    "n": 92,
+    "m_oc": 36,
+    "w_oc": 10,
+    "v_oc": 10
+   },
+   "英超": {
+    "n": 78,
+    "m_oc": 24,
+    "w_oc": 11,
+    "v_oc": 11
    },
    "荷甲": {
-    "n": 65,
-    "m_oc": 27,
+    "n": 74,
+    "m_oc": 30,
     "w_oc": 7,
     "v_oc": 7
    },
-   "英超": {
-    "n": 63,
-    "m_oc": 17,
-    "w_oc": 8,
-    "v_oc": 8
-   },
-   "葡超": {
-    "n": 54,
-    "m_oc": 18,
-    "w_oc": 2,
-    "v_oc": 2
-   },
    "法甲": {
-    "n": 54,
-    "m_oc": 17,
+    "n": 63,
+    "m_oc": 23,
     "w_oc": 3,
     "v_oc": 3
    },
+   "葡超": {
+    "n": 61,
+    "m_oc": 22,
+    "w_oc": 2,
+    "v_oc": 2
+   },
    "德甲": {
-    "n": 43,
-    "m_oc": 14,
+    "n": 53,
+    "m_oc": 16,
     "w_oc": 5,
     "v_oc": 5
    },
    "英甲": {
-    "n": 36,
+    "n": 47,
     "m_oc": 0,
-    "w_oc": 17,
-    "v_oc": 17
+    "w_oc": 23,
+    "v_oc": 23
    },
    "英乙": {
-    "n": 35,
+    "n": 47,
     "m_oc": 0,
-    "w_oc": 10,
-    "v_oc": 10
+    "w_oc": 13,
+    "v_oc": 13
    },
    "美职联": {
     "n": 34,
@@ -29127,7 +32142,7 @@
     "v_oc": 15
    }
   },
-  "verdict": "模型 方向命中率最高（43.5%，N=793）；其余 WhoScored 41.8% / V站 41.8%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
-  "total_records": 1201
+  "verdict": "模型 方向命中率最高（44.4%，N=869）；其余 WhoScored 42.9% / V站 42.9%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
+  "total_records": 1318
  }
 }

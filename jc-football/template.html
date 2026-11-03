@@ -1748,7 +1748,7 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.98";
+const VERSION = "v1.7.99";
 const CHANGELOG = [
   {
     version: "v1.7.91",
@@ -6590,9 +6590,13 @@ function renderBkParlay(){
   const pl = state.basketballParlay || {};
   const recs = pl.records || [];
   if(sumBox){
-    sumBox.innerHTML = `篮球串关历史战绩：共 <b>${pl.total || 0}</b> 组 · 命中 ${pl.hit || 0} · 错误 ${pl.miss || 0} · 待开奖 ${pl.pending || 0}`
-      + ` · 历史命中率 <b>${pl.hitRate != null ? pl.hitRate : 0}%</b> · 近7日 <b>${pl.recent7Rate != null ? pl.recent7Rate : 0}%</b>`
-      + ` · 三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，EV 为负的档位长期必亏，谨慎跟单`;
+    const _hr = pl.hitRate != null ? pl.hitRate : 0;
+    const _warn = _hr < 30
+      ? `<span style="color:var(--bad);font-weight:700">⚠️ 弱模型预警</span>`
+      : `<span style="color:var(--warn)">注意</span>`;
+    sumBox.innerHTML = `${_warn}：篮球 AI 预测模型偏弱（历史平均信心约 56%，最高仅 60.8%），`
+      + `串关历史命中率仅 <b style="color:var(--bad)">${_hr}%</b>（近7日 ${pl.recent7Rate != null ? pl.recent7Rate : 0}%），数学上长期必亏。`
+      + `以下为<b>实验性参考</b>，三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，<b>绝非跟单建议</b>，请勿据此下注。`;
   }
   if(!recs.length){ if(dateBar) dateBar.innerHTML = ""; listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
 

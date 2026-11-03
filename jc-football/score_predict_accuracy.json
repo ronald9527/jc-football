@@ -193,22 +193,6 @@
    "mae": 1.0
   },
   {
-   "id": 559642,
-   "league": "法甲",
-   "home": "Paris FC",
-   "away": "AS Monaco FC",
-   "date": "2026-11-01",
-   "predH": 1,
-   "predA": 0,
-   "actH": 3,
-   "actA": 1,
-   "predOutcome": "H",
-   "actOutcome": "H",
-   "exactHit": false,
-   "outcomeHit": true,
-   "mae": 1.5
-  },
-  {
    "id": 559640,
    "league": "法甲",
    "home": "Olympique Lyonnais",
@@ -223,6 +207,22 @@
    "exactHit": false,
    "outcomeHit": true,
    "mae": 1.0
+  },
+  {
+   "id": 559642,
+   "league": "法甲",
+   "home": "Paris FC",
+   "away": "AS Monaco FC",
+   "date": "2026-11-01",
+   "predH": 1,
+   "predA": 0,
+   "actH": 3,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.5
   },
   {
    "id": 565844,
@@ -289,22 +289,6 @@
    "mae": 0.5
   },
   {
-   "id": 567345,
-   "league": "葡超",
-   "home": "Académico de Viseu FC",
-   "away": "Rio Ave FC",
-   "date": "2026-11-01",
-   "predH": 0,
-   "predA": 0,
-   "actH": 2,
-   "actA": 1,
-   "predOutcome": "D",
-   "actOutcome": "H",
-   "exactHit": false,
-   "outcomeHit": false,
-   "mae": 1.5
-  },
-  {
    "id": 567340,
    "league": "葡超",
    "home": "CS Marítimo",
@@ -319,6 +303,22 @@
    "exactHit": false,
    "outcomeHit": true,
    "mae": 0.5
+  },
+  {
+   "id": 567345,
+   "league": "葡超",
+   "home": "Académico de Viseu FC",
+   "away": "Rio Ave FC",
+   "date": "2026-11-01",
+   "predH": 0,
+   "predA": 0,
+   "actH": 2,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
   },
   {
    "id": 558547,
@@ -13825,6 +13825,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-11-02 19:56:48",
+ "updatedAt": "2026-11-02 18:41:28",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }

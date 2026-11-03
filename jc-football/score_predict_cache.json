@@ -11377,7 +11377,7 @@
   ]
  },
  "332": {
-  "ts": 1793126927.55181,
+  "ts": 1793616120.637159,
   "name": "Birmingham City FC",
   "matches": [
    {
@@ -11397,9 +11397,9 @@
     "id": 561773,
     "utc": "2026-08-22T11:30:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
+    "home": true,
+    "oppId": 387,
+    "oppName": "Bristol City FC",
     "gf": 2,
     "ga": 2,
     "hg": 2,
@@ -11423,9 +11423,9 @@
     "id": 561803,
     "utc": "2026-09-01T19:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
+    "home": true,
+    "oppId": 340,
+    "oppName": "Southampton FC",
     "gf": 1,
     "ga": 1,
     "hg": 1,
@@ -11436,9 +11436,9 @@
     "id": 561819,
     "utc": "2026-09-06T11:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
+    "home": true,
+    "oppId": 76,
+    "oppName": "Wolverhampton Wanderers FC",
     "gf": 2,
     "ga": 2,
     "hg": 2,
@@ -11475,9 +11475,9 @@
     "id": 561855,
     "utc": "2026-09-19T14:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
+    "home": true,
+    "oppId": 343,
+    "oppName": "Middlesbrough FC",
     "gf": 2,
     "ga": 2,
     "hg": 2,
@@ -11501,11 +11501,11 @@
     "id": 561875,
     "utc": "2026-10-13T19:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
-    "gf": 0,
-    "ga": 4,
+    "home": true,
+    "oppId": 1081,
+    "oppName": "Preston North End FC",
+    "gf": 4,
+    "ga": 0,
     "hg": 4,
     "ag": 0,
     "status": "FINISHED"
@@ -11514,11 +11514,11 @@
     "id": 561886,
     "utc": "2026-10-17T14:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 332,
-    "oppName": "Birmingham City FC",
-    "gf": 0,
-    "ga": 3,
+    "home": true,
+    "oppId": 69,
+    "oppName": "Queens Park Rangers FC",
+    "gf": 3,
+    "ga": 0,
     "hg": 3,
     "ag": 0,
     "status": "FINISHED"
@@ -11534,6 +11534,19 @@
     "ga": 1,
     "hg": 1,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561915,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 1126,
+    "oppName": "Lincoln City FC",
+    "gf": 3,
+    "ga": 1,
+    "hg": 1,
+    "ag": 3,
     "status": "FINISHED"
    }
   ]
@@ -11701,18 +11714,18 @@
   ]
  },
  "68": {
-  "ts": 1793127899.449095,
+  "ts": 1793616145.889249,
   "name": "Norwich City FC",
   "matches": [
    {
     "id": 561763,
     "utc": "2026-08-15T14:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 2,
-    "ga": 1,
+    "home": true,
+    "oppId": 74,
+    "oppName": "West Bromwich Albion FC",
+    "gf": 1,
+    "ga": 2,
     "hg": 1,
     "ag": 2,
     "status": "FINISHED"
@@ -11734,11 +11747,11 @@
     "id": 561785,
     "utc": "2026-08-29T14:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 1,
-    "ga": 4,
+    "home": true,
+    "oppId": 328,
+    "oppName": "Burnley FC",
+    "gf": 4,
+    "ga": 1,
     "hg": 4,
     "ag": 1,
     "status": "FINISHED"
@@ -11773,11 +11786,11 @@
     "id": 561832,
     "utc": "2026-09-09T18:45:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 1,
-    "ga": 2,
+    "home": true,
+    "oppId": 332,
+    "oppName": "Birmingham City FC",
+    "gf": 2,
+    "ga": 1,
     "hg": 2,
     "ag": 1,
     "status": "FINISHED"
@@ -11799,11 +11812,11 @@
     "id": 561850,
     "utc": "2026-09-20T12:30:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 4,
-    "ga": 3,
+    "home": true,
+    "oppId": 60,
+    "oppName": "Bolton Wanderers FC",
+    "gf": 3,
+    "ga": 4,
     "hg": 3,
     "ag": 4,
     "status": "FINISHED"
@@ -11825,11 +11838,11 @@
     "id": 561879,
     "utc": "2026-10-14T18:45:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 1,
-    "ga": 0,
+    "home": true,
+    "oppId": 340,
+    "oppName": "Southampton FC",
+    "gf": 0,
+    "ga": 1,
     "hg": 0,
     "ag": 1,
     "status": "FINISHED"
@@ -11838,11 +11851,11 @@
     "id": 561881,
     "utc": "2026-10-17T14:00:00Z",
     "comp": "ELC",
-    "home": false,
-    "oppId": 68,
-    "oppName": "Norwich City FC",
-    "gf": 1,
-    "ga": 0,
+    "home": true,
+    "oppId": 325,
+    "oppName": "Portsmouth FC",
+    "gf": 0,
+    "ga": 1,
     "hg": 0,
     "ag": 1,
     "status": "FINISHED"
@@ -11858,6 +11871,19 @@
     "ga": 1,
     "hg": 1,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561910,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 346,
+    "oppName": "Watford FC",
+    "gf": 3,
+    "ga": 2,
+    "hg": 3,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -13843,7 +13869,7 @@
   ]
  },
  "61": {
-  "ts": 1791514194.89938,
+  "ts": 1793616094.298009,
   "name": "Chelsea FC",
   "matches": [
    {
@@ -13908,6 +13934,58 @@
     "gf": 0,
     "ga": 3,
     "hg": 3,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560595,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 1044,
+    "oppName": "AFC Bournemouth",
+    "gf": 5,
+    "ga": 1,
+    "hg": 5,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560603,
+    "utc": "2026-10-17T11:30:00Z",
+    "comp": "PL",
+    "home": false,
+    "oppId": 62,
+    "oppName": "Everton FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 0,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560617,
+    "utc": "2026-10-24T16:30:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 73,
+    "oppName": "Tottenham Hotspur FC",
+    "gf": 0,
+    "ga": 2,
+    "hg": 0,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560626,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 66,
+    "oppName": "Manchester United FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
     "ag": 0,
     "status": "FINISHED"
    }
@@ -14781,7 +14859,7 @@
   ]
  },
  "70": {
-  "ts": 1791514113.008012,
+  "ts": 1793616130.853701,
   "name": "Stoke City FC",
   "matches": [
    {
@@ -14887,11 +14965,76 @@
     "hg": 2,
     "ag": 1,
     "status": "FINISHED"
+   },
+   {
+    "id": 561866,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 60,
+    "oppName": "Bolton Wanderers FC",
+    "gf": 2,
+    "ga": 1,
+    "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561876,
+    "utc": "2026-10-13T19:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 343,
+    "oppName": "Middlesbrough FC",
+    "gf": 2,
+    "ga": 3,
+    "hg": 2,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561888,
+    "utc": "2026-10-17T14:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 342,
+    "oppName": "Derby County FC",
+    "gf": 1,
+    "ga": 0,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561897,
+    "utc": "2026-10-24T14:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 387,
+    "oppName": "Bristol City FC",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561908,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 1081,
+    "oppName": "Preston North End FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
    }
   ]
  },
  "1081": {
-  "ts": 1791514243.5091,
+  "ts": 1793616138.191149,
   "name": "Preston North End FC",
   "matches": [
    {
@@ -14996,6 +15139,71 @@
     "ga": 2,
     "hg": 2,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561867,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 384,
+    "oppName": "Millwall FC",
+    "gf": 0,
+    "ga": 1,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561875,
+    "utc": "2026-10-13T19:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 332,
+    "oppName": "Birmingham City FC",
+    "gf": 0,
+    "ga": 4,
+    "hg": 4,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561892,
+    "utc": "2026-10-17T14:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 404,
+    "oppName": "Wrexham AFC",
+    "gf": 1,
+    "ga": 4,
+    "hg": 4,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561898,
+    "utc": "2026-10-24T14:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 74,
+    "oppName": "West Bromwich Albion FC",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561908,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 70,
+    "oppName": "Stoke City FC",
+    "gf": 0,
+    "ga": 2,
+    "hg": 2,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -15363,7 +15571,7 @@
   ]
  },
  "1126": {
-  "ts": 1791514268.583773,
+  "ts": 1793616111.588643,
   "name": "Lincoln City FC",
   "matches": [
    {
@@ -15468,6 +15676,71 @@
     "ga": 2,
     "hg": 1,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561858,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 356,
+    "oppName": "Sheffield United FC",
+    "gf": 0,
+    "ga": 3,
+    "hg": 3,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561878,
+    "utc": "2026-10-14T19:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 563,
+    "oppName": "West Ham United FC",
+    "gf": 0,
+    "ga": 6,
+    "hg": 0,
+    "ag": 6,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561884,
+    "utc": "2026-10-17T11:30:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 384,
+    "oppName": "Millwall FC",
+    "gf": 2,
+    "ga": 2,
+    "hg": 2,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561899,
+    "utc": "2026-10-24T14:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 328,
+    "oppName": "Burnley FC",
+    "gf": 4,
+    "ga": 1,
+    "hg": 4,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561915,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 332,
+    "oppName": "Birmingham City FC",
+    "gf": 1,
+    "ga": 3,
+    "hg": 1,
+    "ag": 3,
     "status": "FINISHED"
    }
   ]
@@ -15887,7 +16160,7 @@
   ]
  },
  "346": {
-  "ts": 1791514227.543983,
+  "ts": 1793616153.921016,
   "name": "Watford FC",
   "matches": [
    {
@@ -15992,6 +16265,71 @@
     "ga": 1,
     "hg": 1,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561861,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 328,
+    "oppName": "Burnley FC",
+    "gf": 0,
+    "ga": 4,
+    "hg": 0,
+    "ag": 4,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561872,
+    "utc": "2026-10-13T18:45:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 715,
+    "oppName": "Cardiff City FC",
+    "gf": 1,
+    "ga": 5,
+    "hg": 5,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561889,
+    "utc": "2026-10-17T11:30:00Z",
+    "comp": "ELC",
+    "home": true,
+    "oppId": 348,
+    "oppName": "Charlton Athletic FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561903,
+    "utc": "2026-10-24T14:00:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 76,
+    "oppName": "Wolverhampton Wanderers FC",
+    "gf": 0,
+    "ga": 1,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 561910,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "ELC",
+    "home": false,
+    "oppId": 68,
+    "oppName": "Norwich City FC",
+    "gf": 2,
+    "ga": 3,
+    "hg": 3,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -16204,7 +16542,7 @@
   ]
  },
  "78": {
-  "ts": 1791514333.931856,
+  "ts": 1793616171.017929,
   "name": "Club Atlético de Madrid",
   "matches": [
    {
@@ -16309,6 +16647,84 @@
     "ga": 1,
     "hg": 2,
     "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564699,
+    "utc": "2026-10-10T14:15:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 263,
+    "oppName": "Deportivo Alavés",
+    "gf": 2,
+    "ga": 1,
+    "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 575345,
+    "utc": "2026-10-13T19:00:00Z",
+    "comp": "CL",
+    "home": true,
+    "oppId": 66,
+    "oppName": "Manchester United FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564710,
+    "utc": "2026-10-17T12:00:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 80,
+    "oppName": "RCD Espanyol de Barcelona",
+    "gf": 1,
+    "ga": 0,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 575362,
+    "utc": "2026-10-20T19:00:00Z",
+    "comp": "CL",
+    "home": false,
+    "oppId": 10,
+    "oppName": "VfB Stuttgart",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564724,
+    "utc": "2026-10-24T19:00:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 560,
+    "oppName": "RC Deportivo La Coruña",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564730,
+    "utc": "2026-10-31T13:00:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 88,
+    "oppName": "Levante UD",
+    "gf": 2,
+    "ga": 0,
+    "hg": 0,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -17285,7 +17701,7 @@
   ]
  },
  "66": {
-  "ts": 1793097441.854606,
+  "ts": 1793616101.838699,
   "name": "Manchester United FC",
   "matches": [
    {
@@ -17429,6 +17845,19 @@
     "ga": 3,
     "hg": 0,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560626,
+    "utc": "2026-10-31T12:30:00Z",
+    "comp": "PL",
+    "home": false,
+    "oppId": 61,
+    "oppName": "Chelsea FC",
+    "gf": 0,
+    "ga": 2,
+    "hg": 2,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -22636,7 +23065,7 @@
   ]
  },
  "103": {
-  "ts": 1793169190.857676,
+  "ts": 1793616178.481021,
   "name": "Bologna FC 1909",
   "matches": [
    {
@@ -22741,6 +23170,32 @@
     "ga": 0,
     "hg": 0,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558549,
+    "utc": "2026-10-28T17:30:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 98,
+    "oppName": "AC Milan",
+    "gf": 4,
+    "ga": 2,
+    "hg": 2,
+    "ag": 4,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558539,
+    "utc": "2026-10-31T14:00:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 5911,
+    "oppName": "AC Monza",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -26259,7 +26714,7 @@
   ]
  },
  "88": {
-  "ts": 1793017887.269471,
+  "ts": 1793616163.01259,
   "name": "Levante UD",
   "matches": [
    {
@@ -26390,6 +26845,19 @@
     "ga": 2,
     "hg": 2,
     "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564730,
+    "utc": "2026-10-31T13:00:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 78,
+    "oppName": "Club Atlético de Madrid",
+    "gf": 0,
+    "ga": 2,
+    "hg": 0,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
