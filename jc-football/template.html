@@ -548,6 +548,17 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .sp-chip:hover{color:var(--text)}
 .sp-group{margin-bottom:14px}
 .sp-group-title{font-size:12px;font-weight:700;color:var(--accent);margin:6px 2px 6px;border-left:3px solid var(--accent);padding-left:8px}
+/* v1.7.103 分期日分组（按竞彩日期折叠，仅今日展开） */
+.sp-dategrp{margin-bottom:14px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.sp-dategrp-head{display:flex;align-items:center;gap:10px;cursor:pointer;padding:9px 12px;background:var(--panel);border-bottom:1px solid var(--line);user-select:none}
+.sp-dategrp.sp-dg-collapsed .sp-dategrp-head{border-bottom:none}
+.sp-dategrp-head:hover{background:var(--line)}
+.sp-dg-title{font-size:13px;font-weight:700;color:var(--accent)}
+.sp-dg-meta{font-size:11.5px;color:var(--sub);margin-left:auto}
+.sp-caret2{color:var(--sub);font-size:11px;flex:0 0 auto;transition:transform .2s}
+.sp-dategrp.sp-dg-collapsed .sp-caret2{transform:rotate(-90deg)}
+.sp-dategrp-body{padding:10px 12px}
+.sp-dategrp.sp-dg-collapsed .sp-dategrp-body{display:none}
 .sp-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
 .sp-card.sp-live{border-left:3px solid #faad14}
 .sp-card.sp-fin{border-left:3px solid var(--line2)}
@@ -1744,8 +1755,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.102";
+const VERSION = "v1.7.104";
 const CHANGELOG = [
+  {
+    version: "v1.7.103",
+    date: "2026-11-04",
+    title: "比分预测列表改『分期日显示』（按竞彩日期分组，仅今日展开）",
+    details: [
+      "『今日竞彩预测比分』列表原按联赛堆成一片（270 场跨 10 余天全摊开），是『全部放在一起』的根源；现改为按竞彩日期(utcDate)分期",
+      "每个竞彩日期是一个可折叠分组，仅『今日竞彩』日期（含在售/未开赛的最新日期，如 2026-11-03）自动展开，其余日期默认折叠，点标题展开",
+      "分组头显示日期 + 场次数 + 未开赛/已结束统计；组内仍按 V站优先、开球时间排序，卡片含联赛标签不丢信息",
+      "新增 spToggleDateGrp 折叠交互与 .sp-dategrp 系列样式"
+    ]
+  },
   {
     version: "v1.7.101",
     date: "2026-11-04",
@@ -5284,6 +5306,10 @@ function spToggleSec(el){
   const sec = el.closest(".sp-sec");
   if(sec) sec.classList.toggle("collapsed");
 }
+function spToggleDateGrp(el){
+  const grp = el.closest(".sp-dategrp");
+  if(grp) grp.classList.toggle("sp-dg-collapsed");
+}
 
 /* ================= 比分预测 · WhoScored 区块（竞彩主干化，v1.7.23） =================
    口径（用户需求）：只显示竞彩每天开出的比赛；当天竞彩赛程【全部列出】为主干；
@@ -6044,21 +6070,45 @@ function renderScorePred(){
   const view = (filt==="all" ? ms : ms.filter(m=>m.league===filt));
   const stName = {SCHEDULED:"未开赛", LIVE:"进行中", IN_PLAY:"进行中", PAUSED:"中场", FINISHED:"已结束", POSTPONED:"延期", SUSPENDED:"暂停", CANCELLED:"取消"};
   const outName = {H:"主胜", D:"平局", A:"客胜"};
-  const groups = {};
-  view.forEach(m=>{ const k=m.league||"其他"; (groups[k]=groups[k]||[]).push(m); });
-  // v1.7.81：分组内把 V站 预测场次排到顶部（其次按开球时间）
-  Object.keys(groups).forEach(lg=>{
-    groups[lg].sort((a,b)=>{
+  /* v1.7.103：分期日显示——按竞彩日期(utcDate)分组，仅「今日竞彩」日期自动展开，其余折叠，
+     不再把所有日期的比赛堆成一片。today = 含在售(TIMED/Selling)/未开赛的最新日期 */
+  const _dateOf = m => ((m.utcDate || m.date || "").slice(0,10)) || "未排期";
+  const _stOf = m => (m.status||"").toUpperCase();
+  const _datesAll = Array.from(new Set(view.map(_dateOf))).filter(d=>d!=="未排期").sort().reverse();
+  let todayDate = null;
+  for(const dt of _datesAll){ if(view.some(m=>_dateOf(m)===dt && _stOf(m)!=="FINISHED")){ todayDate = dt; break; } }
+  if(!todayDate && _datesAll.length) todayDate = _datesAll[0];
+  const dateGroups = {};
+  view.forEach(m=>{ const k=_dateOf(m); (dateGroups[k]=dateGroups[k]||[]).push(m); });
+  const sortedDates = Object.keys(dateGroups).sort((a,b)=>{
+    if(a===todayDate) return -1;
+    if(b===todayDate) return 1;
+    const ra = a==="未排期" ? "9999" : a, rb = b==="未排期" ? "9999" : b;
+    return rb.localeCompare(ra);
+  });
+  let html = "";
+  sortedDates.forEach(dt=>{
+    const gms = dateGroups[dt];
+    gms.sort((a,b)=>{
       const va = vzNumsSet.has(spJcNumOf(a,a.date)) ? 1 : 0;
       const vb = vzNumsSet.has(spJcNumOf(b,b.date)) ? 1 : 0;
       if(va!==vb) return vb - va;
-      return (a.kickoff||"").localeCompare(b.kickoff||"");
+      return (a.kickoff||a.utcDate||"").localeCompare(b.kickoff||b.utcDate||"");
     });
-  });
-  let html = "";
-  Object.keys(groups).forEach(lg=>{
-    html += `<div class="sp-group"><div class="sp-group-title">${lg}（${groups[lg].length}）</div>`;
-    groups[lg].forEach(m=>{
+    const _n = gms.length;
+    const _fin = gms.filter(m=>_stOf(m)==="FINISHED").length;
+    const _pend = _n - _fin;
+    const _isToday = (dt===todayDate);
+    const _collapsed = _isToday ? "" : " sp-dg-collapsed";
+    const _caret = _isToday ? "▾" : "▸";
+    html += `<div class="sp-dategrp${_collapsed}">
+      <div class="sp-dategrp-head" onclick="spToggleDateGrp(this)">
+        <span class="sp-dg-title">${_isToday ? "📌 今日竞彩 · "+dt : dt}</span>
+        <span class="sp-dg-meta">共 ${_n} 场 · 未开赛 ${_pend} · 已结束 ${_fin}</span>
+        <span class="sp-caret2">${_caret}</span>
+      </div>
+      <div class="sp-dategrp-body">`;
+    gms.forEach(m=>{
       const finished = m.status==="FINISHED";
       const live = (m.status==="LIVE"||m.status==="IN_PLAY"||m.status==="PAUSED");
       // 概率条
@@ -6124,7 +6174,7 @@ function renderScorePred(){
         <div class="sp-foot"><span class="sp-out">预测方向：${outName[m.predOutcome]||"-"}</span>${vzAccLine}${hit}</div>
       </div>`;
     });
-    html += `</div>`;
+    html += `</div></div>`;
   });
   list.innerHTML = html;
 
