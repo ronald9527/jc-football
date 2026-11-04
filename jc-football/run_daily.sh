@@ -181,6 +181,29 @@ else
 fi
 set -e
 
+# ---------- 步骤1.852：比分预测赛果回填（500体育 + 规范化，v1.7.113）----------
+# 痛点：fetch_scores.py 从竞彩档案补全历史场次时把 scoreActual("1:2") 同时塞进
+# actH/actA、status 留空 → 页面只在 status=FINISHED 且 actH 为整数时认赛果，
+# 于是已完赛场次显示「未开赛」、日期分组「已结束 0」；且竞彩官方开奖接口封锁
+# 海外 IP（HTTP 567），近几日 result 迟迟不回填。500体育 trade.500.com 海外可达，
+# 其竞彩历史页服务端渲染带比分，用它补齐近几日赛果。
+# 顺序约束：必须在 1.85 fetch_scores（每轮重写 matches）之后、步骤2 build_panel
+# （读 score_predict.json）之前。build_panel 内另有 normalize_sp 内存兜底，
+# 保证步骤2.5 陈旧豁免重跑 fetch_scores 后页面依旧正确。
+# 隔离设计：纯增量幂等零噪声、抓网失败静默降级、失败只记日志绝不阻断部署。
+log "==> 步骤1.852 比分预测赛果回填 (sp_results.py)"
+set +e
+if have_time 40; then
+  "$PY" sp_results.py --quiet
+  _sp_rc=$?
+  if [ "$_sp_rc" -ne 0 ]; then
+    log "!! 赛果回填失败（exit=$_sp_rc），沿用上次数据（不影响部署）"
+  fi
+else
+  log "!! 剩余时间不足，跳过赛果回填（沿用上次数据），优先保证部署"
+fi
+set -e
+
 log "==> 步骤1.88 WhoScored 人工预测比分 (fetch_whoscored.py)"
 set +e
 if have_time 120; then
@@ -339,6 +362,9 @@ if [ -f score_predict.json ]; then
     log "   ⚠️ 比分预测已陈旧（$((_age/3600))h），触发预算豁免强制重抓"
     if "$PY" fetch_scores.py --keep-cache --max-teams 25 2>/dev/null; then
       log "   ✅ 比分预测已刷新"
+      # v1.7.113：重抓会重写 matches（丢历史竞彩日、status 复位），
+      # 复用已有 500体育缓存重新规范化，避免磁盘与页面数据回退（不再抓网）。
+      "$PY" sp_results.py --no-net --quiet 2>/dev/null || true
       _refreshed=1
     else
       log "   !! 比分预测重抓失败（沿用旧数据）"

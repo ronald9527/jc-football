@@ -138,6 +138,17 @@ def main():
                 score_pred = json.load(f)
         except Exception:
             pass
+    # v1.7.113：赛果规范化的「最后一道关」——无论 fetch_scores.py 在步骤1.85 还是
+    # 步骤2.5 陈旧豁免重跑，页面数据都保证：有赛果的场次 status=FINISHED、整数比分、
+    # 命中判定齐全，且历史竞彩日不缺场（10-24/10-25 曾整段被滚动窗口挤出）。
+    # 纯内存修正不写源盘；持久化由 sp_results.py CLI（步骤1.852）负责。
+    try:
+        import sys as _sys
+        _sys.path.insert(0, HERE)
+        import sp_results
+        sp_results.normalize_sp(score_pred)
+    except Exception as _e:
+        print("  [sp_results] 规范化跳过（沿用源数据）:", _e)
     js_scorepred = json.dumps(score_pred, ensure_ascii=False).replace("</", "<\\/")
     # 模型 vs WhoScored 命中率 A/B 对比（accuracy_ab.py 每日累积，独立分析源）
     _ab = {}

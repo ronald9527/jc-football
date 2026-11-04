@@ -1765,8 +1765,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.112";
+const VERSION = "v1.7.113";
 const CHANGELOG = [
+  {
+    version: "v1.7.113",
+    date: "2026-11-05",
+    title: "修复比分预测历史赛果不显示「已结束」：500体育补赛果 + 统一规范化",
+    details: [
+      "根因：fetch_scores.py 从竞彩档案补全历史场次时把 scoreActual（形如「1:2」）整串同时塞进 actH/actA、status 留空、evaluated=False；而页面只在 status=FINISHED 且 actH 为整数比分时认赛果 —— 97 场已完赛比赛被判成「未开赛」，日期分组大面积显示「已结束 0」（10-24~10-30、11-02 等）",
+      "新增 sp_results.py：① 抓 500体育 trade.500.com/jczq/?date= 历史竞彩页（海外实测 HTTP 200，竞彩官方接口 567 封锁）按竞彩编号+队名补近几日赛果，累积缓存 jc_results_500.json；② 统一规范化 score_predict.matches：脏字符串拆成整数比分、status=FINISHED、补齐 evaluated/exactHit/outcomeHit/mae 命中判定；③ 历史竞彩日兜底，自动补回被滚动窗口挤出的 10-24/10-25 等日期",
+      "修复效果：FINISHED 从 8 场增至 237 场，10-22~11-02 每个竞彩日「未开赛 0」；10-24 已结束 30 场、10-25 已结束 29 场、11-02 已结束 17 场。11-03/11-04 少数场次 500体育同样尚未发布赛果，诚实保留不编造",
+      "接入：步骤1.85 fetch_scores 之后新增 1.852 每日自动跑；build_panel.py 内 normalize_sp 作最后一道关（步骤2.5 陈旧豁免重跑 fetch_scores 后页面依旧正确），2.5 重抓分支补跑 --no-net 保证磁盘不回退；幂等零噪声、同编号跨周错配防护、抓网失败静默降级，绝不阻断部署"
+    ]
+  },
   {
     version: "v1.7.112",
     date: "2026-11-05",

@@ -786,8 +786,19 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                     except Exception:
                         _ko = ""
                     _utc = ("%sT%s:00" % (_date, _ko)) if _ko else (_date + "T00:00:00")
-                    _acth = _r.get("actH") or _r.get("scoreActual")
-                    _acta = _r.get("actA") or _r.get("scoreActual")
+                    # v1.7.113：不再把 scoreActual("1:2") 整串同时塞进 actH/actA。
+                    # 页面只在 status=FINISHED 且 actH 为整数比分时显示赛果，脏字符串会让
+                    # 已完赛场次显示「未开赛」、分组统计「已结束 0」（历史赛果不回填）。
+                    # 优先取官方 result{home,away}，退路把 scoreActual 拆成两个整数。
+                    _acth, _acta = _r.get("actH"), _r.get("actA")
+                    if _acth is None or _acta is None:
+                        _res = _r.get("result")
+                        if isinstance(_res, dict) and _res.get("home") is not None and _res.get("away") is not None:
+                            _acth, _acta = _res["home"], _res["away"]
+                        else:
+                            _mm = _re.match(r"^\s*(\d+)\s*[:：\-]\s*(\d+)\s*$", str(_r.get("scoreActual") or ""))
+                            if _mm:
+                                _acth, _acta = int(_mm.group(1)), int(_mm.group(2))
                     matches_out.append({
                         "id": _r.get("id"), "competition": "", "league": _lg,
                         "home": _jh, "away": _ja,
