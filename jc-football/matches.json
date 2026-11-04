@@ -1,163 +1,7 @@
 {
- "updateTime": "2026-11-05 01:59:33",
- "count": 10,
+ "updateTime": "2026-11-05 03:14:37",
+ "count": 9,
  "matches": [
-  {
-   "id": "1479953",
-   "num": "周三004",
-   "week": "周三",
-   "date": "2026-11-05",
-   "kickoff": "2026-11-05 01:45",
-   "time": "01:45",
-   "league": "欧冠",
-   "home": "费内巴切",
-   "away": "利物浦",
-   "hr": "31",
-   "ar": "4",
-   "hrn": 31,
-   "arn": 4,
-   "status": "",
-   "had": {
-    "h": 5.9,
-    "d": 5.3,
-    "a": 1.28
-   },
-   "hhad": {
-    "h": 2.84,
-    "d": 4.05,
-    "a": 1.85,
-    "goal": "+1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.8,
-   "verdict": null,
-   "hits": [],
-   "score": {
-    "dir": "h",
-    "score": 0.0,
-    "stars": 0,
-    "kelly": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "kellyDiff": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": []
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "+1"
-   },
-   "asianVerdict": null,
-   "scoreRec": {
-    "predicted": "2:1",
-    "alternatives": [
-     "1:0",
-     "1:1",
-     "1:2"
-    ],
-    "confidence": 40,
-    "expHome": 1.5,
-    "expAway": 1.2,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.5·客队预期进球1.2",
-     "热门方向主胜概率0%",
-     "竞彩让球1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 3,
-     "w": 1,
-     "d": 2,
-     "l": 0,
-     "wr": 33,
-     "form": "平胜平",
-     "home_wr": 0,
-     "away_wr": 100,
-     "hdp_wr": 33
-    },
-    "away": {
-     "n": 6,
-     "w": 1,
-     "d": 1,
-     "l": 4,
-     "wr": 17,
-     "form": "负平胜负负负",
-     "home_wr": 25,
-     "away_wr": 0,
-     "hdp_wr": 33
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 3,
-     "gf": 1.0,
-     "ga": 3.0
-    },
-    "away": {
-     "n": 6,
-     "gf": 2.17,
-     "ga": 2.0
-    }
-   },
-   "h2h": null
-  },
   {
    "id": "1480052",
    "num": "周三005",
@@ -318,7 +162,11 @@
      "ga": 1.5
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1479949",
@@ -480,7 +328,11 @@
      "ga": 1.17
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1480047",
@@ -642,7 +494,11 @@
      "ga": 0.6
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1479940",
@@ -804,7 +660,11 @@
      "ga": 1.0
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1480118",
@@ -966,7 +826,11 @@
      "ga": 0.5
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1479998",
@@ -1128,7 +992,11 @@
      "ga": 0.5
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1480083",
@@ -1290,7 +1158,11 @@
      "ga": 0.67
     }
    },
-   "h2h": null
+   "h2h": null,
+   "modelPred": {
+    "h": 1,
+    "a": 1
+   }
   },
   {
    "id": "1425910",
@@ -1666,7 +1538,7 @@
      "diff": 0
     },
     "date": "2026-11-05",
-    "fetched_at": "2026-11-05 01:59:33",
+    "fetched_at": "2026-11-05 03:14:37",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1678,7 +1550,7 @@
  ],
  "highOddsParlay": null,
  "safeParlay": {
-  "generatedAt": "2026-11-05 01:59:33",
+  "generatedAt": "2026-11-05 03:14:37",
   "candidateCount": 0,
   "candidatePool": [],
   "poolNotes": [
@@ -12524,8 +12396,8 @@
   ]
  },
  "strongWeak": {
-  "generatedAt": "2026-11-05 01:59:33",
-  "searchDate": "2026-11-05 01:59",
+  "generatedAt": "2026-11-05 03:14:37",
+  "searchDate": "2026-11-05 03:14",
   "count": 0,
   "matches": []
  },
@@ -13567,15 +13439,15 @@
   },
   "2026-11-05": {
    "date": "2026-11-05",
-   "generatedAt": "2026-11-05 01:59:33",
+   "generatedAt": "2026-11-05 03:14:37",
    "count": 0,
    "matches": []
   }
  },
  "halfFull": {
-  "generatedAt": "2026-11-05 01:59:33",
+  "generatedAt": "2026-11-05 03:14:37",
   "searchDate": "2026-11-05",
-  "count": 9,
+  "count": 8,
   "matches": [
    {
     "num": "周三011",
@@ -13795,51 +13667,6 @@
      "awayHalf": 0.68,
      "homeFull": 1.2,
      "awayFull": 1.5
-    },
-    "reasons": [
-     "全场胜负接近（主33%/平33%/客34%）",
-     "半场平局概率38%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周三004",
-    "home": "费内巴切",
-    "away": "利物浦",
-    "league": "欧冠",
-    "kickoff": "2026-11-05 01:45",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 23.9,
-    "recommend2": "负负",
-    "recommend2Key": "aa",
-    "confidence2": 20.6,
-    "probDist": {
-     "胜胜": 23.9,
-     "负负": 20.6,
-     "平胜": 15.2,
-     "平平": 12.2,
-     "平负": 10.7,
-     "胜平": 6.0,
-     "负平": 5.1,
-     "胜负": 3.4,
-     "负胜": 2.8
-    },
-    "fullProb": {
-     "h": 33.0,
-     "d": 33.0,
-     "a": 34.0
-    },
-    "halfProb": {
-     "h": 33.3,
-     "d": 38.1,
-     "a": 28.6
-    },
-    "expGoals": {
-     "homeHalf": 0.68,
-     "awayHalf": 0.54,
-     "homeFull": 1.5,
-     "awayFull": 1.2
     },
     "reasons": [
      "全场胜负接近（主33%/平33%/客34%）",
@@ -22431,8 +22258,8 @@
   },
   "2026-11-05": {
    "date": "2026-11-05",
-   "generatedAt": "2026-11-05 01:59:33",
-   "count": 9,
+   "generatedAt": "2026-11-05 03:14:37",
+   "count": 8,
    "matches": [
     {
      "num": "周三011",
@@ -22577,35 +22404,6 @@
      "fullScore": {
       "home": 0,
       "away": 0
-     }
-    },
-    {
-     "num": "周三004",
-     "home": "费内巴切",
-     "away": "利物浦",
-     "league": "欧冠",
-     "kickoff": "2026-11-05 01:45",
-     "recommend": "胜胜",
-     "recommendKey": "hh",
-     "confidence": 23.9,
-     "recommend2": "负负",
-     "confidence2": 20.6,
-     "probDist": {
-      "胜胜": 23.9,
-      "负负": 20.6,
-      "平胜": 15.2,
-      "平平": 12.2,
-      "平负": 10.7,
-      "胜平": 6.0,
-      "负平": 5.1,
-      "胜负": 3.4,
-      "负胜": 2.8
-     },
-     "actualHalfFull": "?a",
-     "hit": null,
-     "fullScore": {
-      "home": 0,
-      "away": 1
      }
     },
     {
