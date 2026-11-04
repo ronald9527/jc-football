@@ -1765,8 +1765,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.109";
+const VERSION = "v1.7.110";
 const CHANGELOG = [
+  {
+    version: "v1.7.110",
+    date: "2026-11-04",
+    title: "AI命中率页升级：相对随机基准的客观分级 + 数据结论卡",
+    details: [
+      "把上一版命中率页从『只读数字』升级为可核对的客观结论：每个玩法按方向随机基准（二选一≈50%、胜分差6选1≈16.7%）给出『优于/相当/弱于随机』分级，±5pt 容差，样本<10 标『样本不足』",
+      "新增顶部『数据结论卡』：147 场回溯中 3/4 个玩法弱于随机基准、胜分差(wnm) 仅 5.9% 明显偏弱、主推 32.8%——把模型真实表现直白呈现，帮用户自行判断，明确标注不构成投注建议",
+      "全程零数据源耦合、零付费：仅复用页内已注入的 basketball_ai_accuracy.json 147 条回溯，与足球模型/核心数据完全隔离"
+    ]
+  },
   {
     version: "v1.7.109",
     date: "2026-11-04",
@@ -6313,6 +6323,7 @@ function renderBkAcc(){
   const acc = state.basketballAiAcc || {history:[]};
   const hist = (acc.history || []).filter(r => r && r.plays);
   const plays = ["mnl","hdc","hilo","wnm"];
+  const RAND_BASE = {mnl:50, hdc:50, hilo:50, wnm:16.7};  // 方向猜测的随机基准(%): 三玩法二选一, 胜分差6选1
   const agg = {}; plays.forEach(p => agg[p] = {hit:0, tot:0});
   let topHit = 0, topTot = 0;
   const byLeague = {};
@@ -6327,17 +6338,36 @@ function renderBkAcc(){
     plays.forEach(p => { const pl = r.plays && r.plays[p]; if(pl && typeof pl.hit === "boolean"){ byLeague[lg].tot++; if(pl.hit) byLeague[lg].hit++; } });
   });
   const total = hist.length;
-  const pct = (h,t) => t ? (100*h/t).toFixed(1)+"%" : "—";
+  const rate = (h,t) => t ? 100*h/t : 0;
+  const pct  = (h,t) => t ? (100*h/t).toFixed(1)+"%" : "—";
+  /* 相对随机基准的客观分级（±5pt 容差；仅统计口径，非荐单） */
+  const grade = (p, a) => {
+    const v = rate(a.hit, a.tot), b = RAND_BASE[p];
+    if(a.tot < 10) return {label:"样本不足", color:"var(--sub)"};
+    if(v >= b + 5) return {label:"优于随机", color:"var(--good)"};
+    if(v >= b - 5) return {label:"与随机相当", color:"var(--sub)"};
+    return {label:"弱于随机", color:"var(--bad)"};
+  };
   if(sumBox){
     sumBox.innerHTML = `基于 <b>${total}</b> 条 AI 预测回溯（已结算场次的每玩法命中），样本偏薄仅供参考 · 数据更新 ${acc.updatedAt || "—"}`;
   }
-  let h = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">`;
+  let h = "";
+  /* 数据结论卡：把命中率洞察直接变成一句可核对的客观结论 */
+  const weakN = plays.filter(p => grade(p, agg[p]).label === "弱于随机").length;
+  const wnmR = pct(agg.wnm.hit, agg.wnm.tot);
+  h += `<div style="background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:12.5px;line-height:1.7">`
+     + `<div style="font-weight:800;font-size:13px;margin-bottom:4px">📊 数据结论（客观统计 · 不构成投注建议）</div>`
+     + `在 <b>${total}</b> 场已结算回溯中，<b>${weakN}/4</b> 个玩法命中率低于「方向随机猜测」基准（二选一玩法≈50%、胜分差 6选1≈16.7%）；`
+     + `其中胜分差(wnm) 命中仅 <b style="color:var(--bad)">${wnmR}</b>，明显偏弱。主推方向整体命中 <b>${pct(topHit,topTot)}</b>。`
+     + `篮球 AI 样本偏薄，此页用于核对模型真实表现，请勿据此下单。</div>`;
+  h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">`;
   plays.forEach(p => {
-    const a = agg[p];
+    const a = agg[p], g = grade(p, a);
     h += `<div style="background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center">`
        + `<div style="font-size:12px;color:var(--sub)">${BK_PLAY_NAME[p]||p}</div>`
-       + `<div style="font-size:22px;font-weight:800;color:var(--accent)">${pct(a.hit,a.tot)}</div>`
-       + `<div style="font-size:11px;color:var(--sub)">${a.hit}/${a.tot} 命中</div></div>`;
+       + `<div style="font-size:22px;font-weight:800;color:${g.color}">${pct(a.hit,a.tot)}</div>`
+       + `<div style="font-size:11px;color:var(--sub)">${a.hit}/${a.tot} · 基准 ${RAND_BASE[p]}%</div>`
+       + `<div style="font-size:11px;font-weight:700;color:${g.color};margin-top:4px">${g.label}</div></div>`;
   });
   h += `</div>`;
   h += `<div style="margin:8px 0 4px;font-size:13px">主推方向命中：<b style="color:var(--accent)">${pct(topHit,topTot)}</b>（${topHit}/${topTot}）</div>`;
