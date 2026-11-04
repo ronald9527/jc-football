@@ -26,16 +26,22 @@ historyDateList、reliable 命中率统计。
 幂等：records 里已有赛果的记录不覆盖；可重复执行；未来日期（未开赛）保留
 pending。用法：
   python3 backfill_ws_results.py --dry-run   # 只预览不写盘
-  python3 backfill_ws_results.py             # 实际回填
+  python3 backfill_ws_results.py             # 实际回填（定时任务用）
+  python3 backfill_ws_results.py --quiet     # CI：仅一行汇总，不输出明细
+
+接入 run_daily.sh 步骤 1.882（fetch_whoscored 之后、accuracy_ab / build_panel
+之前）。幂等零噪声：无新增记录、无 pending 清理、ws.history/reliable 无变化时
+**不写盘**，避免每轮刷新 updatedAt 制造无意义的数据快照提交与部署指纹抖动。
 """
 import json
 import os
 import sys
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DRY = "--dry-run" in sys.argv
+QUIET = "--quiet" in sys.argv
 
 HIST_PATH = os.path.join(HERE, "whoscored_history.json")
 WS_PATH = os.path.join(HERE, "whoscored_data.json")
@@ -43,14 +49,20 @@ JC_PATH = os.path.join(HERE, "history.json")
 SP_PATH = os.path.join(HERE, "score_predict.json")
 FD_PATH = os.path.join(HERE, "fd_data.json")
 
-BJ_NOW = datetime.utcnow() + timedelta(hours=8)
+# 明确固定 UTC+8（北京时间），不受 CI 容器 TZ / naive datetime 影响；
+# 与 run_daily.sh 的 `export TZ=Asia/Shanghai` 口径一致。
+BJ_NOW = datetime.now(timezone(timedelta(hours=8))).replace(tzinfo=None)
 TODAY = BJ_NOW.date()
 STAMP = BJ_NOW.strftime("%Y-%m-%d %H:%M:%S")
 
 
-def _load(p):
-    with open(p, encoding="utf-8") as f:
-        return json.load(f)
+def _load(p, default=None):
+    """可选源缺失/损坏时返回 default，绝不抛异常中断流水线。"""
+    try:
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default if default is not None else {}
 
 
 def _save(p, obj):
@@ -241,17 +253,21 @@ def recompute_reliable(eva):
 def main():
     hist = _load(HIST_PATH)
     ws = _load(WS_PATH)
+    # 记录原始 ws 派生字段快照，用于「无变化不写盘」判断（幂等零噪声）
+    _keys = ("history", "historyDateList", "reliable")
+    _orig = json.dumps({k: ws.get(k) for k in _keys}, ensure_ascii=False, sort_keys=True)
     records = hist.get("records", {})
     pending = hist.get("pending", {})
     ws_history = ws.get("history", [])
 
     jc, jc_total, eng, eng_total, loose = build_indexes(ws)
-    print("赛果池：竞彩官方 %d 场 / 英文队名 %d 条（索引键 %d）"
-          % (jc_total, eng_total, len(eng)))
-    print("起始：records %d 条，pending %d 条，ws.history %d 条"
-          % (len(records), len(pending), len(ws_history)))
-    print("北京日期：%s%s" % (TODAY.isoformat(), "  [DRY-RUN 不写盘]" if DRY else ""))
-    print("-" * 60)
+    if not QUIET:
+        print("赛果池：竞彩官方 %d 场 / 英文队名 %d 条（索引键 %d）"
+              % (jc_total, eng_total, len(eng)))
+        print("起始：records %d 条，pending %d 条，ws.history %d 条"
+              % (len(records), len(pending), len(ws_history)))
+        print("北京日期：%s%s" % (TODAY.isoformat(), "  [DRY-RUN 不写盘]" if DRY else ""))
+        print("-" * 60)
 
     added, skipped = 0, defaultdict(int)
     by_source = defaultdict(int)
@@ -301,32 +317,53 @@ def main():
     hist["pending"] = {k: v for k, v in pending.items() if k not in done_ids}
     hist["updatedAt"] = STAMP
 
-    print("回填结果：新增 records %d 条（其中带竞彩编号、页面可见 %d 条）"
-          % (added, new_jc_visible))
-    print("  来源分布：", dict(by_source))
-    print("  保留 pending %d 条，原因：" % len(hist["pending"]))
-    for k, c in sorted(skipped.items(), key=lambda x: -x[1]):
-        print("    %-24s %d" % (k, c))
     ov = ws["reliable"]["overall"]
-    print("  重算命中率：样本 %d 场 | 精确命中 %.1f%% | 方向命中 %.1f%%"
-          % (ov["n"], ov.get("exactHit", 0), ov.get("outcomeHit", 0)))
-    print("  ws.history: %d 条 | historyDateList %d 个日期"
-          % (len(ws["history"]), len(ws["historyDateList"])))
-    if new_records:
-        print("  样例(前3)：")
-        for r in new_records[:3]:
-            print("    %s %s %s vs %s 预测%s:%s 实际%s:%s 精确%s 方向%s 来源已记"
-                  % (r["date"], r.get("league"), r["home"], r["away"],
-                     r["predH"], r["predA"], r["actH"], r["actA"],
-                     r["exactHit"], r["outcomeHit"]))
-    print("-" * 60)
+    pruned = len(pending) - len(hist["pending"])
+    changed = (added > 0 or pruned > 0
+               or json.dumps({k: ws.get(k) for k in _keys},
+                             ensure_ascii=False, sort_keys=True) != _orig)
+
+    if QUIET:
+        # CI 一行汇总（run_daily.sh 的 log 会自动带时间戳前缀）
+        print("  新增%d / 清理僵尸%d / 保留pending%d / 样本%d场(精确%.1f%% 方向%.1f%%) → %s"
+              % (added, pruned, len(hist["pending"]), ov["n"],
+                 ov.get("exactHit", 0), ov.get("outcomeHit", 0),
+                 ("DRY-RUN未写盘" if DRY else ("已写盘" if changed else "无变化跳过写盘"))))
+    else:
+        print("回填结果：新增 records %d 条（其中带竞彩编号、页面可见 %d 条）"
+              % (added, new_jc_visible))
+        print("  来源分布：", dict(by_source))
+        print("  清理僵尸 pending %d 条 | 保留 %d 条，原因："
+              % (pruned, len(hist["pending"])))
+        for k, c in sorted(skipped.items(), key=lambda x: -x[1]):
+            print("    %-24s %d" % (k, c))
+        print("  重算命中率：样本 %d 场 | 精确命中 %.1f%% | 方向命中 %.1f%%"
+              % (ov["n"], ov.get("exactHit", 0), ov.get("outcomeHit", 0)))
+        print("  ws.history: %d 条 | historyDateList %d 个日期"
+              % (len(ws["history"]), len(ws["historyDateList"])))
+        if new_records:
+            print("  样例(前3)：")
+            for r in new_records[:3]:
+                print("    %s %s %s vs %s 预测%s:%s 实际%s:%s 精确%s 方向%s"
+                      % (r["date"], r.get("league"), r["home"], r["away"],
+                         r["predH"], r["predA"], r["actH"], r["actA"],
+                         r["exactHit"], r["outcomeHit"]))
+        print("-" * 60)
 
     if DRY:
-        print("DRY-RUN 结束，未写盘。")
+        if not QUIET:
+            print("DRY-RUN 结束，未写盘。")
+        return
+    if not changed:
+        # 幂等零噪声：无新增、无清理、派生字段无变化时不写盘，
+        # 避免每轮刷新 updatedAt 制造无意义的数据快照提交 / 部署指纹抖动。
+        if not QUIET:
+            print("无实质变化，跳过写盘（幂等零噪声）。")
         return
     _save(HIST_PATH, hist)
     _save(WS_PATH, ws)
-    print("已写盘：whoscored_history.json / whoscored_data.json")
+    if not QUIET:
+        print("已写盘：whoscored_history.json / whoscored_data.json")
 
 
 if __name__ == "__main__":

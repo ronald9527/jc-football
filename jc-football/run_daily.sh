@@ -194,6 +194,34 @@ else
 fi
 set -e
 
+# ---------- 步骤1.882：比分预测赛后结果全量离线回溯（v1.7.112）----------
+# 隔离设计：纯本地 JSON 对账，零外网、零抓取预算占用（实测 <1s）。
+# 痛点：海外 CI 抓 WhoScored /livescores 常被软限流，赛果回填静默饿死 →
+# whoscored_history.json 的 pending 不断堆积（曾堆积 173 条），赛后回溯区缺记录。
+# 本步骤用本地权威赛果源（竞彩 history.json 官方赛果 + 两套预测历史 +
+# score_predict.matches + fd_data）自动补漏，并清理「已评估残留」僵尸 pending。
+# 顺序约束（改代码前必读）：
+#   · 必须在 1.88 fetch_whoscored 之后 —— fetch 先更新 records/pending/源站数据；
+#   · 必须在 1.887 accuracy_ab（A/B 对比，读 whoscored_history.records）之前；
+#   · 必须在 步骤2 build_panel（读 whoscored_data.json）之前。
+# whoscored_data.json 的 history 每轮由 records 重建（eva=records.values()），
+# 故回填进 records 的记录不会被覆盖；两个产物 json 均在 daily.yml 回写 FILES 内，
+# 且部署指纹含 whoscored_data 的 history/reliable，补到新赛果会自动落库并上线。
+# 幂等零噪声：无新增/无清理/派生字段无变化时不写盘，不制造空数据快照提交。
+# 失败只记日志，绝不阻断部署（沿用项目一贯的隔离设计）。
+log "==> 步骤1.882 比分预测赛后回溯 (backfill_ws_results.py)"
+set +e
+if have_time 15; then
+  "$PY" backfill_ws_results.py --quiet
+  _bf_rc=$?
+  if [ "$_bf_rc" -ne 0 ]; then
+    log "!! 赛后回溯失败（exit=$_bf_rc），沿用上次数据（不影响足球与部署）"
+  fi
+else
+  log "!! 剩余时间不足，跳过赛后回溯（沿用上次数据），优先保证部署"
+fi
+set -e
+
 # ---------- 步骤1.886：V站·呼死狗 中文情报（独立源，v1.7.75；零翻译、竞彩编号直配）----------
 # 隔离设计：V站抓取失败只跳过本源（保留旧 vzhan_data.json），绝不影响 WhoScored/模型/部署；
 # 与 WhoScored 共用 have_time 门槛，超预算同样跳过，保证部署步骤一定被执行。

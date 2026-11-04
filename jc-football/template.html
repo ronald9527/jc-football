@@ -1765,8 +1765,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.111";
+const VERSION = "v1.7.112";
 const CHANGELOG = [
+  {
+    version: "v1.7.112",
+    date: "2026-11-05",
+    title: "赛后回溯接入每日定时任务，永久防赛果回填饿死",
+    details: [
+      "backfill_ws_results.py 正式接入 run_daily.sh 步骤 1.882：每日 6 轮自动跑（北京时间 08/12/15/18/20/22），从此无需人工干预，WhoScored 赛果回填饿死导致的 pending 堆积会被每轮自动补齐并清理",
+      "接在 1.88 fetch_whoscored 之后、1.887 A/B 对比与步骤2 build_panel 之前：下游读到的都是补齐后的完整历史；whoscored_data 的 history 每轮由 records 重建，补进 records 的记录不会被覆盖；两个产物 json 已在 CI 回写列表、部署指纹也含其 history/reliable，补到新赛果会自动落库并上线",
+      "幂等零噪声：无新增/无清理/派生字段无变化时不写盘，不刷新 updatedAt、不制造空数据快照提交或部署指纹抖动；纯本地 JSON 对账零外网零预算（实测 <1s），失败只记日志绝不阻断部署，沿用项目一贯隔离设计",
+      "端到端模拟验证：人为制造 3 条赛果饿死 + 2 条僵尸 pending，脚本自动补齐 3 条、清理 5 条，records 回到 429、pending 回到 4，补回赛果与线上逐条一致"
+    ]
+  },
   {
     version: "v1.7.111",
     date: "2026-11-04",
