@@ -20929,6 +20929,106 @@
  ],
  "history": [
   {
+   "id": "1980912",
+   "date": "2026-11-03",
+   "league": "意甲",
+   "home": "Atalanta",
+   "away": "Parma Calcio 1913",
+   "predH": 2,
+   "predA": 1,
+   "actH": 0,
+   "actA": 3,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周一004",
+   "preConf": {
+    "dir": 49.0,
+    "exact": 8.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 24,
+    "teamN": 6,
+    "sample": 30,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1993968",
+   "date": "2026-11-02",
+   "league": "西甲",
+   "home": "Elche",
+   "away": "Valencia",
+   "predH": 1,
+   "predA": 1,
+   "actH": 0,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周日019",
+   "preConf": {
+    "dir": 44.7,
+    "exact": 12.5,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 19,
+    "teamN": 4,
+    "sample": 23,
+    "outcome": "平局",
+    "tip": "比分可信度高，可跟注比分 1:1"
+   }
+  },
+  {
+   "id": "1980922",
+   "date": "2026-11-02",
+   "league": "意甲",
+   "home": "Juventus",
+   "away": "Napoli",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 0,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": "周日021",
+   "preConf": {
+    "dir": 45.4,
+    "exact": 8.7,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 24,
+    "teamN": 8,
+    "sample": 32,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1953101",
+   "date": "2026-11-02",
+   "league": "美职联",
+   "home": "New England Revolution",
+   "away": "Inter Miami CF",
+   "predH": 2,
+   "predA": 1,
+   "actH": 1,
+   "actA": 2,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周日025",
+   "preConf": {
+    "dir": 43.6,
+    "exact": 10.2,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 34,
+    "teamN": 4,
+    "sample": 38,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
    "id": "2013745",
    "date": "2026-11-01",
    "league": "意乙",
@@ -20974,6 +21074,31 @@
     "leagueN": 23,
     "teamN": 5,
     "sample": 28,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1982330",
+   "date": "2026-11-01",
+   "league": "荷甲",
+   "home": "FC Groningen",
+   "away": "Sparta Rotterdam",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 3,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周日015",
+   "preConf": {
+    "dir": 46.6,
+    "exact": 8.0,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 13,
+    "teamN": 2,
+    "sample": 15,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:1 可作小注参考"
    }
@@ -22276,6 +22401,56 @@
     "sample": 18,
     "outcome": "平局",
     "tip": "比分中等可信，比分 1:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1995455",
+   "date": "2026-10-31",
+   "league": "德甲",
+   "home": "Elversberg",
+   "away": "Mainz 05",
+   "predH": 1,
+   "predA": 2,
+   "actH": 4,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周五007",
+   "preConf": {
+    "dir": 38.6,
+    "exact": 7.3,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 17,
+    "teamN": 4,
+    "sample": 21,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  {
+   "id": "1997633",
+   "date": "2026-10-31",
+   "league": "葡超",
+   "home": "Casa Pia AC",
+   "away": "Sporting CP",
+   "predH": 0,
+   "predA": 2,
+   "actH": 0,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周五011",
+   "preConf": {
+    "dir": 39.9,
+    "exact": 6.8,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 6,
+    "teamN": 3,
+    "sample": 9,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
    }
   },
   {
@@ -28877,6 +29052,8 @@
   }
  ],
  "historyDateList": [
+  "2026-11-03",
+  "2026-11-02",
   "2026-11-01",
   "2026-10-31",
   "2026-10-30",
@@ -28900,16 +29077,16 @@
  ],
  "reliable": {
   "overall": {
-   "n": 422,
-   "exactHit": 8.3,
-   "outcomeHit": 42.9
+   "n": 429,
+   "exactHit": 8.4,
+   "outcomeHit": 42.7
   },
   "leagues": [
    {
     "league": "西甲",
-    "n": 19,
-    "exactHit": 21.1,
-    "outcomeHit": 52.6
+    "n": 20,
+    "exactHit": 20.0,
+    "outcomeHit": 50.0
    },
    {
     "league": "英超",
@@ -28922,6 +29099,12 @@
     "n": 12,
     "exactHit": 16.7,
     "outcomeHit": 25.0
+   },
+   {
+    "league": "葡超",
+    "n": 7,
+    "exactHit": 14.3,
+    "outcomeHit": 42.9
    },
    {
     "league": "土超",
@@ -28937,9 +29120,9 @@
    },
    {
     "league": "美职联",
-    "n": 34,
-    "exactHit": 11.8,
-    "outcomeHit": 44.1
+    "n": 35,
+    "exactHit": 11.4,
+    "outcomeHit": 42.9
    },
    {
     "league": "意乙",
@@ -28954,28 +29137,28 @@
     "outcomeHit": 50.0
    },
    {
-    "league": "意甲",
-    "n": 24,
-    "exactHit": 8.3,
-    "outcomeHit": 54.2
-   },
-   {
     "league": "英冠",
     "n": 49,
     "exactHit": 8.2,
     "outcomeHit": 42.9
    },
    {
-    "league": "荷甲",
-    "n": 13,
+    "league": "意甲",
+    "n": 26,
     "exactHit": 7.7,
     "outcomeHit": 53.8
    },
    {
+    "league": "荷甲",
+    "n": 14,
+    "exactHit": 7.1,
+    "outcomeHit": 50.0
+   },
+   {
     "league": "德甲",
-    "n": 17,
-    "exactHit": 5.9,
-    "outcomeHit": 29.4
+    "n": 18,
+    "exactHit": 5.6,
+    "outcomeHit": 27.8
    },
    {
     "league": "英乙",
@@ -28996,12 +29179,6 @@
     "outcomeHit": 51.6
    },
    {
-    "league": "葡超",
-    "n": 6,
-    "exactHit": 0.0,
-    "outcomeHit": 33.3
-   },
-   {
     "league": "League Cup",
     "n": 6,
     "exactHit": 0.0,
@@ -29016,19 +29193,19 @@
     "outcomeHit": 100.0
    },
    {
-    "team": "Celta Vigo",
-    "n": 3,
-    "exactHit": 66.7,
-    "outcomeHit": 66.7
-   },
-   {
     "team": "Sudtirol",
     "n": 3,
     "exactHit": 66.7,
     "outcomeHit": 66.7
    },
    {
-    "team": "Atalanta",
+    "team": "Celta Vigo",
+    "n": 3,
+    "exactHit": 66.7,
+    "outcomeHit": 66.7
+   },
+   {
+    "team": "Nottingham Forest",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 100.0
@@ -29040,25 +29217,7 @@
     "outcomeHit": 100.0
    },
    {
-    "team": "Nottingham Forest",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 100.0
-   },
-   {
-    "team": "Everton",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 66.7
-   },
-   {
-    "team": "Blackpool",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 66.7
-   },
-   {
-    "team": "Kilmarnock",
+    "team": "Inter Miami CF",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 66.7
@@ -29070,13 +29229,61 @@
     "outcomeHit": 66.7
    },
    {
+    "team": "Everton",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
+    "team": "Kilmarnock",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
     "team": "Rangers",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 66.7
    },
    {
+    "team": "Blackpool",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
+    "team": "Valencia",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 33.3
+   },
+   {
+    "team": "Hoffenheim",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 33.3
+   },
+   {
+    "team": "Sporting CP",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 33.3
+   },
+   {
+    "team": "LR Vicenza",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 33.3
+   },
+   {
     "team": "Torino",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 33.3
+   },
+   {
+    "team": "Lyon",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 33.3
@@ -29094,45 +29301,15 @@
     "outcomeHit": 33.3
    },
    {
-    "team": "LR Vicenza",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
-   },
-   {
     "team": "Paris Saint-Germain",
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 33.3
-   },
-   {
-    "team": "Lyon",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
-   },
-   {
-    "team": "Hoffenheim",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
-   },
-   {
-    "team": "Arsenal",
-    "n": 4,
-    "exactHit": 25.0,
-    "outcomeHit": 100.0
-   },
-   {
-    "team": "Preston",
-    "n": 4,
-    "exactHit": 25.0,
-    "outcomeHit": 75.0
    }
   ],
   "baseline": {
-   "dir": 42.9,
-   "exact": 8.3
+   "dir": 42.7,
+   "exact": 8.4
   }
  }
 }

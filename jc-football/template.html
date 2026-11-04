@@ -1765,8 +1765,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.110";
+const VERSION = "v1.7.111";
 const CHANGELOG = [
+  {
+    version: "v1.7.111",
+    date: "2026-11-04",
+    title: "比分预测赛后结果全量离线回溯（WhoScored 人工预测）",
+    details: [
+      "新增 backfill_ws_results.py：用本地 4 个权威赛果源（竞彩 history.json 官方赛果 754 场 + whoscored/score_predict 历史 + score_predict.matches 已评估场次 + fd_data）对赛后结果做一次性全量回溯，全程不依赖外网，绕过海外沙箱抓不到 WhoScored /livescores 导致赛果回填饿死的痛点",
+      "补齐 7 场已完赛预测的赛果与命中判定（周五007 埃尔沃斯堡、周五011 卡萨皮亚、周日015 格罗宁根、周日019 埃尔切、周日021 尤文图斯、周日025 新英格兰革命、周一004 亚特兰大），全部带竞彩编号、赛后回溯区直接可见；命中判定与记录格式复用 fetch_whoscored.py 既有规则，preConf 赛前可信度快照完整保留",
+      "顺带清理 162 条『已评估但残留』的僵尸 pending（其 preConf 早已持久化在 records，逐条核验零丢失），pending 由 173 条收敛到 4 条（3 场本地确无赛果 + 1 场次日未开赛），并同步重算 reliable 命中率统计：样本 422→429 场、精确命中 8.4%、方向命中 42.7%",
+      "匹配采用『竞彩编号+日期±2天』优先、『英文队名归一+日期』兜底、别名包含式补漏（如 Atalanta ↔ Atalanta BC），逐条队名核对零错配；脚本幂等可重复执行，未改动源站 updatedAt（如实反映源站最后抓取时间，避免误导自检）"
+    ]
+  },
   {
     version: "v1.7.110",
     date: "2026-11-04",
