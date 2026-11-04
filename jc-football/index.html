@@ -1492,6 +1492,11 @@ footer b{color:var(--sub)}
     <div id="bkStatsPane" style="display:none">
       <div id="bkStatsList"></div>
     </div>
+    <!-- AI命中率 pane（v1.7.109，聚合147条AI预测回溯的按玩法命中率） -->
+    <div id="bkAccPane" style="display:none">
+      <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="bkAccSummary"></div>
+      <div id="bkAccList"></div>
+    </div>
   </div>
 
   <div class="sp-view" id="scorePredView" style="display:none">
@@ -1760,8 +1765,18 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.107";
+const VERSION = "v1.7.109";
 const CHANGELOG = [
+  {
+    version: "v1.7.109",
+    date: "2026-11-04",
+    title: "竞彩篮球新增「AI命中率」二级 tab",
+    details: [
+      "新增：篮球专区二级导航新增「AI命中率」页，聚合 basketball_ai_accuracy.json 的 147 条 AI 预测回溯",
+      "展示：①四玩法（胜负/让分胜负/大小分/胜分差）按历史回溯的命中率；②主推方向整体命中率；③按联赛拆分命中率；④近期 12 条回溯明细（命中/未中）",
+      "用途：README 已注明篮球 AI 样本偏薄，本页把『同指命中率』从脚注提示变成可一眼核对的命中率仪表盘，帮用户判断是否跟单；与足球模型零耦合"
+    ]
+  },
   {
     version: "v1.7.107",
     date: "2026-11-04",
@@ -6290,6 +6305,67 @@ function renderScorePred(){
 const BK_PLAY_NAME = {mnl:"胜负", hdc:"让分胜负", hilo:"大小分", wnm:"胜分差"};
 const BK_WNM_NAME = {l1:"1-5分", l2:"6-10分", l3:"11-15分", l4:"16-20分", l5:"21-25分", l6:"26+分"};
 
+/* 二级 tab：AI命中率（v1.7.109，聚合 basketball_ai_accuracy.history 的按玩法命中率） */
+function renderBkAcc(){
+  const sumBox = $("#bkAccSummary");
+  const listBox = $("#bkAccList");
+  if(!listBox) return;
+  const acc = state.basketballAiAcc || {history:[]};
+  const hist = (acc.history || []).filter(r => r && r.plays);
+  const plays = ["mnl","hdc","hilo","wnm"];
+  const agg = {}; plays.forEach(p => agg[p] = {hit:0, tot:0});
+  let topHit = 0, topTot = 0;
+  const byLeague = {};
+  hist.forEach(r => {
+    plays.forEach(p => {
+      const pl = r.plays && r.plays[p];
+      if(pl && typeof pl.hit === "boolean"){ agg[p].tot++; if(pl.hit) agg[p].hit++; }
+    });
+    if(typeof r.topHit === "boolean"){ topTot++; if(r.topHit) topHit++; }
+    const lg = r.league || "未知";
+    byLeague[lg] = byLeague[lg] || {hit:0, tot:0};
+    plays.forEach(p => { const pl = r.plays && r.plays[p]; if(pl && typeof pl.hit === "boolean"){ byLeague[lg].tot++; if(pl.hit) byLeague[lg].hit++; } });
+  });
+  const total = hist.length;
+  const pct = (h,t) => t ? (100*h/t).toFixed(1)+"%" : "—";
+  if(sumBox){
+    sumBox.innerHTML = `基于 <b>${total}</b> 条 AI 预测回溯（已结算场次的每玩法命中），样本偏薄仅供参考 · 数据更新 ${acc.updatedAt || "—"}`;
+  }
+  let h = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">`;
+  plays.forEach(p => {
+    const a = agg[p];
+    h += `<div style="background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center">`
+       + `<div style="font-size:12px;color:var(--sub)">${BK_PLAY_NAME[p]||p}</div>`
+       + `<div style="font-size:22px;font-weight:800;color:var(--accent)">${pct(a.hit,a.tot)}</div>`
+       + `<div style="font-size:11px;color:var(--sub)">${a.hit}/${a.tot} 命中</div></div>`;
+  });
+  h += `</div>`;
+  h += `<div style="margin:8px 0 4px;font-size:13px">主推方向命中：<b style="color:var(--accent)">${pct(topHit,topTot)}</b>（${topHit}/${topTot}）</div>`;
+  h += `<div style="margin:14px 0 6px;font-weight:700;font-size:13px">按联赛命中率</div><div>`;
+  Object.keys(byLeague).sort((a,b) => byLeague[b].tot - byLeague[a].tot).forEach(lg => {
+    const a = byLeague[lg];
+    h += `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px">`
+       + `<span>${lg}</span><span><b style="color:var(--accent)">${pct(a.hit,a.tot)}</b> <span style="color:var(--sub)">${a.hit}/${a.tot}</span></span></div>`;
+  });
+  h += `</div>`;
+  const recent = hist.slice().sort((a,b) => (b.date||"").localeCompare(a.date||"")).slice(0, 12);
+  h += `<div style="margin:14px 0 6px;font-weight:700;font-size:13px">近期回溯（最新 ${recent.length} 条）</div><div>`;
+  recent.forEach(r => {
+    const tp = r.topPlay, td = r.topDir;
+    const tdName = (tp === "wnm") ? (BK_WNM_NAME[td] || td) : (td === "h" ? "主" : td === "a" ? "客" : td);
+    const tpName = (BK_PLAY_NAME[tp] || tp) + (td ? "·" + tdName : "");
+    h += `<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px">`
+       + `<span style="color:var(--sub);min-width:64px">${r.date||""}</span>`
+       + `<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.num||""} ${r.home||"?"} vs ${r.away||"?"}</span>`
+       + `<span style="color:var(--sub)">${tpName}</span>`
+       + `<span style="color:${r.topHit ? "var(--good)" : "var(--bad)"}">${r.topHit ? "✅命中" : "❌未中"}</span>`
+       + `</div>`;
+  });
+  h += `</div>`;
+  if(!total) h = `<div style="padding:24px;text-align:center;color:var(--sub)">暂无 AI 预测回溯数据</div>`;
+  listBox.innerHTML = h;
+}
+
 function renderBasketball(){
   const bk = state.basketball || {matches:[]};
   const histRecs = (state.basketballHist && state.basketballHist.records) || {};
@@ -6335,6 +6411,7 @@ function renderBasketball(){
       {k:"ai",    label:"AI预测", n:null},
       {k:"parlay",label:"篮球串关", n:null},
       {k:"stats", label:"历史统计", n:null},
+      {k:"acc",   label:"AI命中率", n:null},
       // ▼ 后续篮球功能在此追加二级 tab
     ];
     subTabs.innerHTML = tabs.map(t =>
@@ -6346,12 +6423,13 @@ function renderBasketball(){
   }
 
   /* pane 切换 + 分派渲染 */
-  const _bkPanes = {sched:"bkSchedPane", hist:"bkHistPane", ai:"bkAiPane", parlay:"bkParlayPane", stats:"bkStatsPane"};
+  const _bkPanes = {sched:"bkSchedPane", hist:"bkHistPane", ai:"bkAiPane", parlay:"bkParlayPane", stats:"bkStatsPane", acc:"bkAccPane"};
   Object.keys(_bkPanes).forEach(k =>
     $("#" + _bkPanes[k]).style.display = (state.bkSubTab === k) ? "block" : "none");
   if(state.bkSubTab === "ai"){ renderBkAi(); return; }
   if(state.bkSubTab === "parlay"){ renderBkParlay(); return; }
   if(state.bkSubTab === "stats"){ renderBkStats(); return; }
+  if(state.bkSubTab === "acc"){ renderBkAcc(); return; }
   if(state.bkSubTab === "hist"){ renderBkHist(all); return; }
   renderBkSched(all);
 }
