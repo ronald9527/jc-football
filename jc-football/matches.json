@@ -1,149 +1,7 @@
 {
- "updateTime": "2026-11-05 00:16:55",
- "count": 11,
+ "updateTime": "2026-11-05 01:59:33",
+ "count": 10,
  "matches": [
-  {
-   "id": "1480128",
-   "num": "周三003",
-   "week": "周三",
-   "date": "2026-11-04",
-   "kickoff": "2026-11-04 23:30",
-   "time": "23:30",
-   "league": "欧罗巴",
-   "home": "雷恩",
-   "away": "奥林匹亚",
-   "hr": "13",
-   "ar": "5",
-   "hrn": 13,
-   "arn": 5,
-   "status": "",
-   "had": {
-    "h": 1.92,
-    "d": 3.3,
-    "a": 3.17
-   },
-   "hhad": {
-    "h": 3.97,
-    "d": 3.65,
-    "a": 1.63,
-    "goal": "-1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.8,
-   "verdict": null,
-   "hits": [],
-   "score": {
-    "dir": "h",
-    "score": 0.0,
-    "stars": 0,
-    "kelly": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "kellyDiff": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": []
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "-1"
-   },
-   "asianVerdict": null,
-   "scoreRec": {
-    "predicted": "1:2",
-    "alternatives": [
-     "0:1",
-     "0:2",
-     "0:3"
-    ],
-    "confidence": 40,
-    "expHome": 1.2,
-    "expAway": 1.5,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率0%",
-     "竞彩让球-1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 6,
-     "w": 4,
-     "d": 2,
-     "l": 0,
-     "wr": 67,
-     "form": "胜胜平胜平胜",
-     "home_wr": 100,
-     "away_wr": 50,
-     "hdp_wr": 17
-    },
-    "away": null
-   },
-   "attack": {
-    "home": {
-     "n": 6,
-     "gf": 1.33,
-     "ga": 1.83
-    },
-    "away": null
-   },
-   "h2h": null
-  },
   {
    "id": "1479953",
    "num": "周三004",
@@ -264,44 +122,38 @@
    },
    "form": {
     "home": {
-     "n": 6,
-     "w": 4,
+     "n": 3,
+     "w": 1,
      "d": 2,
      "l": 0,
-     "wr": 67,
-     "form": "胜平胜胜胜平",
-     "home_wr": 67,
-     "away_wr": 67,
-     "hdp_wr": 33,
-     "gf": 3.5,
-     "ga": 0.5,
-     "src": "500球队页"
+     "wr": 33,
+     "form": "平胜平",
+     "home_wr": 0,
+     "away_wr": 100,
+     "hdp_wr": 33
     },
     "away": {
-     "n": 5,
-     "w": 3,
-     "d": 2,
-     "l": 0,
-     "wr": 60,
-     "form": "平胜胜胜平",
-     "home_wr": 60,
-     "away_wr": null,
-     "hdp_wr": 67,
-     "gf": 2.0,
-     "ga": 1.0,
-     "src": "500球队页"
+     "n": 6,
+     "w": 1,
+     "d": 1,
+     "l": 4,
+     "wr": 17,
+     "form": "负平胜负负负",
+     "home_wr": 25,
+     "away_wr": 0,
+     "hdp_wr": 33
     }
    },
    "attack": {
     "home": {
-     "n": 6,
-     "gf": 3.5,
-     "ga": 0.5
+     "n": 3,
+     "gf": 1.0,
+     "ga": 3.0
     },
     "away": {
-     "n": 5,
-     "gf": 2.0,
-     "ga": 1.0
+     "n": 6,
+     "gf": 2.17,
+     "ga": 2.0
     }
    },
    "h2h": null
@@ -560,8 +412,8 @@
    "hhadOpen": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [],
@@ -722,8 +574,8 @@
    "hhadOpen": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [],
@@ -884,8 +736,8 @@
    "hhadOpen": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [],
@@ -1046,8 +898,8 @@
    "hhadOpen": null,
    "hhadVerdict": {
     "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
+    "txt": "推荐让平（综合评分0.0）",
+    "dir": "d",
     "stars": 1,
     "score": 0.0,
     "reasons": [],
@@ -1814,7 +1666,7 @@
      "diff": 0
     },
     "date": "2026-11-05",
-    "fetched_at": "2026-11-05 00:16:55",
+    "fetched_at": "2026-11-05 01:59:33",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1826,7 +1678,7 @@
  ],
  "highOddsParlay": null,
  "safeParlay": {
-  "generatedAt": "2026-11-05 00:16:55",
+  "generatedAt": "2026-11-05 01:59:33",
   "candidateCount": 0,
   "candidatePool": [],
   "poolNotes": [
@@ -12672,8 +12524,8 @@
   ]
  },
  "strongWeak": {
-  "generatedAt": "2026-11-05 00:16:55",
-  "searchDate": "2026-11-05 00:16",
+  "generatedAt": "2026-11-05 01:59:33",
+  "searchDate": "2026-11-05 01:59",
   "count": 0,
   "matches": []
  },
@@ -13715,13 +13567,13 @@
   },
   "2026-11-05": {
    "date": "2026-11-05",
-   "generatedAt": "2026-11-05 00:16:55",
+   "generatedAt": "2026-11-05 01:59:33",
    "count": 0,
    "matches": []
   }
  },
  "halfFull": {
-  "generatedAt": "2026-11-05 00:16:55",
+  "generatedAt": "2026-11-05 01:59:33",
   "searchDate": "2026-11-05",
   "count": 9,
   "matches": [
@@ -22579,7 +22431,7 @@
   },
   "2026-11-05": {
    "date": "2026-11-05",
-   "generatedAt": "2026-11-05 00:16:55",
+   "generatedAt": "2026-11-05 01:59:33",
    "count": 9,
    "matches": [
     {
