@@ -1765,8 +1765,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.116";
+const VERSION = "v1.7.117";
 const CHANGELOG = [
+  {
+    version: "v1.7.117",
+    date: "2026-11-06",
+    title: "修复「按刷新数据后立刻重载旧页面」：云端返回了历史任务的 runId",
+    details: [
+      "实测发现：POST /api/refresh 返回的 runId 是几个小时前早已 success 的旧任务（42068669689），而不是本次新触发的 42076536275。根因在 functions/api/refresh.js 的 findLatestDispatchRun()：GitHub 登记新 run 有 10-30s 延迟，查不到新 run 时代码却回退到未过滤的历史 dispatch 列表，把旧任务返回给前端；前端轮询立刻看到 completed/success 就重载，此时新数据还没抓完，用户看到的仍是旧页面——这正是「按了按钮还是这样子」的直接体感",
+      "云端修复：严格只认 created_at ≥ 本次触发时刻的 workflow_dispatch run，查不到就如实返回 runId:null，绝不拿旧任务顶替；API 请求加时间戳与 no-cache 破缓存；登记等待由 3×2s 延长到 6×3s",
+      "前端修复：runId 为 null 时不再空等 240 秒且按钮一直卡在「触发中」，改为每 12s 轮询 version.json 的 updateTime / deployTime，一旦实际部署产物变化就恢复按钮并强制重载；保留 8 分钟超时与 240 秒硬兜底",
+      "至此按钮闭环：触发 → 云端完整流水线 → 以真实部署产物为准重载，不再依赖 CI 状态或历史任务误判"
+    ]
+  },
   {
     version: "v1.7.116",
     date: "2026-11-06",
@@ -7787,6 +7798,28 @@ function triggerRePull(){
       const runId = d.runId, started = Date.now();
       jcToast("✅ 已触发！云端正在重新抓取并部署（约1-4分钟，完成自动重载）", 7000);
       if(!runId){
+        // 云端没能关联到本次 run（GitHub 登记延迟）：改为监听「实际部署产物」，
+        // version.json 的 updateTime/deployTime 一变就重载，避免空等或轮询到旧任务。
+        const baseUpd = (state.meta && state.meta.updateTime) || "";
+        let dep0 = "";
+        const watch = ()=>{
+          if(Date.now()-started > 8*60*1000) return;
+          fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
+            .then(r=>r.json()).then(v=>{
+              const u=(v&&v.updateTime)||"", dep=(v&&v.deployTime)||"";
+              if(!dep0) dep0=dep;   // 首轮只记基线，不误判
+              const changed = (u && u!==baseUpd) || (dep && dep0 && dep!==dep0);
+              if(changed){
+                btn.disabled=false; btn.innerHTML=orig;
+                jcToast("🎉 云端已完成更新，正在重新加载…", 3000);
+                setTimeout(__hardReload, 1200);
+              }else{
+                __rePullTimer=setTimeout(watch, 12000);
+              }
+            }).catch(()=>{ __rePullTimer=setTimeout(watch, 12000); });
+        };
+        __rePullTimer=setTimeout(watch, 12000);
+        setTimeout(()=>{ btn.disabled=false; btn.innerHTML=orig; }, 8000);
         setTimeout(__hardReload, 240000);
         return;
       }

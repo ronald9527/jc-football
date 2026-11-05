@@ -40,22 +40,23 @@ function sleep(ms) {
 }
 
 async function findLatestDispatchRun(token, dispatchedAt) {
-  // 优先按 event=workflow_dispatch 过滤；GitHub 登记 run 有 1-3s 延迟，故多取几条。
+  // GitHub 的 workflow_runs 列表对新登记 run 有延迟（常 10-30s），且带缓存。
+  // 必须破缓存 + 严格只认「本次触发之后登记」的 run：
+  // 早期实现会在查不到新 run 时回退到历史 dispatch 列表，把几个小时前
+  // 早已 success 的旧任务返回给前端 → 前端立刻重载，用户看到的仍是旧数据，
+  // 表现就是「按了刷新数据按钮没反应」。
   const resp = await fetch(
-    `https://api.github.com/repos/${REPO}/actions/runs?event=workflow_dispatch&per_page=8`,
-    { headers: ghHeaders(token) }
+    `https://api.github.com/repos/${REPO}/actions/runs?event=workflow_dispatch&per_page=15&_t=${Date.now()}`,
+    { headers: { ...ghHeaders(token), "Cache-Control": "no-cache" } }
   );
   if (!resp.ok) return null;
   const j = await resp.json();
-  let runs = (j.workflow_runs || []).filter((r) => r.event === "workflow_dispatch");
-  // 只要本次触发之后登记的 run，避免并发/历史 dispatch 让前端轮询到别人的旧任务。
-  if (dispatchedAt) {
-    const fresh = runs.filter(
-      (r) => new Date(r.created_at).getTime() >= dispatchedAt - 120000
-    );
-    if (fresh.length) runs = fresh;
-  }
-  if (runs.length === 0) return null;
+  const runs = (j.workflow_runs || []).filter(
+    (r) =>
+      r.event === "workflow_dispatch" &&
+      new Date(r.created_at).getTime() >= dispatchedAt - 15000
+  );
+  if (runs.length === 0) return null;   // 没找到就如实返回 null，绝不拿旧任务顶替
   runs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   return runs[0] || null;
 }
@@ -80,10 +81,11 @@ export async function onRequestPost({ env }) {
         502
       );
     }
-    // 等待 GitHub 把 run 登记进列表（最多 3 次 × 2s）
+    // 等待 GitHub 把 run 登记进列表（登记常需 10-30s，最多 6 次 × 3s）。
+    // 仍找不到就返回 runId:null，由前端改为监听实际部署产物，绝不返回旧任务。
     let run = null;
-    for (let i = 0; i < 3 && !run; i++) {
-      await sleep(2000);
+    for (let i = 0; i < 6 && !run; i++) {
+      await sleep(3000);
       run = await findLatestDispatchRun(token, dispatchedAt);
     }
     return json({
