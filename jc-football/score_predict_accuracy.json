@@ -17935,8 +17935,24 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
+  },
+  {
+   "id": "1479953",
+   "league": "欧冠",
+   "home": "费内巴切",
+   "away": "利物浦",
+   "date": "2026-11-05",
+   "predH": 2,
+   "predA": 1,
+   "actH": 3,
+   "actA": 2,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.0
   }
  ],
- "updatedAt": "2026-11-05 23:07:37",
+ "updatedAt": "2026-11-06 00:52:08",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
