@@ -1254,8 +1254,9 @@ def main():
         m["eValue"] = had_s.get("eValue")
         m["eKey"] = had_s.get("eKey")
         m["absValue"] = had_s.get("absValue")
-        # 返还率
-        h, d, a = m["had"]["h"], m["had"]["d"], m["had"]["a"]
+        # 返还率（备用源 500.com 某些场次缺让球/胜平负赔率，用 .get 兜底避免 KeyError）
+        _had = m.get("had") or {}
+        h, d, a = _had.get("h"), _had.get("d"), _had.get("a")
         if h and d and a:
             m["returnRate"] = round(1.0 / (1.0/h + 1.0/d + 1.0/a) * 100, 1)
         else:
@@ -1342,7 +1343,7 @@ def main():
             by_id[mid] = {
                 "id": mid, "num": m["num"], "date": m["date"], "kickoff": m["kickoff"],
                 "league": m["league"], "home": m["home"], "away": m["away"],
-                "goal": m["hhad"]["goal"], "odds": m["had"],
+                "goal": (m.get("hhad") or {}).get("goal", ""), "odds": m.get("had") or {},
                 "prob": m["hadProb"], "sup": m["hadSup"],
                 "hr": m.get("hr"), "ar": m.get("ar"), "hrn": m.get("hrn"), "arn": m.get("arn"),
                 "goalsExp": m.get("goalsExp"), "hhProb": m.get("hhProb"), "aaProb": m.get("aaProb"),
@@ -1781,9 +1782,11 @@ def evaluate(m, cfg):
     """竞彩版规则判定（阈值由回测配置动态调整）：返回 (verdict, hits, score)
     verdict: {t, txt, dir(推荐方向), stars, score}"""
     hits = []
-    prob, sup = m["hadProb"], m["hadSup"]
+    prob, sup = m.get("hadProb") or {}, m.get("hadSup") or {}
     rrate = m.get("returnRate")
-    goal = m["hhad"]["goal"]
+    # 备用源 500.com 的场次可能没有让球盘（hhad 为空或缺 goal），此处必须容错，
+    # 否则整轮抓取崩溃、matches.json 沿用旧快照（页面「数据已过期」红字的根因）。
+    goal = (m.get("hhad") or {}).get("goal", 0)
 
     def diff(d):
         p, s = prob.get(d), sup.get(d)
@@ -1847,7 +1850,7 @@ def evaluate(m, cfg):
     # 凯利指数 = 赔率 × 官方概率（以返还率为基准，凯利差>0 表示该方向价值偏高）
     kelly, kelly_diff = {}, {}
     for d in ("h", "d", "a"):
-        od = m["had"].get(d)
+        od = (m.get("had") or {}).get(d)
         p = prob.get(d)
         if od and p is not None:
             kelly[d] = round(od * p / 100.0, 3)

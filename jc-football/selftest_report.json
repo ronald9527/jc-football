@@ -1,17 +1,22 @@
 {
-  "checkedAt": "2026-11-05 18:55:40",
+  "checkedAt": "2026-11-06 01:34:31",
   "errorCount": 1,
-  "warnCount": 1,
+  "warnCount": 2,
   "issues": [
     {
       "level": "WARN",
       "cat": "串关",
-      "msg": "今日无串关推荐（候选不满足档位门槛）"
+      "msg": "parlay2 存在蚊子肉单场 1.28（下限 1.45）"
+    },
+    {
+      "level": "WARN",
+      "cat": "串关",
+      "msg": "parlay2 总赔 1.75 偏低"
     },
     {
       "level": "ERROR",
       "cat": "隔离",
-      "msg": "篮球数据已停更 最后更新 2026-11-02 01:03:09（89.9 小时前）——fetch_basketball 连续失败或被预算门槛跳过，页面在 Serve 旧快照，需立即排查"
+      "msg": "篮球数据已停更 最后更新 2026-11-02 01:03:09（96.5 小时前）——fetch_basketball 连续失败或被预算门槛跳过，页面在 Serve 旧快照，需立即排查"
     }
   ]
 }

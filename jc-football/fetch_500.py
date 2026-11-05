@@ -104,8 +104,14 @@ def parse_jczq(html):
                 goal = ("+%g" % rqf) if rqf > 0 else ("%g" % rqf)
             except Exception:
                 goal = rq
-        if hhad:
-            hhad["goal"] = goal
+        # 下游 evaluate() 会直接读 m["hhad"]["goal"]；500.com 部分场次无让球赔率时
+        # hhad 为空字典，若此处只在 hhad 非空时补 goal，整轮抓取会抛 KeyError 并被
+        # run_daily.sh 的容错吞掉 → matches.json 永远沿用旧快照、页面批次时间冻结。
+        # 因此无条件补齐 h/d/a 与 goal，保证备用源结构与官方源完全兼容。
+        for _d in (had, hhad):
+            for _k in ("h", "d", "a"):
+                _d.setdefault(_k, None)
+        hhad["goal"] = goal
 
         # 排名：行内形如 [10]布鲁马波 ... 赫根[4]
         ranks = re.findall(r"\[(\d+)\]", plain)
