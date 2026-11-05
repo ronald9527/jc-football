@@ -26,7 +26,7 @@ UA = ("Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) "
 HEADERS = {"User-Agent": UA, "Accept": "application/json"}
 OUT = "vzhan_data.json"
 HIST = "vzhan_history.json"
-DELAY = 0.7
+DELAY = 0.3   # v1.7.118：26 场双请求原 0.7s 间隔需 45s，压缩到 ~20s 以免被预算门槛跳过
 
 
 def _get(path, params=None, retries=3):
@@ -281,6 +281,11 @@ def main():
     t0 = time.time()
     print("== V站(呼死狗) 竞彩情报抓取 ==")
     matches, total = fetch_all()
+    # v1.7.118：接口临时返回空时绝不能用空数组覆盖掉上一轮完整情报，
+    # 否则「抓到了却把数据抹成 0」比不抓更糟（用户看到 V站 空空如也）。
+    if total == 0 or not matches:
+        print("!! 接口返回 0 场（临时不可用/限流），保留上次 vzhan_data.json，本次不写盘", flush=True)
+        return 1
     withpred = sum(1 for m in matches if m["hasPred"])
     update_history(matches)
     out = {
@@ -293,7 +298,8 @@ def main():
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     print("== 完成: 竞彩 %d 场 | 有预测 %d 场 | 用时 %.1fs -> %s ==" % (total, withpred, time.time() - t0, OUT))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

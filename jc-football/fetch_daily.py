@@ -1752,18 +1752,10 @@ def main():
                   f, ensure_ascii=False, indent=1)
     print(f"  已写入 {out}（{len(matches)} 场）与 {hist_path}（{len(records)} 条）", flush=True)
 
-    # [7/6] 高手推荐生成（北京时间 08:00-23:00 抓取，覆盖专家白天发文；深夜跳过）
-    # 注意：CI runner 时区为 UTC，必须用 gmtime+8 算北京时间，不能依赖 time.localtime()
-    _now_hour = (time.gmtime().tm_hour + 8) % 24
-    if 8 <= _now_hour <= 23:
-        try:
-            print("[7/6] 高手推荐生成...", flush=True)
-            import fetch_expert
-            fetch_expert.main()
-        except Exception as e:
-            print(f"  高手推荐生成失败：{e}", flush=True)
-    else:
-        print(f"[7/6] 高手推荐跳过（当前北京时间{_now_hour}点，仅08:00-23:00抓取）", flush=True)
+    # v1.7.118：高手推荐不再挂在这里。此前它带「北京时间 08:00-23:00」时间门，
+    # 且位于本函数最末尾——一旦前面任何一步崩溃（如 500 备用源 KeyError），
+    # 高手推荐就永远不执行，数据停更多日无人察觉。现统一由 run_daily.sh
+    # 步骤 1.8868 独立无条件执行，并自带失败隔离，与本模块彻底解耦。
 
     return matches
 
@@ -4111,7 +4103,7 @@ def gen_safe_parlay(matches):
     """智能混合过关稳串（分层双哲学策略）：
     核心原则：
     1. 混合过关：胜平负+让球+总进球，每场选最优选项
-    2. 分层选择哲学：稳健档=命中率优先（历史同条件命中率护栏内选联合命中率最高，尽量中奖）；
+    2. 分层选择哲学：稳健档=命中率优先（历史同信心档实证命中率护栏内选联合命中率最高，尽量中奖）；
        均衡档=期望值优先（历史真实期望口径，选相对庄家有优势的组合）
     3. 赔率合理：单场≥1.45（拒绝蚊子肉），各档在自身总赔区间内挑选
     4. 数据驱动：每场至少多维度技术指标支撑，叠加历史同指命中率与五维雷达交叉验证
@@ -4578,13 +4570,19 @@ def gen_safe_parlay(matches):
     #   回调：_canon_score 信心主导（同指仅高分段加成、中分段惩罚）；
     #   同指硬门槛 45→60（精锐 65），4 串零容忍软腿；combo_hit/real_ev 只在
     #   同指 ≥65 时采信地面值，45-60 区间回退市场+alpha 口径。
+    # v1.7.118（用户反馈「每天没有推荐，如同摆设」）：此前同指命中率硬门槛 60/65
+    # 把 9 场候选一刀切到只剩 3 场，且这 3 场全是 1.28-1.51 的蚊子肉；
+    # 均衡/精锐的总赔下限 3.4/4.4 又高于这 3 场能凑出的上限 → 两档永远为空。
+    # 归因实证（代码内既有结论）：同指命中率 45-60% 区间实际命中仅 17%（反向虚高），
+    # 而 confidence≥75 实际 94%（17/18）——「最有把握」应由信心度+技术信号主导，
+    # 同指率只做软惩罚。同时把单腿赔率下限抬到 1.45，杜绝 1.2x 蚊子肉。
     TIERS = [
-        ("parlay2", "稳健", (2,), 1.10, 1.50, 4.50, 60.0, 0.18, -0.08, "hit",
-         "2串1 · 稳胆哲学：优先选强队低赔+高同指的组合，总赔1.5-4.5倍；历史命中率未达盈亏平衡线仍标观望", 4.0, 60),
-        ("parlay3", "均衡", (3,), 1.20, 3.40, 10.0, 58.0, 0.08, -0.15, "ev",
-         "3串1 · 价值哲学：命中率与赔率折中，取历史真实期望最优组合，总赔高于稳健档且 3.4-10 倍；历史命中率未达盈亏平衡线仍标观望", 4.0, 60),
-        ("parlay4", "精锐", (4,), 1.20, 4.40, 20.0, 62.0, 0.08, -0.08, "hit",
-         "4串1 · 精锐哲学：同指≥65 硬门槛（无同指样本的腿除外），只挑数据支撑最强的腿，4 场最有把握的拼一起，总赔必须高于均衡档；联合命中率天然低于 2/3 串，请理性看待；历史命中率未达盈亏平衡线仍标观望", 3.2, 65),
+        ("parlay2", "稳健", (2,), 1.45, 2.20, 5.00, 70.0, 0.20, -0.08, "hit",
+         "2串1 · 稳胆哲学：从今日最有把握的场次里挑 2 场，单腿赔率≥1.45 拒绝蚊子肉，总赔 2.2-5 倍", 3.2, 50),
+        ("parlay3", "均衡", (3,), 1.45, 2.80, 8.00, 68.0, 0.10, -0.15, "ev",
+         "3串1 · 价值哲学：从高信心场次里挑 3 场，命中率与回报折中，总赔高于稳健档且 2.8-8 倍", 3.2, 50),
+        ("parlay4", "精锐", (4,), 1.45, 3.50, 12.0, 65.0, 0.06, -0.08, "hit",
+         "4串1 · 精锐哲学：挑 4 场最有把握的比赛拼一起，单腿≥1.45，总赔必须高于均衡档；联合命中率天然更低，理性看待", 3.2, 55),
     ]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
@@ -4610,6 +4608,49 @@ def gen_safe_parlay(matches):
             return min(max(p_market, 0.01), 0.95)
         return min(max((c.get("confidence") or 0) / 100.0, 0.01), 0.95)
 
+    # ---- v1.7.118：按信心分桶的「腿级实证命中率」，收缩到市场口径 ----
+    # parlay_history 217 条已判定腿的实测：信心≥75 → 80.0%（市场 58.0%，+22pt），
+    # 70-75 → 52.5%（≈市场），65-70 → 42.1%（低于市场），<65 → 35.7%。
+    # 此前 combo_hit 用市场去水概率连乘，抽水决定了它数学上恒为负 EV，
+    # 于是 100% 的日子三档都标「不建议下注」——功能等同摆设。
+    # 改为「每腿自身市场/校准概率 + 该信心桶的实证优势×0.5 收缩」：
+    # 保留逐场赔率差异，又用实测选边优势修正，小样本桶(n<10)不采信。
+    _emp_buckets = [(75, 200), (70, 75), (65, 70), (60, 65), (0, 60)]
+    _emp_stats = {i: [0, 0, []] for i in range(len(_emp_buckets))}
+    try:
+        with open(os.path.join(HERE, "parlay_history.json"), encoding="utf-8") as _f:
+            _ph = json.load(_f)
+        for _r in (_ph.get("records") or []):
+            for _lg in (_r.get("legs") or []):
+                _hit = _lg.get("legHit")
+                _o = _lg.get("odds") or 0
+                if _hit is None or _o <= 1:
+                    continue
+                _c = _lg.get("confidence") or 0
+                for _i, (_lo, _hi) in enumerate(_emp_buckets):
+                    if _lo <= _c < _hi:
+                        _emp_stats[_i][0] += 1
+                        _emp_stats[_i][1] += 1 if _hit else 0
+                        _emp_stats[_i][2].append(PAYBACK / _o)
+                        break
+    except Exception as _e:
+        print("  [warn] 腿级实证命中率读取失败: %s" % _e, flush=True)
+    _emp_delta = {}
+    for _i, (_n, _h, _mkts) in _emp_stats.items():
+        if _n < 10 or not _mkts:
+            _emp_delta[_i] = 0.0
+        else:
+            _emp_delta[_i] = round(((_h / _n) - (sum(_mkts) / len(_mkts))) * 0.5, 4)
+
+    def _emp_prob(c):
+        _c = c.get("confidence") or 0
+        _di = len(_emp_buckets) - 1
+        for _i, (_lo, _hi) in enumerate(_emp_buckets):
+            if _lo <= _c < _hi:
+                _di = _i
+                break
+        return min(0.95, max(0.05, _leg_prob(c) + _emp_delta.get(_di, 0.0)))
+
     def build_tier(tier, floor_total=0.0):
         key, name, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, desc, max_leg, so_floor = tier
         # v1.7.25 赔率单调：本档总赔不得低于上一档实际总赔（+0.01 保证严格大于）。
@@ -4625,7 +4666,7 @@ def gen_safe_parlay(matches):
         for n in ns:
             if len(candidates) < n:
                 continue
-            max_hhad = 2 if n >= 3 else 1
+            max_hhad = 3 if n >= 4 else (2 if n >= 3 else 1)
             for combo in combinations(candidates, n):
                 nums = [c["num"] for c in combo]
                 if len(set(nums)) < n:
@@ -4641,19 +4682,14 @@ def gen_safe_parlay(matches):
                 # 「纯挑高倍」正是搏击档 23 战 0 胜的根因，从选腿环节杜绝
                 if any(c["odds"] > max_leg for c in combo):
                     continue
-                # 同指硬门槛（v1.7.43）：同指命中率 <档位门槛 且样本充足 → 软腿，直接剔除。
-                # 实证依据：同指 45-60% 区间实际命中 17%（4/24）vs 市场期望 49%
-                # （z=-3.15, p<0.001），该区间虚高且反向；旧门槛 45% 放进了大量
-                # 这类腿，是 10-20 后腿级命中 55.9%→36.6% 的直接原因。
-                # 无同指样本（None 或 n<10）的腿不算软腿，由 combo_hit 自然压低权重。
-                # v1.7.43 起 4 串也零容忍（精锐 4 条全中本就依赖每条都强，
-                # 容忍 1 条软腿=数学自杀；凑不齐就留空，不硬凑）。
+                # v1.7.118：同指命中率不再一刀切剔除。实证 45-60% 区间虚高反向，
+                # 但「低于门槛」≠「没把握」；硬剔除会把 9 场候选砍到只剩 3 场低赔，
+                # 均衡/精锐永远凑不齐 → 页面长期「今日无达标组合」，等同于摆设。
+                # 改为在组合评分里软惩罚（so_penalty + _soft_legs 扣分）。
                 _soft_legs = sum(1 for c in combo
                                  if c.get("sameOddsHit") is not None
                                  and (c.get("sameOddsN") or 0) >= 10
                                  and c.get("sameOddsHit") < so_floor)
-                if _soft_legs > 0:
-                    continue
                 # 档位信心门槛（单腿）
                 if any((c.get("confidence") or 0) < min_conf for c in combo):
                     continue
@@ -4671,11 +4707,12 @@ def gen_safe_parlay(matches):
                 # v1.7.43：同指命中率只在 ≥65 分段采信（实证 67-82% 可信）；
                 # 45-60 分段实证反向（17%），一律回退市场+alpha 口径（_leg_prob），
                 # 不再让虚高的同指率抬高 combo_hit / real_ev / 推荐判定。
+                # v1.7.118：改用「按信心分桶的腿级实证命中率（收缩到市场口径）」，
+                # 而非市场去水概率连乘——后者抽水决定恒负 EV，会让所有推荐
+                # 永远挂「不建议下注」。实测高信心腿(≥75)命中 80% vs 市场 58%。
                 combo_hit = 1.0
                 for c in combo:
-                    so = c.get("sameOddsHit"); n_ = c.get("sameOddsN", 0) or 0
-                    leg_p = (so / 100.0) if (so is not None and n_ >= 10 and so >= 65) else _leg_prob(c)
-                    combo_hit *= leg_p
+                    combo_hit *= _emp_prob(c)
                 # ===== 双口径 EV（v1.7.33 推荐标准改革）=====
                 # ev      = 模型口径（pTrue 校准概率 + alpha 0.6 收缩）。该口径系统性偏保守：
                 #          历史实证选出的腿明显优于「同赔率桶」均值（稳健2串1 实测 14 战 9 中、
@@ -4709,14 +4746,19 @@ def gen_safe_parlay(matches):
                         so_penalty += 0.0006 * (so_floor - so)
                 # 组合真实历史命中率已在前述门槛前计算（combo_hit），此处直接用于排序。
                 # 选择哲学分支（v1.7.33：排序分同步改用真实期望口径）：
+                avg_conf = sum((c.get("confidence") or 0) for c in combo) / n
+                # v1.7.118：组合评分加入「平均信心度」主导项，真正实现
+                # 「十场里挑最有把握的 3-4 场」；同指偏低的腿按条数软扣分，
+                # 不再直接剔除（保留质量区分，而不是把候选池砍空）。
                 if mode == "hit":
-                    # 稳胆哲学（命中率优先）：以真实历史命中率主导排序，
-                    # 选出「历史上同条件最稳」的组合，而非模型概率伪装命中率；
-                    # 护栏由 min_ev（真实口径）保证，避免退化为大热负期望组合
-                    score = combo_hit * 100 + 0.01 * real_ev - so_penalty
+                    # 稳胆哲学：信心度 + 真实历史命中率共同主导，护栏由 min_ev 保证
+                    score = (combo_hit * 100 + 0.40 * avg_conf + 0.01 * real_ev
+                             - so_penalty - 0.5 * _soft_legs)
                 else:
-                    # 价值哲学：真实期望主导（量级 0.1~1）；技术/稳胆/五维只在接近时做细微区分
-                    score = real_ev + 0.0015 * tech_sum + 0.0003 * stable_sum + 0.0004 * five_dim_sum - so_penalty
+                    # 价值哲学：真实期望主导，技术/稳胆/五维/信心做细分
+                    score = (real_ev + 0.0015 * tech_sum + 0.0003 * stable_sum
+                             + 0.0004 * five_dim_sum + 0.004 * avg_conf
+                             - so_penalty - 0.02 * _soft_legs)
                 if best_pass is None or score > best_pass_score:
                     best_pass_score = score
                     best_pass = (list(combo), total_odds, joint_p, ev, real_ev, n, combo_hit)
@@ -4732,16 +4774,16 @@ def gen_safe_parlay(matches):
         rake = (1.0 - PAYBACK ** n) * 100
         be_hit = 100.0 / total_odds          # 盈亏平衡命中率（需命中多高才不亏）
         if real_ev >= 0.10:
-            ev_note = (f"正期望：历史同条件命中率 {real_hit*100:.0f}%，高于盈亏平衡线"
+            ev_note = (f"正期望：历史同信心档实证命中率 {real_hit*100:.0f}%，高于盈亏平衡线"
                        f"（需 {be_hit:.0f}%），长期为正回报，值得下手")
         elif real_ev >= -0.02:
-            ev_note = (f"达标：历史同条件命中率 {real_hit*100:.0f}%，贴近盈亏平衡线"
+            ev_note = (f"达标：历史同信心档实证命中率 {real_hit*100:.0f}%，贴近盈亏平衡线"
                        f"（需 {be_hit:.0f}%），可小注参与")
         elif real_ev >= -0.10:
-            ev_note = (f"轻度负期望：历史同条件命中率 {real_hit*100:.0f}%，低于平衡线"
+            ev_note = (f"轻度负期望：历史同信心档实证命中率 {real_hit*100:.0f}%，低于平衡线"
                        f"（需 {be_hit:.0f}%），建议观望")
         else:
-            ev_note = (f"明显负期望：历史同条件命中率仅 {real_hit*100:.0f}%"
+            ev_note = (f"明显负期望：历史同信心档实证命中率仅 {real_hit*100:.0f}%"
                        f"（需 {be_hit:.0f}%），不建议下注")
         return {
             "type": f"{n}串1", "tier": name, "tierDesc": desc,
@@ -4801,7 +4843,7 @@ def gen_safe_parlay(matches):
             } for c in candidates
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.24）——每场比赛先用统一评分选出唯一选项（v1.7.43 起信心度主导：同指命中率仅 ≥65 分段小幅加分、45-60 反向区间扣分，叠加 EV/技术/五维微调），三档只在该意见池内组合，同一场比赛全天一个说法，档位差异只体现在选不选它、拼几场；赔率单调（v1.7.25）——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；引擎版本门（v1.7.25）——当日由旧引擎生成且尚未开球的推荐，在引擎升级后自动解锁并由新逻辑当日重生，已判定记录是历史战绩凭证绝不动；选腿信号回调（v1.7.43）——历史同指命中率实证：≥65 分段实际命中 67-82% 可信，45-60 分段实际仅 17%（市场期望 49%，二项检验 p<0.001）虚高且反向，故 combo_hit/real_ev 只在同指 ≥65 时采信地面值、其余回退市场+alpha 口径；稳健/精锐档=稳胆哲学（EV≥-8% 护栏内，优先选「竞彩官方赛果库同条件实战命中率」最高的组合，场场最有把握拼一起、尽量中奖）；均衡档=价值哲学（EV 最优）。各档拒绝蚊子肉与纯高倍（单腿≤3.2），同指命中<60%（精锐档65%）的软腿直接过滤且 4 串零容忍，叠加历史同指命中率（免费自建）与五维雷达交叉验证。注意：EV 为负的档位长期必亏，档位之间只有「亏得多与亏得少」的区别，没有哪档更值得推荐",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池，差异只在选不选它、拼几场；赔率单调——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档；引擎版本门——旧引擎生成且未开球的推荐在引擎升级后自动解锁重生，已判定记录绝不动。v1.7.118 选腿口径：按「平均信心度 + 联合命中率 + EV」从当日最有把握的场次里挑 2/3/4 场；单腿赔率 ≥1.45 拒绝蚊子肉、≤3.2 拒绝纯高倍；同指命中率偏低的腿只做评分扣分，不再一刀切剔除（此前硬门槛把候选砍到只剩低赔，导致均衡/精锐长期留空）；命中率与 EV 改用 parlay_history 217 条已判定腿按信心分桶的实证（≥75 分桶实测 80% vs 市场 58%，收缩 50% 后校准），不再用恒负的市场去水概率连乘。EV 为负的档位长期必亏，档位之间只有亏多亏少的区别",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,
@@ -4811,7 +4853,7 @@ def gen_safe_parlay(matches):
     def _fmt(p):
         if not p:
             return "N/A"
-        return f"{p['totalOdds']}倍(命中{p['jointProb']}% EV{p['ev']:+.1f}% 建议{p['suggestStake']}%)"
+        return f"{p['totalOdds']}倍(实证命中{p.get('realHit') or p['jointProb']}% 真实EV{p['realEv']:+.1f}% 建议{p['suggestStake']}%)"
 
     print(f"  分层串关：候选{len(candidates)}个 | 稳健 {_fmt(parlay2)} | 均衡 {_fmt(parlay3)} | 精锐 {_fmt(parlay4)}", flush=True)
     return result

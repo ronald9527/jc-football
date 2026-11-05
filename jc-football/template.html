@@ -1409,7 +1409,7 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="highodds-view" id="highOddsView" style="display:none">
-    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">单场单意见：每场比赛全天只出一个推荐说法，三档共用同一个意见池，差异只在「选不选它、拼几场」；赔率单调（v1.7.25）：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂，候选不足的档位留空不硬凑；拒绝蚊子肉也拒绝纯高倍：单腿赔率1.40-3.20、同指命中<45%的软腿直接过滤；每档在自身区间内选「联合命中率+EV」最优组合。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
+    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">单场单意见：每场比赛全天只出一个推荐说法，三档共用同一个意见池，差异只在「选不选它、拼几场」；赔率单调（v1.7.25）：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂，候选不足的档位留空不硬凑；拒绝蚊子肉也拒绝纯高倍：单腿赔率1.45-3.20、同指命中率偏低的腿只做评分扣分不再一刀切剔除；每档按「平均信心度+联合命中率+EV」从当日最有把握的场次里选 2/3/4 场。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="highOddsSummary"></div>
     <div id="highOddsList"></div>
   </div>
@@ -1765,8 +1765,19 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.117";
+const VERSION = "v1.7.118";
 const CHANGELOG = [
+  {
+    version: "v1.7.118",
+    date: "2026-11-06",
+    title: "一次性修复分层串关/V站/高手推荐三处长期停摆",
+    details: [
+      "分层串关（每天无推荐、只有 1.75 倍蚊子肉）：根因是同指命中率硬门槛 60/65 把 9 场候选一刀切到只剩 3 场，且这 3 场赔率全是 1.28-1.51；均衡/精锐档总赔下限 3.4/4.4 又高于能凑出的上限，两档永远为空。现改为：同指率只做软惩罚（不再直接剔除）、组合评分加入平均信心度主导项、单腿赔率下限抬到 1.45 拒绝蚊子肉、三档总赔区间重设为 2.2-5 / 2.8-8 / 3.5-12、4串1 让球玩法上限放宽，实现「十场里挑最有把握的 2/3/4 场」",
+      "V站（没有提取）：接口 mapi.shemen365.com 实测完全可达（26 场/18 场有预测），但 fetch_vzhan.py 常被流水线 have_time 预算门槛跳过；且接口偶发返回空时会把旧情报覆盖成 0 场。现去掉预算门槛、抓取间隔压缩到 0.3s（约 20s 完成）、空结果不写盘保留上次数据；数据本就随部署上传 Pages 云端副本",
+      "高手推荐（没有提取）：此前只挂在 fetch_daily.py 最末尾且带「北京时间 08-23 点」时间门，主脚本一崩就永远不执行，数据停在 11-02。现改为 run_daily.sh 步骤 1.8868 独立无条件执行 + 失败隔离，与主脚本彻底解耦",
+      "流水线健壮性：三个模块各自失败隔离、互不牵连；本轮一次性跑通全部抓取 → 构建 → 部署并逐项验收，不再零敲碎打"
+    ]
+  },
   {
     version: "v1.7.117",
     date: "2026-11-06",
@@ -5140,7 +5151,10 @@ function renderHighOdds(){
   // ===== 稳胆串关（高命中率版） =====
   if(sp){
     spCand = sp.candidateCount || 0;
-    if(bdg) bdg.textContent = spCand > 99 ? "99+" : spCand;
+    // v1.7.118：角标显示「今日真正生成了几档推荐」（0-3），而不是候选场数。
+    // 此前候选 9 场却因门槛全空、用户看到 0 以为模块坏了；现在一眼可辨。
+    const _tierN = [sp.parlay2, sp.parlay3, sp.parlay4].filter(Boolean).length;
+    if(bdg) bdg.textContent = _tierN;
     html += `<div style="margin:16px 0 8px;font-size:13px;font-weight:600;color:var(--good);">🎯 分层串关：稳健 / 均衡 / 精锐（单场单意见：同一场比赛全天一个说法，三档只在意见池内组合，差异只在选不选它、拼几场；赔率单调：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂；各档在自身赔率区间内取「联合命中率+EV」最优，拒绝蚊子肉也拒绝纯高倍；已叠加历史同指命中率与五维雷达评分交叉验证）</div>
     <div style="margin:0 0 10px;padding:10px 12px;background:var(--bg);border:1px dashed var(--border);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
@@ -7059,9 +7073,15 @@ function renderExpert(){
   // 今日推荐：列出今天全部竞彩比赛，下方挂专家推荐
   const recs = exp.recommendations || [];
   const todayMatches = (BUILT_DATA && BUILT_DATA.matches) || [];
-  if(bdg) bdg.textContent = String(recs.length);
-  if(summary) summary.innerHTML = `今日 ${todayMatches.length} 场竞彩开售 · 专家推荐 ${recs.length} 场 · 更新于 ${exp.updatedAt||""}`;
-  let html = "";
+  const _arts = (exp.articles || exp.todayArticles || []).length;
+  const _batch = exp.batchDate || "";
+  const _todayStr = (()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");})();
+  // v1.7.118：凌晨专家尚未发今日文章时，如实说明「最近批次」，别让页面看起来像坏了
+  const _batchTip = (_arts>0 && _batch && _batch!==_todayStr)
+    ? `<div style="margin:0 0 8px;padding:8px 10px;background:rgba(250,173,20,.10);border:1px solid rgba(250,173,20,.3);border-radius:6px;font-size:11px;color:var(--warn);line-height:1.6;">🌙 今日专家尚未发布针对今日赛程的推荐；已抓取 <b>${_arts}</b> 篇专家文章（批次 ${_batch}），可在「专家文章」查看。今日 09:00 后自动更新当日推荐。</div>` : "";
+  if(bdg) bdg.textContent = String(recs.length || _arts);
+  if(summary) summary.innerHTML = `今日 ${todayMatches.length} 场竞彩开售 · 专家推荐 ${recs.length} 场 · 已抓取 ${_arts} 篇文章${_batch?`（批次 ${_batch}）`:""} · 更新于 ${exp.updatedAt||""}`;
+  let html = _batchTip;
   todayMatches.forEach(m=>{
     const kickoffShort = (m.kickoff||"").slice(11,16);
     const goal = (m.hhad && m.hhad.goal) || "";

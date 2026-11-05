@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02 18:41:24",
+  "updatedAt": "2026-11-06 03:03:08",
   "stats": {
     "史密斯": {
       "expert": "史密斯",
@@ -68,24 +68,24 @@
     "布海东": {
       "expert": "布海东",
       "total": 3,
-      "judged": 2,
+      "judged": 3,
       "hits": 2,
-      "miss": 0,
-      "pending": 1,
-      "hitRate": 100.0,
-      "recent10Rate": 100.0,
-      "streak": 2,
-      "score": 24,
-      "streakBonus": 4,
-      "isNew": true,
+      "miss": 1,
+      "pending": 0,
+      "hitRate": 66.7,
+      "recent10Rate": 66.7,
+      "streak": 0,
+      "score": 17,
+      "streakBonus": 0,
+      "isNew": false,
       "recent": [
         {
           "date": "2026-11-02",
           "home": "拉科鲁尼亚",
           "away": "奥萨苏纳",
           "recommend": "让负",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-30",
@@ -108,14 +108,14 @@
     "航哥": {
       "expert": "航哥",
       "total": 4,
-      "judged": 3,
+      "judged": 4,
       "hits": 0,
-      "miss": 3,
-      "pending": 1,
+      "miss": 4,
+      "pending": 0,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
-      "score": -9,
+      "score": -12,
       "streakBonus": 0,
       "isNew": false,
       "recent": [
@@ -124,8 +124,8 @@
           "home": "圣旺红星",
           "away": "南锡",
           "recommend": "让负",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "1:4"
         },
         {
           "date": "2026-10-31",
@@ -155,25 +155,41 @@
     },
     "晓哥看球": {
       "expert": "晓哥看球",
-      "total": 3,
-      "judged": 2,
+      "total": 5,
+      "judged": 3,
       "hits": 1,
-      "miss": 1,
-      "pending": 1,
-      "hitRate": 50.0,
-      "recent10Rate": 50.0,
-      "streak": 1,
-      "score": 9,
-      "streakBonus": 2,
-      "isNew": true,
+      "miss": 2,
+      "pending": 2,
+      "hitRate": 33.3,
+      "recent10Rate": 33.3,
+      "streak": 0,
+      "score": 4,
+      "streakBonus": 0,
+      "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-04",
+          "home": "浦项制铁",
+          "away": "大阪钢巴",
+          "recommend": "客胜",
+          "hit": null,
+          "actualScore": null
+        },
+        {
+          "date": "2026-11-04",
+          "home": "布里兰",
+          "away": "鹿岛鹿角",
+          "recommend": "客胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-02",
           "home": "萨索洛",
           "away": "佛罗伦萨",
           "recommend": "让胜",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:4"
         },
         {
           "date": "2026-10-30",
@@ -195,25 +211,33 @@
     },
     "张磊": {
       "expert": "张磊",
-      "total": 2,
-      "judged": 1,
+      "total": 3,
+      "judged": 2,
       "hits": 0,
-      "miss": 1,
+      "miss": 2,
       "pending": 1,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
-      "score": -3,
+      "score": -6,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
+        {
+          "date": "2026-11-04",
+          "home": "雷恩",
+          "away": "奥林匹亚",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-02",
           "home": "布拉干蒂诺RB",
           "away": "桑托斯",
           "recommend": "让负",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-27",
@@ -228,15 +252,15 @@
     "蒋娴": {
       "expert": "蒋娴",
       "total": 2,
-      "judged": 1,
-      "hits": 0,
+      "judged": 2,
+      "hits": 1,
       "miss": 1,
-      "pending": 1,
-      "hitRate": 0.0,
-      "recent10Rate": 0.0,
-      "streak": 0,
-      "score": -3,
-      "streakBonus": 0,
+      "pending": 0,
+      "hitRate": 50.0,
+      "recent10Rate": 50.0,
+      "streak": 1,
+      "score": 9,
+      "streakBonus": 2,
       "isNew": true,
       "recent": [
         {
@@ -244,8 +268,8 @@
           "home": "圣旺红星",
           "away": "南锡",
           "recommend": "让负",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "1:4"
         },
         {
           "date": "2026-10-27",
@@ -284,24 +308,24 @@
     "宋昭毅": {
       "expert": "宋昭毅",
       "total": 3,
-      "judged": 2,
+      "judged": 3,
       "hits": 1,
-      "miss": 1,
-      "pending": 1,
-      "hitRate": 50.0,
-      "recent10Rate": 50.0,
+      "miss": 2,
+      "pending": 0,
+      "hitRate": 33.3,
+      "recent10Rate": 33.3,
       "streak": 0,
-      "score": 7,
+      "score": 4,
       "streakBonus": 0,
-      "isNew": true,
+      "isNew": false,
       "recent": [
         {
           "date": "2026-11-02",
           "home": "萨索洛",
           "away": "佛罗伦萨",
           "recommend": "主胜/平局",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:4"
         },
         {
           "date": "2026-10-30",
@@ -324,15 +348,15 @@
     "杨震": {
       "expert": "杨震",
       "total": 2,
-      "judged": 1,
-      "hits": 1,
+      "judged": 2,
+      "hits": 2,
       "miss": 0,
-      "pending": 1,
+      "pending": 0,
       "hitRate": 100.0,
       "recent10Rate": 100.0,
-      "streak": 1,
-      "score": 12,
-      "streakBonus": 2,
+      "streak": 2,
+      "score": 24,
+      "streakBonus": 4,
       "isNew": true,
       "recent": [
         {
@@ -340,8 +364,8 @@
           "home": "拉科鲁尼亚",
           "away": "奥萨苏纳",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-27",
@@ -356,24 +380,24 @@
     "张羽鸿": {
       "expert": "张羽鸿",
       "total": 3,
-      "judged": 2,
-      "hits": 0,
+      "judged": 3,
+      "hits": 1,
       "miss": 2,
-      "pending": 1,
-      "hitRate": 0.0,
-      "recent10Rate": 0.0,
-      "streak": 0,
-      "score": -6,
-      "streakBonus": 0,
-      "isNew": true,
+      "pending": 0,
+      "hitRate": 33.3,
+      "recent10Rate": 33.3,
+      "streak": 1,
+      "score": 6,
+      "streakBonus": 2,
+      "isNew": false,
       "recent": [
         {
           "date": "2026-11-02",
           "home": "哥德堡盖斯",
           "away": "AIK索尔纳",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-30",
@@ -396,14 +420,14 @@
     "秦游夏": {
       "expert": "秦游夏",
       "total": 2,
-      "judged": 1,
+      "judged": 2,
       "hits": 0,
-      "miss": 1,
-      "pending": 1,
+      "miss": 2,
+      "pending": 0,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
-      "score": -3,
+      "score": -6,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
@@ -412,8 +436,8 @@
           "home": "萨索洛",
           "away": "佛罗伦萨",
           "recommend": "平局",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:4"
         },
         {
           "date": "2026-10-27",
@@ -452,14 +476,14 @@
     "张晓彬": {
       "expert": "张晓彬",
       "total": 2,
-      "judged": 1,
+      "judged": 2,
       "hits": 0,
-      "miss": 1,
-      "pending": 1,
+      "miss": 2,
+      "pending": 0,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
-      "score": -3,
+      "score": -6,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
@@ -468,8 +492,8 @@
           "home": "哥德堡盖斯",
           "away": "AIK索尔纳",
           "recommend": "客胜/平局",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-30",
@@ -484,15 +508,15 @@
     "中.誉": {
       "expert": "中.誉",
       "total": 2,
-      "judged": 1,
-      "hits": 0,
+      "judged": 2,
+      "hits": 1,
       "miss": 1,
-      "pending": 1,
-      "hitRate": 0.0,
-      "recent10Rate": 0.0,
-      "streak": 0,
-      "score": -3,
-      "streakBonus": 0,
+      "pending": 0,
+      "hitRate": 50.0,
+      "recent10Rate": 50.0,
+      "streak": 1,
+      "score": 9,
+      "streakBonus": 2,
       "isNew": true,
       "recent": [
         {
@@ -500,8 +524,8 @@
           "home": "拉科鲁尼亚",
           "away": "奥萨苏纳",
           "recommend": "主胜/平局",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:1"
         },
         {
           "date": "2026-10-30",
@@ -515,11 +539,11 @@
     },
     "绿茵七号位": {
       "expert": "绿茵七号位",
-      "total": 1,
+      "total": 2,
       "judged": 1,
       "hits": 0,
       "miss": 1,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
@@ -527,6 +551,14 @@
       "streakBonus": 0,
       "isNew": true,
       "recent": [
+        {
+          "date": "2026-11-04",
+          "home": "雷恩",
+          "away": "奥林匹亚",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-10-30",
           "home": "里尔",
@@ -595,25 +627,33 @@
     },
     "徐弋": {
       "expert": "徐弋",
-      "total": 1,
-      "judged": 0,
+      "total": 2,
+      "judged": 1,
       "hits": 0,
-      "miss": 0,
+      "miss": 1,
       "pending": 1,
-      "hitRate": 0,
-      "recent10Rate": 0,
+      "hitRate": 0.0,
+      "recent10Rate": 0.0,
       "streak": 0,
-      "score": 0,
+      "score": -3,
       "streakBonus": 0,
       "isNew": true,
       "recent": [
+        {
+          "date": "2026-11-04",
+          "home": "雷恩",
+          "away": "奥林匹亚",
+          "recommend": "主胜/平局",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-02",
           "home": "哥德堡盖斯",
           "away": "AIK索尔纳",
           "recommend": "平局",
-          "hit": null,
-          "actualScore": null
+          "hit": false,
+          "actualScore": "2:1"
         }
       ]
     }

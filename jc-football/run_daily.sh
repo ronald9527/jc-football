@@ -249,12 +249,11 @@ set -e
 # 隔离设计：V站抓取失败只跳过本源（保留旧 vzhan_data.json），绝不影响 WhoScored/模型/部署；
 # 与 WhoScored 共用 have_time 门槛，超预算同样跳过，保证部署步骤一定被执行。
 log "==> 步骤1.886 V站·呼死狗情报 (fetch_vzhan.py)"
+# v1.7.118：不再卡 have_time 预算门槛。此前 V站常被「剩余时间不足」跳过，
+# 而接口实测 0.1s 可达、全流程约 20s，是用户明确要求每天必更的情报源；
+# 失败时脚本自身保留旧数据（不覆盖为空），这里再加一层隔离即可。
 set +e
-if have_time 90; then
-  "$PY" fetch_vzhan.py
-else
-  log "!! 剩余时间不足，跳过 V站 抓取（沿用上次数据），优先保证部署"
-fi
+"$PY" fetch_vzhan.py || log "!! V站 抓取失败（保留上次数据），继续其余模块"
 set -e
 
 # ---------- 步骤1.8865：V站网关稳定性探活（监控，v1.7.77；不阻断部署）----------
@@ -270,6 +269,23 @@ if have_time 30; then
   fi
 else
   log "!! 剩余时间不足，跳过 V站网关探活（沿用上次状态），优先保证部署"
+fi
+set -e
+
+# ---------- 步骤1.8868：高手推荐·92玩球易红单（独立源，v1.7.118）----------
+# 此前只挂在 fetch_daily.py 最末尾、且带「北京时间 08-23 点」时间门：
+# 主脚本一旦中途崩溃（如 500 备用源 KeyError），此处永远不执行，
+# expert_recommendations.json 停更多日。现改为独立无条件步骤 + 失败隔离。
+log "==> 步骤1.8868 高手推荐·92玩球易红单 (fetch_expert.py)"
+set +e
+"$PY" fetch_expert.py || log "!! 高手推荐抓取失败（保留上次数据），继续其余模块"
+# v1.7.118：凌晨（09:00 前）专家还没发今日文章，严格「只取当天」会稳定产出 0 篇，
+# 页面每天凌晨都像模块坏了。此时自动回退抓「昨天」这一最近批次并标注 batchDate。
+_EXP_N=$("$PY" -c "import json;print(len(json.load(open('expert_recommendations.json',encoding='utf-8')).get('articles',[])))" 2>/dev/null || echo 0)
+if [ "$_EXP_N" = "0" ]; then
+  _YDAY=$(TZ=Asia/Shanghai date -d "yesterday" +%F)
+  log "   今日暂无专家发文，回退抓最近一批（$_YDAY）"
+  JC_EXPERT_DATE="$_YDAY" "$PY" fetch_expert.py || log "!! 回退批次抓取失败（保留上次数据），继续其余模块"
 fi
 set -e
 

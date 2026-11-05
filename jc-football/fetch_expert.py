@@ -19,6 +19,8 @@ os.environ.setdefault("TZ", "Asia/Shanghai")
 time.tzset()
 
 DIR = os.path.dirname(os.path.abspath(__file__))
+# v1.7.118：目标批次日期可由流水线覆盖（凌晨回退抓最近一批），默认今天。
+EXPERT_DATE = os.environ.get("JC_EXPERT_DATE") or time.strftime("%Y-%m-%d")
 
 def load_json(name):
     p = os.path.join(DIR, name)
@@ -42,9 +44,11 @@ def is_non_football(league, title):
 
 def fetch_92wq_articles():
     """从92玩球获取最新专家文章列表：
-    1) 从第1页逐页往后翻，严格只保留当天日期发布的帖子
-    2) 遇到非当天日期的帖子连续2页就停止翻页
+    1) 从第1页逐页往后翻，严格只保留目标日期发布的帖子
+    2) 遇到非目标日期的帖子连续2页就停止翻页
     3) 记录已处理文章ID到expert_seen.json，下次只处理新帖子
+    v1.7.118：目标日期可由 JC_EXPERT_DATE 覆盖。凌晨专家尚未发今日文章时，
+    流水线回退抓「昨天」这一最近批次，避免每天凌晨产出 0 篇像模块坏了。
     """
     headers = {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
@@ -52,7 +56,7 @@ def fetch_92wq_articles():
         "Accept-Language": "zh-CN,zh;q=0.9",
         "Referer": "https://www.92wq.com/",
     }
-    today = time.strftime("%Y-%m-%d")
+    today = EXPERT_DATE
 
     # 读取已处理文章ID记录和首尾定位
     seen_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "expert_seen.json")
@@ -1870,8 +1874,8 @@ def main():
     print(f"  生成高手推荐：{len(recs)} 条（仅当天竞彩比赛，已核查专家战绩）")
 
     # 5. 保存
-    today = time.strftime("%Y-%m-%d")
-    # 仅保留当天文章，并按下单发布时间倒序（最新在前），用于「专家文章」流
+    today = EXPERT_DATE
+    # 仅保留目标批次文章，并按下单发布时间倒序（最新在前），用于「专家文章」流
     seen_ids = set()
     today_articles = []
     for a in articles_data:
@@ -1888,7 +1892,8 @@ def main():
     today_articles.sort(key=lambda a: a.get("pubDateTime") or a.get("pubDate") or "", reverse=True)
     out = {
         "updatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "sourceNote": "数据来源：92玩球(92wq.com)易红单平台真实专家推荐，已核查专家历史战绩，仅保留当天竞彩官方赛程比赛",
+        "batchDate": today,
+        "sourceNote": "数据来源：92玩球(92wq.com)易红单平台真实专家推荐，已核查专家历史战绩；当前展示批次 %s（凌晨专家未发今日文章时回退最近一批）" % today,
         "articles": today_articles,
         "todayArticles": today_articles,
         "recommendations": recs,
