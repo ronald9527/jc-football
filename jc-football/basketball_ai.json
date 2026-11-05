@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-11-06 03:57:17",
+ "updatedAt": "2026-11-06 05:44:22",
  "dataDate": "2026-11-05",
- "source": "sporttery+500",
+ "source": "500.com",
  "upcomingCount": 2,
  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主",
  "predictions": [
@@ -21,35 +21,35 @@
      "confidence": 50.0,
      "sameOddsHit": 53.1,
      "sameOddsN": 64,
-     "pTrue": 45.9,
-     "canon": 1.387,
-     "edge": 0.5,
-     "goalLine": "",
+     "pTrue": 47.1,
+     "canon": -0.212,
+     "edge": -0.3,
+     "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.55,
-       "confidence": 51.5,
+       "odds": 1.68,
+       "confidence": 50.3,
        "sameOddsHit": 46.9,
        "sameOddsN": 64
       }
      ]
     },
     "hdc": {
-     "dir": "a",
-     "odds": 1.7,
-     "confidence": 50.5,
+     "dir": "h",
+     "odds": 1.96,
+     "confidence": 50.0,
      "sameOddsHit": null,
      "sameOddsN": 1,
-     "pTrue": 50.5,
-     "canon": 1.492,
-     "edge": 0.5,
+     "pTrue": 48.4,
+     "canon": 0.692,
+     "edge": 0.1,
      "goalLine": "-2.5",
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
+       "dir": "a",
+       "odds": 1.83,
+       "confidence": 51.6,
        "sameOddsHit": null,
        "sameOddsN": 1
       }
@@ -57,21 +57,21 @@
     },
     "hilo": {
      "dir": "l",
-     "odds": 1.66,
-     "confidence": 51.5,
+     "odds": 1.7,
+     "confidence": 50.8,
      "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 51.5,
-     "canon": 1.302,
-     "edge": 0.4,
-     "goalLine": "+224.5",
+     "sameOddsN": 1,
+     "pTrue": 50.8,
+     "canon": 2.095,
+     "edge": 0.8,
+     "goalLine": "224.5",
      "alts": [
       {
        "dir": "h",
-       "odds": 1.74,
+       "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 0
+       "sameOddsN": 1
       }
      ]
     },
@@ -84,7 +84,7 @@
      "pTrue": 10.9,
      "canon": 0.37,
      "edge": 0.0,
-     "goalLine": "",
+     "goalLine": null,
      "alts": [
       {
        "dir": "l1",
@@ -138,40 +138,40 @@
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 2.48,
+     "odds": 2.56,
      "confidence": 50.6,
      "sameOddsHit": 53.1,
      "sameOddsN": 64,
-     "pTrue": 36.7,
-     "canon": 5.396,
-     "edge": 2.5,
-     "goalLine": "",
+     "pTrue": 36.9,
+     "canon": 5.198,
+     "edge": 2.4,
+     "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.29,
-       "confidence": 55.7,
+       "odds": 1.35,
+       "confidence": 55.5,
        "sameOddsHit": 46.9,
        "sameOddsN": 64
       }
      ]
     },
     "hdc": {
-     "dir": "a",
-     "odds": 1.7,
-     "confidence": 53.2,
-     "sameOddsHit": 83.3,
+     "dir": "h",
+     "odds": 2.68,
+     "confidence": 50.6,
+     "sameOddsHit": 16.7,
      "sameOddsN": 6,
-     "pTrue": 52.6,
-     "canon": 5.721,
-     "edge": 2.6,
+     "pTrue": 38.7,
+     "canon": 6.704,
+     "edge": 3.1,
      "goalLine": "-6.5",
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": 16.7,
+       "dir": "a",
+       "odds": 1.48,
+       "confidence": 61.3,
+       "sameOddsHit": 83.3,
        "sameOddsN": 6
       }
      ]
@@ -181,18 +181,18 @@
      "odds": 1.7,
      "confidence": 61.6,
      "sameOddsHit": null,
-     "sameOddsN": 0,
+     "sameOddsN": 3,
      "pTrue": 61.0,
      "canon": 22.614,
      "edge": 11.0,
-     "goalLine": "+236.5",
+     "goalLine": "236.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 0
+       "sameOddsN": 3
       }
      ]
     },
@@ -205,7 +205,7 @@
      "pTrue": 7.5,
      "canon": 0.408,
      "edge": 0.0,
-     "goalLine": "",
+     "goalLine": null,
      "alts": [
       {
        "dir": "l1",
