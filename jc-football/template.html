@@ -1765,8 +1765,20 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.113";
+const VERSION = "v1.7.115";
 const CHANGELOG = [
+  {
+    version: "v1.7.115",
+    date: "2026-11-05",
+    title: "「刷新数据」按钮真正全面更新 + 赛果回溯同步命中统计",
+    details: [
+      "根因（按钮无效）：triggerRePull()（触发云端完整流水线）早已写好，但顶部「刷新数据」按钮实际只绑定了 loadLiveDatasets(true)——仅重拉已部署的 JSON 快照，不会重新抓取；且该函数漏拉 score_predict.json（比分预测/赛果回溯/命中统计的唯一数据源），连已有数据都刷新不全",
+      "修复：按钮改为「先即时拉云端快照刷新视图 → 再触发 /api/refresh 云端流水线」；流水线跑 run_daily.sh deploy（抓取全部数据源 → 1.852 赛果回溯 → 命中统计同步 → 构建 → 部署），与在对话里说「回溯并更新」效果一致；轮询到成功后带时间戳强制重载，绕过 WebView/PWA 缓存",
+      "即时刷新补齐 8 个数据源：score_predict.json / history.json / matches.json / hkmo_history.json / strongweak_history.json / fd_data.json / parlay_history.json / half_full_history.json，覆盖比分预测、历史回溯、命中统计、赛程、港澳、强弱、串关与半全场",
+      "命中统计完整性：sp_results.py 新增 sync_stats()，把回溯到的赛果同步进 dateIndex（日期回溯区）与 history/reliable/accuracy（命中率仪表盘）并重算，同时回写 score_predict_accuracy.json。此前命中库 884 条只覆盖 8 场新赛果、命中率虚高（8.5%/44.6%）；现补齐至 1121 场，真实口径 7.8%/39.5%",
+      "顺带修复 verify_deploy.py 门禁：只认 const VAR 而页面注入用 let BUILT_XXX，导致两项计数恒为 0、CI 每轮误判部署失败；改同时识别 const/let/var 并用 JSONDecoder 稳健提取"
+    ]
+  },
   {
     version: "v1.7.113",
     date: "2026-11-05",
@@ -7602,12 +7614,18 @@ async function loadLiveDatasets(showTip){
   const bust = __cacheBust();
   const get = (f)=> fetch(f+"?"+bust, {cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
   try{
-    const [vz, vzgw, vzh, ws, ex, exh, exs, bk, bkh, bka, bkp, bks, bkaa] = await Promise.all([
+    const [vz, vzgw, vzh, ws, ex, exh, exs, bk, bkh, bka, bkp, bks, bkaa,
+           sp, hist, core, hkmoh, swh, fd, ph, hfh] = await Promise.all([
       get("vzhan_data.json"), get("vzhan_gateway_status.json"), get("vzhan_history.json"),
       get("whoscored_data.json"), get("expert_recommendations.json"), get("expert_history.json"),
       get("expert_stats.json"), get("basketball.json"), get("basketball_history.json"),
       get("basketball_ai.json"), get("basketball_parlay_history.json"),
-      get("basketball_stats.json"), get("basketball_ai_accuracy.json")
+      get("basketball_stats.json"), get("basketball_ai_accuracy.json"),
+      // v1.7.115：补齐此前遗漏的核心数据源，尤其 score_predict.json——
+      // 比分预测 / 赛果回溯 / 命中统计的唯一数据源，漏了它「刷新」就不算全面。
+      get("score_predict.json"), get("history.json"), get("matches.json"),
+      get("hkmo_history.json"), get("strongweak_history.json"), get("fd_data.json"),
+      get("parlay_history.json"), get("half_full_history.json")
     ]);
     if(vz) BUILT_VZHAN = vz;
     if(vzgw) BUILT_VZGW = vzgw;
@@ -7631,6 +7649,36 @@ async function loadLiveDatasets(showTip){
     if(bkp){ BUILT_BASKETBALL_PARLAY = bkp; if(state) state.basketballParlay = JSON.parse(JSON.stringify(bkp)); }
     if(bks){ BUILT_BASKETBALL_STATS = bks; if(state) state.basketballStats = JSON.parse(JSON.stringify(bks)); }
     if(bkaa){ BUILT_BASKETBALL_AI_ACC = bkaa; if(state) state.basketballAiAcc = JSON.parse(JSON.stringify(bkaa)); }
+    // v1.7.115：核心数据源热替换（防御式，任一源结构异常不影响其余刷新）
+    try{
+      if(sp) BUILT_SCOREPRED = sp;                       // 比分预测 / 赛果回溯 / 命中统计
+      if(hist){
+        BUILT_HISTORY = hist;
+        if(state){ state.history = JSON.parse(JSON.stringify(hist.records||[])); state.histUpdated = hist.updatedAt||""; }
+      }
+      if(core){
+        BUILT_DATA = core;
+        if(state){
+          state.data = JSON.parse(JSON.stringify(core.matches||[]));
+          state.meta = state.meta || {};
+          if(core.updateTime) state.meta.updateTime = core.updateTime;
+          if(core.parlayHistory) state.parlayHistory = JSON.parse(JSON.stringify(core.parlayHistory));
+          if(core.halfFull) state.halfFull = JSON.parse(JSON.stringify(core.halfFull));
+          if(core.halfFullHistory) state.halfFullHistory = JSON.parse(JSON.stringify(core.halfFullHistory));
+          if(core.strongWeak) state.strongWeak = JSON.parse(JSON.stringify(core.strongWeak));
+          if(core.strongWeakHistory) state.strongWeakHistory = JSON.parse(JSON.stringify(core.strongWeakHistory));
+        }
+      }
+      if(hkmoh){ BUILT_HKMOH = hkmoh; if(state) state.hkmoHistory = JSON.parse(JSON.stringify(hkmoh.records||[])); }
+      if(swh){ BUILT_SWH = swh; if(state) state.strongWeakHistory = swh; }
+      if(fd){
+        BUILT_FD = fd;
+        for(const k of Object.keys(FD)) delete FD[k];
+        (fd.matches||[]).forEach(x=>{ if(x && x.num) FD[x.num]=x; });
+      }
+      if(ph && state){ state.parlayHistory = JSON.parse(JSON.stringify(ph)); }
+      if(hfh && state){ state.halfFullHistory = JSON.parse(JSON.stringify(hfh)); }
+    }catch(e){}
     // 以云端 version.json 的时间戳作为「数据更新于」
     try{
       const v = await get("version.json");
@@ -7728,7 +7776,7 @@ function triggerRePull(){
       const runId = d.runId, started = Date.now();
       jcToast("✅ 已触发！云端正在重新抓取并部署（约1-4分钟，完成自动重载）", 7000);
       if(!runId){
-        setTimeout(()=>location.reload(), 240000);
+        setTimeout(__hardReload, 240000);
         return;
       }
       const next = ()=>{
@@ -7746,7 +7794,7 @@ function triggerRePull(){
             if(s.status==="completed"){
               if(s.conclusion==="success"){
                 jcToast("🎉 抓取完成，正在重新加载…", 3000);
-                setTimeout(()=>location.reload(), 1200);
+                setTimeout(__hardReload, 1500);
                 return;
               }
               btn.disabled=false; btn.innerHTML=orig;
@@ -7764,7 +7812,15 @@ function triggerRePull(){
       jcToast("无法连接刷新服务，请检查网络后重试", 6000, true);
     });
 }
-$("#rePullBtn").addEventListener("click", ()=>{ loadLiveDatasets(true); });
+/* v1.7.115：「刷新数据」按钮真正全面更新。
+   ① 立即拉云端已部署的全部 JSON 快照，视图先即时刷新；
+   ② 同时触发 /api/refresh → GitHub Actions 跑 run_daily.sh deploy
+      （抓取全部数据源 → 赛果回溯 → 命中统计同步 → 构建 → 部署），
+      效果等同在对话里说「回溯并更新」；成功后带时间戳强制重载。 */
+$("#rePullBtn").addEventListener("click", ()=>{
+  loadLiveDatasets(false);   // 不弹 toast，交给 triggerRePull 统一提示
+  triggerRePull();
+});
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
 $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("#freshMask").classList.remove("show"); });
 /* 每2分钟实时刷新数据（直接fetch matches.json，不刷新页面）；每5分钟检测版本 */

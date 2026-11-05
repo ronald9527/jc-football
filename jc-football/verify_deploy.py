@@ -41,22 +41,24 @@ def fetch(url):
 
 
 def extract_json(hay, varname):
-    """从 `const VAR = {...};` 中稳健提取对象文本（括号配对，避免贪婪截断）"""
-    pat = re.compile(r'const\s+' + re.escape(varname) + r'\s*=\s*')
+    """从 `const/let/var VAR = {...}` 中稳健提取对象文本。
+
+    页面注入用 `let BUILT_XXX = ...`（build_panel.py 的占位符替换），
+    旧实现只匹配 `const` → 两个计数恒为 0，门禁长期误判部署失败。
+    改用 JSONDecoder.raw_decode，顺带避免字符串内 '{'/'}' 干扰括号配对。
+    """
+    pat = re.compile(r'(?:const|let|var)\s+' + re.escape(varname) + r'\s*=\s*')
     m = pat.search(hay)
     if not m:
         return None
-    i = hay.index('{', m.end())
-    depth = 0
-    for j in range(i, len(hay)):
-        c = hay[j]
-        if c == '{':
-            depth += 1
-        elif c == '}':
-            depth -= 1
-            if depth == 0:
-                return hay[i:j + 1]
-    return None
+    i = hay.find('{', m.end())
+    if i < 0:
+        return None
+    try:
+        _, end = json.JSONDecoder().raw_decode(hay[i:])
+        return hay[i:i + end]
+    except Exception:
+        return None
 
 
 def local_version():

@@ -39,7 +39,7 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function findLatestDispatchRun(token) {
+async function findLatestDispatchRun(token, dispatchedAt) {
   // 优先按 event=workflow_dispatch 过滤；GitHub 登记 run 有 1-3s 延迟，故多取几条。
   const resp = await fetch(
     `https://api.github.com/repos/${REPO}/actions/runs?event=workflow_dispatch&per_page=8`,
@@ -48,7 +48,14 @@ async function findLatestDispatchRun(token) {
   if (!resp.ok) return null;
   const j = await resp.json();
   let runs = (j.workflow_runs || []).filter((r) => r.event === "workflow_dispatch");
-  if (runs.length === 0) runs = j.workflow_runs || []; // 兜底：取最近一次任意运行
+  // 只要本次触发之后登记的 run，避免并发/历史 dispatch 让前端轮询到别人的旧任务。
+  if (dispatchedAt) {
+    const fresh = runs.filter(
+      (r) => new Date(r.created_at).getTime() >= dispatchedAt - 120000
+    );
+    if (fresh.length) runs = fresh;
+  }
+  if (runs.length === 0) return null;
   runs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   return runs[0] || null;
 }
@@ -57,6 +64,7 @@ export async function onRequestPost({ env }) {
   const token = env.GH_PAT;
   if (!token) return json({ ok: false, error: "服务端未配置 GH_PAT" }, 500);
   try {
+    const dispatchedAt = Date.now();
     const disp = await fetch(
       `https://api.github.com/repos/${REPO}/actions/workflows/${WF}/dispatches`,
       {
@@ -72,14 +80,17 @@ export async function onRequestPost({ env }) {
         502
       );
     }
-    // 等待 GitHub 把 run 登记进列表
-    await sleep(5000);
-    const run = await findLatestDispatchRun(token);
+    // 等待 GitHub 把 run 登记进列表（最多 3 次 × 2s）
+    let run = null;
+    for (let i = 0; i < 3 && !run; i++) {
+      await sleep(2000);
+      run = await findLatestDispatchRun(token, dispatchedAt);
+    }
     return json({
       ok: true,
       runId: run ? run.id : null,
       htmlUrl: run ? run.html_url : null,
-      message: "已触发重新抓取，云端正在拉取全部数据并部署（约 1-4 分钟）",
+      message: "已触发全面重新抓取（全部数据源 + 赛果回溯 + 命中统计），云端正在构建并部署",
     });
   } catch (e) {
     return json({ ok: false, error: "服务端异常：" + (e && e.message ? e.message : e) }, 500);

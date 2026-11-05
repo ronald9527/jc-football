@@ -374,6 +374,169 @@ def ensure_history_matches(sp, hist, today, span=14):
     return added
 
 
+# ---------------------------------------------------------------- 命中统计同步
+def _outcome_of(h, a):
+    s = _sign(h, a)
+    return "H" if s == 1 else ("D" if s == 0 else ("A" if s == -1 else None))
+
+
+def _sync_date_index(sp, by_pair):
+    """把权威赛果补进 dateIndex（日期回溯区），让历史竞彩日的命中统计不再空白。
+
+    只补原本无赛果的条目，已有赛果一律尊重原值，避免任何权威数据被覆盖。
+    命中判定口径与 matches 完全一致（预测比分 vs 实际比分）。
+    """
+    di = sp.get("dateIndex")
+    if not isinstance(di, dict):
+        return 0
+    fixed = 0
+    for d, arr in di.items():
+        if not isinstance(arr, list):
+            continue
+        for r in arr:
+            if not isinstance(r, dict):
+                continue
+            ah, aa = r.get("actH"), r.get("actA")
+            if isinstance(ah, int) and isinstance(aa, int):
+                continue
+            home, away = r.get("home"), r.get("away")
+            if not (home and away):
+                continue
+            v = None
+            for dd in (str(d)[:10], _date_shift(str(d)[:10], -1), _date_shift(str(d)[:10], 1)):
+                if not dd:
+                    continue
+                v = by_pair.get((dd, _norm(home), _norm(away)))
+                if v:
+                    break
+            if not v:
+                continue
+            h, a = v[0], v[1]
+            predH, predA = r.get("predH"), r.get("predA")
+            ex = (predH == h and predA == a)
+            ou = (_sign(predH, predA) is not None and _sign(predH, predA) == _sign(h, a))
+            try:
+                mae = (abs(float(predH) - h) + abs(float(predA) - a)) / 2.0
+            except (TypeError, ValueError):
+                mae = 0.0
+            r.update({"actH": h, "actA": a, "actOutcome": _outcome_of(h, a),
+                      "exactHit": bool(ex), "outcomeHit": bool(ou), "mae": mae})
+            fixed += 1
+    return fixed
+
+
+def _hist_record(m):
+    """matches 卡片 -> accuracy/history 回溯记录（与 fetch_scores 的字段口径对齐）。"""
+    mae = m.get("mae")
+    if not isinstance(mae, (int, float)) or isinstance(mae, bool):
+        mae = 0.0
+    return {
+        "id": m.get("id"), "league": m.get("league") or m.get("competition") or "",
+        "home": m.get("home"), "away": m.get("away"),
+        "date": (m.get("utcDate") or m.get("date") or "")[:10],
+        "predH": m.get("predH"), "predA": m.get("predA"),
+        "actH": m.get("actH"), "actA": m.get("actA"),
+        "predOutcome": m.get("predOutcome") or _outcome_of(m.get("predH"), m.get("predA")),
+        "actOutcome": _outcome_of(m.get("actH"), m.get("actA")),
+        "exactHit": bool(m.get("exactHit")), "outcomeHit": bool(m.get("outcomeHit")),
+        "mae": mae,
+    }
+
+
+def _reliable_stats(hist):
+    """与 fetch_scores._reliable 同口径重算命中率：总览 + 联赛榜 + 球队榜。"""
+    by_l, by_t = {}, {}
+    for r in hist:
+        if not isinstance(r, dict):
+            continue
+        mae = r.get("mae") if isinstance(r.get("mae"), (int, float)) else 0.0
+        lg = r.get("league")
+        if lg:
+            d = by_l.setdefault(lg, {"n": 0, "exact": 0, "out": 0, "mae": 0.0})
+            d["n"] += 1
+            d["exact"] += 1 if r.get("exactHit") else 0
+            d["out"] += 1 if r.get("outcomeHit") else 0
+            d["mae"] += mae
+        for tm in (r.get("home"), r.get("away")):
+            if not tm:
+                continue
+            d = by_t.setdefault(tm, {"n": 0, "exact": 0, "out": 0, "mae": 0.0})
+            d["n"] += 1
+            d["exact"] += 1 if r.get("exactHit") else 0
+            d["out"] += 1 if r.get("outcomeHit") else 0
+            d["mae"] += mae
+    leagues, teams = [], []
+    for lg, d in by_l.items():
+        if d["n"] >= 6:
+            leagues.append({"league": lg, "n": d["n"],
+                            "exactHit": round(d["exact"] / d["n"] * 100, 1),
+                            "outcomeHit": round(d["out"] / d["n"] * 100, 1),
+                            "mae": round(d["mae"] / d["n"], 2)})
+    leagues.sort(key=lambda x: (x["exactHit"], x["outcomeHit"]), reverse=True)
+    for tm, d in by_t.items():
+        if d["n"] >= 6:
+            teams.append({"team": tm, "n": d["n"],
+                          "exactHit": round(d["exact"] / d["n"] * 100, 1),
+                          "outcomeHit": round(d["out"] / d["n"] * 100, 1),
+                          "mae": round(d["mae"] / d["n"], 2)})
+    teams.sort(key=lambda x: (x["exactHit"], x["outcomeHit"]), reverse=True)
+    n = len(hist)
+    overall = {"n": n}
+    if n:
+        overall["exactHit"] = round(sum(1 for r in hist if r.get("exactHit")) / n * 100, 1)
+        overall["outcomeHit"] = round(sum(1 for r in hist if r.get("outcomeHit")) / n * 100, 1)
+        overall["mae"] = round(sum((r.get("mae") or 0) for r in hist) / n, 2)
+    return overall, leagues[:10], teams[:12]
+
+
+def sync_stats(sp, by_pair):
+    """把刚回溯的赛果同步进命中统计，解决「赛果有了、命中率还是旧样本」的问题。
+
+    根因：score_predict.json 的 history/reliable/accuracy 是长期回溯库，
+    但 fetch_scores.py 只在自身抓到 FD 赛果时追加；500体育/竞彩官方补回的
+    229 场历史赛果只落在 matches 里，命中率仪表盘仍是 874 条的旧口径
+    （8.5% / 44.5%），样本缺失导致统计虚高、不准确。
+    """
+    di_fixed = _sync_date_index(sp, by_pair)
+    hist = sp.get("history")
+    if not isinstance(hist, list):
+        hist = []
+    seen = {str(r.get("id")) for r in hist if isinstance(r, dict)}
+    added = 0
+    for m in (sp.get("matches") or []):
+        if not isinstance(m, dict) or m.get("status") != "FINISHED":
+            continue
+        if not (isinstance(m.get("actH"), int) and isinstance(m.get("actA"), int)):
+            continue
+        key = str(m.get("id"))
+        if not key or key == "None":
+            key = "%s|%s|%s" % ((m.get("utcDate") or m.get("date") or "")[:10],
+                                _norm(m.get("home")), _norm(m.get("away")))
+        if key in seen:
+            continue
+        hist.append(_hist_record(m))
+        seen.add(key)
+        added += 1
+    hist.sort(key=lambda x: str(x.get("date") or ""), reverse=True)
+    hist = hist[:1500]
+    overall, leagues, teams = _reliable_stats(hist)
+    sp["history"] = hist
+    sp["reliable"] = {"overall": overall, "leagues": leagues, "teams": teams}
+    sp["accuracy"] = overall
+    di = sp.get("dateIndex")
+    if isinstance(di, dict):
+        keys = sorted(di.keys(), reverse=True)
+        dl = sp.get("dateList")
+        if not isinstance(dl, list) or sorted(map(str, dl), reverse=True) != keys:
+            sp["dateList"] = keys
+    # 有实质回溯才刷新时间戳（幂等零噪声：第二次跑 added/fixed 均为 0，不刷新）。
+    # 否则 selftest 会把「刚补齐 229 场命中记录」误判为比分预测停更 24h。
+    if di_fixed or added:
+        sp["updatedAt"] = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime("%Y-%m-%d %H:%M:%S")
+    return {"date_index_fixed": di_fixed, "history_added": added,
+            "history_total": len(hist), "overall": overall}
+
+
 # ---------------------------------------------------------------- 规范化
 def normalize_sp(sp, hist=None, cache=None, today=None):
     """就地规范化 sp['matches']，返回统计 dict。纯本地、无副作用（不写盘）。"""
@@ -450,6 +613,9 @@ def normalize_sp(sp, hist=None, cache=None, today=None):
             stat["by_date"][d] += 1
         elif st == "FINISHED":
             stat["already"] += 1
+    # 命中统计同步：赛果回溯后，history/reliable/accuracy/dateIndex 必须一起更新，
+    # 否则页面仍按旧样本显示命中率（统计不完整、不准确）。
+    stat["stats"] = sync_stats(sp, by_pair)
     return stat
 
 
@@ -470,12 +636,38 @@ def main():
         _save_if_changed(CACHE_PATH, cache, cache_old)
 
     stat = normalize_sp(sp, hist, cache, today)
-    wrote = _save_if_changed(SP_PATH, sp, _load(SP_PATH) or {})
+    sp_old = _load(SP_PATH) or {}
+    wrote = _save_if_changed(SP_PATH, sp, sp_old)
+
+    # 同步 A/B 命中率对比库：只按 id 追加本次新回溯的记录，保留原有历史，
+    # 避免 fetch_scores.py 下一轮用旧库把 score_predict.json 的 history 覆盖回去。
+    acc_path = os.path.join(HERE, "score_predict_accuracy.json")
+    acc_old = _load(acc_path) or {"history": []}
+    acc = dict(acc_old)
+    # 必须复制 list：dict() 是浅拷贝，直接 append 会就地改到 acc_old，
+    # 导致 _save_if_changed 的差量比较永远相等、A/B 库静默不落盘。
+    acc_hist = list(acc.get("history") or [])
+    seen = {str(r.get("id")) for r in acc_hist if isinstance(r, dict)}
+    acc_added = 0
+    for rec in (sp.get("history") or []):
+        if not isinstance(rec, dict):
+            continue
+        key = str(rec.get("id"))
+        if key in seen:
+            continue
+        acc_hist.append(rec)
+        seen.add(key)
+        acc_added += 1
+    acc["history"] = acc_hist
+    _save_if_changed(acc_path, acc, acc_old)
+    st = stat["stats"]
 
     if QUIET:
-        print("sp_results: 补历史场次%d | 规范化 %d 场(已有%d/缺赛果%d) | 500体育新增 %d 条(抓%d日/失败%d) | 写盘:%s%s"
+        print("sp_results: 补历史场次%d | 规范化 %d 场(已有%d/缺赛果%d) | 500体育新增 %d 条(抓%d日/失败%d) | 命中库+%d(共%d,精确%.1f%%/方向%.1f%%) | 日期回溯补%d | 写盘:%s%s"
               % (stat["ensured"], stat["fixed"], stat["already"], stat["no_result"],
-                 added, fetch_dates, failed, "是" if wrote else "否", " [DRY-RUN]" if DRY else ""))
+                 added, fetch_dates, failed, st["history_added"], st["history_total"],
+                 st["overall"].get("exactHit", 0), st["overall"].get("outcomeHit", 0),
+                 st["date_index_fixed"], "是" if wrote else "否", " [DRY-RUN]" if DRY else ""))
         return 0
 
     print("=" * 64)
@@ -487,6 +679,10 @@ def main():
     print("matches 共 %d 场（补回历史场次 %d） | 规范化 %d | 原本已规范 %d | 仍无赛果 %d"
           % (stat["total"], stat["ensured"], stat["fixed"], stat["already"], stat["no_result"]))
     print("  来源分布：", dict(stat["by_src"]))
+    print("  命中统计同步：回溯库新增 %d 场 → 共 %d 场 | 精确 %.1f%% / 方向 %.1f%% / MAE %.2f"
+          % (st["history_added"], st["history_total"], st["overall"].get("exactHit", 0),
+             st["overall"].get("outcomeHit", 0), st["overall"].get("mae", 0)))
+    print("  日期回溯区补赛果：%d 条" % st["date_index_fixed"])
     print("  按日期（规范化场数）：")
     for d in sorted(stat["by_date"], reverse=True):
         print("    %s : %d" % (d, stat["by_date"][d]))
