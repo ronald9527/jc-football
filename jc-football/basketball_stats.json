@@ -1,38 +1,10 @@
 {
  "sample": {
-  "total": 54,
-  "scored": 49,
+  "total": 71,
+  "scored": 65,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
-  "德篮联": {
-   "n": 1,
-   "home_win_rate": 0.0,
-   "hdc_home_hit_rate": 0.0,
-   "hilo_over_rate": 100.0,
-   "avg_total": 186.0
-  },
-  "美职篮": {
-   "n": 34,
-   "home_win_rate": 44.1,
-   "hdc_home_hit_rate": 41.2,
-   "hilo_over_rate": 44.1,
-   "avg_total": 228.3
-  },
-  "美职女篮": {
-   "n": 3,
-   "home_win_rate": 0.0,
-   "hdc_home_hit_rate": 0.0,
-   "hilo_over_rate": 33.3,
-   "avg_total": 133.0
-  },
-  "欧篮联": {
-   "n": 9,
-   "home_win_rate": 44.4,
-   "hdc_home_hit_rate": 33.3,
-   "hilo_over_rate": 33.3,
-   "avg_total": 170.1
-  },
   "澳篮联": {
    "n": 1,
    "home_win_rate": 100.0,
@@ -40,57 +12,99 @@
    "hilo_over_rate": 100.0,
    "avg_total": 192.0
   },
+  "美职女篮": {
+   "n": 2,
+   "home_win_rate": 0.0,
+   "hdc_home_hit_rate": 0.0,
+   "hilo_over_rate": 50.0,
+   "avg_total": 140.0
+  },
+  "欧篮联": {
+   "n": 3,
+   "home_win_rate": 33.3,
+   "hdc_home_hit_rate": 33.3,
+   "hilo_over_rate": 66.7,
+   "avg_total": 191.3
+  },
+  "美职篮": {
+   "n": 42,
+   "home_win_rate": 47.6,
+   "hdc_home_hit_rate": 38.1,
+   "hilo_over_rate": 40.5,
+   "avg_total": 225.9
+  },
   "西篮联": {
    "n": 1,
    "home_win_rate": 0.0,
    "hdc_home_hit_rate": 100.0,
    "hilo_over_rate": 100.0,
    "avg_total": 182.0
+  },
+  "西篮甲": {
+   "n": 6,
+   "home_win_rate": 66.7,
+   "hdc_home_hit_rate": 50.0,
+   "hilo_over_rate": 66.7,
+   "avg_total": 181.3
+  },
+  "澳大利亚篮球联赛": {
+   "n": 5,
+   "home_win_rate": 60.0,
+   "hdc_home_hit_rate": 40.0,
+   "hilo_over_rate": 40.0,
+   "avg_total": 191.0
+  },
+  "德国篮球联赛": {
+   "n": 5,
+   "home_win_rate": 20.0,
+   "hdc_home_hit_rate": 40.0,
+   "hilo_over_rate": 60.0,
+   "avg_total": 171.4
   }
  },
  "hdc_overall": {
-  "h": 19,
-  "a": 30,
+  "h": 26,
+  "a": 39,
   "d": 0,
-  "home_hit_rate": 38.8
+  "home_hit_rate": 40.0
  },
  "hilo_overall": {
-  "over": 22,
-  "under": 27,
-  "over_rate": 44.9
+  "over": 31,
+  "under": 34,
+  "over_rate": 47.7
  },
  "wnm_dist": {
-  "l1": 6,
-  "l2": 5,
-  "l3": 2,
-  "l4": 3,
+  "l1": 9,
+  "l2": 8,
+  "l3": 6,
+  "l4": 2,
   "l5": 3,
-  "l6": 1
+  "l6": 2
  },
  "home_advantage": {
-  "home_win_rate": 40.8
+  "home_win_rate": 46.2
  },
  "roi": {
   "hdc": {
-   "bet": 49,
-   "profit": -20.7,
-   "roi": -42.2
+   "bet": 65,
+   "profit": 2.6,
+   "roi": 4.0
   },
   "hilo": {
-   "bet": 49,
-   "profit": -10.5,
-   "roi": -21.5
+   "bet": 65,
+   "profit": -10.8,
+   "roi": -16.6
   },
   "mnl": {
-   "bet": 45,
-   "profit": -23.0,
-   "roi": -51.1
+   "bet": 64,
+   "profit": -6.3,
+   "roi": -9.9
   },
   "wnm": {
-   "bet": 20,
-   "profit": 9.1,
-   "roi": 45.2
+   "bet": 30,
+   "profit": 16.4,
+   "roi": 54.7
   }
  },
- "updatedAt": "2026-11-06 00:55:41"
+ "updatedAt": "2026-11-06 03:57:17"
 }

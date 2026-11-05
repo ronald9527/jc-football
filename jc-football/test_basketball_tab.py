@@ -29,6 +29,7 @@ PATH = sys.argv[1] if len(sys.argv) > 1 else "/workspace/jc-football/index.html"
 EMPTY_MOCK = '''
 () => {
   state.basketballHist = {updatedAt: "", records: {}};
+  state.basketball = {updatedAt: "", dataDate: "", source: "", matches: []};
   renderBasketball();
 }
 '''
@@ -36,6 +37,9 @@ EMPTY_MOCK = '''
 HIST_MOCK = '''
 () => {
   state.basketballHist = {updatedAt: "2026-01-01 00:00:00", records: {}};
+  // v1.7.119：500 备用源会把赛果直接写进 basketball.json.matches，
+  // 合成夹具必须同时清空赛程数据，否则生产数据会混进确定性断言。
+  state.basketball = {updatedAt: "", dataDate: "", source: "", matches: []};
   const mk = (id, num, kickoff, home, away, score, hdc, hilo) => {
     state.basketballHist.records[id] = {
       id: id, num: num, date: kickoff.slice(0, 10), kickoff: kickoff,
@@ -93,7 +97,8 @@ with sync_playwright() as p:
     assert page.query_selector("#bkSchedPane").is_visible()
     cards = page.query_selector_all("#bkList .bk-card")
     first = page.evaluate(
-        "() => { const ms = ((state.basketball||{}).matches||[]).filter(m => !m.score);"
+        "() => { const ms = ((state.basketball||{}).matches||[]).filter(m => !m.score)"
+        "   .sort((a,b) => (a.kickoff||'').localeCompare(b.kickoff||''));"
         " return ms[0] ? {num: ms[0].num, home: ms[0].home, away: ms[0].away,"
         " hasOdds: !!(ms[0].mnl || ms[0].hdc || ms[0].hilo)} : null; }")
     assert first, "页面注入的篮球赛程为空"

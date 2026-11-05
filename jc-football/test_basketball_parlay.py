@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""篮球串关单元测试（v1.7.44）。
+"""篮球串关单元测试（v1.7.119）。
 
 验证点：
-  1. TIERS_BK 配置：min_odds=1.20、min_conf=55、so_floor=0（不硬剔除，由 canon 软惩罚）
-  2. gen_bk_parlay 产出三档（bk2/bk3/bk4），每档 legs 数 = tier size
-  3. 真实落盘 basketball_parlay_history.json：realEv 为负的档位 recommended=False（诚实标记）
+  1. TIERS_BK 配置：min_odds=1.55（挡蚊子肉）、min_conf=50（不再硬砍空档）、
+     so_floor=50（同指低仅软扣分）
+  2. gen_bk_parlay 产出三档键，非空档 legs 数 = 档位规模；凑不齐留空可接受
+  3. 真实落盘文件：realEv 为负的档位 recommended=False（诚实标记）
   4. 串关记录结构与足球对齐：含 legs[]/realEv/result/engineVer
 """
 import json
@@ -21,13 +22,13 @@ TIDX_SIZE, TIDX_MINODDS, TIDX_MINCONF, TIDX_SOFLOOR = 2, 3, 6, 11
 def test_tiers_config():
     assert len(bkp.TIERS_BK) == 3, "应有 3 档，实际 %d" % len(bkp.TIERS_BK)
     for t in bkp.TIERS_BK:
-        assert t[TIDX_MINODDS] == 1.20, "min_odds 应 1.20，实际 %r" % t[TIDX_MINODDS]
-        assert t[TIDX_MINCONF] == 55.0, "min_conf 应 55.0，实际 %r" % t[TIDX_MINCONF]
-        assert t[TIDX_SOFLOOR] == 0, "so_floor 应 0（不硬剔除），实际 %r" % t[TIDX_SOFLOOR]
+        assert t[TIDX_MINODDS] == 1.55, "min_odds 应 1.55，实际 %r" % t[TIDX_MINODDS]
+        assert t[TIDX_MINCONF] == 50.0, "min_conf 应 50.0，实际 %r" % t[TIDX_MINCONF]
+        assert t[TIDX_SOFLOOR] == 50, "so_floor 应 50（软扣分线），实际 %r" % t[TIDX_SOFLOOR]
         assert t[TIDX_SIZE] in (2, 3, 4), "档位规模应 2/3/4，实际 %r" % t[TIDX_SIZE]
     ids = [t[0] for t in bkp.TIERS_BK]
     assert ids == ["bk2", "bk3", "bk4"], "档位 id 应为 bk2/bk3/bk4，实际 %s" % ids
-    print("1. TIERS_BK 配置 OK：min_odds=1.20/min_conf=55/so_floor=0，三档 bk2/bk3/bk4")
+    print("1. TIERS_BK 配置 OK：min_odds=1.55/min_conf=50/so_floor=50，三档 bk2/bk3/bk4")
 
 
 def test_gen_parlay_three_tiers():
@@ -87,18 +88,21 @@ def test_realfile_legs_have_goal_line():
         for l in r.get("legs", []):
             n_legs += 1
             gl = l.get("goalLine")
-            assert gl, "leg 缺 goalLine：%s %s %s" % (r.get("date"), l.get("num"), l.get("play"))
+            play = l.get("play")
+            # 胜负(mnl)无盘口，不要求 goalLine；让分/大小分必须有
+            if play not in ("hdc", "hilo"):
+                continue
+            assert gl, "leg 缺 goalLine：%s %s %s" % (r.get("date"), l.get("num"), play)
             n_gl += 1
             v = float(gl)
-            if l.get("play") == "hilo":
+            if play == "hilo":
                 hilo_seen += 1
                 assert v > 100, "大小分 goalLine 应为总分线(>100)，实得 %s" % gl
             else:
-                # 让分：符号方向应与 dir 一致（h=主方、a=客方）
-                # 负=主让(h 方让) → dir 可为 h(主让胜) 或 a(客受让胜)；仅校验数值合法
                 assert v != 0 or True, "盘口合法"
     assert hilo_seen > 0, "应至少有一条大小分腿用于校验"
-    print("4. 盘口契约 OK：%d/%d 腿带 goalLine；大小分腿 %d 条均为总分线" % (n_gl, n_legs, hilo_seen))
+    print("4. 盘口契约 OK：%d/%d 腿带 goalLine（胜负玩法无盘口）；大小分腿 %d 条均为总分线"
+          % (n_gl, n_legs, hilo_seen))
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ import os
 import re
 import sys
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BK_PATH = os.path.join(HERE, "basketball.json")
@@ -42,6 +42,7 @@ WNM_BOUNDS = [("l1", 1, 5), ("l2", 6, 10), ("l3", 11, 15),
               ("l4", 16, 20), ("l5", 21, 25), ("l6", 26, 10 ** 9)]
 
 SAMPLE_WARN = "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
+FAKE_FROM = "2026-11-02"   # 篮球停更起始日：此后用 11-01 旧比赛重复生成的预测一律剔除
 
 
 # ----------------------------------------------------------------------------
@@ -403,7 +404,10 @@ def gen_bk_prediction(matches, records):
         # 单场单意见：取校准胜率最高（模型+市场共识的最强热门）的玩法方向。
         # 回测已证：竞彩篮球热门被高估（隐含65%强队真实仅中31%），模型无法跑赢市场，
         # 故只取共识最强侧作为最优选，不追模型反向 edge（那会主动选到更差的冷门）。
-        top_key = max(plays, key=lambda k: (plays[k].get("confidence") or 0))
+        # v1.7.119：胜分差六区间回测命中率仅约 5%，绝不作为主推（串关因此不再
+        # 把极难命中的长盘腿塞进推荐）；四个玩法预测仍完整展示供参考。
+        stable = {k: v for k, v in plays.items() if k != "wnm"} or plays
+        top_key = max(stable, key=lambda k: (stable[k].get("confidence") or 0))
         preds.append({
             "id": m.get("id"), "num": m.get("num"), "league": m.get("league"),
             "home": m.get("home"), "away": m.get("away"), "kickoff": m.get("kickoff"),
@@ -674,34 +678,92 @@ def seed_bk_accuracy(bk_records):
 # ----------------------------------------------------------------------------
 # 主流程
 # ----------------------------------------------------------------------------
+def _purge_stale_accuracy(bk_records):
+    """剔除停更期「拿 11-01 已结束比赛反复冒充当日预测」的重复回测样本。
+
+    判定：记录日期 >= 停更日，但该场比赛所属销售批次早于停更日。
+    幂等：seed_bk_accuracy 之后按真实批次日补回的样本不会被误删。
+    """
+    acc = _load(ACC_PATH, {"history": []})
+    h = acc.get("history") or []
+    keep, removed = [], 0
+    for x in h:
+        d = x.get("date") or ""
+        bd = (bk_records.get(x.get("id")) or {}).get("date") or ""
+        if d >= FAKE_FROM and bd and bd < FAKE_FROM:
+            removed += 1
+            continue
+        keep.append(x)
+    if removed:
+        acc["history"] = keep
+        acc["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        _save(ACC_PATH, acc)
+    return removed
+
+
 def main():
     bk = _load(BK_PATH, {"matches": []})
     hist = _load(BKH_PATH, {"records": {}})
     records = hist.get("records") or {}
-    matches = bk.get("matches") or []
+    all_matches = bk.get("matches") or []
+    purged = _purge_stale_accuracy(records)
+    now = datetime.now()
+    today = now.strftime("%Y-%m-%d")
+
+    # ---- 新鲜度门禁（v1.7.119）----
+    # 2026-11-02~11-05 篮球官方接口海外 567，流水线连续 4 天拿 11-01 的
+    # 5 场旧比赛反复生成「今日预测」和串关，页面上看着天天有推荐，其实全是
+    # 已经打完 3 天的比赛。门禁：数据批次必须新鲜、且只预测尚未开赛的比赛；
+    # 无有效比赛时保留上次 AI 文件、不再写新预测，也绝不往回溯库塞假样本。
+    data_date = bk.get("dataDate") or ""
+    data_fresh = (bool(data_date)
+                  and data_date >= (now - timedelta(days=1)).strftime("%Y-%m-%d"))
+    now_s = now.strftime("%Y-%m-%d %H:%M")
+
+    def _upcoming(m):
+        if m.get("score"):
+            return False
+        k = (m.get("kickoff") or "")[:16]
+        return bool(k) and k > now_s
+
+    matches = [m for m in all_matches if _upcoming(m)] if data_fresh else []
+
+    if not matches:
+        stats = compute_bk_stats(records)
+        stats["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
+        _save(STATS_PATH, stats)
+        seeded = seed_bk_accuracy(records)
+        settled = settle_bk_accuracy(records)
+        print("[篮球AI] 门禁生效：批次 %s（新鲜=%s）/ 在售未开赛 0 场，"
+              "保留上次预测，不生成假推荐 | 统计更新 | 清理假样本 %d 条 | 回溯播种 %d / 结算 %d"
+              % (data_date or "无", data_fresh, purged, seeded, settled))
+        return 0
 
     preds = gen_bk_prediction(matches, records)
     ai = {
-        "updatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "updatedAt": now.strftime("%Y-%m-%d %H:%M:%S"),
+        "dataDate": data_date,
+        "source": bk.get("source") or "",
+        "upcomingCount": len(matches),
         "note": SAMPLE_WARN,
         "predictions": preds,
     }
     _save(AI_PATH, ai)
 
     stats = compute_bk_stats(records)
-    stats["updatedAt"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    stats["updatedAt"] = now.strftime("%Y-%m-%d %H:%M:%S")
     _save(STATS_PATH, stats)
 
     # 预测回溯：记录当日预测 + 回测播种历史 + 用赛果档案结算（v1.7.46）
-    today = datetime.now().strftime("%Y-%m-%d")
     added = record_bk_accuracy(preds, today)
     seeded = seed_bk_accuracy(records)
     settled = settle_bk_accuracy(records)
 
-    print("[篮球AI] 预测 %d 场（四玩法）/ 历史统计基于 %d 条档案（%d 有赛果）"
-          % (len(preds), len(records), sum(1 for r in records.values() if r.get("score"))))
-    print("[篮球AI回溯] 当日新增 %d / 历史播种 %d / 结算 %d（累计 %d 条）"
-          % (added, seeded, settled,
+    print("[篮球AI] 预测 %d 场（四玩法，未开赛）/ 批次 %s / 源 %s | 统计基于 %d 条档案（%d 有赛果）"
+          % (len(preds), data_date, ai["source"], len(records),
+             sum(1 for r in records.values() if r.get("score"))))
+    print("[篮球AI回溯] 当日新增 %d / 清理假样本 %d / 历史播种 %d / 结算 %d（累计 %d 条）"
+          % (added, purged, seeded, settled,
              len((_load(ACC_PATH, {"history": []})).get("history") or [])))
     return 0
 

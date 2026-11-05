@@ -301,36 +301,30 @@ fi
 set -e
 
 # ---------- 步骤1.89：竞彩篮球（独立源，与足球数据/模型零耦合，v1.7.29）----------
-log "==> 步骤1.89 竞彩篮球 (fetch_basketball.py)"
-# 隔离设计：篮球抓取失败只跳过篮球（保留旧数据），绝不影响足球与部署；
-# 与足球共用 have_time 门槛，超预算同样跳过，保证部署步骤一定被执行。
+log "==> 步骤1.89 竞彩篮球 (fetch_basketball.py 双源 + 赛果回溯)"
+# 隔离设计：篮球抓取失败只跳过篮球（保留旧数据），绝不影响足球与部署。
+# v1.7.119：去掉 have_time 预算门槛，改为无条件执行。此前篮球常被预算跳过，
+# 叠加官方接口海外 567 且无备用源，直接造成 11-02~11-05 连续 4 天停更。
+# fetch_basketball.py 自带 500.com 备用源与近 6 批次赛果回溯，单轮约 5-8s，
+# 不会挤压部署时间；失败仍 exit 0 保留旧数据。
 set +e
-if have_time 90; then
-  "$PY" fetch_basketball.py
-else
-  log "!! 剩余时间不足，跳过篮球抓取（沿用上次数据），优先保证部署"
-fi
+"$PY" fetch_basketball.py --backfill-days 6
 set -e
 
 # ---------- 步骤1.90：篮球预测/串关/统计（v1.7.44，独立源零耦合）----------
 # 隔离设计同 1.89：篮球 AI 失败只跳过篮球预测，绝不影响足球与部署。
-# fetch_basketball_ai.py 产出 basketball_ai.json（四玩法预测）+ basketball_stats.json
-# （联赛历史统计）；fetch_basketball_parlay.py 产出 basketball_parlay_history.json（串关）。
 # 三者均依赖 1.89 的 basketball.json / basketball_history.json，故放在其后。
+# v1.7.119：同样去掉预算门槛，保证赛果回填后立刻结算串关与回溯命中率。
 set +e
-if have_time 90; then
-  log "==> 步骤1.90a 篮球预测与统计 (fetch_basketball_ai.py)"
-  "$PY" fetch_basketball_ai.py
-  if [ $? -ne 0 ]; then
-    log "!! 篮球预测/统计生成失败，沿用上次（不影响足球与部署）"
-  fi
-  log "==> 步骤1.90b 篮球串关 (fetch_basketball_parlay.py)"
-  "$PY" fetch_basketball_parlay.py
-  if [ $? -ne 0 ]; then
-    log "!! 篮球串关生成失败，沿用上次（不影响足球与部署）"
-  fi
-else
-  log "!! 剩余时间不足，跳过篮球预测/串关/统计（沿用上次数据），优先保证部署"
+log "==> 步骤1.90a 篮球预测与统计 (fetch_basketball_ai.py)"
+"$PY" fetch_basketball_ai.py
+if [ $? -ne 0 ]; then
+  log "!! 篮球预测/统计生成失败，沿用上次（不影响足球与部署）"
+fi
+log "==> 步骤1.90b 篮球串关 (fetch_basketball_parlay.py)"
+"$PY" fetch_basketball_parlay.py
+if [ $? -ne 0 ]; then
+  log "!! 篮球串关生成失败，沿用上次（不影响足球与部署）"
 fi
 set -e
 
@@ -353,17 +347,17 @@ if [ "$BUILD_RC" -ne 0 ]; then
 fi
 
 # ---------- 步骤2.5：关键数据「陈旧豁免重抓」——每日新鲜的最后保险 ----------
-# 成因：步骤1.85/1.89 的 have_time 预算门槛可能在总预算吃紧时跳过篮球/比分预测，
-# 导致这两类数据偶尔陈旧（v1.7.44~v1.7.45 反复出现 17h/98h 停更）。部署是受保护的
-# 必跑步骤，故在部署前做一次「陈旧检测」：若 >18h 未更新则无视预算强制重抓，确保
-# 即将发出的部署一定带最新数据；重抓失败沿用旧数据，绝不阻断部署。
+# 成因：早期步骤 1.85/1.89 的 have_time 预算门槛可能在总预算吃紧时跳过篮球/比分预测，
+# 导致这两类数据偶尔陈旧（v1.7.44~v1.7.45 反复出现 17h/98h 停更）。
+# v1.7.119 起篮球两步已改为无条件执行，这里保留「>18h 陈旧」兜底，
+# 应对极端场景（进程被杀、网络全断后恢复）。部署是受保护的必跑步骤。
 _py_age() { "$PY" -c "import time,os,sys; p=sys.argv[1]; print(int(time.time()-os.path.getmtime(p)) if os.path.exists(p) else 999999)" "$1"; }
 _refreshed=0
 if [ -f basketball.json ]; then
   _age=$(_py_age basketball.json)
   if [ "$_age" -gt 64800 ]; then
     log "   ⚠️ 竞彩篮球已陈旧（$((_age/3600))h），触发预算豁免强制重抓"
-    if "$PY" fetch_basketball.py 2>/dev/null; then
+    if "$PY" fetch_basketball.py --backfill-days 6 2>/dev/null; then
       log "   ✅ 竞彩篮球已刷新"
       "$PY" fetch_basketball_ai.py 2>/dev/null && "$PY" fetch_basketball_parlay.py 2>/dev/null
       _refreshed=1

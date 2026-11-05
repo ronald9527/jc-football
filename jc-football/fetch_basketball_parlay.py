@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""篮球串关（v1.7.44 新增，独立源，与足球零耦合）。
+"""篮球串关（v1.7.44 新增，v1.7.119 质量重构，独立源，与足球零耦合）。
 
-候选池 = 当日 basketball_ai.json 预测（每场 topPlay 玩法方向，单场单意见）
-三档   = 稳健2串 / 均衡3串 / 精锐4串（参数对标 v1.7.43 足球，so_floor 60/精锐65）
-落盘   = basketball_parlay_history.json（结构对标 parlay_history.json，含 realEv/engineVer/snapshot）
+候选池 = 当日 basketball_ai.json 预测中「尚未开赛」的比赛（单场单意见）
+三档   = 稳健2串 / 均衡3串 / 精锐4串
+落盘   = basketball_parlay_history.json（结构对标 parlay_history.json）
 结算   = check 已开赛 pending，回填 legHit/result（补 wnmResult 胜分差区间判定）
+
+v1.7.119 修复（篮球停更期假推荐 + 门槛过硬天天没推荐）
+  - 门禁：数据批次不新鲜 / 无未开赛比赛时，绝不生成新批次，也不覆盖旧推荐
+  - 清洗：移除 2026-11-02~11-05 停更期用 11-01 已结束比赛生成的 5 组假记录
+  - 校准：用 basketball_ai_accuracy.json 的实证命中率（按玩法+信心分桶、贝叶斯收缩）
+          替代「拍脑袋的市场共识」，组合按实证 EV 择优
+  - 软惩罚：同指命中率低不再一刀切剔除，改为评分扣分；信心门槛从 58 放宽到 50
+  - 不蚊子肉：单腿赔率 ≥1.55；排除胜分差六区间（回测命中率仅约 5%）
 """
 
 import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import combinations
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -20,21 +28,21 @@ AI_PATH = os.path.join(HERE, "basketball_ai.json")
 BK_PATH = os.path.join(HERE, "basketball.json")
 BKH_PATH = os.path.join(HERE, "basketball_history.json")
 PARLAY_PATH = os.path.join(HERE, "basketball_parlay_history.json")
+ACC_PATH = os.path.join(HERE, "basketball_ai_accuracy.json")
 
 PAYBACK = 0.886
 ALPHA_SHRINK = 0.60
-ENGINE_VERSION = "v1.7.44"
+ENGINE_VERSION = "v1.7.119"
+FAKE_FROM = "2026-11-02"      # 篮球官方接口海外 567 停更起始日
 
-# 篮球串关参数（适配篮球赔率尺度：赔率天然比足球低、信心体系简化、同指率样本薄）。
-# so_floor=0：样本薄时同指统计不可信，不在 build_tier 硬剔除，改由 canon 软惩罚处理。
-# (key, 档名, ns, min_odds, min_total, max_total, min_conf, min_joint, min_ev, mode, max_leg, so_floor)
-# 注：篮球 AI 模型偏弱（历史平均信心约 56%、最高仅 60.8%），同指命中率已知的腿多 ≤20%，
-# 任意串关组合长期必亏。故门槛偏保守：信心≥58、软腿(同指<58且样本足)剔除、
-# 联合命中率门槛抬高，只在相对最好的组合上留痕，绝不暗示可跟单盈利。
+# (key, 档名, 腿数, 单腿下限, 总赔下限, 总赔上限, 最低信心,
+#  最低联合实证概率, 最低实证EV, mode, 单腿上限, 同指软惩罚线)
+# 说明：不再设「同指硬门槛」（样本薄时它把候选全砍光，导致三档天天留空）；
+# 单腿下限 1.55 挡掉 1.29 一类蚊子肉，上限 2.8 挡掉冷门长盘。
 TIERS_BK = [
-    ("bk2", "稳健2串1", 2, 1.10, 1.60, 3.50, 58.0, 0.22, -0.05, "hit", 4.0, 58),
-    ("bk3", "均衡3串1", 3, 1.20, 3.00, 9.00, 58.0, 0.12, -0.10, "ev", 4.0, 58),
-    ("bk4", "精锐4串1", 4, 1.20, 4.50, 18.0, 58.0, 0.09, -0.08, "hit", 3.2, 58),
+    ("bk2", "稳健2串1", 2, 1.55, 2.40, 4.60, 50.0, 0.16, -0.30, "ev", 2.80, 50),
+    ("bk3", "均衡3串1", 3, 1.55, 3.80, 9.00, 50.0, 0.08, -0.38, "ev", 2.80, 50),
+    ("bk4", "精锐4串1", 4, 1.55, 6.00, 18.0, 50.0, 0.04, -0.45, "ev", 2.80, 50),
 ]
 
 PLAY_NAME = {"mnl": "胜负", "hdc": "让分胜负", "hilo": "大小分", "wnm": "胜分差"}
@@ -64,6 +72,7 @@ def _f(x):
 
 
 def _leg_prob(o, pt=None):
+    """市场共识口径（仅在实证样本不足时兜底）。"""
     if not o or o <= 1:
         return None
     p_market = PAYBACK / o
@@ -73,6 +82,60 @@ def _leg_prob(o, pt=None):
     else:
         p = p_market
     return min(max(p, 0.01), 0.95)
+
+
+def load_empirical():
+    """从篮球 AI 回溯库统计实证命中率。
+
+    按 (玩法, 信心5分桶) 与 (玩法, 全部) 两档统计，样本不足时逐级回退，
+    再用市场隐含概率作先验做贝叶斯收缩，避免小样本虚高/虚低。
+    """
+    acc = _load(ACC_PATH, {"history": []})
+    buckets, overall, total = {}, {}, [0, 0]
+    for h in acc.get("history") or []:
+        for pk, pl in (h.get("plays") or {}).items():
+            hit = pl.get("hit")
+            if hit is None:
+                continue
+            conf = _f(pl.get("conf")) or 55.0
+            b = int(conf // 5) * 5
+            v = 1 if hit is True else 0
+            for store, key in ((buckets, (pk, b)), (overall, pk)):
+                s = store.setdefault(key, [0, 0])
+                s[0] += v
+                s[1] += 1
+            total[0] += v
+            total[1] += 1
+    return {"buckets": buckets, "overall": overall, "total": total}
+
+
+def _emp_prob(c, emp):
+    """单腿实证命中概率：分桶 → 玩法整体 → 市场共识，逐级贝叶斯收缩。"""
+    o = _f(c.get("odds"))
+    market = (PAYBACK / o) if o > 1 else 0.50
+    pk = c.get("playKey") or c.get("play")
+    conf = _f(c.get("confidence")) or 55.0
+    b = int(conf // 5) * 5
+    stats = None
+    for key in ((pk, b), (pk, b - 5), (pk, b + 5)):
+        s = emp["buckets"].get(key)
+        if s and s[1] >= 6:
+            stats = s
+            break
+    if stats is None:
+        s = emp["overall"].get(pk)
+        if s and s[1] >= 8:
+            stats = s
+    if stats is None:
+        s = emp["total"]
+        if s[1] >= 20:
+            stats = s
+    if stats is None:
+        return _leg_prob(o, c.get("pTrue")) or 0.50
+    hits, n = stats
+    k = 10.0                       # 先验强度：小样本不敢偏离市场太多
+    p = (hits + market * k) / (n + k)
+    return min(max(p, 0.05), 0.92)
 
 
 def _kickoff_dt(s):
@@ -107,15 +170,30 @@ def _leg_play_desc(play_key, goal_line):
 
 
 # ----------------------------------------------------------------------------
-def gen_bk_candidates(preds, matches_map):
-    """每场取 topPlay 玩法方向作为该场唯一候选（单场单意见）。"""
+def gen_bk_candidates(preds, matches_map, now=None):
+    """每场取 topPlay 玩法方向作为该场唯一候选（单场单意见）。
+
+    v1.7.119 三重过滤：
+      - 已结束/已开赛的比赛绝不进候选（停更期拿旧比赛造假推荐的直接根因）
+      - 胜分差六区间不进串关（回测命中率约 5%，与「高质量」目标相悖）
+      - 赔率过低（蚊子肉）或过高（冷门长盘）的腿不进候选
+    """
+    now = now or datetime.now()
+    now_s = now.strftime("%Y-%m-%d %H:%M")
     cands = []
     for p in preds:
         tp = p.get("topPlay")
         pl = (p.get("plays") or {}).get(tp)
-        if not pl:
+        if not pl or tp == "wnm":
             continue
         m = matches_map.get(p.get("id")) or {}
+        if m.get("score") or not p.get("kickoff"):
+            continue
+        if (p.get("kickoff") or "")[:16] <= now_s:
+            continue
+        odds = _f(pl.get("odds"))
+        if odds < 1.55 or odds > 2.80:
+            continue
         goal = m.get(tp, {}).get("goalLine") if isinstance(m.get(tp), dict) else None
         cands.append({
             "id": p.get("id"), "num": p.get("num"), "league": p.get("league"),
@@ -131,93 +209,88 @@ def gen_bk_candidates(preds, matches_map):
     return cands
 
 
-def _combo_hit(combo):
-    """同指仅 ≥65 采信地面值，否则回退市场共识口径。"""
+def _combo_emp(combo, emp):
+    """组合联合实证命中率（各腿实证概率相乘）。"""
     ch = 1.0
     for c in combo:
-        so, n_ = c.get("sameOddsHit"), c.get("sameOddsN") or 0
-        leg_p = (so / 100.0) if (so is not None and n_ >= 10 and so >= 65) else _leg_prob(c["odds"], c.get("pTrue"))
-        ch *= leg_p if leg_p else 0.01
+        ch *= _emp_prob(c, emp)
     return ch
 
 
-def _build_tier(tier, candidates):
+def _build_tier(tier, candidates, emp):
+    """按「实证 EV 择优」挑组合，同指低改为软扣分而非一刀切剔除。"""
     (key, name, ns, min_odds, min_total, max_total, min_conf,
      min_joint, min_ev, mode, max_leg, so_floor) = tier
-    best_pass, best_fb = None, None
+    best = None
     for combo in combinations(candidates, ns):
         total_odds = 1.0
-        joint_p = 1.0
         ok = True
         for c in combo:
-            o = c["odds"]
-            total_odds *= o
-            lp = _leg_prob(o, c.get("pTrue"))
-            if lp:
-                joint_p *= lp
-            # 单腿约束
+            o = _f(c.get("odds"))
+            total_odds *= o if o > 1 else 1.0
             if o < min_odds or o > max_leg:
                 ok = False
                 break
-            if (c.get("confidence") or 0) < min_conf:
+            if (_f(c.get("confidence")) or 0) < min_conf:
                 ok = False
                 break
         if not ok:
             continue
         if total_odds < min_total or total_odds > max_total:
             continue
-        if joint_p < min_joint:
+        combo_hit = _combo_emp(combo, emp)
+        if combo_hit < min_joint:
             continue
-        # 同指硬门槛（软腿剔除，全档零容忍）
+        real_ev = combo_hit * total_odds - 1.0
+        if real_ev < min_ev:
+            continue
+        # 同指命中率低 → 评分扣分（样本薄时不再让整档留空）
         soft = sum(1 for c in combo
                    if c.get("sameOddsHit") is not None
                    and (c.get("sameOddsN") or 0) >= 10
                    and c.get("sameOddsHit") < so_floor)
-        if soft > 0:
-            continue
-        combo_hit = _combo_hit(combo)
-        real_ev = combo_hit * total_odds - 1.0
-        ev = joint_p * total_odds - 1.0
-        score = combo_hit * 100 + 0.01 * real_ev
+        score = combo_hit * 100 + real_ev * 12 - soft * 2.5
         tier_obj = {
             "type": name, "tier": key, "tierDesc": name,
             "legs": [dict(c) for c in combo],
             "totalOdds": round(total_odds, 2),
-            "avgConfidence": round(sum(c["confidence"] for c in combo) / ns, 1),
-            "jointProb": round(joint_p, 4),
+            "avgConfidence": round(sum(_f(c["confidence"]) for c in combo) / ns, 1),
+            "jointProb": round(combo_hit, 4),
             "realHit": round(combo_hit, 4),
-            "ev": round(ev, 4),
+            "ev": round(combo_hit * total_odds - 1.0, 4),
             "realEv": round(real_ev, 4),
-            "recommended": real_ev >= -0.02,
+            "empirical": True,
+            "recommended": real_ev >= 0,
             "score": round(score, 3),
         }
-        if real_ev >= min_ev:
-            if best_pass is None or score > best_pass["score"]:
-                best_pass = tier_obj
-        if best_fb is None or score > best_fb["score"]:
-            best_fb = tier_obj
-    return best_pass or best_fb
+        if best is None or score > best["score"]:
+            best = tier_obj
+    return best
 
 
-def gen_bk_parlay(preds, matches_map):
+def gen_bk_parlay(preds, matches_map, emp=None, meta=None):
+    emp = emp if emp is not None else load_empirical()
     candidates = gen_bk_candidates(preds, matches_map)
     safe = {
         "generatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
         "candidatePool": candidates,
+        "dataDate": (meta or {}).get("dataDate", ""),
+        "upcomingCount": (meta or {}).get("upcomingCount", 0),
+        "empiricalSamples": emp["total"][1],
         "bk2": None, "bk3": None, "bk4": None,
         "strategy": (
-            "篮球分层串关三档（竞彩篮球混合过关：胜负/让分胜负/大小分/胜分差，"
-            "每场只选一种玩法，符合竞彩规则）：单场单意见（v1.7.44）——每场比赛先用统一评分"
-            "（信心度主导，同指命中率仅≥65%才在评分中加成，45-60区间反向软惩罚）选出唯一玩法方向，"
-            "三档只在该候选池内组合；样本薄（仅数十场历史赛果），同指统计仅供参考，"
-            "不硬过滤，预测以市场共识+alpha收缩为主；各档拒绝极端赔率（单腿≤4.0，精锐≤3.2）。"
-            "注意：EV 为负的档位长期必亏，凑不齐的档位留空不硬凑"
+            "篮球分层串关（v1.7.119）：只取当日尚未开赛的比赛，每场只选一种玩法方向"
+            "（符合竞彩混合过关同场不可串规则）；胜分差六区间回测命中率仅约 5%，"
+            "不再进入串关。命中概率由 basketball_ai_accuracy.json 的实证命中率按"
+            "「玩法+信心分桶」统计并贝叶斯收缩校准，组合按实证 EV 择优；"
+            "同指命中率低改为评分软扣分而非硬剔除，避免三档天天留空。"
+            "单腿赔率 1.55~2.80（挡掉蚊子肉与冷门长盘）。"
+            "凑不齐真实比赛时该档留空，绝不拿已结束的比赛硬凑。"
         ),
     }
     for tier in TIERS_BK:
-        key = tier[0]
-        safe[key] = _build_tier(tier, candidates)
+        safe[tier[0]] = _build_tier(tier, candidates, emp)
     return safe
 
 
@@ -407,21 +480,66 @@ def check_basketball_parlay():
 
 
 # ----------------------------------------------------------------------------
+def _purge_fake(hist):
+    """清理 2026-11-02 起篮球停更期用 11-01 已结束比赛生成的假批次。
+
+    那 4 天官方接口海外 567，basketball.json 冻结在 11-01，流水线每天照常
+    「生成今日推荐」，实际推的是 3 天前打完的比赛。这些记录既不是真实推荐，
+    结算后还会污染命中率，必须移除。幂等：只在首次执行时生效。
+    """
+    records = hist.get("records") or []
+    keep = [r for r in records if (r.get("date") or "") < FAKE_FROM]
+    removed = len(records) - len(keep)
+    if removed:
+        hist["records"] = keep
+        _recalc(hist, keep)
+        _save(PARLAY_PATH, hist)
+    return removed
+
+
 def main():
     ai = _load(AI_PATH, {"predictions": []})
-    preds = ai.get("predictions") or []
     bk = _load(BK_PATH, {"matches": []})
+    hist0 = _load(PARLAY_PATH, {"records": []})
+    removed = _purge_fake(hist0)
+
+    now = datetime.now()
+    now_s = now.strftime("%Y-%m-%d %H:%M")
+    today = now.strftime("%Y-%m-%d")
+    data_date = bk.get("dataDate") or ""
+    fresh = (bool(data_date)
+             and data_date >= (now - timedelta(days=1)).strftime("%Y-%m-%d"))
+    preds = [p for p in (ai.get("predictions") or [])
+             if (p.get("kickoff") or "")[:16] > now_s]
     matches_map = {m.get("id"): m for m in (bk.get("matches") or [])}
 
-    safe = gen_bk_parlay(preds, matches_map)
-    today = (safe["generatedAt"])[:10]
+    # 门禁：数据陈旧 / 无未开赛比赛 / 候选为空 → 不生成新批次，也不覆盖旧推荐
+    emp = load_empirical()
+    safe = None
+    if fresh and preds:
+        safe = gen_bk_parlay(preds, matches_map, emp,
+                            {"dataDate": data_date, "upcomingCount": len(preds)})
+        if safe["candidateCount"] == 0:
+            safe = None
+    if safe is None:
+        checked = check_basketball_parlay()
+        hist = _load(PARLAY_PATH, {"records": []})
+        print("[篮球串关] 门禁生效：批次 %s（新鲜=%s）/ 未开赛预测 %d 场 / "
+              "清理假批次 %d 组 / 结算 %d 组，本轮不新增推荐 | 历史 %d 组(中%d/错%d/待%d)"
+              % (data_date or "无", fresh, len(preds), removed, checked,
+                 hist.get("total", 0), hist.get("hit", 0), hist.get("miss", 0),
+                 hist.get("pending", 0)))
+        return 0
+
     hist = save_parlay_history(safe, today)
     checked = check_basketball_parlay()
 
-    print("[篮球串关] 候选 %d 场 | 三档: %s | 历史 %d 组(中%d/错%d/待%d) | 结算 %d 组"
+    print("[篮球串关] 候选 %d 场 | 三档: %s | 实证样本 %d 条 | 清理假批次 %d 组 | "
+          "历史 %d 组(中%d/错%d/待%d) | 结算 %d 组"
           % (safe["candidateCount"],
              "/".join("%s%s" % (k, "✓" if safe[k] else "空")
                       for k in ("bk2", "bk3", "bk4")),
+             emp["total"][1], removed,
              hist["total"], hist["hit"], hist["miss"], hist["pending"], checked))
     return 0
 

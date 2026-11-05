@@ -1765,8 +1765,21 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.118";
+const VERSION = "v1.7.119";
 const CHANGELOG = [
+  {
+    version: "v1.7.119",
+    date: "2026-11-06",
+    title: "篮球停更根治 + 篮球串关质量重构（一次性做完）",
+    details: [
+      "篮球停更根因：竞彩官方篮球接口在 GitHub Actions 海外 IP 长期 HTTP 567（本地中国网络 HTTP 200），而足球早有 500.com 备用源、篮球却没有。结果 basketball.json 冻结在 11-01，连续 4 天 AI 预测和串关都拿 11-01 那 5 场已结束比赛反复生成「今日推荐」——页面天天有内容，实则全是假数据",
+      "新增 fetch_basketball_500.py 备用源：按销售批次日抓 500 竞彩篮球页，取赛程/让分线/总分线/让分胜负赔率/胜分差 12 档赔率/赛果比分；胜分差隐含概率反推胜负赔率。官方接口失败或过期时无条件接管，海外也能每日更新",
+      "赛果回溯：一次补齐 11-01~11-05 共 16 场缺失赛果（档案 54 条/49 赛果 → 71 条/65 赛果）。比分主客方向用官方档案 10-31 火箭 98:119 雷霆逐场校准，让分/大小分结果同步重算",
+      "新鲜度门禁：AI 与串关只处理「批次新鲜 + 尚未开赛」的比赛；无有效比赛时保留上一批、不覆盖、不写回溯样本。清理停更期 15 条假预测样本与 5 组假串关记录，命中率不再被污染",
+      "篮球串关重构：命中概率改用 AI 回溯库实证命中率（按玩法+信心分桶、贝叶斯收缩）而非拍脑袋市场共识；同指命中率低由硬门槛改软扣分，避免三档天天留空；单腿赔率 1.55~2.80 挡掉 1.29 一类蚊子肉与冷门长盘；胜分差六区间（回测命中率约 5%）不再进串关；组合按实证 EV 择优",
+      "前端如实标注销售批次、数据源（500 备用源赔率为参考值）、在售未开赛场数；凑不齐 3/4 场的档位明确留空说明，不硬凑"
+    ]
+  },
   {
     version: "v1.7.118",
     date: "2026-11-06",
@@ -6508,7 +6521,11 @@ function renderBasketball(){
   if(meta){
     const parts = [];
     if(bk.updatedAt) parts.push(`赛程赔率更新 ${bk.updatedAt}`);
+    if(bk.dataDate) parts.push(`销售批次 ${bk.dataDate}`);
+    if(bk.upcomingCount != null) parts.push(`在售未开赛 ${bk.upcomingCount} 场`);
+    if(bk.source) parts.push(`数据源 ${bk.source}${String(bk.source).indexOf("500") >= 0 ? "（500备用源：胜负/大小分赔率为市场共识参考值，让分与胜分差为真实盘口）" : ""}`);
     if(state.basketballHist && state.basketballHist.updatedAt) parts.push(`赛果档案更新 ${state.basketballHist.updatedAt}`);
+    if(bk.stale) parts.push(`⚠️ 数据批次陈旧，请点顶部「刷新数据」`);
     parts.push("每 30 分钟自动更新");
     meta.innerHTML = parts.map(p => `<span>🕐 ${p}</span>`).join("");
   }
@@ -6571,8 +6588,11 @@ function renderBkSched(all){
   const shown = state.bkDate === "all" ? all : all.filter(m => bkDateOf(m) === state.bkDate);
 
   if(sumBox){
-    sumBox.innerHTML = `未开赛/待回填 <b>${shown.length}</b> 场（已完赛的请到「赛后回看」查看）`
-      + ` · 四种玩法：胜负 / 让分胜负 / 大小分 / 胜分差`;
+    const _d = new Date(), _p = n => String(n).padStart(2, "0");
+    const _now = `${_d.getFullYear()}-${_p(_d.getMonth()+1)}-${_p(_d.getDate())} ${_p(_d.getHours())}:${_p(_d.getMinutes())}`;
+    const _up = shown.filter(m => (m.kickoff || "").slice(0, 16) > _now).length;
+    sumBox.innerHTML = `未开赛 <b>${_up}</b> 场 · 已开赛待出赛果 <b>${shown.length - _up}</b> 场`
+      + `（已完赛的请到「赛后回看」查看） · 四种玩法：胜负 / 让分胜负 / 大小分 / 胜分差`;
   }
   let html = "";
   shown.forEach(m => { html += bkCardHtml(m); });
@@ -6632,6 +6652,12 @@ function bkCardHtml(m){
   const done = !!m.score;
   const hdc = m.hdc || {}, hilo = m.hilo || {}, mnl = m.mnl || {}, wnm = m.wnm || {};
   const kickBJ = (m.kickoff || "").slice(5, 16);
+  // v1.7.119：500 备用源按批次返回整批比赛，其中「已开赛但官方还没出赛果」的
+  // 场次此前一律显示「未开赛」，会让人误以为还能投注。按开赛时间如实区分。
+  const _d = new Date(), _p = n => String(n).padStart(2, "0");
+  const _now = `${_d.getFullYear()}-${_p(_d.getMonth()+1)}-${_p(_d.getDate())} ${_p(_d.getHours())}:${_p(_d.getMinutes())}`;
+  const started = !!(m.kickoff || "").slice(0, 16)
+    && (m.kickoff || "").slice(0, 16) <= _now;
   let html = `<div class="bk-card">`
     + `<div class="bk-card-head">`
     + `<span class="bk-num">${m.num || ""}</span>`
@@ -6640,7 +6666,9 @@ function bkCardHtml(m){
     + `<span class="bk-teams">${bkTeamHtml(m.home, m.away)}</span>`
     + (done
         ? `<span class="bk-status st-done">已完赛</span><span class="bk-score">${m.score[0]} : ${m.score[1]}</span>`
-        : `<span class="bk-status st-pre">未开赛</span>`)
+        : (started
+            ? `<span class="bk-status" style="color:var(--warn)">已开赛·待出赛果</span>`
+            : `<span class="bk-status st-pre">未开赛</span>`))
     + `</div>`;
   html += `<div class="bk-odds">`
     + bkOdCell("胜负", "", mnl.h, mnl.a, done ? (m.score[0] > m.score[1] ? "h" : "a") : null)
@@ -6756,10 +6784,13 @@ function renderBkAi(){
   const ai = state.basketballAi || {};
   const preds = ai.predictions || [];
   if(sumBox){
-    sumBox.innerHTML = `共 <b>${preds.length}</b> 场在售比赛已产出四玩法预测`
+    sumBox.innerHTML = `共 <b>${preds.length}</b> 场在售未开赛比赛已产出四玩法预测`
+      + (ai.dataDate ? ` · 批次 ${ai.dataDate}` : "")
+      + (ai.source ? ` · 源 ${ai.source}` : "")
+      + ` · <span style="color:var(--accent)">已开赛/已结束的比赛不再生成预测</span>`
       + (ai.note ? ` · <span style="color:var(--warn)">${ai.note}</span>` : "");
   }
-  if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球预测数据（每 30 分钟自动更新）</div>`; return; }
+  if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">当前无在售未开赛比赛，保留上一批预测（不拿已结束的比赛凑数）<br>新批次开售后每 30 分钟自动生成</div>`; return; }
   listBox.innerHTML = preds.map(p => bkAiCardHtml(p)).join("");
 }
 
@@ -6896,12 +6927,15 @@ function renderBkParlay(){
   const recs = pl.records || [];
   if(sumBox){
     const _hr = pl.hitRate != null ? pl.hitRate : 0;
-    const _warn = _hr < 30
-      ? `<span style="color:var(--bad);font-weight:700">⚠️ 弱模型预警</span>`
-      : `<span style="color:var(--warn)">注意</span>`;
-    sumBox.innerHTML = `${_warn}：篮球 AI 预测模型偏弱（历史平均信心约 56%，最高仅 60.8%），`
-      + `串关历史命中率仅 <b style="color:var(--bad)">${_hr}%</b>（近7日 ${pl.recent7Rate != null ? pl.recent7Rate : 0}%），数学上长期必亏。`
-      + `以下为<b>实验性参考</b>，三档（稳健2串/均衡3串/精锐4串）每日 AI 自动生成，<b>绝非跟单建议</b>，请勿据此下注。`;
+    const _bk = state.basketball || {};
+    const _up = _bk.upcomingCount != null ? _bk.upcomingCount : "-";
+    sumBox.innerHTML = `实证校准：命中概率取自 AI 回溯库按「玩法+信心分桶」统计并贝叶斯收缩，`
+      + `组合按实证 EV 择优，同指命中率低改为软扣分（不再把三档全砍空）。`
+      + `历史命中率 <b>${_hr}%</b>（近7日 ${pl.recent7Rate != null ? pl.recent7Rate : 0}%），请自行核对。`
+      + `当前批次 ${_bk.dataDate || "-"} 在售未开赛 <b>${_up}</b> 场，`
+      + `2串/3串/4串分别需 2/3/4 场，凑不齐的档位留空不硬凑；`
+      + `单腿赔率 1.55~2.80（挡蚊子肉与冷门长盘），胜分差六区间不进串关。`
+      + `<span style="color:var(--warn)">串关风险高，仅为参考，非跟单建议。</span>`;
   }
   if(!recs.length){ if(dateBar) dateBar.innerHTML = ""; listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球串关记录（每日 09:00 后由 AI 生成）</div>`; return; }
 

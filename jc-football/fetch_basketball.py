@@ -1,29 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""竞彩篮球数据抓取（v1.7.29 新增「竞彩篮球」Tab）。
+"""竞彩篮球数据抓取（v1.7.119 双源根治停更）。
 
 数据源与足球完全隔离——只写 basketball.json / basketball_history.json，
 绝不触碰足球的 matches.json / history.json / rules_config.json。
 
-数据源（竞彩官方 webapi，与足球同网关、basketball 路径）：
-  - 赛程+赔率：basketball/getMatchCalculatorV1.qry（在售比赛，含四种玩法赔率）
-  - 赛果回填：basketball/getFixedBonusV1.qry?matchId=（开奖后 matchResult.poolStatus
-    = "Payout"，sectionsNo999 形如 "93:116" = 主队:客队比分）
+双源设计（v1.7.119）
+--------------------
+  A. 官方 webapi.sporttery.cn/gateway/uniform/basketball/getMatchCalculatorV1.qry
+     在售赛程 + 四玩法精确 SP 赔率。本地（中国网络）HTTP 200，
+     但 GitHub Actions 海外 IP 长期 HTTP 567 —— 这正是篮球从 2026-11-02
+     停更 4 天、AI 与串关反复拿 11-01 旧比赛造假推荐的根因。
+  B. 500.com 备用源 fetch_basketball_500.py（trade.500.com/jclq/?date=）
+     海外实测 HTTP 200，按销售批次日返回整批赛程 + 让分/大小分盘口 +
+     胜分差 12 档赔率 + 已结束场次比分。官方不通/过期时无条件接管，
+     保证每天都有真实当日赛程与可回溯赛果。
 
-玩法（与足球的胜平负/让球/总进球/半全场不同，篮球是四玩法）：
+合并规则：500 全量赛程打底，官方在售 3~N 场的精确赔率按 (批次日,编号) 覆盖；
+官方独有的字段标 _oddsApprox=[]，其余标 500.com 参考赔率。
+
+玩法（篮球四玩法）
   - mnl  胜负        {h: 主胜赔, a: 客胜赔}
-  - hdc  让分胜负    {goalLine: 让分(代数值, 主队加), h: 让分主胜赔, a: 让分客胜赔}
+  - hdc  让分胜负    {goalLine: 让分(代数值, 主队加), h, a}
   - hilo 大小分      {goalLine: 总分线, h: 大分赔, l: 小分赔}
-  - wnm  胜分差      {l1..l6: 各胜分区间赔率（1-5/6-10/11-15/16-20/21-25/26+ 分）}
+  - wnm  胜分差      {l1..l6, w1..w6: 各胜分区间赔率}
 
 编号空间：篮球从 301 起（周二301…），与足球 001 起并行，互不冲突。
 
-设计原则（对齐足球独立源接入模式，参考 fetch_scores.py / fetch_football_data.py）：
-  - 抓取失败时保留旧数据并 exit 0，不拖垮 run_daily.sh 主流程（足球不受影响）
-  - WAF 重试直接复用 fetch_daily.fetch()（同一网关、同一套反爬特征）
-  - 单轮回填设上限，保护定时任务 600s 总预算
+设计原则
+  - 抓取失败时保留旧数据并 exit 0，不拖垮 run_daily.sh 主流程
+  - 官方空响应（0 场但不抛异常）不再抹空在售赛程
+  - 赛果回填以 500 页面比分为主（已用官方档案 10-31 火箭98:119雷霆校准为主:客），
+    官方开奖接口作补充；单轮回填设上限保护定时任务预算
 """
 
+import argparse
 import json
 import os
 import re
@@ -33,20 +44,31 @@ from datetime import datetime, timedelta
 
 try:
     from fetch_daily import fetch          # 复用足球同款 WAF 重试（同网关）
-except Exception:                          # 独立运行兜底（理论上不会发生）
+except Exception:                          # 独立运行兜底
     fetch = None
+
+try:
+    from fetch_basketball_500 import fetch_recent as fetch_500_recent
+except Exception:
+    fetch_500_recent = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CALC_URL = ("https://webapi.sporttery.cn/gateway/uniform/basketball/"
             "getMatchCalculatorV1.qry?channel=c&clientCode=3001")
 BONUS_URL = ("https://webapi.sporttery.cn/gateway/uniform/basketball/"
              "getFixedBonusV1.qry")
-BK_PATH = os.path.join(HERE, "basketball.json")           # 当日+近期赛程赔率
-BKH_PATH = os.path.join(HERE, "basketball_history.json")  # 赛后累积（含赛果）
+BK_PATH = os.path.join(HERE, "basketball.json")
+BKH_PATH = os.path.join(HERE, "basketball_history.json")
 
-KEEP_DAYS = 7            # basketball.json 保留天数（控制注入页面体积）
-BACKFILL_DELAY_H = 2.5   # 开赛多久后才查赛果（等官方开奖）
-MAX_BACKFILL = 30        # 单轮赛果回填上限（保护时间预算）
+KEEP_DAYS = 8            # 赛程/档案保留天数
+BACKFILL_DELAY_H = 2.0   # 开赛多久后才查赛果
+MAX_BONUS = 12           # 官方开奖接口单轮最多查询次数（WAF 概率拦截，别浪费预算）
+QUIET = False
+
+
+def log(msg):
+    if not QUIET:
+        print(msg, flush=True)
 
 
 def _load(path, default):
@@ -70,15 +92,20 @@ def _odds(raw):
         return None
     out = {}
     for k, v in raw.items():
-        if k in ("h", "a", "l") or re.fullmatch(r"l\d+", k):
-            out[k] = v
+        if k in ("h", "a", "l") or re.fullmatch(r"[lw]\d+", k):
+            # 统一成 float：500 备用源给数值、官方给字符串，混用类型会让
+            # 前端 toFixed / 数值比较出错
+            try:
+                out[k] = float(v)
+            except (TypeError, ValueError):
+                out[k] = v
         elif k == "goalLine":
             out[k] = v
     return out or None
 
 
 def fetch_calc():
-    """抓在售赛程+四玩法赔率 → matches 列表（结构与足球 matches.json 对齐的轻量版）。"""
+    """抓官方在售赛程+四玩法精确赔率。"""
     if fetch is None:
         raise RuntimeError("fetch_daily.fetch 不可用")
     fb = fetch(CALC_URL, must_contain="matchInfoList")
@@ -111,13 +138,15 @@ def fetch_calc():
                 "hilo": _odds(m.get("hilo")),
                 "wnm": _odds(m.get("wnm")),
                 "hasOdds": bool(m.get("mnl") or m.get("hdc") or m.get("hilo")),
+                "_src": "sporttery",
+                "_oddsApprox": [],
             }
             matches.append(rec)
     return matches
 
 
 def fetch_bonus(mid):
-    """按 matchId 查官方开奖结果。已开奖返回 {"home": 主队分, "away": 客队分}，否则 None。"""
+    """按 matchId 查官方开奖结果（补充源，WAF 拦截时静默返回 None）。"""
     if fetch is None:
         return None
     try:
@@ -125,100 +154,175 @@ def fetch_bonus(mid):
         v = fb.get("value") or {}
         mr = v.get("matchResult") or {}
         if (mr.get("poolStatus") or "") != "Payout":
-            return None                      # 未开奖 / 已取消
-        sec = mr.get("sectionsNo999") or ""  # "93:116"
+            return None
+        sec = mr.get("sectionsNo999") or ""
         g = re.match(r"^\s*(\d+)\s*:\s*(\d+)\s*$", sec)
         if not g:
             return None
+        # 返回 dict（沿用 v1.7.29 起的既有约定，test_basketball_fetch.py 依赖）
         return {"home": int(g.group(1)), "away": int(g.group(2))}
     except Exception:
         return None
 
 
+def _merge(official, fb500):
+    """500 全量赛程打底 + 官方精确赔率覆盖（按 批次日+编号 匹配）。"""
+    merged = {}
+    for m in fb500:
+        merged[(m.get("date", ""), m.get("num", ""))] = dict(m)
+    covered = 0
+    for m in official:
+        key = (m.get("date", ""), m.get("num", ""))
+        base = merged.get(key)
+        if base is None:
+            merged[key] = dict(m)
+            covered += 1
+            continue
+        for pk in ("mnl", "hdc", "hilo", "wnm"):
+            if m.get(pk):
+                base[pk] = m[pk]
+        base["id"] = m.get("id") or base.get("id")
+        base["_src"] = "sporttery+500"
+        base["_oddsApprox"] = []
+        base["hasOdds"] = True
+        covered += 1
+    return list(merged.values()), covered
+
+
+def _apply_result(rec, score, now):
+    """写入赛果并判定让分/大小分结果（幂等）。"""
+    rec["score"] = [int(score[0]), int(score[1])]
+    rec["evaluated"] = True
+    rec["resultAt"] = now.strftime("%Y-%m-%d %H:%M")
+    hdc = rec.get("hdc") or {}
+    gl = _line_num(hdc.get("goalLine"))
+    if gl is not None:
+        adj = score[0] + gl
+        rec["hdcResult"] = "h" if adj > score[1] else ("a" if adj < score[1] else "d")
+    hilo = rec.get("hilo") or {}
+    tl = _line_num(hilo.get("goalLine"))
+    if tl is not None:
+        rec["hiloResult"] = "h" if (score[0] + score[1]) > tl else "l"
+
+
 def main():
+    global QUIET
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--backfill-days", type=int, default=6,
+                    help="回溯最近 N 个销售批次日（默认 6）")
+    ap.add_argument("--no-net", action="store_true",
+                    help="不访问网络，仅用现有 basketball.json 重算档案")
+    ap.add_argument("--quiet", action="store_true")
+    args = ap.parse_known_args()[0]
+    QUIET = args.quiet
     t0 = time.time()
     now = datetime.now()
+    today = now.strftime("%Y-%m-%d")
 
-    # ---- 1. 在售赛程+赔率 ----
-    matches = fetch_calc()
-    # v1.7.46 加固：接口偶发空响应（网关波动/限流）会返回 0 场但不抛异常，
-    # 若直接落盘会把在售赛程抹空。旧数据非空时退回上一轮在售，避免「误删」。
+    # ---- 1. 官方在售赛程（失败/过期都不致命）----
+    official = []
+    try:
+        official = fetch_calc()
+    except Exception as e:
+        log("[篮球] 官方接口不可用（%s），切换 500.com 备用源" % str(e)[:80])
+    off_dates = sorted({m.get("date", "") for m in official if m.get("date")})
+    off_fresh = bool(off_dates) and off_dates[-1] >= (now - timedelta(days=1)).strftime("%Y-%m-%d")
+    log("[篮球] 官方在售 %d 场（批次 %s，新鲜=%s）"
+        % (len(official), ",".join(off_dates) or "无", off_fresh))
+
+    # ---- 2. 500.com 备用源：无条件抓最近 N 批次（赛程 + 赛果）----
+    fb500, failed_days = [], []
+    if not args.no_net and fetch_500_recent is not None:
+        try:
+            fb500, failed_days = fetch_500_recent(args.backfill_days, now)
+        except Exception as e:
+            log("[篮球] 500 备用源异常: %r" % e)
+    elif not args.no_net:
+        log("[篮球] 500 备用源模块不可用")
+    fb_scored = sum(1 for x in fb500 if x.get("score"))
+    log("[篮球] 500 备用源近 %d 批次 %d 场（含赛果 %d 场，失败日期 %s）"
+        % (args.backfill_days, len(fb500), fb_scored, ",".join(failed_days) or "无"))
+
+    # 双源全空 → 保留旧数据，绝不抹空
     old = _load(BK_PATH, {})
     old_matches = old.get("matches") or []
-    if not matches and old_matches:
-        print("[篮球] 接口返回 0 场（疑似空响应/网关波动），保留上一轮 %d 场在售，不覆盖"
-              % len(old_matches), flush=True)
-        matches = old_matches
-    print("[篮球] 在售赛程 %d 场（含赔率 %d 场）"
-          % (len(matches), sum(1 for x in matches if x.get("hasOdds"))), flush=True)
+    if not official and not fb500:
+        log("[篮球] 双源均无数据，沿用上一轮 %d 场（不覆盖）" % len(old_matches))
+        if not old_matches:
+            return
+        return
 
-    # ---- 2. 合并历史档案（已滚出在售列表的近期比赛，含赛果）----
+    matches, covered = _merge(official, fb500)
+    if not matches and old_matches:
+        log("[篮球] 合并后 0 场（疑似空响应），保留上一轮 %d 场" % len(old_matches))
+        matches = old_matches
+
+    # ---- 3. 合并历史档案 ----
     hist = _load(BKH_PATH, {})
     records = hist.get("records") or {}
     keep_from = (now - timedelta(days=KEEP_DAYS)).strftime("%Y-%m-%d")
-    # 在售比赛先进档案（无赛果的待回填记录也要在，否则回填后无处写）
+    fields = ("id", "num", "week", "date", "kickoff", "time", "league",
+              "home", "away", "hr", "ar", "batchDate", "_src", "_oddsApprox")
     for x in matches:
-        rec = records.get(x["id"]) or {}
-        rec.update({k: x[k] for k in ("id", "num", "week", "date", "kickoff",
-                                      "time", "league", "home", "away", "hr", "ar")})
-        rec.setdefault("mnl", x.get("mnl"))
-        rec.setdefault("hdc", x.get("hdc"))
-        rec.setdefault("hilo", x.get("hilo"))
-        rec.setdefault("wnm", x.get("wnm"))
-        records[x["id"]] = rec
-    # 清理过期
+        rid = x.get("id") or (x.get("date", "") + x.get("num", "") + x.get("home", ""))
+        rec = records.get(rid) or {}
+        rec.update({k: x[k] for k in fields if x.get(k) is not None})
+        for pk in ("mnl", "hdc", "hilo", "wnm"):
+            if x.get(pk):
+                rec[pk] = x[pk]
+        if x.get("score") and not rec.get("score"):
+            _apply_result(rec, x["score"], now)
+        records[rid] = rec
     records = {k: v for k, v in records.items()
                if (v.get("date") or "9999") >= keep_from}
-    hist = {"records": records, "updatedAt": now.strftime("%Y-%m-%d %H:%M:%S")}
 
-    # ---- 3. 赛果回填（开赛 2.5h 后查官方开奖接口；已回填跳过）----
-    cands = []
+    # ---- 4. 赛果补充：500 未出比分的已开赛场次，试官方开奖接口 ----
+    bonus_done = 0
     for rec in records.values():
+        if bonus_done >= MAX_BONUS:
+            break
         if rec.get("score"):
             continue
         try:
             kick = datetime.strptime((rec.get("kickoff") or "")[:16], "%Y-%m-%d %H:%M")
         except ValueError:
             continue
-        if (now - kick).total_seconds() > BACKFILL_DELAY_H * 3600:
-            cands.append((kick, rec))
-    cands.sort(key=lambda t: t[0])          # 开球最早的先回填（防饿死，同足球 v1.7.28 设计）
-    done = 0
-    for kick, rec in cands[:MAX_BACKFILL]:
-        r = fetch_bonus(rec["id"])
-        if r:
-            rec["score"] = [r["home"], r["away"]]
-            rec["evaluated"] = True
-            rec["resultAt"] = now.strftime("%Y-%m-%d %H:%M")
-            # 让分胜负结果判定（goalLine 为代数值：主队实际分 + goalLine 后比较）
-            hdc = rec.get("hdc") or {}
-            gl = _line_num(hdc.get("goalLine"))
-            if gl is not None:
-                adj = r["home"] + gl
-                rec["hdcResult"] = "h" if adj > r["away"] else ("a" if adj < r["away"] else "d")
-            # 大小分结果判定
-            hilo = rec.get("hilo") or {}
-            tl = _line_num(hilo.get("goalLine"))
-            if tl is not None:
-                rec["hiloResult"] = "h" if (r["home"] + r["away"]) > tl else "l"
-            done += 1
-        time.sleep(0.4)
-    if cands:
-        print("[篮球] 赛果回填候选 %d 场，本轮补抓 %d 场，剩余 %d 场下轮继续"
-              % (len(cands), done, len(cands) - done), flush=True)
+        if (now - kick).total_seconds() < BACKFILL_DELAY_H * 3600:
+            continue
+        s = fetch_bonus(rec.get("id"))
+        if s:
+            _apply_result(rec, [s["home"], s["away"]], now)
+            bonus_done += 1
+        time.sleep(0.25)
 
-    # ---- 4. 落盘 ----
-    _save(BKH_PATH, hist)
+    n_eval = sum(1 for r in records.values() if r.get("score"))
+    n_upcoming = sum(1 for x in matches
+                     if (x.get("kickoff") or "")[:16] > now.strftime("%Y-%m-%d %H:%M")
+                     and not x.get("score"))
+
+    # ---- 5. 落盘 ----
+    batch_dates = sorted({x.get("date", "") for x in matches if x.get("date")})
+    source = ("sporttery+500" if official and fb500 else
+              ("sporttery" if official else "500.com"))
+    _save(BKH_PATH, {"records": records,
+                     "updatedAt": now.strftime("%Y-%m-%d %H:%M:%S")})
     out = {
         "updatedAt": now.strftime("%Y-%m-%d %H:%M:%S"),
+        "dataDate": batch_dates[-1] if batch_dates else "",
+        "batchDates": batch_dates,
+        "source": source,
+        "officialCovered": covered,
+        "upcomingCount": n_upcoming,
+        "scoredCount": n_eval,
+        "stale": batch_dates[-1] < (now - timedelta(days=1)).strftime("%Y-%m-%d")
+                 if batch_dates else True,
         "matches": [x for x in matches
                     if (x.get("date") or "9999") >= keep_from],
     }
     _save(BK_PATH, out)
-    n_eval = sum(1 for r in records.values() if r.get("score"))
-    print("[篮球] 已写入 %s（%d 场）/ %s（档案 %d 条，含赛果 %d 条），耗时 %.0fs"
-          % (os.path.basename(BK_PATH), len(out["matches"]),
-             os.path.basename(BKH_PATH), len(records), n_eval, time.time() - t0))
+    log("[篮球] 写入 %d 场（未开赛 %d，批次 %s，源 %s，官方覆盖 %d）/ 档案 %d 条含赛果 %d 条，耗时 %.0fs"
+        % (len(out["matches"]), n_upcoming, out["dataDate"], source, covered,
+           len(records), n_eval, time.time() - t0))
 
 
 def _line_num(s):

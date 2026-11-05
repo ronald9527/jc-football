@@ -345,7 +345,12 @@ def check_basketball_ai():
     print("· 检查 8 篮球预测/串关/统计（v1.7.44）新鲜度与隔离")
     bk = load("basketball.json", {})
     bk_ms = (bk or {}).get("matches", []) if isinstance(bk, dict) else []
-    bk_unsold_ids = {m.get("id") for m in bk_ms if isinstance(m, dict) and not m.get("score")}
+    # v1.7.119：在售口径改为「尚未开赛且无赛果」。此前把已开赛但赛果未出、
+    # 以及停更期残留的旧比赛都算进分母，门禁生效后必然误报「AI 覆盖不足」。
+    _bk_now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    bk_unsold_ids = {m.get("id") for m in bk_ms
+                     if isinstance(m, dict) and not m.get("score")
+                     and (m.get("kickoff") or "")[:16] > _bk_now}
 
     # 1) 预测篮球_ai.json
     ai = load("basketball_ai.json")
