@@ -323,7 +323,9 @@ def main():
                       # 跨轮累积，需随部署上传做云端副本。
                       "vzhan_data.json", "vzhan_history.json",
                       "vzhan_gateway_status.json",
-                      "expert_history.json", "expert_stats.json"]:
+                      "expert_history.json", "expert_stats.json",
+                      # v1.7.124：正路推荐正确率统计（独立可核对副本）
+                      "good_rate_stats.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
@@ -386,6 +388,9 @@ def main():
         "whoscored_history.json", "history.json", "parlay_history.json",
         "hkmo_history.json", "strongweak_history.json", "half_full_history.json",
         "smart_model.json", "matches.json", "whoscored_data.json",
+        # v1.7.124：正路统计为派生数据，每轮由 gen_good_rate.py 基于
+        # history.json + matches.json 重算，不进自举包（避免旧快照覆盖线上累积）。
+        "good_rate_stats.json",
         # v1.7.93：V站完赛归档（含 highConf）跨轮累积，同理须排除出自举包，
         # 由生产端累积，冷启动从 Pages 副本恢复。
         "vzhan_history.json",

@@ -335,6 +335,16 @@ set +e
 "$PY" fetch_crests.py --no-fetch 2>/dev/null || true
 set -e
 
+# ---------- 步骤1.95：正路推荐正确率统计（v1.7.124）----------
+# 用户诉求：今日赛程里标「正路」的推荐，历史正确率到底是多少，要可核对的统计。
+# 纯本地 JSON 计算（history.json 官方开奖回溯 + matches.json 竞彩赛程），零外网、<1s。
+# 顺序约束：必须在步骤2 build_panel.py 之前——产物写进 matches.json.goodRateStats，
+# 由 build_panel 一并注入 index.html；失败只记日志，绝不阻断部署。
+log "==> 步骤1.95 正路推荐正确率统计 (gen_good_rate.py)"
+set +e
+"$PY" gen_good_rate.py
+set -e
+
 log "==> 步骤2 构建页面 (build_panel.py)"
 # 容错：构建脚本偶发异常不应让定时任务被判失败（否则触发告警/邮件）。
 # 抓取步骤已恢复数据，构建失败可沿用上次 index.html，下个周期重试。
@@ -383,6 +393,9 @@ if [ -f score_predict.json ]; then
 fi
 if [ "$_refreshed" = "1" ]; then
   log "==> 步骤2.5b 陈旧重抓后重建页面"
+  # v1.7.124：fetch_scores.py 重抓会重写 matches.json（丢掉 goodRateStats），
+  # 必须先重算统计再构建页面，否则页面统计区会退回旧字段或空白。
+  "$PY" gen_good_rate.py 2>/dev/null || true
   "$PY" build_panel.py 2>/dev/null || true
 fi
 
@@ -409,7 +422,7 @@ def filehash(p):
         return hashlib.sha256(open(p, "rb").read()).digest()
     except Exception:
         return b""
-parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak")
+parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak", "goodRateStats")
 parts += norm("history.json", "records")
 parts += norm("fd_data.json", "matches", "byNum")
 parts += norm("score_predict.json", "matches", "reliable", "accuracy")

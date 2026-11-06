@@ -1147,6 +1147,38 @@ footer b{color:var(--sub)}
 .focus-item .fi-cross{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px}
 .focus-item .fi-cross.ok{background:rgba(82,196,26,.12);color:var(--good);border:1px solid rgba(82,196,26,.35)}
 .focus-item .fi-cross.diff{background:rgba(250,173,20,.12);color:var(--warn);border:1px solid rgba(250,173,20,.4)}
+/* v1.7.124 今日赛程 · 正路推荐正确率统计 */
+.gr-view{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:0 0 14px;overflow:hidden}
+.gr-head{padding:12px 14px;background:linear-gradient(135deg,var(--panel2),var(--panel));cursor:pointer;user-select:none}
+.gr-head:hover{background:var(--panel2)}
+.gr-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.gr-title{font-size:13px;font-weight:700;color:var(--text)}
+.gr-batch{font-size:10.5px;color:var(--sub);background:var(--panel3);border:1px solid var(--line);border-radius:5px;padding:2px 7px}
+.gr-toggle{margin-left:auto;font-size:11px;color:var(--accent);font-weight:700;white-space:nowrap}
+.gr-hero{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:10px}
+.gr-big{font-size:34px;font-weight:800;line-height:1;color:#fff;letter-spacing:-1px}
+.gr-big small{font-size:11px;color:var(--sub);font-weight:500;letter-spacing:0}
+.gr-sub{font-size:11px;color:var(--sub);line-height:1.6}
+.gr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:11px}
+.gr-kpi{background:var(--panel3);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+.gr-kpi .l{font-size:10px;color:var(--sub);white-space:nowrap}
+.gr-kpi .v{font-size:15px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.gr-pos{color:var(--good)}.gr-neg{color:var(--bad)}.gr-flat{color:var(--sub)}
+.gr-body{display:none;padding:12px 14px;border-top:1px solid var(--line)}
+.gr-body.show{display:block}
+.gr-sec{margin:16px 0 0}.gr-sec:first-child{margin-top:0}
+.gr-sec h4{font-size:12px;color:var(--accent);margin:0 0 7px;padding-left:8px;border-left:3px solid var(--accent)}
+.gr-concl{font-size:11.5px;line-height:1.85;color:var(--text);background:var(--accent-dim);border:1px solid rgba(77,163,255,.28);border-radius:8px;padding:10px 12px}
+.gr-tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.gr-tbl{width:100%;border-collapse:collapse;font-size:10.5px;min-width:440px}
+.gr-tbl th,.gr-tbl td{padding:6px 8px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.gr-tbl th{background:var(--panel2);color:var(--sub);font-weight:600}
+.gr-tbl tr:last-child td{border-bottom:none}
+.gr-tbl td b{font-variant-numeric:tabular-nums}
+.gr-pend{color:var(--sub)}.gr-hit{color:var(--good);font-weight:700}.gr-miss{color:var(--bad);font-weight:700}
+.gr-notes{font-size:10.5px;color:var(--sub);line-height:1.85;padding-left:18px;margin:6px 0 0}
+.gr-notes li{margin:3px 0}
+@media (max-width:768px){.gr-big{font-size:28px}.gr-kpis{grid-template-columns:repeat(2,1fr)}}
 /* 规则组命中率榜 */
 .rg-board{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow-x:auto}.rg-board .rg-title{font-size:12.5px;font-weight:700;padding:10px 14px 6px;display:flex;align-items:center;gap:8px}
 .rg-board .rg-title .tip{font-size:10.5px;color:var(--weak);font-weight:400;margin-left:auto}
@@ -1362,6 +1394,8 @@ footer b{color:var(--sub)}
   </div>
   <div class="upd-banner" id="updBanner"></div>
 
+  <!-- v1.7.124 今日赛程 · 正路推荐正确率统计（只在今日赛程 Tab 显示） -->
+  <div class="gr-view" id="goodRateView"></div>
   <div class="focus-board" id="focusBoard"></div>
   <div id="cardsView"></div>
   <div class="tview" id="tableView"></div>
@@ -1765,8 +1799,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.123";
+const VERSION = "v1.7.124";
 const CHANGELOG = [
+  {
+    version: "v1.7.124",
+    date: "2026-11-06",
+    title: "今日赛程新增「正路推荐正确率」统计：数字可核对，不虚高、不承诺盈利",
+    details: [
+      "用户要求「再把今日赛程，正路的推荐，正确率是多少，需要一个统计」—— 新增 gen_good_rate.py，从 history.json 官方开奖回溯 + matches.json 竞彩赛程离线计算，产物写进 matches.json.goodRateStats 并随构建注入页面，独立副本 good_rate_stats.json 同步上云",
+      "统计口径与 judge_hit() 完全一致：正路 = verdict.t==good（预测热门方向打出）；命中 = 官方赛果 had==判定方向；只计已结算 hit/miss，取消走水 n-a 与待开奖一律排除单列；bad/cold 反指、warn 谨慎不计入本统计",
+      "关键诚实口径：同时给出「市场去水隐含概率」（理论真概率基准）与「盈亏平衡命中率」= 1/赔率（含庄家抽水，按赔率下注不亏必须跨过的线），再加每场 1 单位均注 ROI；命中率高于真概率 ≠ 赚钱，避免只报一个漂亮数字误导跟单",
+      "当前实测（905 条历史档案、123 场已结算正路）：正确率 56.10%（69 中 54 未中，Wilson 95%CI 47.27%~64.55%），市场去水隐含 48.49%（表观超额 +7.61pt、单侧 p=0.0003），但盈亏平衡线 54.84%（含抽水），有赔率 109 场实际命中 54.13%、相对盈亏线 −0.71pt、均注 ROI −1.18%（单侧 p=0.567，未跑赢）",
+      "结论如实写明：周度超额在 −22.7pt~+24.6pt 之间剧烈波动，样本不足以证明稳定可提现优势，「可作方向参考，不构成盈利依据」；星级分层同页展示（3星 37.3%、4星 80.0%、5星 58.3%，星级与命中率并不单调，不拿星级当稳赚保证）",
+      "今日竞彩批次严格隔离：只统计竞彩当天开出的 2026-11-06（周五）14 场，正路 6 场逐条列出编号/对阵/方向/赔率/隐含概率/信心/结算状态；当前 6 场均未开奖，明确标注「未开奖 · 不计入正确率」，赛后自动回填纳入统计，绝不混入周六 / 周日批次",
+      "刷新闭环：run_daily.sh 新增步骤 1.95（build_panel 之前）与步骤 2.5b 重抓后重算；部署指纹纳入 goodRateStats；页面实时刷新 matches.json 时同步热更新统计；独立统计文件加入 Pages 副本并排除出自举代码包，避免旧快照覆盖线上累积"
+    ]
+  },
   {
     version: "v1.7.123",
     date: "2026-11-06",
@@ -4004,6 +4052,7 @@ function render(){
   $("#cardsView").style.display = isToday ? "block" : "none";
   $("#tableView").style.display = isToday ? "block" : "none";
   $("#focusBoard").style.display = isToday ? "block" : "none";
+  const grViewEl = $("#goodRateView"); if(grViewEl) grViewEl.style.display = isToday ? "block" : "none";
   $("#historyView").classList.toggle("show", state.tab==="history");
   const bdViewEl = $("#bdView"); if(bdViewEl) bdViewEl.classList.toggle("show", false);
   $("#swView").style.display = isSW ? "block" : "none";
@@ -4026,8 +4075,94 @@ function render(){
   if (isScorePred){ renderScorePred(); return; }
   if (isBK){ renderBasketball(); return; }
   if (!isToday){ renderHistory(); return; }
+  renderGoodRate();
   if (state.view==="card"){ renderCards(); $("#cardsView").style.display="block"; $("#tableView").style.display="none"; }
   else { renderTable(); $("#tableView").style.display="block"; $("#cardsView").style.display="none"; }
+}
+
+/* ---------- v1.7.124 今日赛程 · 正路推荐正确率统计 ----------
+   数据源：matches.json.goodRateStats（由 gen_good_rate.py 从 history.json
+   官方开奖回溯计算）。口径与 judge_hit() 一致，只计已结算 good 判定。
+   诚实原则：命中率高于「去水隐含」不等于赚钱，必须同时给出
+   含抽水的「盈亏平衡线」与均注 ROI，未结算场次绝不拿来凑样本。 */
+function renderGoodRate(){
+  const el = $("#goodRateView");
+  if(!el) return;
+  const s = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.goodRateStats) || null;
+  if(!s || !s.overall || !s.today){
+    el.innerHTML = '<div class="gr-head"><div class="gr-top"><span class="gr-title">📊 今日赛程 · 正路推荐正确率</span></div>'+
+      '<div class="gr-sub" style="margin-top:8px">本轮尚未生成统计，点击「刷新数据」或重新打开页面后自动出现。</div></div>';
+    return;
+  }
+  const o=s.overall, t=s.today;
+  const ESC_MAP = {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
+  const esc = x => String(x==null?"":x).replace(/[&<>"']/g, c => ESC_MAP[c] || c);
+  const P = v => (typeof v==="number") ? v.toFixed(2)+"%" : "—";
+  const SG = v => (typeof v==="number") ? (v>0?"+":"")+v.toFixed(2) : null;
+  const CC = v => (typeof v!=="number") ? "gr-flat" : (v>0?"gr-pos":(v<0?"gr-neg":"gr-flat"));
+  const PT = v => (typeof v==="number") ? SG(v)+"pt" : "—";
+  const kpi = (l,v,cls) => '<div class="gr-kpi"><div class="l">'+esc(l)+'</div><div class="v '+(cls||"")+'">'+v+'</div></div>';
+  const grTable = (items, keyTitle) => {
+    if(!items || !items.length) return '<div class="gr-sub">该维度暂无样本</div>';
+    let h='<div class="gr-tblwrap"><table class="gr-tbl"><thead><tr><th>'+esc(keyTitle)+'</th><th>场次</th><th>命中</th><th>正确率</th><th>盈亏平衡线</th><th>去水隐含</th><th>均注ROI</th></tr></thead><tbody>';
+    items.forEach(x=>{
+      const rt = (typeof x.roi==="number") ? SG(x.roi)+"%" : "—";
+      h+='<tr><td>'+esc(x.key)+'</td><td>'+x.n+'</td><td>'+x.hit+'</td><td><b>'+P(x.rate)+'</b></td><td>'+P(x.breakEven)+'</td><td>'+P(x.marketDeVig)+'</td><td class="'+CC(x.roi)+'">'+rt+'</td></tr>';
+    });
+    return h+'</tbody></table></div>';
+  };
+  const picksHtml = (()=>{
+    const ps=t.picks||[];
+    if(!ps.length) return '<div class="gr-sub">今日批次暂无正路判定场次</div>';
+    let h='<div class="gr-tblwrap"><table class="gr-tbl"><thead><tr><th>编号</th><th>联赛</th><th>对阵</th><th>方向</th><th>赔率</th><th>市场隐含</th><th>信心</th><th>结算状态</th></tr></thead><tbody>';
+    ps.forEach(p=>{
+      const st = p.settled
+        ? (p.hit ? '<span class="gr-hit">命中 '+esc(p.score||"")+'</span>' : '<span class="gr-miss">未中 '+esc(p.score||"")+'</span>')
+        : '<span class="gr-pend">未开奖 · 不计入正确率</span>';
+      h+='<tr><td>'+esc(p.num)+'</td><td>'+esc(p.league)+'</td><td>'+esc(p.home)+' vs '+esc(p.away)+'</td><td><b>'+esc(p.dirName)+'</b></td><td>'+(typeof p.odds==="number"?p.odds.toFixed(2):"—")+'</td><td>'+(typeof p.prob==="number"?p.prob.toFixed(0)+"%":"—")+'</td><td>'+(p.stars||0)+'星</td><td>'+st+'</td></tr>';
+    });
+    return h+'</tbody></table></div>';
+  })();
+  const notes = (s.notes||[]).map(n=>'<li>'+esc(n)+'</li>').join("");
+  const roiTxt = (typeof o.roi==="number") ? SG(o.roi)+"%" : "—";
+  el.innerHTML =
+    '<div class="gr-head" id="grHead">'+
+      '<div class="gr-top"><span class="gr-title">📊 今日赛程 · 正路推荐正确率</span>'+
+        '<span class="gr-batch">📅 '+esc(t.batchDate)+' '+esc(t.batchLabel)+' 竞彩批次 · '+t.totalMatches+' 场</span>'+
+        '<span class="gr-toggle" id="grToggle">展开明细 ▾</span></div>'+
+      '<div class="gr-hero"><div><div class="gr-big">'+P(o.rate)+' <small>历史正确率</small></div>'+
+        '<div class="gr-sub">'+o.n+' 战 · '+o.hit+' 中 · '+o.miss+' 未中　|　Wilson 95%CI '+P((o.wilson95||[])[0])+' ~ '+P((o.wilson95||[])[1])+'</div></div></div>'+
+      '<div class="gr-kpis">'+
+        kpi('市场去水隐含',P(o.marketDeVig),"")+
+        kpi('盈亏平衡线',P(o.breakEven),"")+
+        kpi('均注 ROI',roiTxt,CC(o.roi))+
+        kpi('相对真概率',PT(o.vsDeVig),CC(o.vsDeVig))+
+        kpi('相对盈亏线',PT(o.vsBreakEven),CC(o.vsBreakEven))+
+        kpi('有赔率样本',o.pricedN+' 场',"")+
+        kpi('今日正路',t.goodCount+' 场',"")+
+        kpi('今日已开奖',t.settledCount+' / '+t.goodCount,"")+
+      '</div>'+
+    '</div>'+
+    '<div class="gr-body" id="grBody">'+
+      '<div class="gr-sec"><h4>结论（先看这里）</h4><div class="gr-concl">'+esc(s.conclusion)+'</div></div>'+
+      '<div class="gr-sec"><h4>今日竞彩批次正路清单 · '+esc(t.batchDate)+' '+esc(t.batchLabel)+'（共 '+t.goodCount+' 场，已开奖 '+t.settledCount+' 场）</h4>'+picksHtml+
+        '<div class="gr-sub" style="margin-top:6px">严格按竞彩当天开出的批次统计，不与周六 / 周日场次混算；未开奖场次不计入正确率，赛后自动回填纳入统计。</div></div>'+
+      '<div class="gr-sec"><h4>按信心星级分层</h4>'+grTable(s.byStars,"星级")+'</div>'+
+      '<div class="gr-sec"><h4>按赔率区间分层</h4>'+grTable(s.byOddsBand,"赔率区间")+'</div>'+
+      '<div class="gr-sec"><h4>按联赛分层（样本≥5）</h4>'+grTable(s.byLeague,"联赛")+'</div>'+
+      '<div class="gr-sec"><h4>时间窗口</h4>'+grTable(s.windows,"窗口")+'</div>'+
+      '<div class="gr-sec"><h4>近 30 日逐日</h4>'+grTable(s.byDate,"日期")+'</div>'+
+      '<div class="gr-sec"><h4>统计口径（可逐条核对）</h4><ul class="gr-notes">'+notes+'</ul></div>'+
+    '</div>';
+  const head=document.getElementById("grHead"), body=document.getElementById("grBody"), tog=document.getElementById("grToggle");
+  if(head && body){
+    if(window.__grOpen){ body.classList.add("show"); if(tog) tog.textContent="收起明细 ▴"; }
+    head.onclick=()=>{
+      const open=body.classList.toggle("show");
+      window.__grOpen=open;
+      if(tog) tog.textContent=open?"收起明细 ▴":"展开明细 ▾";
+    };
+  }
 }
 
 /* ---------- 北单推荐保存（页面加载时自动保存，赛后回溯命中） ---------- */
@@ -7815,10 +7950,12 @@ function refreshRealtimeData(showTip){
       if(d.halfFullHistory){ state.halfFullHistory = JSON.parse(JSON.stringify(d.halfFullHistory)); }
       if(d.expert){ state.expert = JSON.parse(JSON.stringify(d.expert)); }
       if(d.expertHistory){ state.expertHistory = JSON.parse(JSON.stringify(d.expertHistory)); }
+      // v1.7.124：正路正确率统计随 matches.json 一起热更新
+      if(d.goodRateStats){ BUILT_DATA.goodRateStats = JSON.parse(JSON.stringify(d.goodRateStats)); }
       __lastRealtimeFetch = new Date().toLocaleString("zh-CN");
       // 重新渲染当前页面
       const curTab = state.tab;
-      if(curTab==="today"){ renderStats(); renderFocus(); renderFilters(); renderCards(); renderTable(); }
+      if(curTab==="today"){ renderStats(); renderFocus(); renderFilters(); renderGoodRate(); renderCards(); renderTable(); }
       else if(curTab==="history"){ renderHistory(); }
       else if(curTab==="bd"){ renderBD(); }
       else if(curTab==="strongweak"){ renderStrongWeak(); }

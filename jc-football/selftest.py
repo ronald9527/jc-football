@@ -672,6 +672,102 @@ def check_pipeline_safeguards():
             % ", ".join(missing))
 
 
+def check_good_rate(data, hist):
+    """检查 10 正路推荐正确率统计（v1.7.124）。
+
+    重点：口径与 history.json 按 judge_hit() 同规则复算比对，防止统计脚本
+    悄悄换口径、把未结算/反指场次混进来把正确率做高；再校验竞彩批次隔离、
+    独立文件一致性、前端与流水线接线。
+    """
+    print("· 检查 10 正路推荐正确率统计（v1.7.124）")
+    s = (data or {}).get("goodRateStats")
+    if not isinstance(s, dict) or not s.get("overall") or not s.get("today"):
+        add("ERROR", "正确率统计",
+            "matches.json 缺少 goodRateStats（gen_good_rate.py 未跑，或构建前被 fetch_scores 重写覆盖）")
+        return
+    o, t = s["overall"], s["today"]
+
+    # (1) 与 history.json 官方开奖回溯复算：样本、命中数、正确率必须完全一致
+    recs = (hist or {}).get("records", [])
+    core = [r for r in recs if r.get("hitFlag") in ("hit", "miss")
+            and (r.get("verdict") or {}).get("t") == "good"]
+    hits = sum(1 for r in core if r["hitFlag"] == "hit")
+    if o.get("n") != len(core) or o.get("hit") != hits:
+        add("ERROR", "正确率统计",
+            "样本口径与 history.json 不一致：统计 n=%s/hit=%s，复算 n=%s/hit=%s"
+            % (o.get("n"), o.get("hit"), len(core), hits))
+    elif len(core):
+        rate = round(100.0 * hits / len(core), 2)
+        if abs(float(o.get("rate") or 0) - rate) > 0.01:
+            add("ERROR", "正确率统计",
+                "正确率与复算不一致：显示 %s%%，复算 %.2f%%" % (o.get("rate"), rate))
+        else:
+            print("  口径复算一致：%d 战 %d 中 = %.2f%%" % (len(core), hits, rate))
+    if o.get("n") != (o.get("hit") or 0) + (o.get("miss") or 0):
+        add("ERROR", "正确率统计", "n ≠ hit + miss，统计结构不自洽")
+    w = o.get("wilson95") or []
+    if len(w) != 2 or not (0 <= w[0] <= float(o.get("rate") or 0) <= w[1] <= 100):
+        add("ERROR", "正确率统计", "Wilson 95% 置信区间异常：%s" % w)
+    if (o.get("pricedN") or 0) > (o.get("n") or 0):
+        add("ERROR", "正确率统计", "有赔率样本数大于总样本数")
+
+    # (2) 诚实口径必填：不能只报一个漂亮命中率
+    for k in ("marketDeVig", "breakEven", "roi", "vsDeVig", "vsBreakEven",
+              "testVsDeVig", "testVsBreakEven"):
+        if o.get(k) is None:
+            add("ERROR", "正确率统计", "缺少关键口径字段 %s（去水隐含/盈亏平衡线/ROI 必须齐全）" % k)
+    if "不构成盈利依据" not in (s.get("conclusion") or ""):
+        add("ERROR", "正确率统计", "结论缺少「不构成盈利依据」的诚实声明")
+    if not (s.get("notes") or []):
+        add("ERROR", "正确率统计", "缺少可核对的统计口径说明")
+
+    # (3) 今日竞彩批次隔离：绝不混入周六/周日
+    picks = t.get("picks") or []
+    if t.get("goodCount") != len(picks):
+        add("ERROR", "正确率统计", "今日正路场次数与清单条数不一致")
+    prefix = t.get("batchPrefix") or ""
+    cross = [p.get("num") for p in picks
+             if prefix and not str(p.get("num") or "").startswith(prefix)]
+    if cross:
+        add("ERROR", "正确率统计", "今日清单混入非本竞彩批次的场次：%s" % ", ".join(map(str, cross)))
+    if (t.get("pendingCount") or 0) + (t.get("settledCount") or 0) != len(picks):
+        add("ERROR", "正确率统计", "今日已开奖 + 未开奖 ≠ 正路清单条数")
+    unsettled_bad = [p.get("num") for p in picks if not p.get("settled") and p.get("hit") is not None]
+    if unsettled_bad:
+        add("ERROR", "正确率统计", "未开奖场次被错误计入命中：%s" % ", ".join(map(str, unsettled_bad)))
+
+    # (4) 独立统计文件与页面内嵌字段必须同源
+    ind = load("good_rate_stats.json")
+    if not isinstance(ind, dict):
+        add("ERROR", "正确率统计", "缺少独立统计文件 good_rate_stats.json")
+    else:
+        def sig(x):
+            d = json.loads(json.dumps(x))
+            d.pop("generatedAt", None)
+            return json.dumps(d, ensure_ascii=False, sort_keys=True)
+        if sig(ind) != sig(s):
+            add("ERROR", "正确率统计", "good_rate_stats.json 与 matches.json.goodRateStats 不同源")
+
+    # (5) 前端模块与每日流水线接线
+    try:
+        tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    except Exception:
+        tpl = ""
+    if "renderGoodRate" not in tpl or 'id="goodRateView"' not in tpl:
+        add("ERROR", "正确率统计", "template.html 缺少正路统计渲染模块")
+    try:
+        sh = open(os.path.join(HERE, "run_daily.sh"), encoding="utf-8").read()
+    except Exception:
+        sh = ""
+    if "gen_good_rate.py" not in sh:
+        add("ERROR", "正确率统计", "run_daily.sh 未接入 gen_good_rate.py，刷新后统计不会更新")
+    if '"goodRateStats"' not in sh:
+        add("ERROR", "正确率统计", "部署指纹未纳入 goodRateStats，统计变化不会触发上线")
+    print("  今日批次 %s（%s）：%d 场 / 正路 %d 场 / 已开奖 %d 场"
+          % (t.get("batchDate"), t.get("batchLabel"), t.get("totalMatches"),
+             len(picks), t.get("settledCount")))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -692,6 +788,7 @@ def main():
     check_basketball_backtrack()
     check_scorepred_freshness(load("score_predict.json"))
     check_pipeline_safeguards()
+    check_good_rate(data, hist)
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]
