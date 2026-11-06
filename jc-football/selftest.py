@@ -149,6 +149,40 @@ def check_parlay(data):
         print("  %s：%s %.2f倍 命中%s%% EV%s%% 真实EV%s%% 负超额腿%d 推荐=%s" % (
             key, p.get("tier"), tot, p.get("jointProb"), p.get("ev"),
             p.get("realEv"), len(neg), p.get("recommended")))
+    # ===== v1.7.122 门禁：先有合格单场、才有组合（前缀嵌套 + 统一资格）=====
+    # 用户原则「选串关是把单场最有把握，数据支撑，合理，才进行串关组合」。
+    # 防止引擎退回「先定 2/3/4 腿档位、再各自凑组合、档位越高门槛越松」。
+    _tiers = [(k, sp.get(k)) for k in ("parlay2", "parlay3", "parlay4")]
+    _present = [(k, p) for k, p in _tiers if p]
+    for _k, _p in _present:
+        _ls = _p.get("legs") or []
+        # ① 每条腿都必须是合格单场：实证超额≥0、样本≥20、赔率 1.60~3.20
+        _bad = [l for l in _ls if (l.get("edge") or 0) < 0
+                or (l.get("empN") or 0) < 20
+                or not (1.60 <= (l.get("odds") or 0) <= 3.20)]
+        if _bad:
+            add("ERROR", "串关", "%s 含 %d 条不合格单场（应：超额≥0、样本≥20、赔率1.60~3.20）" % (_k, len(_bad)))
+        # ② 把握度排名必须连续 1..n（前缀）
+        _ranks = sorted((l.get("gripRank") or 0) for l in _ls)
+        if _ranks != list(range(1, len(_ls) + 1)):
+            add("ERROR", "串关", "%s 把握度排名不连续 %s（应为 1..%d 前缀）" % (_k, _ranks, len(_ls)))
+    # ③ 后档严格包含前档全部腿（嵌套）
+    def _sig(legs):
+        return set((l.get("num"), l.get("label")) for l in (legs or []))
+    for (_ka, _pa), (_kb, _pb) in zip(_present, _present[1:]):
+        if not _sig(_pa.get("legs")).issubset(_sig(_pb.get("legs"))):
+            add("ERROR", "串关", "%s 未包含 %s 全部腿（前缀嵌套被破坏，又在独立凑组合）" % (_kb, _ka))
+    # ④ 总赔随腿数严格递增
+    _tos = [_p.get("totalOdds") or 0 for _k, _p in _present]
+    if any(x >= y for x, y in zip(_tos, _tos[1:])):
+        add("ERROR", "串关", "三档总赔未严格递增 %s" % _tos)
+    # ⑤ 合格单场不足 N 条时该档必须为空（不得硬凑）
+    _qn = sp.get("qualifiedCount")
+    if isinstance(_qn, int):
+        for _k, _n in (("parlay2", 2), ("parlay3", 3), ("parlay4", 4)):
+            if _qn < _n and sp.get(_k):
+                add("ERROR", "串关", "合格单场仅 %d 条，%s 却仍出档（硬凑）" % (_qn, _k))
+    print("  合格单场 %s 条 | 前缀嵌套 / 总赔递增 / 排名连续 检查完成" % sp.get("qualifiedCount"))
     if found == 0:
         add("WARN", "串关", "今日无串关推荐（候选不满足档位门槛）")
 

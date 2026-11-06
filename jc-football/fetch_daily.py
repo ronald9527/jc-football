@@ -4147,17 +4147,21 @@ def parlay_canon_score(opt):
 
 
 def gen_safe_parlay(matches):
-    """智能混合过关稳串（分层双哲学策略）：
-    核心原则：
-    1. 混合过关：胜平负+让球+总进球，每场选最优选项
-    2. 分层选择哲学：稳健档=命中率优先（历史同信心档实证命中率护栏内选联合命中率最高，尽量中奖）；
-       均衡档=期望值优先（历史真实期望口径，选相对庄家有优势的组合）
-    3. 赔率合理：单场≥1.45（拒绝蚊子肉），各档在自身总赔区间内挑选
-    4. 数据驱动：每场至少多维度技术指标支撑，叠加历史同指命中率与五维雷达交叉验证
-    5. 动态场数：比赛质量高时3串1，质量一般时2串1
-    EV 双口径（v1.7.33）：模型口径（pTrue，偏保守，仅参考）与地面真实口径
-    （同指命中率×总赔−1）——推荐判定/达标线/排序/仓位全部用真实口径。
-    返回 {parlay2, parlay3, parlay4, generatedAt, strategy}
+    """智能混合过关稳串：先选合格单场，再按把握度取前缀成档（v1.7.122）。
+
+    用户原则：「选串关是把单场最有把握、数据支撑、合理，才进行串关组合」。
+    实现顺序（与旧版「先定 2/3/4 腿档位再凑组合」相反）：
+    1. 单场资格（统一绝对标准，不因档位变化）：
+       数据支撑 = 后验实证超额 ≥0pt 且同方向样本 ≥20 场；
+       合理     = 赔率 1.60~3.20、非平局；
+       最有把握 = 按后验命中率降序（市场共识先验 + 历史实证贝叶斯收缩）。
+    2. 串关 = 合格单场序列前缀：稳健=前2、均衡=前3、精锐=前4，
+       天然严格嵌套、总赔随腿数单调递增。
+    3. 合格单场不足 N 条，第 N 档留空并写明原因，绝不降门槛/换腿硬凑。
+    4. 推荐资格硬条件：真实 EV 达标且全组无负超额腿，否则标「观望」。
+    EV 双口径：模型口径（pTrue，偏保守，仅参考）与地面真实口径
+    （腿级实证命中率×总赔−1）——推荐判定/达标线/仓位用真实口径。
+    返回 {parlay2, parlay3, parlay4, generatedAt, strategy, candidatePool, ...}
     """
     # v1.7.120 根治「分层串关每天空白」：竞彩销售批次跨自然日。
     # 例：周五001 开球 11-06 16:40、周五002~014 开球 11-07 凌晨，但它们是同一个
@@ -4699,7 +4703,12 @@ def gen_safe_parlay(matches):
     # 市场定价的腿会被拉低，赔率略高但实证有超额的腿反而更靠前。
     # 档位门槛仍按当日候选池分位数自适应，保证任何数据源下都从「相对最有
     # 证据支持」的场次里出组合，既不硬凑也不空档。
-    _tier_conf = [70.0, 68.0, 65.0]
+    # v1.7.122：档位信心门槛彻底废除。旧实现按档位分位数一路放宽
+    # （_q(0.70) → _q(0.90) → 全池最低分），等于「腿数越多、单场质量要求越低」，
+    # 与用户「先选出最有把握的单场、才进行组合」的原则正好相反。实测真实 EV
+    # 从稳健 -3.1% 恶化到均衡 -12.0%、精锐 -38.9%，且均衡档的腿不在精锐档里。
+    # 现统一由下方「合格单场」绝对标准把关，档位不再各自设门槛、各自凑组合。
+    _tier_conf = [0.0, 0.0, 0.0]
     if _lean and candidates:
         for c in candidates:
             _p, _e, _n, _so = _posterior(c)
@@ -4707,27 +4716,6 @@ def gen_safe_parlay(matches):
                 _p -= 0.05
             c["confidence"] = round(min(86.0, max(52.0, 40 + _p * 55)), 1)
         print("  分层串关：精简数据源，信心度已按后验命中率重标定", flush=True)
-
-    # v1.7.121：档位信心门槛对「所有」数据源自适应（此前只在精简源分支生效，
-    # 官方完整源写死 70/68/65 —— 叠加 edge 证据修正后信心整体下移，稳健档
-    # 「2 条腿都 ≥70」凑不齐而留空，反而 3/4 串有推荐，档位语义倒挂）。
-    # 按当日候选池信心分位数取门槛，其余护栏（证据准入/总赔区间/联合
-    # 概率/EV）一律不动，保证「相对最有证据支持」的场次优先。
-    if candidates:
-        # 门槛只按「通过证据准入的合格候选」计算：负超额腿信心分再高也不得
-        # 参与定门槛（它们已被禁止进组合，却会把分位数抬高、把稳健档挤空）。
-        _eligible = [c for c in candidates
-                     if not (_STRICT_EDGE and (c.get("edge") or 0) < -1.0)]
-        _pool = _eligible or candidates
-        _cs = sorted((c["confidence"] for c in _pool), reverse=True)
-
-        def _q(f):
-            return _cs[min(len(_cs) - 1, int(len(_cs) * f))]
-        # 稳健取合格池前 70%、均衡前 90%、精锐用最低合格腿（保证 2/3/4 腿凑得齐）；
-        # 其余护栏（证据准入/总赔区间/联合概率/EV）一律不动。
-        _tier_conf = [round(_q(0.70), 1), round(_q(0.90), 1), round(_cs[-1], 1)]
-        print("  分层串关：自适应信心门槛 %s（合格候选 %d/%d）" % (
-            _tier_conf, len(_eligible), len(candidates)), flush=True)
 
     # ===== v1.7.121 通用证据修正（所有数据源，含官方完整源）=====
     # 精简源分支的 confidence 已由后验命中率 post 驱动（post 内含实证超额），
@@ -4742,6 +4730,47 @@ def gen_safe_parlay(matches):
                 c["confidence"] = round(max(40.0, c["confidence"] + _e * 1.2), 1)
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
+
+    # ===== v1.7.122 核心：先选合格单场，才进行串关组合 =====
+    # 用户原则：「选串关是把单场最有把握，数据支撑，合理，才进行串关组合」。
+    # 旧实现先定 2/3/4 腿的档位、再各自 combinations() 凑组合，且档位越高
+    # 门槛越松（精锐直接取全池最低信心），实测真实 EV 稳健 -3.1% → 均衡
+    # -12.0% → 精锐 -38.9%，均衡档的腿甚至不在精锐档里。现改为四步：
+    #   ① 单场层面用统一「绝对标准」筛合格单场，不因档位变化：
+    #      数据支撑 = 历史同方向实证超额 ≥0 且样本 ≥20 场（不编造优势）；
+    #      合理     = 赔率 1.60~上限、非平局（平局天然难测）；
+    #      最有把握 = 按后验命中率降序（已含市场先验 + 历史实证贝叶斯收缩，
+    #                 不是赔率的单调变换，杜绝「低赔无脑选」）。
+    #   ② 排成唯一序列 qualified，每场记 gripRank = 今日第 N 有把握。
+    #   ③ 串关 = 该序列前缀：稳健=前2、均衡=前3、精锐=前4。天然严格嵌套、
+    #      总赔天然单调递增（每条赔率 >1），不再需要独立凑组合与动态地板。
+    #   ④ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。
+    _EDGE_MIN = float(os.environ.get("JC_EDGE_MIN", "0"))
+    _MIN_EMP_N = 20
+    _MIN_LEG_ODDS = 1.60
+    _MAX_LEG_ODDS = 2.80 if _lean else 3.20
+
+    def _qualified(c):
+        if (c.get("edge") or 0) < _EDGE_MIN:
+            return False                      # 历史实证跑不赢市场定价 = 无数据支撑
+        if (c.get("empN") or 0) < _MIN_EMP_N:
+            return False                      # 样本不足 = 证据不足，不假装有利
+        _o = c.get("odds") or 0
+        if not (_MIN_LEG_ODDS <= _o <= _MAX_LEG_ODDS):
+            return False                      # 蚊子肉 / 高赔冷门，都不「合理」
+        if c.get("dir") == "d":
+            return False                      # 平局天然难测
+        return True
+
+    qualified = sorted((c for c in candidates if _qualified(c)),
+                       key=lambda c: -(c.get("postProb") or 0))
+    for _i, _c in enumerate(qualified, 1):
+        _c["gripRank"] = _i                  # 今日第 N 有把握的合格单场
+    print("  分层串关：合格单场 %d/%d 条（按后验把握度排序）%s" % (
+        len(qualified), len(candidates),
+        ("，首位 %s %s @%s 后验%s%%" % (qualified[0]["num"], qualified[0]["label"],
+                                       qualified[0]["odds"], qualified[0].get("postProb")))
+        if qualified else "，今日无合格单场"), flush=True)
 
     # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选最优组合 =====
     # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明, 单腿赔率上限, 同指硬门槛)
@@ -4772,12 +4801,16 @@ def gen_safe_parlay(matches):
         # 而 hit 模式评分由联合命中率主导，天然偏向最低赔腿 —— 1.45 下限会让
         # 三档全挤在 1.47~1.64。抬到 1.60 后单腿落在 1.6~2.33，是有把握又不
         # 蚊子肉的区间；1.70 实测会把稳健/均衡两档挤空（见实验），故取 1.60。
-        ("parlay2", "稳健", (2,), 1.60, 2.20, 5.00, _tier_conf[0], 0.20, -0.08, "hit",
-         "2串1 · 稳胆哲学：从今日最有把握的场次里挑 2 场，单腿赔率≥1.60 拒绝蚊子肉，总赔 2.2-5 倍", 3.2, 50),
-        ("parlay3", "均衡", (3,), 1.60, 2.80, 8.00, _tier_conf[1], 0.10, -0.15, "ev",
-         "3串1 · 价值哲学：从高信心场次里挑 3 场，命中率与回报折中，总赔高于稳健档且 2.8-8 倍", 3.2, 50),
-        ("parlay4", "精锐", (4,), 1.60, 3.50, 12.0, _tier_conf[2], 0.06, -0.08, "hit",
-         "4串1 · 精锐哲学：挑 4 场最有把握的比赛拼一起，单腿≥1.60，总赔必须高于均衡档；联合命中率天然更低，理性看待", 3.2, 55),
+        # v1.7.122：档位不再「定腿数凑组合」，而是合格单场序列的前缀。
+        # 总赔下限置 0（前缀随腿数天然递增，动态地板足以保证单调）；
+        # 总赔上限/联合概率下限按腿数放宽到「前缀模式的自然量级」，
+        # 避免沿用凑组合时代的窄区间把合理的第 3/4 名误判成不达标。
+        ("parlay2", "稳健", (2,), 1.60, 0.0, 6.00, 0.0, 0.20, -0.08, "hit",
+         "2串1 · 稳胆哲学：由今日第 1~2 有把握的合格单场组成（历史实证跑赢定价、样本≥20场、赔率≥1.60 拒绝蚊子肉）", 3.2, 50),
+        ("parlay3", "均衡", (3,), 1.60, 0.0, 12.0, 0.0, 0.08, -0.15, "ev",
+         "3串1 · 递进哲学：稳健 2 场 + 今日第 3 有把握的合格单场，严格包含稳健档全部腿", 3.2, 50),
+        ("parlay4", "精锐", (4,), 1.60, 0.0, 24.0, 0.0, 0.03, -0.08, "hit",
+         "4串1 · 递进哲学：均衡 3 场 + 今日第 4 有把握的合格单场，严格包含均衡档全部腿；联合命中率天然更低，理性看待", 3.2, 55),
     ]
     if _lean:
         # v1.7.120 精简数据源档位重标定：官方接口不通时 500.com 备用源只给
@@ -4789,8 +4822,8 @@ def gen_safe_parlay(matches):
         # 保证从最有把握的场次里挑 2/3/4 场，而不是为凑赔率去搏冷门。
         # (key, 档位, 场数, 单腿下限, 总赔下限, 总赔上限, 信心下限, 联合下限, EV下限, 模式, 说明, 单腿上限, 同指软门槛)
         _lean_bounds = [
-            (5.00, 0.10, "hit", 2.80),
-            (11.0, 0.05, "hit", 2.80),
+            (6.00, 0.10, "hit", 2.80),
+            (12.0, 0.04, "hit", 2.80),
             (24.0, 0.02, "hit", 2.80),
         ]
         TIERS = [t[:5] + (bd[0],) + t[6:7] + (bd[1],) + t[8:9] + (bd[2],) + t[10:11] + (bd[3],) + t[12:]
@@ -4876,16 +4909,17 @@ def gen_safe_parlay(matches):
         # 概率高=同指命中率高），4 条便宜腿乘积极可能低于 3 条中价腿（6.03 vs 6.27），
         # 用户视角「4 串比 3 串赔得少」= 档位语义崩坏。顺序构建+动态地板修复。
         eff_min_total = max(min_total, floor_total + 0.01)
-        from itertools import combinations
         best_pass = None      # 通过 EV 护栏的达标组合（优先返回）
         best_pass_score = None
         best_fb = None        # 兜底组合：EV 未达标时取最接近的，仅在没有达标组合时返回
         best_fb_score = None
         for n in ns:
-            if len(candidates) < n:
+            if len(qualified) < n:
                 continue
             max_hhad = 3 if n >= 4 else (2 if n >= 3 else 1)
-            for combo in combinations(candidates, n):
+            # v1.7.122：唯一候选组合 = 合格单场按把握度排序后的前 n 名前缀。
+            # 不再遍历 combinations()：档位是优质单场的自然叠加，而非定腿数凑组合。
+            for combo in (tuple(qualified[:n]),):
                 # v1.7.121 证据准入：一条腿若连历史同方向实证都跑不赢市场定价
                 # （edge < −1pt），就没有资格被拼进任何一档。宁可该档留空，
                 # 也不把「便宜但历史上更不准」的腿包装成串关推荐。
@@ -4933,9 +4967,16 @@ def gen_safe_parlay(matches):
                 # v1.7.118：改用「按信心分桶的腿级实证命中率（收缩到市场口径）」，
                 # 而非市场去水概率连乘——后者抽水决定恒负 EV，会让所有推荐
                 # 永远挂「不建议下注」。实测高信心腿(≥75)命中 80% vs 市场 58%。
+                # v1.7.122：命中率估计与选边依据统一到「后验命中率」。
+                # 旧口径按 confidence 分桶加实证 delta，与新版按 postProb 排序
+                # 选腿不是同一套把握度，且历史分桶加成会把负期望粉饰成接近
+                # 平衡（旧稳健 -3.1% 靠约 +6pt 加成，而其中一条腿超额为负）。
+                # 现在「用什么标准选腿，就用什么概率算 EV」，逐条可核对、不双标；
+                # 后验概率已含市场共识先验 + 历史实证贝叶斯收缩，不虚高。
                 combo_hit = 1.0
                 for c in combo:
-                    combo_hit *= _emp_prob(c)
+                    _pp = c.get("postProb")
+                    combo_hit *= (_pp / 100.0) if _pp else _leg_prob(c)
                 # ===== 双口径 EV（v1.7.33 推荐标准改革）=====
                 # ev      = 模型口径（pTrue 校准概率 + alpha 0.6 收缩）。该口径系统性偏保守：
                 #          历史实证选出的腿明显优于「同赔率桶」均值（稳健2串1 实测 14 战 9 中、
@@ -5063,22 +5104,40 @@ def gen_safe_parlay(matches):
     parlay3 = built.get("parlay3")
     parlay4 = built.get("parlay4")
 
-    # 稀薄池诚实提示：候选不足或某档留空时，如实告知用户，不装作三档齐全
+    # v1.7.122：把「单场筛选过程」如实摊开，用户能看到每一档为什么出、为什么空。
     pool_notes = []
-    if len(candidates) < 8:
-        pool_notes.append(f"今日候选池仅 {len(candidates)} 场，串关选择面受限")
-    for t, r in zip(TIERS, [built.get(t[0]) for t in TIERS]):
-        if r is None:
-            pool_notes.append(f"{t[1]}{t[2][0]}串1 今日无达标组合（候选不足或赔率单调门槛未过），留空不硬凑")
-    # v1.7.121 证据准入统计：让用户一眼看到「今天有多少场次经得起验证」
-    _edge_ok = sum(1 for c in candidates if (c.get("edge") or 0) >= -1.0)
+    _excl = {
+        "负超额（实证跑不赢定价）": sum(1 for c in candidates if (c.get("edge") or 0) < _EDGE_MIN),
+        "样本不足 %d 场" % _MIN_EMP_N: sum(1 for c in candidates if (c.get("empN") or 0) < _MIN_EMP_N),
+        "蚊子肉/冷门赔率": sum(1 for c in candidates
+                         if not (_MIN_LEG_ODDS <= (c.get("odds") or 0) <= _MAX_LEG_ODDS)),
+        "平局（天然难测）": sum(1 for c in candidates if c.get("dir") == "d"),
+    }
     pool_notes.append(
-        f"证据准入：{len(candidates)} 条候选中 {_edge_ok} 条历史实证不差于市场定价；"
-        f"其余 {len(candidates) - _edge_ok} 条为负超额（历史上比定价更不准），已排除、不进任何一档")
+        f"单场资格：{len(candidates)} 条候选中 {len(qualified)} 条合格"
+        f"（实证超额≥{_EDGE_MIN:g}pt、样本≥{_MIN_EMP_N}场、"
+        f"赔率{_MIN_LEG_ODDS}~{_MAX_LEG_ODDS:g}、非平局），按后验命中率排序后取前缀成档")
+    _excl_txt = "、".join(f"{k} {v} 条" for k, v in _excl.items() if v)
+    if _excl_txt:
+        pool_notes.append("排除明细（各类可重叠）：" + _excl_txt)
+    tier_notes = []
+    for t, r in zip(TIERS, [built.get(t[0]) for t in TIERS]):
+        n = t[2][0]
+        if r is None:
+            if len(qualified) < n:
+                _note = (f"{t[1]}{n}串1 留空：今日合格单场仅 {len(qualified)} 场，不足 {n} 场；"
+                         f"按「先有最有把握的单场才组合」不降门槛、不硬凑")
+            else:
+                _note = (f"{t[1]}{n}串1 留空：前 {n} 名组合未过合理性复核"
+                         f"（总赔/联合概率），不为凑档换腿")
+            tier_notes.append(_note)
+            pool_notes.append(_note)
 
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
         "candidateCount": len(candidates),
+        "qualifiedCount": len(qualified),
+        "tierNotes": tier_notes,
         "candidatePool": [
             {
                 "num": c["num"], "home": c["home"], "away": c["away"],
@@ -5086,10 +5145,18 @@ def gen_safe_parlay(matches):
                 "confidence": c.get("confidence"),
                 "sameOddsHit": c.get("sameOddsHit"), "sameOddsN": c.get("sameOddsN"),
                 "edge": c.get("edge"), "postProb": c.get("postProb"), "empN": c.get("empN"),
-            } for c in candidates
+                # v1.7.122：页面可逐条核对「这条单场够不够格、排第几有把握、
+                # 不合格是因为哪一条」。排除原因由后端给出，前端不猜测。
+                "qualified": bool(_qualified(c)), "gripRank": c.get("gripRank"),
+                "excludeReasons": ([] if _qualified(c) else (
+                    (["实证未跑赢定价"] if (c.get("edge") or 0) < _EDGE_MIN else [])
+                    + (["样本不足%d场" % _MIN_EMP_N] if (c.get("empN") or 0) < _MIN_EMP_N else [])
+                    + (["蚊子肉/冷门赔率"] if not (_MIN_LEG_ODDS <= (c.get("odds") or 0) <= _MAX_LEG_ODDS) else [])
+                    + (["平局"] if c.get("dir") == "d" else []))),
+            } for c in sorted(candidates, key=lambda x: -(x.get("postProb") or 0))
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池；赔率单调——按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档。v1.7.121 选边证据化：以市场共识概率为先验、历史同方向实证命中率做贝叶斯收缩得「后验命中率」，按后验选边（同方向样本 <20 场视为证据不足、退回市场定价），不再按赔率绝对值挑最低赔；「实证超额 = 历史同方向实证命中率 − 市场定价隐含概率」< −1pt 的腿禁止进入任何一档，凑不出组合该档留空、绝不硬凑；非精简源的信心分同样按负超额扣分，档位信心门槛对所有数据源按候选池分位数自适应。推荐资格 = 真实 EV 达标且全组无负超额腿，否则一律标「观望」。单腿赔率 ≥1.60 拒绝蚊子肉、≤3.2 拒绝纯高倍。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿的选入依据可逐条核对",
+        "strategy": "v1.7.122 选串关原则：先有单场，才有组合。① 单场资格用统一绝对标准（不因档位变化）——数据支撑：历史同方向实证命中率经贝叶斯收缩后的超额 ≥0pt 且样本 ≥20 场（样本不足不编造优势）；合理：赔率 1.60~3.20（拒绝低赔蚊子肉与高赔冷门）、非平局；最有把握：按后验命中率降序，后验已含市场先验+历史实证，不是赔率的单调变换（杜绝「看到低赔就无脑选」）。② 串关 = 合格单场序列的前缀：稳健=前2、均衡=前3、精锐=前4，严格嵌套、总赔随腿数单调递增；不再定腿数凑组合、不再按档位放宽门槛。③ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。④ 推荐资格仍为硬条件：真实 EV 达标且全组无负超额腿，否则一律标「观望」。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿「为什么够格、排第几有把握」可逐条核对",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,

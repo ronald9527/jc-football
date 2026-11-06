@@ -1765,8 +1765,20 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.121";
+const VERSION = "v1.7.122";
 const CHANGELOG = [
+  {
+    version: "v1.7.122",
+    date: "2026-11-06",
+    title: "选串关回归本源：先选合格单场，才按把握度组合",
+    details: [
+      "用户明确原则「选串关是把单场最有把握，数据支撑，合理，才进行串关组合」—— 核查后确认旧实现仍是「先定 2/3/4 腿档位、再各自凑组合」，且档位越高门槛越松（精锐几乎无门槛），实测真实 EV 稳健 −3.1% → 均衡 −12.0% → 精锐 −38.9%，均衡档的腿甚至不在精锐档里",
+      "改为四步：① 单场统一绝对标准筛「合格单场」——数据支撑（历史同方向实证超额≥0pt、样本≥20场）、合理（赔率 1.60~3.20、非平局）、最有把握（按后验命中率降序，不是赔率的单调变换）；② 串关 = 合格单场序列前缀：稳健=前2、均衡=前3、精锐=前4，严格嵌套、总赔随腿数单调递增；③ 合格单场不足 N 条则第 N 档留空并写明原因，绝不降门槛/换腿硬凑；④ 废除按档位放宽的信心门槛",
+      "统一 EV 口径：旧版「选腿用后验命中率、算 EV 却用信心分桶加实证加成」是双标，那个 −3.1% 靠约 +6pt 分桶加成抬出来，且其中一条腿实证超额为负。现改为「用什么标准选腿，就用什么概率算命中率与 EV」——组合命中率 = 各腿后验概率连乘，逐档与页面显示完全自洽",
+      "页面透明化：新增「今日单场资格核查」清单，逐条显示是否合格、第几有把握、后验命中率、实证超额、样本量，以及不合格的具体原因；三档标注由前 N 名前缀组成；留空档写明「今日合格单场不足 N 条」",
+      "结果（当日）：30 条候选中 7 条合格，三档为 2.72 / 5.42 / 12.19 倍、严格嵌套，全部由正超额腿组成；诚实口径下真实 EV −17.2% / −23.1% / −29.5%，三档一律「观望」。不承诺盈利，只承诺每条腿的入选依据可逐条核对"
+    ]
+  },
   {
     version: "v1.7.121",
     date: "2026-11-06",
@@ -5046,13 +5058,17 @@ function parlayLegsHtml(legs){
       const et = weak ? "证据不足" : (ed < -1 ? "负超额·不采信" : (ed > 1 ? "实证有超额" : "与定价持平"));
       edgeBadge = `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;color:${ec};border:1px solid ${ec};" title="实证超额 = 历史同方向实证命中率 − 市场定价隐含概率（赔率 0.886÷o）。>0 才说明历史数据支持该选项比市场更靠谱；样本<20 场视为证据不足">${et} ${ed>0?"+":""}${ed}pt${eh!=null?` · 实证${eh}%(n=${ehn})`:` · 样本${ehn}场`}${leg.postProb!=null?` · 后验${leg.postProb}%`:""}</span>`;
     }
+    // v1.7.122：标注这条腿是「今日第 N 有把握的合格单场」，与档位前缀口径对应。
+    // 组合内序号改称「腿N」，避免与「第N有把握」混淆。
+    const gripBadge = (leg.gripRank != null)
+      ? `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;color:var(--accent);border:1px solid var(--accent);">第${leg.gripRank}有把握</span>` : "";
     const oddsTxt = (typeof leg.odds === "number") ? leg.odds.toFixed(2) : (leg.odds || "—");
     const ko = leg.kickoff ? String(leg.kickoff).slice(0,5) : "";
     return `<div class="ho-leg">
-      <div class="ho-num">第${i+1}场<br><span style="font-size:9px">${leg.num||""}</span></div>
+      <div class="ho-num">腿${i+1}<br><span style="font-size:9px">${leg.num||""}</span></div>
       <div>
         <div class="ho-match"><span class="ho-league">${leg.league||""}</span>${leg.home||""} vs ${leg.away||""}</div>
-        <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b>${soBadge}${fdBadge}${edgeBadge}</div>
+        <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b>${gripBadge}${soBadge}${fdBadge}${edgeBadge}</div>
         <div style="margin-top:3px">${reasonsHtml}</div>
       </div>
       <div class="ho-odds" style="color:var(--good)">${oddsTxt}<small>@${ko}</small></div>
@@ -5233,7 +5249,8 @@ function renderHighOdds(){
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
       ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏。</b><b style="color:var(--text)">EV 有两个口径</b>：<b>模型口径</b>（用校准概率推算，系统性偏保守，仅作参考）与<b>历史同条件口径</b>（同样选法过去实际中了多少，地面真实）；<b style="color:var(--text)">推荐判定只看历史口径</b>：真实命中率 ≥ 盈亏平衡线（100 ÷ 总赔率）才算达标，不达标一律标「观望」。<br>
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
-      ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">但「赔率低」不等于「有把握」</b>：赔率只是市场定价，历史上同一赔率档的实际命中率完全可能<u>低于</u>定价（本页把两者之差叫「实证超额」，负值标红）。v1.7.121 起选边先看该方向的历史实证是否跑赢定价，再看赔率；低赔但历史上更不准的腿直接不进组合。高命中与高回报不可兼得，这是串关的本质矛盾。
+      ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">但「赔率低」不等于「有把握」</b>：赔率只是市场定价，历史上同一赔率档的实际命中率完全可能<u>低于</u>定价（本页把两者之差叫「实证超额」，负值标红）。v1.7.121 起选边先看该方向的历史实证是否跑赢定价，再看赔率；低赔但历史上更不准的腿直接不进组合。高命中与高回报不可兼得，这是串关的本质矛盾。<br>
+      ④ <b style="color:var(--text)">v1.7.122 选串关顺序</b>：先在单场层面用统一标准筛出「最有把握、有数据支撑、合理」的合格单场，再按把握度取前 2 / 3 / 4 名组成三档 —— <b style="color:var(--text)">先有单场，才有组合</b>；合格单场不足就不出该档，绝不为凑腿数放宽门槛或塞入弱腿。
     </div>`;
     // v1.7.121 今日证据总判定：把「为什么不给推荐」讲成可逐条核对的结论，
     // 而不是空洞的一句「不建议下注」。
@@ -5245,9 +5262,14 @@ function renderHighOdds(){
       const _verdict = _rec>0
         ? `今日 <b style="color:var(--good)">${_rec}</b> 档通过证据与期望双重核查`
         : `今日 <b style="color:var(--warn)">0 档</b>达到推荐标准（各档历史实证命中率均未跑赢盈亏平衡线），三档一律标「观望」`;
+      const _qN = sp.qualifiedCount;
+      const _prefix = (_qN!=null)
+        ? `<br><b style="color:var(--text)">🎯 先有单场，才有组合：</b>今日 ${sp.candidateCount||0} 条候选中 <b style="color:var(--good)">${_qN} 条合格</b>（实证超额≥0pt、样本≥20场、赔率合理、非平局），按后验把握度排序后取 <b style="color:var(--text)">前 2 / 前 3 / 前 4 名</b> 分别组成稳健 / 均衡 / 精锐，三档严格嵌套、不降门槛、不换腿硬凑。`
+        : "";
+      const _tn = (sp.tierNotes||[]).length ? `<br><span style="color:var(--warn)">${(sp.tierNotes||[]).join("<br>")}</span>` : "";
       html += `<div style="margin:0 0 10px;padding:9px 12px;background:rgba(255,193,7,.06);border:1px solid var(--warn);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
-        <b style="color:var(--text)">🔍 今日证据核查：</b>共 ${_tiers.length} 档 / ${_legs} 条腿，<b style="color:${_neg>0?'var(--bad)':'var(--good)'}">${_neg} 条负超额腿</b>（历史实证差于市场定价）。${_verdict}。<br>
-        <span style="color:var(--weak)">选边口径：以市场定价为先验、历史同方向实证命中率做贝叶斯收缩；样本 &lt;20 场视为证据不足。每条腿的实证命中率、超额与样本量见下方卡片，逐条可核对。</span>
+        <b style="color:var(--text)">🔍 今日证据核查：</b>共 ${_tiers.length} 档 / ${_legs} 条腿，<b style="color:${_neg>0?'var(--bad)':'var(--good)'}">${_neg} 条负超额腿</b>（历史实证差于市场定价）。${_verdict}。${_prefix}<br>
+        <span style="color:var(--weak)">选边口径：以市场定价为先验、历史同方向实证命中率做贝叶斯收缩；样本 &lt;20 场视为证据不足。组合命中率 = 各腿后验概率连乘，与逐腿显示完全一致。每条腿的依据见下方清单，逐条可核对。</span>${_tn}
       </div>`;
     }
     if(spFromHistory){
@@ -5390,27 +5412,35 @@ function renderHighOdds(){
       </div>`;
       html += _negDetailHtml(negDesc, "各档完整赛程已折叠，");
     }
-    // ===== 候选池透明卡（v1.7.25）=====
-    // 把「今天系统从哪些比赛里挑」完整摊开：每场的唯一系统意见+赔率+信心+历史同指命中率。
-    // 用户可自行核对「是不是随便堆的」——一切用数据说话。
+    // ===== 单场资格核查清单（v1.7.122）=====
+    // 用户要求「选串关是把单场最有把握、数据支撑、合理，才进行串关组合」。
+    // 把「哪些单场够格、排第几有把握、不合格是因为哪一条」全部摊开；
+    // qualified / gripRank / excludeReasons 由后端直接给出，前端只展示不判定，
+    // 保证页面与引擎口径完全一致，用户可逐条核对系统是不是在乱挑。
     const _pool = sp.candidatePool || [];
     if(_pool.length){
+      const _qN = sp.qualifiedCount!=null ? sp.qualifiedCount : _pool.filter(c=>c.qualified).length;
       html += `<div class="ho-card" style="border-left:3px solid var(--accent);margin-top:10px;">
         <div class="ho-head">
-          <span class="ho-type" style="color:var(--accent)">🧾 今日候选池（${_pool.length} 场）</span>
-          <span style="font-size:11px;color:var(--sub)">三档都只在这些比赛及其系统意见内组合</span>
+          <span class="ho-type" style="color:var(--accent)">🧾 今日单场资格核查（${_qN}/${_pool.length} 条合格）</span>
+          <span style="font-size:11px;color:var(--sub)">先有单场，才有组合</span>
         </div>
-        <div style="font-size:11px;color:var(--sub);margin:6px 0 8px;line-height:1.6;">
-          每场比赛全天只有一个「系统意见」（历史同指命中率优先，叠加 EV/信心/技术信号评分选出）；同指命中率来自竞彩官方赛果库同赔率/同盘口条件的历史实战统计，样本 &lt;10 不作依据。
+        <div style="font-size:11px;color:var(--sub);margin:6px 0 8px;line-height:1.7;">
+          合格标准（三档统一、不因档位放宽）：<b style="color:var(--text)">数据支撑</b> = 历史同方向实证超额 ≥0pt 且样本 ≥20 场；<b style="color:var(--text)">合理</b> = 赔率 1.60~3.20、非平局；<b style="color:var(--text)">最有把握</b> = 按后验命中率降序。稳健/均衡/精锐分别取前 2 / 3 / 4 名前缀，严格嵌套；合格单场不足 N 条则该档留空，不降门槛、不换腿硬凑。
         </div>
-        <div style="max-height:280px;overflow-y:auto;">` + _pool.map(c=>{
-          const so = c.sameOddsHit, son = c.sameOddsN || 0;
-          const soTxt = (so!=null && son>=10) ? `同指 <b style="color:${so>=60?"var(--good)":(so<45?"var(--bad)":"var(--warn)")}">${so}%</b>(n=${son})` : (son>0 ? `同指样本不足(n=${son})` : "无同指样本");
-          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dashed var(--border);font-size:11.5px;">
-            <span>${c.num||""} ${c.home||""} vs ${c.away||""}<br><span style="color:var(--sub);font-size:10.5px;">${c.play||""} · <b style="color:var(--good)">${c.label||""}</b></span></span>
-            <span style="text-align:right;">
+        <div style="max-height:320px;overflow-y:auto;">` + _pool.map(c=>{
+          const ok = !!c.qualified;
+          const pp = c.postProb, e = c.edge, n = c.empN || 0;
+          const eTxt = (e!=null) ? `<b style="color:${e>=0?"var(--good)":"var(--bad)"}">${e>=0?"+":""}${e}pt</b>` : "—";
+          const badge = ok
+            ? `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;color:var(--good);border:1px solid var(--good);">✓ 第 ${c.gripRank} 有把握</span>`
+            : `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;color:var(--bad);border:1px solid var(--bad);">✗ ${(c.excludeReasons||[]).join(" / ") || "不合格"}</span>`;
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border);font-size:11.5px;${ok?"":"opacity:.55;"}">
+            <span>${c.num||""} ${c.home||""} vs ${c.away||""}<br>
+              <span style="color:var(--sub);font-size:10.5px;">${c.play||""} · <b style="color:${ok?"var(--good)":"var(--sub)"}">${c.label||""}</b> · ${badge}</span></span>
+            <span style="text-align:right;white-space:nowrap;">
               <span style="color:var(--accent);font-weight:600;">@${(c.odds!=null?Number(c.odds).toFixed(2):"—")}</span><br>
-              <span style="color:var(--sub);font-size:10px;">信心${c.confidence!=null?c.confidence:"—"}% · ${soTxt}</span>
+              <span style="color:var(--sub);font-size:10px;">后验 ${pp!=null?pp+"%":"—"} · 超额 ${eTxt} · n=${n}</span>
             </span>
           </div>`;
         }).join("") + `</div>
