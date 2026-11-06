@@ -1250,6 +1250,16 @@ def main():
         m["hadSup"] = prob_sup(had_s, "hSupportRate", "dSupportRate", "aSupportRate")
         m["hhadProb"] = prob_sup(hhad_s, "hProbability", "dProbability", "aProbability")
         m["hhadSup"] = prob_sup(hhad_s, "hSupportRate", "dSupportRate", "aSupportRate")
+        # v1.7.120 数据侧根治「分层串关空白」：CI 海外 IP 官方支持率接口不通时，
+        # 走 500.com 备用源只有赔率、没有隐含概率（hadProb 全 None）。下游串关算法
+        # 有 `if d_prob < 10: continue`，会把在售场次全部剔除 → 候选池 0 → 三档全空，
+        # 页面天天显示「今日无达标组合」。此处从胜平负/让球赔率反推归一化隐含概率
+        # （去水位），让备用源数据与官方源结构等价，所有下游模块一并受益。
+        if not any((m["hadProb"] or {}).values()):
+            m["hadProb"] = implied_from_odds(m.get("had"))
+        if not any((m["hhadProb"] or {}).values()):
+            m["hhadProb"] = implied_from_odds(
+                {k: v for k, v in (m.get("hhad") or {}).items() if k in ("h", "d", "a")})
         m["votes"] = {"h": had_s.get("win"), "d": had_s.get("draw"), "a": had_s.get("lose")}
         m["eValue"] = had_s.get("eValue")
         m["eKey"] = had_s.get("eKey")
@@ -1743,6 +1753,22 @@ def main():
     merge_model_predict(matches)
 
     out = os.path.join(HERE, "matches.json")
+    # v1.7.120 空壳保护：本批次若三档全空（如凌晨在售不足、某接口偶发异常），
+    # 不得用空 safeParlay 覆盖磁盘上当日已发布的有效推荐。否则一次抖动就会让
+    # 页面整块变空白，且 load_locked_parlay 因当日无历史记录也救不回来。
+    _new_empty = not any((safe_parlay or {}).get(k) for k in ("parlay2", "parlay3", "parlay4"))
+    if _new_empty and os.path.exists(out):
+        try:
+            _old = json.load(open(out, encoding="utf-8"))
+            _osp = _old.get("safeParlay") or {}
+            if any(_osp.get(k) for k in ("parlay2", "parlay3", "parlay4")):
+                _today_bj = time.strftime("%Y-%m-%d")
+                if (_osp.get("generatedAt") or "")[:10] == _today_bj:
+                    safe_parlay = _osp
+                    parlay_history = _old.get("parlayHistory") or parlay_history
+                    print("  分层串关：本批次无达标组合，沿用当日已发布推荐（防空壳覆盖）", flush=True)
+        except Exception as _e:
+            print("  分层串关空壳保护跳过: %s" % _e, flush=True)
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"updateTime": time.strftime("%Y-%m-%d %H:%M:%S"), "count": len(matches),
                    "matches": matches, "highOddsParlay": high_odds_parlay,
@@ -3891,6 +3917,27 @@ def gen_high_odds_parlay(matches):
     return result
 
 
+def implied_from_odds(odds):
+    """从胜平负赔率反推归一化隐含概率（去水位，百分数）。
+
+    CI 海外 IP 拿不到官方支持率接口时走 500.com 备用源，只有赔率没有
+    hProbability/支持率。下游规则判定、比分预测、串关都以 hadProb 为主信号，
+    全 None 会把在售场次整批剔除（串关 `d_prob < 10: continue` → 候选池 0）。
+    这里按 1/odds 归一化还原市场共识概率，让备用源结构与官方源等价。
+    """
+    if not isinstance(odds, dict):
+        return {}
+    inv = {}
+    for k in ("h", "d", "a"):
+        v = odds.get(k)
+        if isinstance(v, (int, float)) and v > 1:
+            inv[k] = 1.0 / v
+    s = sum(inv.values())
+    if not s:
+        return {}
+    return {k: round(v / s * 100, 1) for k, v in inv.items()}
+
+
 def calc_kelly_index(odds, prob):
     """凯利指数计算：Kelly = (b*p - q) / b
     b=净赔率, p=胜率, q=败率
@@ -4112,10 +4159,48 @@ def gen_safe_parlay(matches):
     （同指命中率×总赔−1）——推荐判定/达标线/排序/仓位全部用真实口径。
     返回 {parlay2, parlay3, parlay4, generatedAt, strategy}
     """
+    # v1.7.120 根治「分层串关每天空白」：竞彩销售批次跨自然日。
+    # 例：周五001 开球 11-06 16:40、周五002~014 开球 11-07 凌晨，但它们是同一个
+    # 「周五」销售日、11-06 全天在售可下单。旧逻辑 `date == 今天` 把次日凌晨开球的
+    # 13 场全部丢掉，中午后剩余的当日场次又陆续开赛，候选池归零 → 三档必然留空；
+    # 叠加 CI 容器 UTC 时区错位时更会全场清零。现改为「在售未开赛」口径：
+    # 只要尚未开赛、且开球时间在未来 36 小时内即入池（窗口覆盖一个完整销售日）。
     today = time.strftime("%Y-%m-%d")
-    matches = [m for m in matches if m.get("date") == today]
-    candidates = []
     now_ts = time.time()
+    _WIN = 36 * 3600
+
+    def _kickoff_ts(m):
+        k = m.get("kickoff") or ""
+        try:
+            if len(k) >= 10 and k[4] == '-':
+                return time.mktime(time.strptime(k[:16], "%Y-%m-%d %H:%M"))
+            return time.mktime(time.strptime(f"{m.get('date','')} {k}", "%Y-%m-%d %H:%M"))
+        except Exception:
+            return None
+
+    _kept = []
+    for _m in matches:
+        _kt = _kickoff_ts(_m)
+        # 无法解析开球时间的保留（由下方循环原有逻辑处理），其余只留未开赛且在未来窗口内
+        if _kt is None or (now_ts < _kt <= now_ts + _WIN):
+            _kept.append(_m)
+    matches = _kept
+
+    # v1.7.120 精简模式检测：CI 海外 IP 走 500.com 备用源时，官方支持率 / 盘口异动 /
+    # 规则星级等技术信号接口不通，matches 里这些字段普遍为空。此时 confidence 公式
+    # （d_prob×0.85 后被 max(55) 压平）会失去区分度、全部候选恒等于 55，永远够不到
+    # 档位门槛 70/68/65 → 三档恒空。官方完整数据下这些信号齐全，不触发精简分支。
+    def _has_rich_signal(m):
+        v = m.get("verdict") or {}
+        sup = m.get("hadSup") or {}
+        mov = m.get("mov") or {}
+        return ((isinstance(v.get("stars"), (int, float)) and (v.get("stars") or 0) > 0)
+                or any(isinstance(x, (int, float)) for x in sup.values())
+                or any(isinstance(x, (int, float)) for x in mov.values()))
+    _rich_n = sum(1 for _m in matches if _has_rich_signal(_m))
+    _lean = (len(matches) > 0 and _rich_n < len(matches) * 0.5)
+
+    candidates = []
     # 历史同指：载入竞彩官方赛果库（354+ 已完赛），免费自建同指命中率
     try:
         _hist_recs = load_history()
@@ -4144,6 +4229,11 @@ def gen_safe_parlay(matches):
         vdir = verdict.get("dir")
         prob = m.get("hadProb") or {}
         sup = m.get("hadSup") or {}
+        # v1.7.120 概率兜底：备用源 / 旧快照没有隐含概率时，就地从赔率反推，
+        # 避免 `if d_prob < 10: continue` 把整批在售场次剔除、候选池清零。
+        # 主流程已在 [3/6] 统一补过，这里再兜一层以覆盖单独调用与历史文件。
+        if not any(isinstance(v, (int, float)) for v in prob.values()):
+            prob = implied_from_odds(had)
         goals_exp = m.get("goalsExp") or 2.5
         attack = m.get("attack") or {}
         form = m.get("form") or {}
@@ -4531,8 +4621,25 @@ def gen_safe_parlay(matches):
         # 若某档因意见池收窄而凑不出达标组合，该档留空（前端如实展示），不靠改说法硬凑。
         if match_options:
             # v1.7.43：评分逻辑提取为模块级 parlay_canon_score（见上），此处直接调用
-            _scored = [(parlay_canon_score(o), o) for o in match_options]
-            canon, opt = max(_scored, key=lambda t: t[0])
+            if _lean:
+                # v1.7.120 精简数据源（500.com 备用源）：官方支持率/盘口异动/规则星级
+                # 全缺，confidence 被压平到下限 55，canon 评分里 score=conf×odds 变成
+                # 纯由赔率主导 → 系统意见几乎全选「平局@3.x」（最难预测的方向）。
+                # 改用「市场共识隐含概率 + 历史同指实证命中率」选唯一意见：
+                # 低赔正路优先、平局重罚，杜绝把冷门平局塞进串关。
+                def _lean_pick(o):
+                    _o = o.get("odds") or 99
+                    _pm = 0.886 / _o if _o > 1 else 0.30
+                    _so, _sn = o.get("sameOddsHit"), o.get("sameOddsN") or 0
+                    _p = _pm if (_so is None or _sn < 20) else (0.55 * _pm + 0.45 * _so / 100.0)
+                    if o.get("dir") == "d":
+                        _p -= 0.08          # 平局天然难测，实证命中率显著低
+                    return _p
+                opt = max(match_options, key=_lean_pick)
+                canon = _lean_pick(opt)
+            else:
+                _scored = [(parlay_canon_score(o), o) for o in match_options]
+                canon, opt = max(_scored, key=lambda t: t[0])
             candidates.append({
                 "num": m.get("num"), "league": m.get("league"),
                 "home": m.get("home"), "away": m.get("away"),
@@ -4549,6 +4656,31 @@ def gen_safe_parlay(matches):
                 # v1.7.43：选腿时的 canon 评分快照，供赛后回溯「为什么选这条腿」
                 "canon": round(canon, 3),
             })
+
+    # ===== v1.7.120 精简数据源：信心度重标定 + 档位门槛自适应 =====
+    # 官方技术信号缺失时，上面的 conf 公式（base=d_prob×0.85 + 少量 tech_bonus）
+    # 会被 max(55, ...) 压平成一片 55，档位门槛 70/68/65 把全部候选挡光 → 三档恒空。
+    # 这里用「市场共识隐含概率 + 历史同指实证命中率」重建有区分度的信心度：
+    # 低赔正路更有把握、冷门平局更低，实现「十场里挑最有把握的 2/3/4 场」。
+    # 档位门槛不再写死，改为按当日候选池信心分位数自适应，保证任何数据源下都能
+    # 从当日相对最优的场次里出推荐；单腿赔率下限 1.45 仍严格挡住蚊子肉。
+    _tier_conf = [70.0, 68.0, 65.0]
+    if _lean and candidates:
+        for c in candidates:
+            _o = c.get("odds") or 99
+            _pm = 0.886 / _o if _o > 1 else 0.30
+            _so, _sn = c.get("sameOddsHit"), c.get("sameOddsN") or 0
+            _p = _pm if (_so is None or _sn < 20) else (0.55 * _pm + 0.45 * _so / 100.0)
+            if c.get("dir") == "d":
+                _p -= 0.05
+            c["confidence"] = round(min(86.0, max(52.0, 55 + (_p - 0.30) * 70)), 1)
+        _cs = sorted((c["confidence"] for c in candidates), reverse=True)
+
+        def _q(f):
+            return _cs[min(len(_cs) - 1, int(len(_cs) * f))]
+        # 稳健档只从信心前 45% 里挑（最有把握），均衡/精锐依次放宽以凑够 3/4 场
+        _tier_conf = [round(_q(0.45), 1), round(_q(0.70), 1), round(_q(0.90), 1)]
+        print("  分层串关：精简数据源，信心度已重标定，自适应门槛 %s" % _tier_conf, flush=True)
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
@@ -4577,13 +4709,33 @@ def gen_safe_parlay(matches):
     # 而 confidence≥75 实际 94%（17/18）——「最有把握」应由信心度+技术信号主导，
     # 同指率只做软惩罚。同时把单腿赔率下限抬到 1.45，杜绝 1.2x 蚊子肉。
     TIERS = [
-        ("parlay2", "稳健", (2,), 1.45, 2.20, 5.00, 70.0, 0.20, -0.08, "hit",
-         "2串1 · 稳胆哲学：从今日最有把握的场次里挑 2 场，单腿赔率≥1.45 拒绝蚊子肉，总赔 2.2-5 倍", 3.2, 50),
-        ("parlay3", "均衡", (3,), 1.45, 2.80, 8.00, 68.0, 0.10, -0.15, "ev",
+        # v1.7.120：单腿下限 1.45→1.60。用户明确反对「1.2-1.5 的低赔蚊子肉」，
+        # 而 hit 模式评分由联合命中率主导，天然偏向最低赔腿 —— 1.45 下限会让
+        # 三档全挤在 1.47~1.64。抬到 1.60 后单腿落在 1.6~2.33，是有把握又不
+        # 蚊子肉的区间；1.70 实测会把稳健/均衡两档挤空（见实验），故取 1.60。
+        ("parlay2", "稳健", (2,), 1.60, 2.20, 5.00, _tier_conf[0], 0.20, -0.08, "hit",
+         "2串1 · 稳胆哲学：从今日最有把握的场次里挑 2 场，单腿赔率≥1.60 拒绝蚊子肉，总赔 2.2-5 倍", 3.2, 50),
+        ("parlay3", "均衡", (3,), 1.60, 2.80, 8.00, _tier_conf[1], 0.10, -0.15, "ev",
          "3串1 · 价值哲学：从高信心场次里挑 3 场，命中率与回报折中，总赔高于稳健档且 2.8-8 倍", 3.2, 50),
-        ("parlay4", "精锐", (4,), 1.45, 3.50, 12.0, 65.0, 0.06, -0.08, "hit",
-         "4串1 · 精锐哲学：挑 4 场最有把握的比赛拼一起，单腿≥1.45，总赔必须高于均衡档；联合命中率天然更低，理性看待", 3.2, 55),
+        ("parlay4", "精锐", (4,), 1.60, 3.50, 12.0, _tier_conf[2], 0.06, -0.08, "hit",
+         "4串1 · 精锐哲学：挑 4 场最有把握的比赛拼一起，单腿≥1.60，总赔必须高于均衡档；联合命中率天然更低，理性看待", 3.2, 55),
     ]
+    if _lean:
+        # v1.7.120 精简数据源档位重标定：官方接口不通时 500.com 备用源只给
+        # 胜平负/让球赔率，可用正路腿集中在 1.77-3.15，最小 3 串乘积已达 8.6、
+        # 最小 4 串约 20，而旧档位总赔上限写死 8 / 12、联合概率下限 0.10 / 0.06
+        # 是按官方低赔腿调的 → 3串1/4串1 组合被整批挡光，页面天天「无达标组合」。
+        # 现按腿数放宽总赔上限与联合概率下限（后者是市场去水概率连乘的自然量级），
+        # 单腿赔率上限收到 2.80 挡掉 3.x 冷门平局，三档统一「命中率优先」模式，
+        # 保证从最有把握的场次里挑 2/3/4 场，而不是为凑赔率去搏冷门。
+        # (key, 档位, 场数, 单腿下限, 总赔下限, 总赔上限, 信心下限, 联合下限, EV下限, 模式, 说明, 单腿上限, 同指软门槛)
+        _lean_bounds = [
+            (5.00, 0.10, "hit", 2.80),
+            (11.0, 0.05, "hit", 2.80),
+            (24.0, 0.02, "hit", 2.80),
+        ]
+        TIERS = [t[:5] + (bd[0],) + t[6:7] + (bd[1],) + t[8:9] + (bd[2],) + t[10:11] + (bd[3],) + t[12:]
+                 for t, bd in zip(TIERS, _lean_bounds)]
     # 竞彩单场返奖率：对当日全部场次实测 1/(1/h+1/d+1/a) ≈ 88.6%，即单场抽水约 11.4%。
     # （此前按 70% 估算是错的，会把串关抽水夸大一倍）
     PAYBACK = 0.886
@@ -4643,6 +4795,13 @@ def gen_safe_parlay(matches):
             _emp_delta[_i] = round(((_h / _n) - (sum(_mkts) / len(_mkts))) * 0.5, 4)
 
     def _emp_prob(c):
+        if _lean:
+            # v1.7.120 精简数据源：上面的信心度已按市场概率重标定，与历史腿的
+            # 信心口径不一致，再叠加实证分桶 delta 会系统性高估命中率（实测能把
+            # 4串1 抬成「实证+49%、EV+49%」的虚高假象）。此处直接退回市场去水
+            # 概率，保证联合命中率与 EV 诚实无偏：竞彩抽水决定恒为负期望，
+            # 页面如实标「观望」，但推荐组合照常给出、绝不用假正期望诱导下注。
+            return _leg_prob(c)
         _c = c.get("confidence") or 0
         _di = len(_emp_buckets) - 1
         for _i, (_lo, _hi) in enumerate(_emp_buckets):
@@ -4843,7 +5002,7 @@ def gen_safe_parlay(matches):
             } for c in candidates
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池，差异只在选不选它、拼几场；赔率单调——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档；引擎版本门——旧引擎生成且未开球的推荐在引擎升级后自动解锁重生，已判定记录绝不动。v1.7.118 选腿口径：按「平均信心度 + 联合命中率 + EV」从当日最有把握的场次里挑 2/3/4 场；单腿赔率 ≥1.45 拒绝蚊子肉、≤3.2 拒绝纯高倍；同指命中率偏低的腿只做评分扣分，不再一刀切剔除（此前硬门槛把候选砍到只剩低赔，导致均衡/精锐长期留空）；命中率与 EV 改用 parlay_history 217 条已判定腿按信心分桶的实证（≥75 分桶实测 80% vs 市场 58%，收缩 50% 后校准），不再用恒负的市场去水概率连乘。EV 为负的档位长期必亏，档位之间只有亏多亏少的区别",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池，差异只在选不选它、拼几场；赔率单调——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档；引擎版本门——旧引擎生成且未开球的推荐在引擎升级后自动解锁重生，已判定记录绝不动。v1.7.118 选腿口径：按「平均信心度 + 联合命中率 + EV」从当日最有把握的场次里挑 2/3/4 场；单腿赔率 ≥1.60 拒绝蚊子肉（v1.7.120 由 1.45 抬高，挡掉 1.2-1.5 低赔）、≤3.2 拒绝纯高倍；同指命中率偏低的腿只做评分扣分，不再一刀切剔除（此前硬门槛把候选砍到只剩低赔，导致均衡/精锐长期留空）；命中率与 EV 改用 parlay_history 217 条已判定腿按信心分桶的实证（≥75 分桶实测 80% vs 市场 58%，收缩 50% 后校准），不再用恒负的市场去水概率连乘。EV 为负的档位长期必亏，档位之间只有亏多亏少的区别",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,

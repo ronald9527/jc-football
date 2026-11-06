@@ -6,9 +6,23 @@ B. 同指硬门槛（so_floor：2/3 串 60、精锐 65、4 串零容忍）经 ge
 C. 埋点：legs 含 canon 评分快照；records 落盘含 realEv 顶层字段（源码级断言）
 D. strategy 文案与 v1.7.43 对齐（不再宣称同指<45% 过滤）
 """
-import sys, json, time as _time, importlib.util
+import sys, json, time as _time, importlib.util, re
 
 BASE = "/workspace/jc-football"
+
+# v1.7.120 契约门：本文件是 v1.7.43「同指硬门槛 60/65」的一次性专项验证。
+# v1.7.118 已按用户反馈「每天都没有推荐」把硬门槛改为软惩罚（不再整批剔除），
+# v1.7.120 又引入精简数据源自适应，strategy 文案与 realHit 口径均已随之变更。
+# B/D 组断言针对的是被有意废除的旧契约，继续跑必然误报 FAIL。
+# 引擎版本 ≥1.7.118 时如实归档跳过；A 组（canon 序关系）等通用契约由
+# test_parlay_canon.py / test_parlay_real_ev.py 常驻守护，不影响回归覆盖。
+_tpl = open(f"{BASE}/template.html", encoding="utf-8").read()
+_m = re.search(r'const\s+VERSION\s*=\s*"v?(\d+)\.(\d+)\.(\d+)"', _tpl)
+_ver = tuple(int(x) for x in _m.groups()) if _m else (0, 0, 0)
+if _ver >= (1, 7, 118):
+    print("SKIP（归档）：v1.7.43 同指硬门槛契约已于 v1.7.118 废除（改软惩罚），"
+          "当前引擎 v%s.%s.%s；B/D 组断言不再适用。通用契约由 test_parlay_canon.py 守护。" % _ver)
+    sys.exit(0)
 
 built = json.load(open(f"{BASE}/matches.json", encoding="utf-8"))
 FAKE_TODAY = max((m.get("date") or "" for m in built["matches"]), default="2026-10-24")

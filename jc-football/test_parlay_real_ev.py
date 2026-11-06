@@ -98,11 +98,15 @@ for key in ("parlay2", "parlay3", "parlay4"):
     if not p:
         continue
     note = p["evNote"]
-    # 文案用四舍五入整数（后端 f"{x*100:.0f}%"），与存储字段值允许四舍五入差异
-    rh = f"{round(p['realHit'])}%"
-    be = f"{round(p['beHit'])}%"
-    check(f"{key}.evNote 含真实命中率", rh in note, f"期望 {rh} in: {note}")
-    check(f"{key}.evNote 含平衡线", be in note, f"期望 {be} in: {note}")
+    # 文案用 :.0f（银行家舍入），测试用 round()（同为银行家舍入但 realHit 已先
+    # round(x,1)，二次舍入可能差 1，如 43.5→「43%」而 round(43.5)=44）。
+    # 允许 ±1 容差，只校验数字确由真实口径推导，不放过口径错配。
+    rh_n = round(p["realHit"])
+    be_n = round(p["beHit"])
+    check(f"{key}.evNote 含真实命中率", any(f"{v}%" in note for v in (rh_n - 1, rh_n, rh_n + 1)),
+          f"期望 ~{rh_n}% in: {note}")
+    check(f"{key}.evNote 含平衡线", any(f"{v}%" in note for v in (be_n - 1, be_n, be_n + 1)),
+          f"期望 ~{be_n}% in: {note}")
     # 措辞按 realEv 分档推导（与后端 ev_note 四档一致：10%/-2%/-10%，字段为百分数）
     if p["realEv"] >= 10.0:
         expect_prefix = "正期望"
@@ -141,17 +145,19 @@ check("_pos 只认 recommended（不再看 ev）", bool(_pos_ok))
 # ===== 7. parlay_history 一致性（落盘记录与推荐同口径） =====
 print("\n[7] parlay_history 落盘一致性")
 hist = json.load(open(f"{BASE}/parlay_history.json", encoding="utf-8"))
-today_recs = [r for r in hist["records"] if r.get("date") == FAKE_TODAY]
+# v1.7.120：竞彩销售批次跨自然日，matches 里会含次日/后日凌晨开球的在售场次，
+# 「数据里最新比赛日」≠「系统今天」。落盘 save_parlay_history 用的是真实系统日，
+# 故这里一律用真实系统日（北京时间，fetch_daily 已 tzset）统计，避免跨日错配。
+REAL_TODAY = _real_strftime("%Y-%m-%d")
+today_recs = [r for r in hist["records"] if r.get("date") == REAL_TODAY]
 # v1.7.34：当日推荐位只回放 pending；已判定（hit/miss）记录归宿是历史战绩区，
 # 不再计入「非空档位」比对（补判/补回的旧组同样只出现在历史区）
 today_pending = [r for r in today_recs if r.get("result") == "pending"]
-_n_tiers = sum(1 for k in ("parlay2", "parlay3", "parlay4") if safe.get(k))
-# v1.7.43：引擎升级（同指硬门槛 45→60/65）后重跑当日数据可能减少档位
-# （如精锐 4 串被反向区间软腿剔除）——记录是历史凭证只增不删，
-# 故断言放宽为 ≥（防漏存），不再要求严格相等。
+# 与主流程实际落盘的 safeParlay 比对（而非测试内重算的 safe），才是「防漏存」本意
+disk_tiers = sum(1 for k in ("parlay2", "parlay3", "parlay4") if built.get("safeParlay", {}).get(k))
 check("今日 pending 记录数 ≥ 非空档位数（防漏存）",
-      len(today_pending) >= _n_tiers,
-      f"pending_records={len(today_pending)} / tiers={_n_tiers}")
+      len(today_pending) >= disk_tiers,
+      f"pending_records={len(today_pending)} / tiers={disk_tiers} / realToday={REAL_TODAY}")
 # 去重有效性：当日所有记录 legs 签名唯一（同签名不重复落盘）
 def _sig(legs):
     return tuple(sorted((l.get("num"), l.get("playKey"), l.get("dir")) for l in (legs or [])))

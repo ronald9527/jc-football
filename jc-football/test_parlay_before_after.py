@@ -63,5 +63,15 @@ for line in d2:
 print("  → 同场不同说法：", "、".join(f"{n}:{v}" for n, v in c2.items()) if c2 else "无")
 
 print()
+# v1.7.120：这是一次性历史归档实验，依赖 2026-10-19 发布时的固定场次
+# （周一004 罗德兹vs蒙彼利埃等）。竞彩赛程每日滚动，当前 matches.json 早已
+# 不含这些编号，新旧两版都生成空档属预期，不应判 FAIL 干扰回归。
+# 场景数据缺失时如实跳过；场景仍在时继续做「旧代码自相矛盾 / 新代码一个说法」对照。
+_scene_nums = {"周一004", "周一008", "周一005"}
+_cur_nums = {m.get("num") for m in json.load(
+    open("/workspace/jc-football/matches.json", encoding="utf-8"))["matches"]}
+if not (_scene_nums & _cur_nums):
+    print("结论： SKIP —— 10-19 历史对照场景已不在当日赛程（赛程滚动），非回归失败")
+    sys.exit(0)
 print("结论：", "修复生效——旧代码自相矛盾，新代码全场一个说法" if (c1 and not c2) else "需人工检查")
 sys.exit(0 if (c1 and not c2) else 1)

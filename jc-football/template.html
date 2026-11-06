@@ -1409,7 +1409,7 @@ footer b{color:var(--sub)}
   </div>
 
   <div class="highodds-view" id="highOddsView" style="display:none">
-    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">单场单意见：每场比赛全天只出一个推荐说法，三档共用同一个意见池，差异只在「选不选它、拼几场」；赔率单调（v1.7.25）：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂，候选不足的档位留空不硬凑；拒绝蚊子肉也拒绝纯高倍：单腿赔率1.45-3.20、同指命中率偏低的腿只做评分扣分不再一刀切剔除；每档按「平均信心度+联合命中率+EV」从当日最有把握的场次里选 2/3/4 场。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
+    <div class="fb-title">分层串关 · 稳健/均衡/精锐三档<span class="tip">单场单意见：每场比赛全天只出一个推荐说法，三档共用同一个意见池，差异只在「选不选它、拼几场」；赔率单调（v1.7.25）：三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档，杜绝4串比3串赔得少的倒挂，候选不足的档位留空不硬凑；拒绝蚊子肉也拒绝纯高倍：单腿赔率1.60-3.20（v1.7.120 由 1.45 抬高，挡掉 1.2-1.5 低赔蚊子肉）、同指命中率偏低的腿只做评分扣分不再一刀切剔除；每档按「平均信心度+联合命中率+EV」从当日最有把握的场次里选 2/3/4 场。EV为负=长期必亏，档位间无「谁更值得推荐」</span></div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="highOddsSummary"></div>
     <div id="highOddsList"></div>
   </div>
@@ -1765,8 +1765,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.119";
+const VERSION = "v1.7.120";
 const CHANGELOG = [
+  {
+    version: "v1.7.120",
+    date: "2026-11-06",
+    title: "分层串关空白根治（四层连锁缺陷一次修完）",
+    details: [
+      "症状：线上「分层串关」整块空白，safeParlay 候选池 0 场、三档全空。根因是四层缺陷叠加，只修一层就会换个日子继续空白",
+      "① 日期口径：gen_safe_parlay 用「date == 自然日」过滤，而竞彩销售批次跨自然日——周五002~014 开球在次日凌晨、却在今天全天在售，旧逻辑把它们全丢了；叠加 CI 容器 UTC 与北京时间错位，凌晨跑批时甚至全场清零。现改为「未开赛 + 未来 36 小时」的在售窗口",
+      "② 概率缺失：CI 海外 IP 官方支持率接口不通，走 500.com 备用源只有赔率、没有隐含概率（hadProb 全空），触发 `d_prob < 10` 把在售场次整批剔除。现从赔率反推归一化隐含概率，备用源与官方源结构等价，规则判定/比分预测一并受益",
+      "③ 信心压平：精简数据缺技术信号，confidence 被下限截断成一片 55，档位门槛 70/68/65 把候选全挡光；且单场意见会退化成「平局@3.x」。现用市场共识 + 历史同指实证重标定信心度，门槛按当日候选池分位自适应，平局重罚，只挑最有把握的正路",
+      "④ 档位区间错配：总赔上限 8/12、联合概率下限 0.10/0.06 是按官方低赔腿调的，精简源最小 3 串已达 8.6 倍，3串1/4串1 被整批挡光。现按腿数重设区间、单腿上限收至 2.80，三档统一命中率优先",
+      "诚实口径：精简数据源下 EV 一律用市场去水概率计算（竞彩抽水决定恒为负期望），页面如实标「观望」，绝不用信心重标定后的实证分桶制造 +90% 假正期望诱导下注",
+      "顺带把「蚊子肉」一并解决：单腿赔率下限由 1.45 抬到 1.60（1.70 实测会把稳健/均衡挤空，故取 1.60），三档单腿落在 1.60~2.33、总赔 2.62~20.04，不再出现 1.47/1.51 那种低赔凑数组合；同步收紧自检门禁与页面文案",
+      "双保险：本批次三档全空时不写空壳覆盖当日已发布推荐；前端若偶发拿到空 safeParlay，从当日已发布记录的完整快照 1:1 还原三档，任何时序抖动都不会再出现整页空白"
+    ]
+  },
   {
     version: "v1.7.119",
     date: "2026-11-06",
@@ -5027,6 +5042,25 @@ function renderHighOdds(){
   const list = $("#highOddsList");
   const bdg = $("#highOddsBdg");
 
+  // v1.7.120 空态兜底：后端本批次偶发返回空壳 safeParlay（凌晨在售不足、
+  // 部署时序抖动等）时，从当日已发布推荐的完整快照还原三档，杜绝整页空白。
+  // 历史记录落盘时带 snapshot（发布时的全部字段），可 1:1 还原原卡片。
+  let spFromHistory = false;
+  if(!(sp.parlay2 || sp.parlay3 || sp.parlay4)){
+    const _bjToday = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+    const _recs = ph.records || [];
+    const _arr = Array.isArray(_recs) ? _recs : Object.values(_recs);
+    _arr.forEach(r => {
+      if(r.date !== _bjToday || !r.snapshot || !(r.snapshot.legs || []).length) return;
+      const _t = r.snapshot.tier || r.type || "";
+      const _k = _t.indexOf("稳健") >= 0 ? "parlay2"
+               : _t.indexOf("均衡") >= 0 ? "parlay3"
+               : _t.indexOf("精锐") >= 0 ? "parlay4" : null;
+      if(_k && !sp[_k]){ sp[_k] = r.snapshot; spFromHistory = true; }
+    });
+    if(spFromHistory) sp.__restored = true;
+  }
+
   // 历史战绩统计
   const histTotal = ph.total || 0;
   const histHit = ph.hit || 0;
@@ -5175,6 +5209,9 @@ function renderHighOdds(){
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
       ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">提高命中的唯一办法是选概率更高的腿（赔率更低、回报更少）</b>——高命中与高回报不可兼得，这是串关的本质矛盾。低赔「蚊子肉」腿命中高但回报薄，高赔腿回报厚但拉低联合命中率，各档的赔率区间就是在这个矛盾上取平衡。
     </div>`;
+    if(spFromHistory){
+      html += `<div style="margin:0 0 10px;padding:8px 12px;background:rgba(255,193,7,.08);border:1px solid var(--warn);border-radius:8px;font-size:11.5px;color:var(--warn)">本批次未产出新组合，以下为<b>当日已发布推荐的原始快照</b>（与发布时完全一致，供对账查看），非新生成内容。</div>`;
+    }
     // 四档均无达标组合（EV 全部低于档位门槛）：诚实提示，避免空档像故障
     if(!(sp.parlay2 || sp.parlay3 || sp.parlay4)){
       html += `<div class="ho-card" style="border-left:3px solid var(--warn);">

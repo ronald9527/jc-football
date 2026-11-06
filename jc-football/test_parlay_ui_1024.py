@@ -33,8 +33,14 @@ async def main():
         # 1) 版本
         ver = await page.evaluate("() => (window.VERSION || document.body.textContent.match(/v1\\.7\\.\\d+/) || [''])[0]")
         print("页面版本:", ver)
-        if ver != "v1.7.42":
-            fails.append("版本不是 v1.7.42: %r" % ver)
+        # v1.7.120：该专项验证 v1.7.42 起的「历史签名并集恢复」契约，版本只升不降；
+        # 旧断言写死 == v1.7.42，导致每次升版都误报 FAIL。
+        import re as _re
+        def _vt(v):
+            m = _re.match(r"v?(\d+)\.(\d+)\.(\d+)", v or "")
+            return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
+        if _vt(ver) < (1, 7, 42):
+            fails.append("版本低于 v1.7.42: %r" % ver)
 
         # 2) 进串关 tab
         clicked = await page.evaluate("""() => {

@@ -33,9 +33,15 @@ async def main():
         # 1) 版本（VERSION 是 script 作用域 const，非 window 属性——从页面文本匹配）
         ver = await page.evaluate(
             "() => (document.body.textContent.match(/v1\\.7\\.\\d+/) || [''])[0]")
+        # 1) 版本：该专项验证 v1.7.43 起的「信心主导」契约，版本只升不降。
+        # 早期写死 == v1.7.43，导致每次升版都误报 FAIL（与被测逻辑无关）。
+        def _vt(v):
+            import re as _re
+            m = _re.match(r"v?(\d+)\.(\d+)\.(\d+)", v or "")
+            return tuple(int(x) for x in m.groups()) if m else (0, 0, 0)
         print("页面版本:", ver)
-        if ver != "v1.7.43":
-            fails.append("版本不是 v1.7.43: %r" % ver)
+        if _vt(ver) < (1, 7, 43):
+            fails.append("版本低于 v1.7.43: %r" % ver)
 
         # 2) 进串关 tab
         clicked = await page.evaluate("""() => {

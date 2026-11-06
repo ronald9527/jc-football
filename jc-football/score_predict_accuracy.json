@@ -1,6 +1,22 @@
 {
  "history": [
   {
+   "id": 555074,
+   "league": "巴甲",
+   "home": "Cruzeiro EC",
+   "away": "EC Bahia",
+   "date": "2026-11-06",
+   "predH": 2,
+   "predA": 0,
+   "actH": 3,
+   "actA": 2,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 1.5
+  },
+  {
    "id": 555071,
    "league": "巴甲",
    "home": "Botafogo FR",
@@ -159,6 +175,22 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
+  },
+  {
+   "id": 555077,
+   "league": "巴甲",
+   "home": "SE Palmeiras",
+   "away": "Clube do Remo",
+   "date": "2026-11-05",
+   "predH": 2,
+   "predA": 0,
+   "actH": 6,
+   "actA": 1,
+   "predOutcome": "H",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": true,
+   "mae": 2.5
   },
   {
    "id": 555076,
@@ -17935,24 +17967,8 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
-  },
-  {
-   "id": "1479953",
-   "league": "欧冠",
-   "home": "费内巴切",
-   "away": "利物浦",
-   "date": "2026-11-05",
-   "predH": 2,
-   "predA": 1,
-   "actH": 3,
-   "actA": 2,
-   "predOutcome": "H",
-   "actOutcome": "H",
-   "exactHit": false,
-   "outcomeHit": true,
-   "mae": 1.0
   }
  ],
- "updatedAt": "2026-11-06 00:52:08",
+ "updatedAt": "2026-11-06 13:59:56",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
