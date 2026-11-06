@@ -118,7 +118,7 @@ def check_parlay(data):
     print("· 检查 4/6 串关合理性（蚊子肉检测）")
     sp = (data or {}).get("safeParlay") or {}
     found = 0
-    for key in ("parlay2", "parlay3", "parlayBoost"):
+    for key in ("parlay2", "parlay3", "parlay4"):
         p = sp.get(key)
         if not p:
             continue
@@ -136,8 +136,19 @@ def check_parlay(data):
         for f in ("jointProb", "ev", "rake"):
             if p.get(f) is None:
                 add("WARN", "串关", "%s 缺少字段 %s" % (key, f))
-        print("  %s：%s %.2f倍 命中%s%% EV%s%%" % (
-            key, p.get("tier"), tot, p.get("jointProb"), p.get("ev")))
+        # v1.7.121 证据门禁：负超额腿 = 历史同方向实证命中率低于市场定价，
+        # 这类腿不得进入任何一档；被标「推荐」更是乱推荐，直接判 ERROR。
+        neg = [l for l in legs if (l.get("edge") or 0) < -1.0]
+        if neg:
+            add("ERROR", "串关", "%s 含 %d 条负超额腿（历史实证差于市场定价，证据准入失效）" % (key, len(neg)))
+        if p.get("recommended"):
+            if (p.get("realEv") or 0) < -2:
+                add("ERROR", "串关", "%s 标为推荐但真实EV %s%% 未达标" % (key, p.get("realEv")))
+            if p.get("negEdgeLegs"):
+                add("ERROR", "串关", "%s 标为推荐却有负超额腿" % key)
+        print("  %s：%s %.2f倍 命中%s%% EV%s%% 真实EV%s%% 负超额腿%d 推荐=%s" % (
+            key, p.get("tier"), tot, p.get("jointProb"), p.get("ev"),
+            p.get("realEv"), len(neg), p.get("recommended")))
     if found == 0:
         add("WARN", "串关", "今日无串关推荐（候选不满足档位门槛）")
 

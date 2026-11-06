@@ -1765,8 +1765,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.120";
+const VERSION = "v1.7.121";
 const CHANGELOG = [
+  {
+    version: "v1.7.121",
+    date: "2026-11-06",
+    title: "串关选边证据化：拒绝「看到低赔就无脑选」",
+    details: [
+      "用户质疑「这些串关是否得到验证、是否数据支撑、不要乱推荐、不要看到低赔率就无脑的选」—— 全量核查后确认属实，且比预想更严重",
+      "核查结论：当日三档 recommended 全为 false，实证命中率 33.0% / 16.8% / 11.4% 全部低于保本线 38.1% / 23.5% / 13.4%，真实 EV −13.5% / −28.6% / −15.0%，引擎自己判定「不建议下注」却仍每天摆在主区",
+      "低赔循环论证：旧选边主项是 0.886÷赔率（越低越好），信心分又由同一个值线性映射，属于「用赔率证明赔率」。逐腿核对「历史同方向实证命中率 − 市场定价隐含概率」，5 条腿有 3 条为负（−8.1 / −7.4 / −0.5pt），即这些低赔腿历史上反而比市场定价更不准",
+      "历史战绩（78 期已结算）：总体 15 中 63 错 = 19.2%；稳健2串1 24 战 10 中 ROI +12.3%、均衡3串1 25 战 5 中 +4.7%，但精锐4串1 7 战 0 中、旧搏击3串1 22 战 0 中，ROI 均 −100%",
+      "修法① 选边改按「后验命中率」：以市场共识概率为先验、用历史同方向实证命中率做贝叶斯收缩（样本 <20 视为证据不足、不编造优势）。低赔但实证差于定价的腿被拉低，赔率略高但实证有超额的腿反而胜出",
+      "修法② 证据硬准入：任一腿「实证超额 < −1pt」不得进入任何一档，凑不出组合该档如实留空、绝不硬凑；信心分在非精简源也按负超额扣分；档位信心门槛改为对所有数据源自适应（此前写死 70/68/65，叠加证据修正后会让稳健档倒挂留空）",
+      "修法③ 推荐资格加硬条件：真实 EV 达标且全组无负超额腿，才可能标「推荐」，否则一律观望。页面逐腿展示后验命中率、实证超额与样本量，负超额标红，并新增「证据核查」说明与今日证据总判定",
+      "诚实说明：竞彩单场抽水 11.4%，串关按腿数复合放大，数学上长期是负和游戏。本次不承诺「天天有得赚」，只承诺每条腿的依据可逐条核对、不把没有数据支撑的组合包装成高质量推荐"
+    ]
+  },
   {
     version: "v1.7.120",
     date: "2026-11-06",
@@ -5020,13 +5035,24 @@ function parlayLegsHtml(legs){
     // 五维雷达徽标（已接线，真实输出）
     const fd = leg.fiveDim;
     let fdBadge = (fd != null) ? `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;color:var(--accent);border:1px solid var(--accent);">五维 ${fd}分</span>` : "";
+    // v1.7.121 选边证据徽标：历史同方向实证命中率相对市场定价的超额。
+    // 正值=历史数据支持该选项比市场更靠谱；负值=历史上反而更不准，标红。
+    // 样本 <20 场视为证据不足，不显示「有超额」以免误导。
+    let edgeBadge = "";
+    const ed = leg.edge, ehn = leg.empN || 0, eh = leg.empHit;
+    if(ed != null){
+      const weak = ehn < 20;
+      const ec = weak ? "var(--weak)" : (ed < -1 ? "var(--bad)" : (ed > 1 ? "var(--good)" : "var(--weak)"));
+      const et = weak ? "证据不足" : (ed < -1 ? "负超额·不采信" : (ed > 1 ? "实证有超额" : "与定价持平"));
+      edgeBadge = `<span style="display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;margin-left:4px;color:${ec};border:1px solid ${ec};" title="实证超额 = 历史同方向实证命中率 − 市场定价隐含概率（赔率 0.886÷o）。>0 才说明历史数据支持该选项比市场更靠谱；样本<20 场视为证据不足">${et} ${ed>0?"+":""}${ed}pt${eh!=null?` · 实证${eh}%(n=${ehn})`:` · 样本${ehn}场`}${leg.postProb!=null?` · 后验${leg.postProb}%`:""}</span>`;
+    }
     const oddsTxt = (typeof leg.odds === "number") ? leg.odds.toFixed(2) : (leg.odds || "—");
     const ko = leg.kickoff ? String(leg.kickoff).slice(0,5) : "";
     return `<div class="ho-leg">
       <div class="ho-num">第${i+1}场<br><span style="font-size:9px">${leg.num||""}</span></div>
       <div>
         <div class="ho-match"><span class="ho-league">${leg.league||""}</span>${leg.home||""} vs ${leg.away||""}</div>
-        <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b>${soBadge}${fdBadge}</div>
+        <div class="ho-pick">${leg.play||""} · <b style="color:var(--good)">${leg.label||""}</b> · 信心<b style="color:var(--good)">${conf}%</b>${soBadge}${fdBadge}${edgeBadge}</div>
         <div style="margin-top:3px">${reasonsHtml}</div>
       </div>
       <div class="ho-odds" style="color:var(--good)">${oddsTxt}<small>@${ko}</small></div>
@@ -5207,8 +5233,23 @@ function renderHighOdds(){
       <b style="color:var(--text)">三个问题看懂串关（很重要）：</b><br>
       ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏。</b><b style="color:var(--text)">EV 有两个口径</b>：<b>模型口径</b>（用校准概率推算，系统性偏保守，仅作参考）与<b>历史同条件口径</b>（同样选法过去实际中了多少，地面真实）；<b style="color:var(--text)">推荐判定只看历史口径</b>：真实命中率 ≥ 盈亏平衡线（100 ÷ 总赔率）才算达标，不达标一律标「观望」。<br>
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
-      ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">提高命中的唯一办法是选概率更高的腿（赔率更低、回报更少）</b>——高命中与高回报不可兼得，这是串关的本质矛盾。低赔「蚊子肉」腿命中高但回报薄，高赔腿回报厚但拉低联合命中率，各档的赔率区间就是在这个矛盾上取平衡。
+      ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">但「赔率低」不等于「有把握」</b>：赔率只是市场定价，历史上同一赔率档的实际命中率完全可能<u>低于</u>定价（本页把两者之差叫「实证超额」，负值标红）。v1.7.121 起选边先看该方向的历史实证是否跑赢定价，再看赔率；低赔但历史上更不准的腿直接不进组合。高命中与高回报不可兼得，这是串关的本质矛盾。
     </div>`;
+    // v1.7.121 今日证据总判定：把「为什么不给推荐」讲成可逐条核对的结论，
+    // 而不是空洞的一句「不建议下注」。
+    {
+      const _tiers = [sp.parlay2, sp.parlay3, sp.parlay4].filter(Boolean);
+      const _neg = _tiers.reduce((s,p)=>s+(p.negEdgeLegs||0),0);
+      const _rec = _tiers.filter(p=>p.recommended).length;
+      const _legs = _tiers.reduce((s,p)=>s+((p.legs||[]).length),0);
+      const _verdict = _rec>0
+        ? `今日 <b style="color:var(--good)">${_rec}</b> 档通过证据与期望双重核查`
+        : `今日 <b style="color:var(--warn)">0 档</b>达到推荐标准（各档历史实证命中率均未跑赢盈亏平衡线），三档一律标「观望」`;
+      html += `<div style="margin:0 0 10px;padding:9px 12px;background:rgba(255,193,7,.06);border:1px solid var(--warn);border-radius:8px;font-size:11.5px;color:var(--sub);line-height:1.7;">
+        <b style="color:var(--text)">🔍 今日证据核查：</b>共 ${_tiers.length} 档 / ${_legs} 条腿，<b style="color:${_neg>0?'var(--bad)':'var(--good)'}">${_neg} 条负超额腿</b>（历史实证差于市场定价）。${_verdict}。<br>
+        <span style="color:var(--weak)">选边口径：以市场定价为先验、历史同方向实证命中率做贝叶斯收缩；样本 &lt;20 场视为证据不足。每条腿的实证命中率、超额与样本量见下方卡片，逐条可核对。</span>
+      </div>`;
+    }
     if(spFromHistory){
       html += `<div style="margin:0 0 10px;padding:8px 12px;background:rgba(255,193,7,.08);border:1px solid var(--warn);border-radius:8px;font-size:11.5px;color:var(--warn)">本批次未产出新组合，以下为<b>当日已发布推荐的原始快照</b>（与发布时完全一致，供对账查看），非新生成内容。</div>`;
     }
@@ -5278,6 +5319,12 @@ function renderHighOdds(){
       const stakeTxt = stake>0 ? `建议仓位 ${stake}%（1/4 凯利）` : "不建议下注";
       const negTag = !p.recommended;
       const _tierIcon = p.tier==="稳健"?"🛡️":(p.tier==="均衡"?"⚖️":"💎");
+      // v1.7.121：长串高风险提示（历史战绩一旦长期 0 中，必须显著告知）
+      const _t4 = _tierTrack["parlay4"];
+      const _risk4 = (p.tier==="精锐" && _t4 && _t4.n>=5 && _t4.hit===0)
+        ? `<div style="margin:0 0 8px;font-size:11.5px;color:var(--bad)">⚠️ 高风险档：4串1 抽水约 38.5%，本档历史 <b>${_t4.n} 战 0 中（ROI −100%）</b>。仅作赛后对账，不建议跟随。</div>` : "";
+      // 证据核查说明：逐腿实证超额汇总，负超额标红
+      const _edgeHtml = p.edgeNote ? `<div style="margin:0 0 8px;padding:6px 9px;background:${p.negEdgeLegs>0?'rgba(255,77,79,.06)':'rgba(76,175,80,.05)'};border:1px solid ${p.negEdgeLegs>0?'var(--bad)':'var(--good)'};border-radius:6px;font-size:11px;color:${p.negEdgeLegs>0?'var(--bad)':'var(--good)'}">🔍 ${p.edgeNote}</div>` : "";
       return `<div class="ho-card" style="border-left:3px solid ${negTag?"var(--warn)":tierColor};${negTag?"margin-bottom:10px;":""}">
         <div class="ho-head">
           <span class="ho-type" style="color:${negTag?"var(--warn)":tierColor}">${negTag?"⚠️":_tierIcon} ${p.tier||""} · ${p.type}${negTag?" · <b>观望</b>":""}</span>
@@ -5286,6 +5333,8 @@ function renderHighOdds(){
         ${negTag?`<div style="margin:8px 0 4px;font-size:12px;color:var(--warn)">本档最优组合历史同条件命中率 <b>${rh!=null?rh+"%":"—"}</b>，低于盈亏平衡线（需 ${beHit!=null?beHit+"%":"—"}），真实期望 <b>${realEv!=null?(realEv>0?"+":"")+realEv+"%":"—"}</b>，长期平均每注亏损约 ${realEv!=null?Math.abs(realEv)+"%":"—"}，<b>不建议下注</b>。串关抽水按腿数复合放大（${p.rake!=null?p.rake+"%":"—"}）。</div>`:""}
         <div style="margin-bottom:8px;font-size:11.5px;color:var(--sub)">${p.tierDesc||""}</div>
         ${_trackHtml(p)}
+        ${_risk4}
+        ${_edgeHtml}
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11.5px">
           <span>历史同指命中率 <b style="color:var(--text)">${rh!=null?rh+"%":"—"}</b>${beHit!=null?` <small style="color:var(--weak)">（平衡线 ${beHit}%）</small>`:""}</span>
           <span>真实期望 <b style="color:${realEvColor}">${realEv!=null?(realEv>0?"+":"")+realEv+"%":"—"}</b></span>

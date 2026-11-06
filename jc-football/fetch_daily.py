@@ -4200,6 +4200,34 @@ def gen_safe_parlay(matches):
     _rich_n = sum(1 for _m in matches if _has_rich_signal(_m))
     _lean = (len(matches) > 0 and _rich_n < len(matches) * 0.5)
 
+    # ===== v1.7.121 选边证据口径：后验命中率 + 实证超额 =====
+    # 用户质疑「不要看到低赔率就无脑的选」——核查属实。旧 _lean_pick 主项是
+    # 0.886/赔率（赔率越低分越高），而 confidence 又由同一个值线性映射，属于
+    # 「用赔率证明赔率」的循环论证，不是独立证据。实测当日 5 条腿有 3 条的
+    # 「历史同方向实证命中率 − 市场定价隐含概率」为负（−8.1 / −7.4 / −0.5pt），
+    # 即这些低赔腿历史上反而比市场定价更差，系统却因「便宜」选了它们。
+    # 现改为以市场共识概率为先验、用历史同方向实证命中率做贝叶斯收缩：
+    #   · post = (n·实证 + 60·市场)/(n+60)：样本越少越贴近市场，不放大噪声；
+    #   · edge = post − 市场：>0 才说明历史数据支持该选项比定价更靠谱；
+    #   · 选边按 post（绝对把握）排序，低赔不再自动胜出；
+    #   · 样本 <20 视为证据不足，退回市场概率且 edge=0（不假装有利）；
+    #   · edge<−1pt 的腿不得进入「推荐」组合，从根上杜绝乱推荐。
+    _PAYBACK_PRIOR = 0.886
+    _PRIOR_N = 60.0          # 收缩强度：n=205 时实证权重 77%，n=54 时 47%
+    # 证据准入门槛：组合内不得含「历史实证差于市场定价」的腿。
+    # 凑不出组合时该档如实留空（页面说明原因），绝不硬凑。
+    _STRICT_EDGE = os.environ.get("JC_STRICT_EDGE", "1") != "0"
+
+    def _posterior(o):
+        _o = o.get("odds") or 99
+        market = _PAYBACK_PRIOR / _o if _o > 1 else 0.30
+        so, n = o.get("sameOddsHit"), o.get("sameOddsN") or 0
+        if so is None or n < 20:
+            # 证据不足：不编造优势，也不因缺数据而惩罚
+            return market, 0.0, n, None
+        post = (n * (so / 100.0) + _PRIOR_N * market) / (n + _PRIOR_N)
+        return post, post - market, n, so
+
     candidates = []
     # 历史同指：载入竞彩官方赛果库（354+ 已完赛），免费自建同指命中率
     try:
@@ -4627,11 +4655,11 @@ def gen_safe_parlay(matches):
                 # 纯由赔率主导 → 系统意见几乎全选「平局@3.x」（最难预测的方向）。
                 # 改用「市场共识隐含概率 + 历史同指实证命中率」选唯一意见：
                 # 低赔正路优先、平局重罚，杜绝把冷门平局塞进串关。
+                # v1.7.121：改按「后验命中率」选边，不再按赔率绝对值。
+                # 低赔若历史上实证命中率差于市场定价（edge<0），post 会被拉低，
+                # 从而输给「赔率略高但实证有超额」的选项 —— 破除低赔无脑选。
                 def _lean_pick(o):
-                    _o = o.get("odds") or 99
-                    _pm = 0.886 / _o if _o > 1 else 0.30
-                    _so, _sn = o.get("sameOddsHit"), o.get("sameOddsN") or 0
-                    _p = _pm if (_so is None or _sn < 20) else (0.55 * _pm + 0.45 * _so / 100.0)
+                    _p, _e, _n, _so = _posterior(o)
                     if o.get("dir") == "d":
                         _p -= 0.08          # 平局天然难测，实证命中率显著低
                     return _p
@@ -4640,6 +4668,7 @@ def gen_safe_parlay(matches):
             else:
                 _scored = [(parlay_canon_score(o), o) for o in match_options]
                 canon, opt = max(_scored, key=lambda t: t[0])
+            _pp, _pe, _pn, _pso = _posterior(opt)
             candidates.append({
                 "num": m.get("num"), "league": m.get("league"),
                 "home": m.get("home"), "away": m.get("away"),
@@ -4653,34 +4682,64 @@ def gen_safe_parlay(matches):
                 "sameOddsHit": opt.get("sameOddsHit"),
                 "sameOddsN": opt.get("sameOddsN"),
                 "fiveDim": opt.get("fiveDim"),
+                # v1.7.121 选边证据：后验命中率 / 实证超额 / 原始实证样本。
+                # 页面逐腿展示，负超额标红；用户可直接核对「这条腿凭什么被选」。
+                "postProb": round(_pp * 100, 1),
+                "edge": round(_pe * 100, 1),
+                "empHit": _pso,
+                "empN": _pn,
                 # v1.7.43：选腿时的 canon 评分快照，供赛后回溯「为什么选这条腿」
                 "canon": round(canon, 3),
             })
 
-    # ===== v1.7.120 精简数据源：信心度重标定 + 档位门槛自适应 =====
-    # 官方技术信号缺失时，上面的 conf 公式（base=d_prob×0.85 + 少量 tech_bonus）
-    # 会被 max(55, ...) 压平成一片 55，档位门槛 70/68/65 把全部候选挡光 → 三档恒空。
-    # 这里用「市场共识隐含概率 + 历史同指实证命中率」重建有区分度的信心度：
-    # 低赔正路更有把握、冷门平局更低，实现「十场里挑最有把握的 2/3/4 场」。
-    # 档位门槛不再写死，改为按当日候选池信心分位数自适应，保证任何数据源下都能
-    # 从当日相对最优的场次里出推荐；单腿赔率下限 1.45 仍严格挡住蚊子肉。
+    # ===== v1.7.121 精简数据源：信心度由「后验命中率」重标定 =====
+    # v1.7.120 曾把 confidence = 55 + (0.886/赔率 − 0.30)×70，本质仍是赔率的
+    # 单调变换（用赔率证明赔率），实测信心标 66~79 而同方向实证只有 47~57、
+    # 系统性虚高约 20pt。现改用贝叶斯后验命中率 post 驱动：低赔但实证差于
+    # 市场定价的腿会被拉低，赔率略高但实证有超额的腿反而更靠前。
+    # 档位门槛仍按当日候选池分位数自适应，保证任何数据源下都从「相对最有
+    # 证据支持」的场次里出组合，既不硬凑也不空档。
     _tier_conf = [70.0, 68.0, 65.0]
     if _lean and candidates:
         for c in candidates:
-            _o = c.get("odds") or 99
-            _pm = 0.886 / _o if _o > 1 else 0.30
-            _so, _sn = c.get("sameOddsHit"), c.get("sameOddsN") or 0
-            _p = _pm if (_so is None or _sn < 20) else (0.55 * _pm + 0.45 * _so / 100.0)
+            _p, _e, _n, _so = _posterior(c)
             if c.get("dir") == "d":
                 _p -= 0.05
-            c["confidence"] = round(min(86.0, max(52.0, 55 + (_p - 0.30) * 70)), 1)
-        _cs = sorted((c["confidence"] for c in candidates), reverse=True)
+            c["confidence"] = round(min(86.0, max(52.0, 40 + _p * 55)), 1)
+        print("  分层串关：精简数据源，信心度已按后验命中率重标定", flush=True)
+
+    # v1.7.121：档位信心门槛对「所有」数据源自适应（此前只在精简源分支生效，
+    # 官方完整源写死 70/68/65 —— 叠加 edge 证据修正后信心整体下移，稳健档
+    # 「2 条腿都 ≥70」凑不齐而留空，反而 3/4 串有推荐，档位语义倒挂）。
+    # 按当日候选池信心分位数取门槛，其余护栏（证据准入/总赔区间/联合
+    # 概率/EV）一律不动，保证「相对最有证据支持」的场次优先。
+    if candidates:
+        # 门槛只按「通过证据准入的合格候选」计算：负超额腿信心分再高也不得
+        # 参与定门槛（它们已被禁止进组合，却会把分位数抬高、把稳健档挤空）。
+        _eligible = [c for c in candidates
+                     if not (_STRICT_EDGE and (c.get("edge") or 0) < -1.0)]
+        _pool = _eligible or candidates
+        _cs = sorted((c["confidence"] for c in _pool), reverse=True)
 
         def _q(f):
             return _cs[min(len(_cs) - 1, int(len(_cs) * f))]
-        # 稳健档只从信心前 45% 里挑（最有把握），均衡/精锐依次放宽以凑够 3/4 场
-        _tier_conf = [round(_q(0.45), 1), round(_q(0.70), 1), round(_q(0.90), 1)]
-        print("  分层串关：精简数据源，信心度已重标定，自适应门槛 %s" % _tier_conf, flush=True)
+        # 稳健取合格池前 70%、均衡前 90%、精锐用最低合格腿（保证 2/3/4 腿凑得齐）；
+        # 其余护栏（证据准入/总赔区间/联合概率/EV）一律不动。
+        _tier_conf = [round(_q(0.70), 1), round(_q(0.90), 1), round(_cs[-1], 1)]
+        print("  分层串关：自适应信心门槛 %s（合格候选 %d/%d）" % (
+            _tier_conf, len(_eligible), len(candidates)), flush=True)
+
+    # ===== v1.7.121 通用证据修正（所有数据源，含官方完整源）=====
+    # 精简源分支的 confidence 已由后验命中率 post 驱动（post 内含实证超额），
+    # 不重复扣分；官方完整源走 parlay_canon_score，其 confidence 来自规则星级/
+    # 支持率等技术信号，与「历史实证是否跑赢定价」无关 —— 实测这类信心会标到
+    # 79 分、而同方向实证只有 47.3%（比市场定价低 8pt）。这里按负超额扣分，
+    # 让「历史数据不支持」真正影响选边排序与档位门槛，而不是只贴个标签。
+    if not _lean:
+        for c in candidates:
+            _e = c.get("edge") or 0
+            if _e < -1.0:
+                c["confidence"] = round(max(40.0, c["confidence"] + _e * 1.2), 1)
 
     candidates.sort(key=lambda x: x["confidence"], reverse=True)
 
@@ -4827,6 +4886,11 @@ def gen_safe_parlay(matches):
                 continue
             max_hhad = 3 if n >= 4 else (2 if n >= 3 else 1)
             for combo in combinations(candidates, n):
+                # v1.7.121 证据准入：一条腿若连历史同方向实证都跑不赢市场定价
+                # （edge < −1pt），就没有资格被拼进任何一档。宁可该档留空，
+                # 也不把「便宜但历史上更不准」的腿包装成串关推荐。
+                if _STRICT_EDGE and any((c.get("edge") or 0) < -1.0 for c in combo):
+                    continue
                 nums = [c["num"] for c in combo]
                 if len(set(nums)) < n:
                     continue
@@ -4944,6 +5008,21 @@ def gen_safe_parlay(matches):
         else:
             ev_note = (f"明显负期望：历史同信心档实证命中率仅 {real_hit*100:.0f}%"
                        f"（需 {be_hit:.0f}%），不建议下注")
+        # v1.7.121：逐腿证据核查。负超额 = 该腿历史实证命中率低于市场定价，
+        # 历史数据不支持它比市场更靠谱；这类腿出现在组合里必须显式警示。
+        _neg_edges = [s for s in selected if (s.get("edge") or 0) < -1.0]
+        _weak = [s for s in selected if (s.get("empN") or 0) < 20]
+        if _neg_edges:
+            _worst = min(s["edge"] for s in _neg_edges)
+            edge_note = (f"证据核查：{len(_neg_edges)}/{n} 条腿历史实证命中率低于市场定价"
+                         f"（最差 {_worst:+.1f}pt），历史数据不支持这些选项比市场更靠谱，"
+                         f"不得作为推荐跟随")
+        elif _weak:
+            edge_note = (f"证据核查：{len(_weak)}/{n} 条腿同方向历史样本不足 20 场，"
+                         f"按市场定价估计、未认定有超额优势")
+        else:
+            edge_note = (f"证据核查：{n}/{n} 条腿历史实证命中率均不差于市场定价"
+                         f"（最短样本 {min((s.get('empN') or 0) for s in selected)} 场）")
         return {
             "type": f"{n}串1", "tier": name, "tierDesc": desc,
             "legs": selected,
@@ -4962,11 +5041,13 @@ def gen_safe_parlay(matches):
             "suggestStake": round(stake, 1),
             "rake": round(rake, 1),
             "evNote": ev_note,
-            # 是否值得作为「推荐」展示（v1.7.33）：地面真实口径 EV ≥ -2%（样本噪声容差）。
-            # 模型口径 ev 系统性偏保守（选出的腿优于同赔率桶均值），不再参与推荐判定，
-            # 仅在页面作为「模型期望·参考」展示。历史实证：旧标准下 58 期推荐里 50 期
-            # 挂「不推荐」，而稳健档实际 14 战 9 中、均衡档 18 战 5 中，两档均盈利。
-            "recommended": real_ev >= -0.02,
+            "negEdgeLegs": len(_neg_edges),
+            "edgeNote": edge_note,
+            # v1.7.121 推荐资格加硬门槛：真实 EV 达标，且没有任何负超额腿。
+            # 只要有一条腿历史实证差于市场定价，整组一律标「观望」，绝不推荐。
+            # 用户明确要求「不要乱推荐、不要看到低赔率就无脑的选」：宁可少推，
+            # 也不把「便宜但历史上更不准」的腿包装成高质量推荐。
+            "recommended": real_ev >= -0.02 and not _neg_edges,
         }
 
     # v1.7.25 顺序构建：稳健→均衡→精锐，每档总赔必须高于上一档实际总赔（动态地板）。
@@ -4989,6 +5070,11 @@ def gen_safe_parlay(matches):
     for t, r in zip(TIERS, [built.get(t[0]) for t in TIERS]):
         if r is None:
             pool_notes.append(f"{t[1]}{t[2][0]}串1 今日无达标组合（候选不足或赔率单调门槛未过），留空不硬凑")
+    # v1.7.121 证据准入统计：让用户一眼看到「今天有多少场次经得起验证」
+    _edge_ok = sum(1 for c in candidates if (c.get("edge") or 0) >= -1.0)
+    pool_notes.append(
+        f"证据准入：{len(candidates)} 条候选中 {_edge_ok} 条历史实证不差于市场定价；"
+        f"其余 {len(candidates) - _edge_ok} 条为负超额（历史上比定价更不准），已排除、不进任何一档")
 
     result = {
         "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -4999,10 +5085,11 @@ def gen_safe_parlay(matches):
                 "play": c["play"], "label": c["label"], "odds": c["odds"],
                 "confidence": c.get("confidence"),
                 "sameOddsHit": c.get("sameOddsHit"), "sameOddsN": c.get("sameOddsN"),
+                "edge": c.get("edge"), "postProb": c.get("postProb"), "empN": c.get("empN"),
             } for c in candidates
         ],
         "poolNotes": pool_notes,
-        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池，差异只在选不选它、拼几场；赔率单调——三档按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档；引擎版本门——旧引擎生成且未开球的推荐在引擎升级后自动解锁重生，已判定记录绝不动。v1.7.118 选腿口径：按「平均信心度 + 联合命中率 + EV」从当日最有把握的场次里挑 2/3/4 场；单腿赔率 ≥1.60 拒绝蚊子肉（v1.7.120 由 1.45 抬高，挡掉 1.2-1.5 低赔）、≤3.2 拒绝纯高倍；同指命中率偏低的腿只做评分扣分，不再一刀切剔除（此前硬门槛把候选砍到只剩低赔，导致均衡/精锐长期留空）；命中率与 EV 改用 parlay_history 217 条已判定腿按信心分桶的实证（≥75 分桶实测 80% vs 市场 58%，收缩 50% 后校准），不再用恒负的市场去水概率连乘。EV 为负的档位长期必亏，档位之间只有亏多亏少的区别",
+        "strategy": "分层串关三档（竞彩混合过关：胜平负+让球+总进球，每场只选一种玩法）：单场单意见——每场先用统一评分选出唯一选项，三档共用意见池；赔率单调——按稳健→均衡→精锐顺序构建，每档总赔必须高于上一档。v1.7.121 选边证据化：以市场共识概率为先验、历史同方向实证命中率做贝叶斯收缩得「后验命中率」，按后验选边（同方向样本 <20 场视为证据不足、退回市场定价），不再按赔率绝对值挑最低赔；「实证超额 = 历史同方向实证命中率 − 市场定价隐含概率」< −1pt 的腿禁止进入任何一档，凑不出组合该档留空、绝不硬凑；非精简源的信心分同样按负超额扣分，档位信心门槛对所有数据源按候选池分位数自适应。推荐资格 = 真实 EV 达标且全组无负超额腿，否则一律标「观望」。单腿赔率 ≥1.60 拒绝蚊子肉、≤3.2 拒绝纯高倍。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿的选入依据可逐条核对",
         "parlay2": parlay2,
         "parlay3": parlay3,
         "parlay4": parlay4,
