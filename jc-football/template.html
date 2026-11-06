@@ -1765,8 +1765,20 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.122";
+const VERSION = "v1.7.123";
 const CHANGELOG = [
+  {
+    version: "v1.7.123",
+    date: "2026-11-06",
+    title: "分层串关按竞彩销售批次隔离：绝不把周五和周六串在一起",
+    details: [
+      "用户要求「把日期规律好，别周五的和周六的串起来，我需要的是竞彩当天开出的赛程」—— 核查确认旧实现用「未来 36 小时滚动窗口」把周五 / 周六 / 周日三个批次混进同一候选池再全池取前缀，稳健 2串1 实际是「周六009 + 周五006」，且 36h 之外的周日批次被整体丢弃",
+      "改为按竞彩销售批次（编号前缀 周五/周六/周日 = date 字段，实测严格一一对应）分组，每组独立走完整「选边 → 合格单场 → 前缀成档」流程；结构上任一组合的腿必然同批次，无法跨批；同批次内仍允许跨零点开球（周五场次周六凌晨开球仍属周五批次）",
+      "页面新增「竞彩赛程批次」切换条，默认展示竞彩当天开出的赛程（当天批次），逐批显示各自独立生成三档与在售/候选/合格单场数；历史快照兜底只在主批次生效，避免切到空批次时把当天快照错误混入",
+      "顶层结果仍保持主批次完整字段（parlay2/3/4、candidatePool、qualifiedCount 等），历史落盘、锁定重跑、自检、空态兜底全部零改动兼容；定时任务「已锁定」重跑时补齐批次元数据但不改已发布档位",
+      "当日实测：周五 11-06（当天）13 场在售、2 条合格单场 → 稳健 3.73 倍 1 档；周六 11-07 24 场、5 条合格 → 稳健/均衡/精锐 3 档齐全；周日 11-08 11 场、1 条合格 → 三档留空（不硬凑）。三批次所有组合逐条核对均为同批次"
+    ]
+  },
   {
     version: "v1.7.122",
     date: "2026-11-06",
@@ -3210,7 +3222,7 @@ const state = {
   bkDate: "all", bkSubTab: "sched", bkHistDate: "all",
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   lastFbTab: "today",
-  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false,
+  histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false, parlayBatch: "",
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })(),
   vzOnlyHot: false
 };
@@ -4329,6 +4341,15 @@ document.addEventListener("click", e=>{
   const c = e.target.closest(".ptier-chip");
   if (c && c.dataset.tier !== state.parlayTier){ state.parlayTier = c.dataset.tier; renderHighOdds(); }
 });
+/* 分层串关：竞彩批次切换（v1.7.123）——只换展示批次，绝不动数据 */
+document.addEventListener("click", e=>{
+  const c = e.target.closest(".pbatch-chip");
+  if (c && c.dataset.batch !== (state.parlayBatch || "")){
+    state.parlayBatch = c.dataset.batch;
+    state.parlayTier = "parlay2";
+    renderHighOdds();
+  }
+});
 /* 串关历史：日期下拉「选项」 */
 document.addEventListener("change", e=>{
   const s = e.target.closest("#parlayHistDate");
@@ -5078,7 +5099,21 @@ function parlayLegsHtml(legs){
 
 function renderHighOdds(){
   const ho = state.highOddsParlay || {};
-  const sp = state.safeParlay || {};
+  // v1.7.123 竞彩批次隔离：safeParlay 顶层仍是主批次完整结果（向后兼容所有下游），
+  // batches 是「每个竞彩销售批次各自独立成档」的完整结果。按 state.parlayBatch
+  // 切换查看，任一组合的腿必然来自同一批次；无 batches 字段时按旧版单批兼容。
+  const _root = state.safeParlay || {};
+  const _batches = (Array.isArray(_root.batches) && _root.batches.length) ? _root.batches : null;
+  const _activeKey = _root.activeBatch;
+  const _curKey = state.parlayBatch || _activeKey;
+  let _cur = _root;
+  if(_batches){
+    _cur = _batches.find(b=>b.batchKey===_curKey)
+         || _batches.find(b=>b.batchKey===_activeKey)
+         || _batches[0] || _root;
+  }
+  const _isMainBatch = !_batches || _cur.batchKey === _activeKey || _cur.batchKey === undefined;
+  const sp = _cur;
   const ph = state.parlayHistory || {};
   const summary = $("#highOddsSummary");
   const list = $("#highOddsList");
@@ -5088,7 +5123,9 @@ function renderHighOdds(){
   // 部署时序抖动等）时，从当日已发布推荐的完整快照还原三档，杜绝整页空白。
   // 历史记录落盘时带 snapshot（发布时的全部字段），可 1:1 还原原卡片。
   let spFromHistory = false;
-  if(!(sp.parlay2 || sp.parlay3 || sp.parlay4)){
+  // v1.7.123：历史快照是「当日已发布」的主批次记录，只能还原主批次；
+  // 切到其它批次且该批次本就无达标组合时，绝不能把当天快照塞进去（会混批次）。
+  if(_isMainBatch && !(sp.parlay2 || sp.parlay3 || sp.parlay4)){
     const _bjToday = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
     const _recs = ph.records || [];
     const _arr = Array.isArray(_recs) ? _recs : Object.values(_recs);
@@ -5250,8 +5287,31 @@ function renderHighOdds(){
       ① <b style="color:var(--text)">EV（期望值）是什么</b>：EV = 联合命中概率 × 总赔率 − 1。EV −12% 的意思是：同样条件下长期平均，每花 100 元亏 12 元。<b style="color:var(--text)">注意单注与长期的区别</b>：任何一注的结果只有两种——全中（按总赔率收钱）或不中（亏掉本金），不存在「亏 12%」的中间态；EV 说的是「同样打法重复很多次的平均结果」，不排除你这一注全中。<b style="color:var(--bad)">EV 为负 = 长期必亏。</b><b style="color:var(--text)">EV 有两个口径</b>：<b>模型口径</b>（用校准概率推算，系统性偏保守，仅作参考）与<b>历史同条件口径</b>（同样选法过去实际中了多少，地面真实）；<b style="color:var(--text)">推荐判定只看历史口径</b>：真实命中率 ≥ 盈亏平衡线（100 ÷ 总赔率）才算达标，不达标一律标「观望」。<br>
       ② <b style="color:var(--text)">为什么都在说抽水</b>：竞彩单场返奖率约 88.6%（庄家抽水 11.4%），串关的抽水按腿数复合放大——2串1约 21.6%、3串1约 30.6%、4串1约 38.5%。<b style="color:var(--text)">串得越多，抽水越狠</b>，这就是多串1更难盈利的根本原因。<br>
       ③ <b style="color:var(--text)">怎么才能提高命中</b>：串关命中率 = 各腿概率相乘。每腿 70% → 3串1只剩 34.3%；每腿 80% → 51.2%。<b style="color:var(--text)">但「赔率低」不等于「有把握」</b>：赔率只是市场定价，历史上同一赔率档的实际命中率完全可能<u>低于</u>定价（本页把两者之差叫「实证超额」，负值标红）。v1.7.121 起选边先看该方向的历史实证是否跑赢定价，再看赔率；低赔但历史上更不准的腿直接不进组合。高命中与高回报不可兼得，这是串关的本质矛盾。<br>
-      ④ <b style="color:var(--text)">v1.7.122 选串关顺序</b>：先在单场层面用统一标准筛出「最有把握、有数据支撑、合理」的合格单场，再按把握度取前 2 / 3 / 4 名组成三档 —— <b style="color:var(--text)">先有单场，才有组合</b>；合格单场不足就不出该档，绝不为凑腿数放宽门槛或塞入弱腿。
+      ④ <b style="color:var(--text)">v1.7.122 选串关顺序</b>：先在单场层面用统一标准筛出「最有把握、有数据支撑、合理」的合格单场，再按把握度取前 2 / 3 / 4 名组成三档 —— <b style="color:var(--text)">先有单场，才有组合</b>；合格单场不足就不出该档，绝不为凑腿数放宽门槛或塞入弱腿。<br>
+      ⑤ <b style="color:var(--text)">v1.7.123 竞彩批次隔离</b>：竞彩按「开售批次」组织赛程，编号前缀（周五 / 周六 / 周日）与赛程日期一一对应；同一批次内允许跨零点开球，但<b style="color:var(--good)">不同批次的场次绝不串进同一注组合</b>。每个批次各自独立筛选合格单场、独立成档，默认展示<b style="color:var(--text)">竞彩当天开出的赛程</b>，可切换查看其它在售批次。
     </div>`;
+    // ===== v1.7.123 竞彩批次切换条 =====
+    // 用户要求「把日期规律好，别周五的和周六的串起来，我需要的是竞彩当天开出的赛程」。
+    // 每个 chip 显示批次名+日期+已生成档数；当天批次带「当天」标记并默认选中。
+    {
+      const _list = _batches || [_root];
+      const _curK = sp.batchKey || _root.activeBatch;
+      const _chips = _list.map(b=>{
+        const _k = b.batchKey || _root.activeBatch || "all";
+        const _on = (_k === _curK) || (!_batches);
+        const _lb = b.batchLabel ? (b.batchLabel + " " + (b.batchDate||"")) : "当日赛程";
+        const _n = b.tierCount != null ? b.tierCount : [b.parlay2,b.parlay3,b.parlay4].filter(Boolean).length;
+        return `<button class="sp-chip pbatch-chip ${_on?"on":""}" data-batch="${_k}">${_lb}${b.isToday?' · 当天':''} · ${_n}档</button>`;
+      }).join("");
+      html += `<div style="margin:0 0 10px;padding:9px 12px;background:rgba(76,175,80,.05);border:1px solid var(--good);border-radius:8px;">
+        <div style="font-size:11.5px;color:var(--sub);line-height:1.7;margin-bottom:7px;">
+          <b style="color:var(--text)">📅 竞彩赛程批次</b>：竞彩按开售批次出赛程（编号前缀 = 赛程日期），同一批次内可跨零点开球，但<b style="color:var(--good)">绝不把周五与周六的场次串进同一注</b>。每个批次独立筛单场、独立成档；默认展示<b style="color:var(--text)">竞彩当天开出的赛程</b>，点击切换查看其它在售批次。<br>
+          <span style="color:var(--weak)">${_root.batchNote||""}</span>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">${_chips}</div>
+        <div style="margin-top:7px;font-size:10.5px;color:var(--weak)">当前批次：<b style="color:var(--text)">${sp.batchLabel||"当日"} ${sp.batchDate||""}</b>，在售未开赛 ${sp.matchCount||0} 场，候选 ${sp.candidateCount||0} 条，合格单场 ${sp.qualifiedCount||0} 条</div>
+      </div>`;
+    }
     // v1.7.121 今日证据总判定：把「为什么不给推荐」讲成可逐条核对的结论，
     // 而不是空洞的一句「不建议下注」。
     {

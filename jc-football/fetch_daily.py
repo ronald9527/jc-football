@@ -1662,6 +1662,32 @@ def main():
                 except Exception as e:
                     print(f"  串关历史保存失败: {e}", flush=True)
                 print(f"  串关补生成：{len(_filled)} 个未发布档位（已发布档位不变）", flush=True)
+        # v1.7.123：锁定语义是「已发布档位绝不改动」，但批次元数据不是已发布内容，
+        # 必须补齐——否则定时任务当天重跑覆盖部署后，页面会丢掉批次切换、退化成
+        # 单批展示。这里重算只为拿 batches，主批次三档强制同步为今日已发布的原值，
+        # 保证用户切到当天批次时看到的与默认完全一致，其余批次作参考。
+        if isinstance(safe_parlay, dict) and not safe_parlay.get("batches"):
+            try:
+                _batched = gen_safe_parlay(matches) or {}
+                _blist = _batched.get("batches") or []
+                if _blist:
+                    _ak = _batched.get("activeBatch")
+                    for _b in _blist:
+                        if _b.get("batchKey") == _ak:
+                            for _k in ("parlay2", "parlay3", "parlay4"):
+                                _b[_k] = safe_parlay.get(_k)
+                            _b["tierCount"] = sum(1 for _k in ("parlay2", "parlay3", "parlay4")
+                                                  if safe_parlay.get(_k))
+                            break
+                    safe_parlay["batches"] = _blist
+                    for _mk in ("activeBatch", "batchDate", "batchLabel", "isToday",
+                                "batchNote", "matchCount"):
+                        if safe_parlay.get(_mk) is None and _batched.get(_mk) is not None:
+                            safe_parlay[_mk] = _batched[_mk]
+                    safe_parlay["tierCount"] = sum(1 for _k in ("parlay2", "parlay3", "parlay4")
+                                                   if safe_parlay.get(_k))
+            except Exception as _e:
+                print(f"  串关批次元数据补齐失败（不影响已发布推荐）: {_e}", flush=True)
         print(f"  串关推荐：今日已锁定（{gen_at}），不再变动", flush=True)
     else:
         # 稳胆串关：低赔高信心，追求高命中率（高倍串关已按用户要求永久移除）
@@ -4146,8 +4172,11 @@ def parlay_canon_score(opt):
             + 0.001 * (opt.get("fiveDim") or 0))
 
 
-def gen_safe_parlay(matches):
-    """智能混合过关稳串：先选合格单场，再按把握度取前缀成档（v1.7.122）。
+def _gen_parlay_one_batch(matches):
+    """单批次计算核心：先选合格单场，再按把握度取前缀成档（v1.7.122）。
+
+    仅处理「同一竞彩开售批次」的场次；批次分组由 gen_safe_parlay 在外层完成，
+    保证任一组合的腿必然来自同一次开售的赛程（不跨周五/周六/周日）。
 
     用户原则：「选串关是把单场最有把握、数据支撑、合理，才进行串关组合」。
     实现顺序（与旧版「先定 2/3/4 腿档位再凑组合」相反）：
@@ -4163,15 +4192,14 @@ def gen_safe_parlay(matches):
     （腿级实证命中率×总赔−1）——推荐判定/达标线/仓位用真实口径。
     返回 {parlay2, parlay3, parlay4, generatedAt, strategy, candidatePool, ...}
     """
-    # v1.7.120 根治「分层串关每天空白」：竞彩销售批次跨自然日。
-    # 例：周五001 开球 11-06 16:40、周五002~014 开球 11-07 凌晨，但它们是同一个
-    # 「周五」销售日、11-06 全天在售可下单。旧逻辑 `date == 今天` 把次日凌晨开球的
-    # 13 场全部丢掉，中午后剩余的当日场次又陆续开赛，候选池归零 → 三档必然留空；
-    # 叠加 CI 容器 UTC 时区错位时更会全场清零。现改为「在售未开赛」口径：
-    # 只要尚未开赛、且开球时间在未来 36 小时内即入池（窗口覆盖一个完整销售日）。
+    # v1.7.123 批次隔离：外层 gen_safe_parlay 已按竞彩销售批次（编号前缀=date）
+    # 分组、并逐批只保留未开赛场次后调用本函数，因此这里**不再做 36 小时滚动窗口**。
+    # 那个窗口正是「把周五和周六串起来」的根因：它把多个批次混进同一候选池再全池
+    # 取前缀，稳健 2 串 1 会变成「周六009 + 周五006」；同时它还会把开球时间距现在
+    # >36h 的批次（如周日）整体丢弃，让后续批次永远不参与。批次本身就是赛程边界。
+    # 这里只再做一次「剔除已开赛」兜底（下方 candidates 循环还有一道同口径过滤）。
     today = time.strftime("%Y-%m-%d")
     now_ts = time.time()
-    _WIN = 36 * 3600
 
     def _kickoff_ts(m):
         k = m.get("kickoff") or ""
@@ -4185,8 +4213,7 @@ def gen_safe_parlay(matches):
     _kept = []
     for _m in matches:
         _kt = _kickoff_ts(_m)
-        # 无法解析开球时间的保留（由下方循环原有逻辑处理），其余只留未开赛且在未来窗口内
-        if _kt is None or (now_ts < _kt <= now_ts + _WIN):
+        if _kt is None or _kt > now_ts:
             _kept.append(_m)
     matches = _kept
 
@@ -5169,6 +5196,136 @@ def gen_safe_parlay(matches):
         return f"{p['totalOdds']}倍(实证命中{p.get('realHit') or p['jointProb']}% 真实EV{p['realEv']:+.1f}% 建议{p['suggestStake']}%)"
 
     print(f"  分层串关：候选{len(candidates)}个 | 稳健 {_fmt(parlay2)} | 均衡 {_fmt(parlay3)} | 精锐 {_fmt(parlay4)}", flush=True)
+    return result
+
+
+def gen_safe_parlay(matches):
+    """按竞彩销售批次分组，逐批独立成档（v1.7.123）。
+
+    用户要求「把日期规律好，别周五的和周六的串起来，我需要的是竞彩当天开出的
+    赛程」。竞彩每个销售批次用编号前缀标识（周五001~周五014 / 周六001~），
+    与 date 字段严格一一对应；同一批次内允许跨零点开球（周五场次可能周六凌晨
+    开球，仍属周五批次），但不同批次的场次绝不能串进同一注组合。
+
+    旧实现用「未来 36 小时滚动窗口」把周五/周六/周日混进同一候选池再全池取
+    前缀，于是稳健 2 串 1 会变成「周六009 + 周五006」；36h 之外的批次还会被
+    整体丢弃。现按批次分组、每组独立调用 _gen_parlay_one_batch，结构上不可能
+    跨批次；每批都带自己的三档、候选池、合格单场与留空说明。
+
+    顶层仍返回「主批次」的完整字段（parlay2/3/4、candidatePool、qualifiedCount、
+    poolNotes、tierNotes、strategy 等），保证 save_parlay_history / load_locked_parlay /
+    selftest / 前端空态兜底 / 历史结算等全部下游零改动兼容。主批次优先取「当天
+    开出的赛程」（date == 北京今天）；当天批次三档全空时才退到档位最多的在售
+    批次，避免整页空白，并在 batchNote 如实说明。
+
+    新增字段：batches（各批次完整结果，按日期升序）、activeBatch、
+    batchDate、batchLabel、isToday、batchNote。
+    """
+    import re as _re
+    today = time.strftime("%Y-%m-%d")
+    now_ts = time.time()
+
+    def _batch_of(m):
+        d = str(m.get("date") or "").strip()
+        n = str(m.get("num") or "")
+        mt = _re.match(r"^(周[一二三四五六日])", n)
+        lab = mt.group(1) if mt else ""
+        return (d or lab or "未标注"), d, lab
+
+    def _kickoff_ts(m):
+        k = m.get("kickoff") or ""
+        try:
+            if len(k) >= 10 and k[4] == '-':
+                return time.mktime(time.strptime(k[:16], "%Y-%m-%d %H:%M"))
+            return time.mktime(time.strptime(f"{m.get('date','')} {k}", "%Y-%m-%d %H:%M"))
+        except Exception:
+            return None
+
+    groups = {}
+    for m in (matches or []):
+        key, d, lab = _batch_of(m)
+        g = groups.setdefault(key, {"date": d, "label": lab, "matches": []})
+        if lab and not g["label"]:
+            g["label"] = lab
+        if d and not g["date"]:
+            g["date"] = d
+        kt = _kickoff_ts(m)
+        # 只把「尚未开赛」的场次放进该批次（已开赛场次不可再下单）
+        if kt is None or kt > now_ts:
+            g["matches"].append(m)
+
+    batches = []
+    for key, g in sorted(groups.items(), key=lambda kv: (kv[1]["date"] or "9999-99-99", kv[0])):
+        if not g["matches"]:
+            continue
+        one = _gen_parlay_one_batch(g["matches"]) or {}
+        bdate = g["date"] or key
+        blabel = g["label"] or key
+        one["batchKey"] = key
+        one["batchDate"] = bdate
+        one["batchLabel"] = blabel
+        one["isToday"] = (g["date"] == today)
+        one["matchCount"] = len(g["matches"])
+        # 批次标识透传到每条腿与每个候选，前端/自检可逐条核对「同批次」
+        for tk in ("parlay2", "parlay3", "parlay4"):
+            p = one.get(tk)
+            if not p:
+                continue
+            p["batchDate"] = bdate
+            p["batchLabel"] = blabel
+            for lg in (p.get("legs") or []):
+                lg["batchDate"] = bdate
+                lg["batchLabel"] = blabel
+        for c in (one.get("candidatePool") or []):
+            c["batchDate"] = bdate
+            c["batchLabel"] = blabel
+        one["tierCount"] = sum(1 for tk in ("parlay2", "parlay3", "parlay4") if one.get(tk))
+        batches.append(one)
+
+    if not batches:
+        # 极端兜底：没有任何未开赛场次（数据源异常/深夜全部售罄）时，仍返回一个
+        # 结构完整的空壳，交给页面既有空态兜底处理，绝不抛异常中断 daily。
+        empty = _gen_parlay_one_batch([]) or {}
+        empty.update({"batches": [], "activeBatch": None, "batchDate": today,
+                      "batchLabel": "", "isToday": True, "matchCount": 0, "tierCount": 0,
+                      "batchNote": "当前无在售未开赛的竞彩批次，暂无串关推荐"})
+        return empty
+
+    # 主批次：有推荐 > 无推荐；当天批次 > 其它批次；档位数多 > 少；日期早 > 晚。
+    # 保证顶层永远指向「竞彩当天开出的赛程」的那批（用户要的），且尽量不空档。
+    def _main_score(b):
+        n = b.get("tierCount") or 0
+        return (0 if n > 0 else 1, 0 if b.get("isToday") else 1, -n, b.get("batchDate") or "9999")
+    main = sorted(batches, key=_main_score)[0]
+
+    result = dict(main)                       # 顶层 = 主批次完整结果（向后兼容）
+    result["batches"] = batches
+    result["activeBatch"] = main["batchKey"]
+    if (main.get("tierCount") or 0) == 0:
+        _today_b = next((b for b in batches if b.get("isToday")), None)
+        result["batchNote"] = (
+            "竞彩当天批次（%s）当前合格单场不足、三档留空，页面默认展示有推荐的"
+            "在售批次（%s %s）；可用上方批次切换查看各批次各自独立的组合。"
+            % (today, main["batchLabel"], main["batchDate"]))
+    elif not main["isToday"]:
+        result["batchNote"] = (
+            "竞彩当天批次（%s）已无在售未开赛场次或暂无达标组合，当前展示最近"
+            "在售批次（%s %s）；各批次组合完全独立，绝不跨批次串关。"
+            % (today, main["batchLabel"], main["batchDate"]))
+    else:
+        result["batchNote"] = (
+            "本批次为竞彩当天开出的赛程（%s %s），组合内所有场次同批次；"
+            "其它在售批次可用上方切换查看，各自独立成档。"
+            % (main["batchLabel"], main["batchDate"]))
+
+    result["strategy"] = (main.get("strategy") or "") + (
+        " 【v1.7.123 批次隔离】按竞彩销售批次（编号前缀=赛程日期）分组，每批独立"
+        "筛选合格单场并前缀成档，任一组合的腿必须同批次，绝不把周五与周六的"
+        "场次串在一起；页面默认展示竞彩当天开出的赛程批次，可切换查看其它在售批次。")
+    print("  分层串关：共 %d 个竞彩批次 [%s]；主批次 %s %s（%d 档）" % (
+        len(batches),
+        " / ".join("%s %s:%d档" % (b["batchLabel"], b["batchDate"], b["tierCount"]) for b in batches),
+        main["batchLabel"], main["batchDate"], main["tierCount"]), flush=True)
     return result
 
 

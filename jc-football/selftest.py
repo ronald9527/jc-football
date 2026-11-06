@@ -176,7 +176,47 @@ def check_parlay(data):
     _tos = [_p.get("totalOdds") or 0 for _k, _p in _present]
     if any(x >= y for x, y in zip(_tos, _tos[1:])):
         add("ERROR", "串关", "三档总赔未严格递增 %s" % _tos)
-    # ⑤ 合格单场不足 N 条时该档必须为空（不得硬凑）
+    # ⑤ v1.7.123 竞彩批次隔离：任一组合的所有腿必须来自同一竞彩销售批次。
+    # 用户明确要求「别周五的和周六的串起来」——用腿上 num 前缀（周五/周六/周日）
+    # 与 batchDate 双重判定；顶层三档与 batches 内每一档都检查。
+    import re as _re
+    def _batch_violation(legs):
+        dates, labels = set(), set()
+        for l in (legs or []):
+            d = l.get("batchDate")
+            n = str(l.get("num") or "")
+            mt = _re.match(r"^(周[一二三四五六日])", n)
+            lab = l.get("batchLabel") or (mt.group(1) if mt else "")
+            if d:
+                dates.add(d)
+            elif lab:
+                dates.add(lab)
+            if lab:
+                labels.add(lab)
+        # 兼容旧单批数据（无批次字段）：不作要求，只检查有标注的情况
+        return len(dates) > 1, sorted(dates), sorted(labels)
+    for _k, _p in _present:
+        _bad, _ds, _ls = _batch_violation(_p.get("legs"))
+        if _bad:
+            add("ERROR", "串关", "%s 跨竞彩批次组合 %s（禁止把周五和周六串起来）" % (_k, _ds))
+    _batches = sp.get("batches")
+    if isinstance(_batches, list):
+        for _b in _batches:
+            _bk = _b.get("batchKey") or _b.get("batchDate")
+            for _k in ("parlay2", "parlay3", "parlay4"):
+                _p = _b.get(_k)
+                if not _p:
+                    continue
+                _bad, _ds, _ls = _batch_violation(_p.get("legs"))
+                if _bad:
+                    add("ERROR", "串关", "批次 %s 的 %s 跨批次 %s" % (_bk, _k, _ds))
+                # 每档腿的批次必须等于所属批次
+                _bd = set(str(l.get("batchDate") or "") for l in (_p.get("legs") or [])
+                          if l.get("batchDate"))
+                if _bd and _b.get("batchDate") and not _bd.issubset({_b["batchDate"]}):
+                    add("ERROR", "串关", "批次 %s 的 %s 混入其它批次腿 %s" % (_bk, _k, sorted(_bd)))
+        print("  批次隔离：%d 个竞彩批次，逐档核对同批次完成" % len(_batches))
+    # ⑥ 合格单场不足 N 条时该档必须为空（不得硬凑）
     _qn = sp.get("qualifiedCount")
     if isinstance(_qn, int):
         for _k, _n in (("parlay2", 2), ("parlay3", 3), ("parlay4", 4)):
