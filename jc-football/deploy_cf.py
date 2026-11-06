@@ -522,11 +522,19 @@ def main():
 
     out = (r.stdout or "") + (r.stderr or "")
     print(out[-1800:])
-    if "Deployment complete" in out or ("Success" in out and "Uploaded" in out):
+    # v1.7.122：wrangler 上传阶段会打印「✨ Success! Uploaded ...」，随后
+    # Functions 发布仍可能失败（Cloudflare 后端 "Failed to publish your Function.
+    # Unknown internal error occurred."）。只看 Success/Uploaded 会把失败部署
+    # 误判成 DEPLOY_OK —— 实测线上根本没更新。失败标志必须优先否决。
+    _failed = ("Deployment failed" in out or "✘ [ERROR]" in out
+               or "Failed to publish your Function" in out)
+    _ok = ("Deployment complete" in out
+           or ("Success" in out and "Uploaded" in out))
+    if _ok and not _failed:
         print("DEPLOY_OK updateTime=%s deployTime=%s pageVersion=%s pageBuild=%s"
               % (upd, deploy_time, page_version, page_build or "-"))
         return 0
-    print("DEPLOY_FAIL 离线包已保留：%s" % dist)
+    print("DEPLOY_FAIL（线上未更新，离线包已保留）：%s" % dist)
     return 1
 
 
