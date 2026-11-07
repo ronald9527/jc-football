@@ -86,9 +86,44 @@ def _outcome(h, a):
     return "H" if h > a else ("A" if a > h else "D")
 
 
+HISTORY_PATH = "history.json"
+# 竞彩官方开奖回溯索引（v1.7.126）：(date, num) -> (finalH, finalA, record)。
+# V站 抓取的是「当天在售赛程」，快照时刻比赛多未开踢，等踢完这批场次已滚出
+# 销售窗口再也抓不到 —— 原生 match_info 完赛回填因此长期 0 场。改用竞彩官方
+# 开奖档案按「日期 + 竞彩编号」严格对齐，赛果一开奖即可归档，零跨文件猜测。
+_OFFICIAL = None
+
+
+def _load_official():
+    global _OFFICIAL
+    if _OFFICIAL is not None:
+        return _OFFICIAL
+    idx = {}
+    try:
+        with open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                               HISTORY_PATH), encoding="utf-8") as f:
+            data = json.load(f)
+        for r in data.get("records", []):
+            res = r.get("result") or {}
+            if res.get("cancel") or res.get("home") is None or res.get("away") is None:
+                continue
+            idx.setdefault((r.get("date"), r.get("num")), (int(res["home"]), int(res["away"]), r))
+    except Exception as e:
+        print("  [warn] 读取 history.json 官方赛果失败: %s" % e)
+    _OFFICIAL = idx
+    return idx
+
+
+def _name_sim(a, b):
+    """队名字符重合度：V站简称 vs 竞彩全称（巴黎圣曼 / 巴黎圣日尔曼）。"""
+    sa, sb = set(str(a or "").replace(" ", "")), set(str(b or "").replace(" ", ""))
+    return len(sa & sb) / len(sa | sb) if (sa | sb) else 0.0
+
+
 # 高信心口径（与前端 vzConfidence 完全一致）：V站 预测方向 == 模型(Poisson) 预测方向。
-# V站接口本身无「信心/星级」字段，故采用多源共识；该标记在「赛果回填」时一并
-# 归档，使赛后回溯能还原「这场当时是否高信心」，对高信心场次的命中率做独立验证。
+# V站接口本身无「信心/星级」字段，故采用多源共识；该标记在「抓取时」即固化到
+# vzhan_data.json，赛果回填时原样归档 —— 否则等比赛踢完，该场的模型预测快照
+# 早已随竞彩销售窗口滚动消失，事后根本无法还原「当时是否高信心」。
 _MODEL_PREDS = None  # 懒加载缓存：[(jcNum, home, away, (h,a))]
 
 
@@ -127,21 +162,75 @@ def _match_model_pred(jc_num, home, away):
     return None
 
 
-def vz_high_conf(pred_h, pred_a, final_h, final_a, jc_num, home, away):
-    """判定该 V站 预测当时是否「高信心」（多源共识）。
+def vz_conf(pred_h, pred_a, jc_num, home, away):
+    """判定该 V站 预测「是否高信心」（赛前口径，与前端 vzConfidence 同源）。
 
-    返回 (bool_high, why)。仅当 V站 与模型 方向一致时为真；方向与赛果无关，
-    因此即使尚未完赛也可判定（回填时即此刻快照）。"""
+    返回 (highConf, why, confAvailable)：
+      · 有模型预测且方向一致 -> (True, 共识, True)
+      · 有模型预测但方向分歧 -> (False, 分歧, True)
+      · 无模型预测快照        -> (False, 无法判定, False)，单列不混入任一组
+    方向与赛果无关，未开赛也可判定，因此抓取时即可固化。"""
     vo = _outcome(pred_h, pred_a)
     if vo is None:
-        return False, ""
+        return False, "", False
     mp = _match_model_pred(jc_num, home, away)
     if not mp:
-        return False, ""
+        return False, "赛前无模型预测快照，无法判定", False
     mo = _outcome(mp[0], mp[1])
     if mo and mo == vo:
-        return True, "V站·模型 方向共识"
-    return False, ""
+        return True, "V站·模型 方向共识", True
+    return False, "V站·模型 方向分歧", True
+
+
+def vz_high_conf(pred_h, pred_a, final_h, final_a, jc_num, home, away):
+    """兼容旧签名（accuracy_ab 等外部调用）：返回 (bool_high, why)。"""
+    hc, why, _ = vz_conf(pred_h, pred_a, jc_num, home, away)
+    return hc, why
+
+
+def attach_conf(matches):
+    """抓取时把高信心判定固化进每条 V站 预测（赛前快照，赛后不重算）。"""
+    n = 0
+    for m in matches:
+        if not (m.get("hasPred") and m.get("predH") is not None and m.get("predA") is not None):
+            m["highConf"] = False
+            m["confWhy"] = ""
+            m["confAvailable"] = False
+            continue
+        hc, why, ok = vz_conf(m["predH"], m["predA"], m.get("jcNum"),
+                              m.get("home"), m.get("away"))
+        m["highConf"] = bool(hc)
+        m["confWhy"] = why
+        m["confAvailable"] = bool(ok)
+        mp = _match_model_pred(m.get("jcNum"), m.get("home"), m.get("away"))
+        m["modelPred"] = list(mp) if mp else None
+        n += int(ok)
+    print("  赛前高信心固化：%d 场可判定（共 %d 场有比分预测）"
+          % (n, sum(1 for m in matches if m.get("hasPred"))), flush=True)
+    return matches
+
+
+def attach_official_result(matches):
+    """用竞彩官方开奖档案补全 finalH/finalA（V站 原生赛果优先，官方兜底）。"""
+    off = _load_official()
+    n = 0
+    for m in matches:
+        if m.get("finalH") is not None and m.get("finalA") is not None:
+            continue
+        hit = off.get((m.get("date"), m.get("jcNum")))
+        if not hit:
+            continue
+        fh, fa, r = hit
+        # 主键已是 (date, jcNum)，队名相似度只用于拦截明显错配
+        if min(_name_sim(m.get("home"), r.get("home")),
+               _name_sim(m.get("away"), r.get("away"))) < 0.25:
+            continue
+        m["finalH"], m["finalA"] = fh, fa
+        m["resultSource"] = "竞彩官方开奖回溯 (history.json)"
+        n += 1
+    if n:
+        print("  官方赛果回填 %d 场（history.json）" % n, flush=True)
+    return matches
 
 
 def _final_from_mi(mi, kickoff):
@@ -244,37 +333,59 @@ def load_json(path, default):
 
 
 def update_history(matches):
-    """完赛且有预测的场次归档(含精确命中/方向命中), 供 accuracy_ab 三源对比"""
+    """完赛且有预测的场次归档（含精确命中/方向命中/高信心），供统计与三源对比。
+
+    v1.7.126：赛果来源改为「V站 原生 match_info 优先 + 竞彩官方开奖兜底」；
+    高信心沿用抓取时固化的赛前判定，绝不在赛后用已滚动消失的模型快照重算。
+    """
     hist = load_json(HIST, {"updatedAt": "", "matches": {}})
+    if not isinstance(hist.get("matches"), dict):
+        hist["matches"] = {}
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    added = 0
+    added = upgraded = 0
     for m in matches:
-        if not (m.get("hasPred") and m.get("finalH") is not None):
+        if not (m.get("hasPred") and m.get("finalH") is not None and m.get("finalA") is not None):
             continue
         key = "%s|%s|%s" % (m.get("jcNum") or m.get("date"), m["home"], m["away"])
-        if key in hist["matches"]:
-            continue
+        old = hist["matches"].get(key)
+        if old and (old.get("confAvailable") or not m.get("confAvailable")):
+            continue  # 幂等：已有归档不覆盖；仅当新记录可判定、旧的不可判定时升级
         fh, fa = m["finalH"], m["finalA"]
-        exact = (m["predH"] == fh and m["predA"] == fa)
-        oc = _outcome(m["predH"], m["predA"]) == _outcome(fh, fa)
-        hc, why = vz_high_conf(m["predH"], m["predA"], fh, fa,
-                               m.get("jcNum"), m["home"], m["away"])
-        hist["matches"][key] = {
+        vo = _outcome(m["predH"], m["predA"])
+        if m.get("confAvailable"):
+            hc, why, ok = bool(m.get("highConf")), m.get("confWhy") or "", True
+        else:
+            hc, why, ok = vz_conf(m["predH"], m["predA"], m.get("jcNum"),
+                                  m["home"], m["away"])
+        rec = {
             "jcNum": m.get("jcNum"), "date": m.get("date"),
             "league": m.get("league"),
             "home": m["home"], "away": m["away"],
             "predH": m["predH"], "predA": m["predA"],
             "finalH": fh, "finalA": fa,
-            "exactHit": bool(exact), "outcomeHit": bool(oc),
-            "highConf": bool(hc), "confWhy": why,
+            "exactHit": bool(m["predH"] == fh and m["predA"] == fa),
+            "outcomeHit": bool(vo == _outcome(fh, fa)),
+            "highConf": bool(hc), "confWhy": why, "confAvailable": bool(ok),
+            "modelPred": m.get("modelPred"),
+            "resultSource": m.get("resultSource") or "V站 report/info match_info",
+            "source": "fetch_vzhan.py 完赛归档",
         }
-        added += 1
+        hist["matches"][key] = rec
+        if old:
+            upgraded += 1
+        else:
+            added += 1
     hist["updatedAt"] = now
+    hist.setdefault("source", "V站 赛前预测 + 竞彩官方开奖回溯")
+    hist.setdefault("meta", {})["version"] = "v1.7.126"
+    hist["meta"]["highConfRule"] = "V站预测方向 == 模型(modelPred)预测方向；与前端 vzConfidence() 同口径"
     with open(HIST, "w", encoding="utf-8") as f:
         json.dump(hist, f, ensure_ascii=False, indent=1)
-    if added:
+    if added or upgraded:
         nh = sum(1 for v in hist["matches"].values() if v.get("exactHit"))
-        print("  历史归档 +%d 场 (共 %d，精确命中 %d)" % (added, len(hist["matches"]), nh))
+        hot = sum(1 for v in hist["matches"].values() if v.get("highConf"))
+        print("  历史归档 +%d 场 / 升级 %d 场 (共 %d，精确命中 %d，🔥高信心 %d)"
+              % (added, upgraded, len(hist["matches"]), nh, hot), flush=True)
 
 
 def main():
@@ -286,18 +397,26 @@ def main():
     if total == 0 or not matches:
         print("!! 接口返回 0 场（临时不可用/限流），保留上次 vzhan_data.json，本次不写盘", flush=True)
         return 1
+    # v1.7.126：赛前固化高信心 + 官方赛果回填，二者都在写盘/归档之前完成
+    attach_conf(matches)
+    attach_official_result(matches)
     withpred = sum(1 for m in matches if m["hasPred"])
+    withhot = sum(1 for m in matches if m.get("highConf"))
+    withfinal = sum(1 for m in matches if m.get("finalH") is not None)
     update_history(matches)
     out = {
         "updatedAt": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "source": "V站/呼死狗 (mapi.shemen365.com)",
         "total": total,
         "withPred": withpred,
+        "withHighConf": withhot,
+        "withResult": withfinal,
         "matches": matches,
     }
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
-    print("== 完成: 竞彩 %d 场 | 有预测 %d 场 | 用时 %.1fs -> %s ==" % (total, withpred, time.time() - t0, OUT))
+    print("== 完成: 竞彩 %d 场 | 有预测 %d 场 | 🔥高信心 %d 场 | 有赛果 %d 场 | 用时 %.1fs -> %s =="
+          % (total, withpred, withhot, withfinal, time.time() - t0, OUT))
     return 0
 
 

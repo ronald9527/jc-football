@@ -340,6 +340,26 @@ set +e
 "$PY" gen_good_rate.py
 set -e
 
+# ---------- 步骤1.951：V站 赛果归档回溯（v1.7.126）----------
+# vzhan_history.json 历史上一直 0 场：fetch_vzhan 只能从 V站 report/info 读
+# 完赛比分、且要求开球过 3h，而抓取的是当天在售赛程、快照时比赛还没开踢。
+# backfill 用 history.json 官方开奖按 (date, jcNum) 对齐补归档，幂等不覆盖；
+# --no-git 为轻量模式（只扫本地文件），全量 git 历史回溯已在本地一次性完成，
+# 产物固化上云由 ensure_history 冷启动拉回，这里只做每轮增量兜底。
+log "==> 步骤1.951 V站 赛果归档回溯 (backfill_vzhan_history.py)"
+set +e
+"$PY" backfill_vzhan_history.py --no-git
+set -e
+
+# ---------- 步骤1.952：V站 🔥高信心预测比分/方向命中率统计（v1.7.126）----------
+# 纯本地 JSON 计算，零外网、<1s。顺序约束：必须在 fetch_vzhan(1.886) 归档与
+# 1.951 回溯之后、步骤2 build_panel.py 之前——产物写进 matches.json.vzHighStats，
+# 由 build_panel 一并注入 index.html；失败只记日志，绝不阻断部署。
+log "==> 步骤1.952 V站高信心命中率统计 (gen_vz_high_stats.py)"
+set +e
+"$PY" gen_vz_high_stats.py
+set -e
+
 log "==> 步骤2 构建页面 (build_panel.py)"
 # 容错：构建脚本偶发异常不应让定时任务被判失败（否则触发告警/邮件）。
 # 抓取步骤已恢复数据，构建失败可沿用上次 index.html，下个周期重试。
@@ -390,7 +410,9 @@ if [ "$_refreshed" = "1" ]; then
   log "==> 步骤2.5b 陈旧重抓后重建页面"
   # v1.7.124：fetch_scores.py 重抓会重写 matches.json（丢掉 goodRateStats），
   # 必须先重算统计再构建页面，否则页面统计区会退回旧字段或空白。
+  # v1.7.126：V站 高信心统计同理由（同样挂在 matches.json 上），一并重算。
   "$PY" gen_good_rate.py 2>/dev/null || true
+  "$PY" gen_vz_high_stats.py 2>/dev/null || true
   "$PY" build_panel.py 2>/dev/null || true
 fi
 
@@ -431,7 +453,7 @@ def filehash(p):
         return hashlib.sha256(open(p, "rb").read()).digest()
     except Exception:
         return b""
-parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak", "goodRateStats")
+parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak", "goodRateStats", "vzHighStats")
 parts += norm("history.json", "records")
 parts += norm("fd_data.json", "matches", "byNum")
 parts += norm("score_predict.json", "matches", "reliable", "accuracy")
@@ -443,6 +465,10 @@ parts += filehash("basketball_ai.json")
 parts += filehash("basketball_stats.json")
 parts += filehash("basketball_parlay_history.json")
 parts += filehash("basketball_ai_accuracy.json")
+# v1.7.126：V站 赛果归档 / 在售预测变化也要触发上线，否则高信心统计刷新了
+# 页面却不更新；归档是跨轮累积的持久档案，单独计入指纹。
+parts += filehash("vzhan_history.json")
+parts += filehash("vzhan_data.json")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")

@@ -1183,6 +1183,12 @@ footer b{color:var(--sub)}
 .gr-notes{font-size:10.5px;color:var(--sub);line-height:1.85;padding-left:18px;margin:6px 0 0}
 .gr-notes li{margin:3px 0}
 @media (max-width:768px){.gr-big{font-size:28px}.gr-kpis{grid-template-columns:repeat(2,1fr)}}
+/* v1.7.126：V站 🔥高信心预测命中率统计（复用 .gr-* 卡片，金色标题区分） */
+.vzs-view{margin:2px 0 14px}
+.vzs-view .gr-title{color:var(--gold,#e8b339)}
+.vzs-view .gr-head{background:linear-gradient(135deg,#2a2113,var(--panel))}
+.vzs-view .gr-big{color:var(--gold,#e8b339)}
+.vzs-hot{color:var(--gold,#e8b339);font-weight:700}
 /* 规则组命中率榜 */
 .rg-board{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow-x:auto}.rg-board .rg-title{font-size:12.5px;font-weight:700;padding:10px 14px 6px;display:flex;align-items:center;gap:8px}
 .rg-board .rg-title .tip{font-size:10.5px;color:var(--weak);font-weight:400;margin-left:auto}
@@ -1557,6 +1563,8 @@ footer b{color:var(--sub)}
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>🐶 V站·呼死狗情报（中文原味）</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
         <div class="sp-sub-head">V站 App「呼死狗」海外爆料员第一手情报<span class="tip">伤停/阵容/状态/渊源全中文直出，无需翻译；比分预测为呼死狗爆料员给出，与卡片「V站」徽标同源。按竞彩当天开售批次展示，可切换周六/周日，绝不跨批次混排</span></div>
+        <!-- v1.7.126：🔥高信心预测比分 / 方向命中率统计（数据源 matches.json.vzHighStats） -->
+        <div class="gr-view vzs-view" id="vzHighStatsView"></div>
         <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="vzSummary"></div>
         <div id="vzList"></div>
         <div id="vzBackfill" style="display:none;margin-top:10px"></div>
@@ -1803,8 +1811,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.125";
+const VERSION = "v1.7.126";
 const CHANGELOG = [
+  {
+    version: "v1.7.126",
+    date: "2026-11-07",
+    title: "V站「🔥高信心」预测比分 / 方向命中率统计：能核对、不虚高、样本如实标注",
+    details: [
+      "用户要求「添加v站高信心预测比分和方向命中率统计」—— 根因先查清：vzhan_history.json 从接入至今一直是 0 场归档，因为 fetch_vzhan 的赛果回填依赖 V站 report/info 的 match_info 且要求开球过 3 小时，而抓取的是当天在售赛程、快照时刻比赛还没开踢，等踢完这批场次早已滚出销售窗口再也抓不到，高信心准不准根本无数据可查",
+      "一次性回溯 backfill_vzhan_history.py：从 git 历史全部 vzhan_data.json 快照 + index.html 内嵌 BUILT_VZHAN 取赛前预测（按 日期+竞彩编号 去重、取最早快照不做事后替换），从 git 历史 matches.json / BUILT_DATA 取赛前 modelPred 判高信心，按 日期+竞彩编号 对齐 history.json 竞彩官方开奖赛果并做队名相似度校验；重建出 55 场已结算归档（16 场🔥高信心、16 场普通、23 场赛前无模型快照单列）",
+      "赛前固化根治：fetch_vzhan.py 抓取时即用当前 matches.json 的 modelPred 把 highConf/confWhy 固化进 vzhan_data.json（口径与前端 vzConfidence() 完全同源），赛后归档原样沿用，绝不在赛后用已滚动消失的模型快照重算；赛果改为「V站 原生优先 + 竞彩官方开奖 history.json 兜底」，每轮刷新自动增量归档",
+      "新增 gen_vz_high_stats.py：同时统计「预测比分精确命中」与「胜平负方向命中」两组指标，分🔥高信心/普通/无法判定三组对照，给出 Wilson 95%CI、独立随机基线（预测分布×实际分布，非拍脑袋 1/3）、二项精确单侧检验、组间 Fisher 精确检验/两比例 z 检验、按日期/联赛/时间窗口分层",
+      "当前实测（55 场已结算）：🔥高信心 16 场比分精确 6.25%（1 中）、方向 50.00%（8 中）；独立基线 比分 7.27% / 方向 32.39%，方向超额 +17.61pt 但二项 p=0.1099 未达显著，组间 Fisher p=1.0000；普通组比分 12.50%、方向 43.75%。结论如实写明样本有限、CI 宽（方向 28.00%~72.00%）、不构成稳定优势证明与投注建议，绝不把 16 场包装成高命中率",
+      "今日高信心清单严格按竞彩当天开售批次隔离（周六 11-07 共 29 场、22 场带 V站 预测、3 场🔥高信心；周日批次单列可切换但绝不混算），未开奖明确标注「不计入正确率」，赛后自动回填纳入统计",
+      "页面：V站·呼死狗情报分区新增统计面板（复用正路统计同款卡片，双指标 KPI + 今日清单 + 三组对照 + 分层表 + 口径说明）；独立报告 V站高信心预测命中率统计.html 可离线核对；刷新数据按钮热更新 vzHighStats；流水线 1.952 统计、2.5b 重抓后重算、部署指纹与 Pages 副本、自检复算口径全链路接线"
+    ]
+  },
   {
     version: "v1.7.125",
     date: "2026-11-07",
@@ -4094,6 +4116,7 @@ function render(){
   if (isBK){ renderBasketball(); return; }
   if (!isToday){ renderHistory(); return; }
   renderGoodRate();
+  try{ renderVzHighStats(); }catch(e){}   // v1.7.126：DOM 存在即渲染，跨 Tab 也能保持同步
   if (state.view==="card"){ renderCards(); $("#cardsView").style.display="block"; $("#tableView").style.display="none"; }
   else { renderTable(); $("#tableView").style.display="block"; $("#cardsView").style.display="none"; }
 }
@@ -4178,6 +4201,100 @@ function renderGoodRate(){
     head.onclick=()=>{
       const open=body.classList.toggle("show");
       window.__grOpen=open;
+      if(tog) tog.textContent=open?"收起明细 ▴":"展开明细 ▾";
+    };
+  }
+}
+
+/* ---------- v1.7.126 V站 🔥高信心预测比分 / 方向命中率统计 ----------
+   数据源：matches.json.vzHighStats（gen_vz_high_stats.py 由 vzhan_history.json
+   赛前固化归档 + history.json 官方开奖回溯计算）。高信心口径与 vzConfidence()
+   完全同源。诚实原则：同时给出比分精确与方向双指标、Wilson 95%CI、独立随机
+   基线、显著性检验与样本量，未开奖场次绝不拿来凑样本，不承诺盈利。 */
+function renderVzHighStats(){
+  const el = $("#vzHighStatsView");
+  if(!el) return;
+  const s = (typeof BUILT_DATA!=="undefined" && BUILT_DATA.vzHighStats) || null;
+  if(!s || !s.overall || !s.groups || !s.today){
+    el.innerHTML = '<div class="gr-head"><div class="gr-top"><span class="gr-title">🔥 V站 高信心预测命中率</span></div>'+
+      '<div class="gr-sub" style="margin-top:8px">本轮尚未生成统计，点击「刷新数据」或重新打开页面后自动出现。</div></div>';
+    return;
+  }
+  const o=s.overall, t=s.today, g=s.groups, c=s.comparison||{};
+  const hot=g.high||{}, normal=g.normal||{}, unknown=g.unknown||{};
+  const ESC_MAP = {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
+  const esc = x => String(x==null?"":x).replace(/[&<>"']/g, ch => ESC_MAP[ch] || ch);
+  const P = v => (typeof v==="number") ? v.toFixed(2)+"%" : "—";
+  const SG = v => (typeof v==="number") ? (v>0?"+":"")+v.toFixed(2) : null;
+  const CC = v => (typeof v!=="number") ? "gr-flat" : (v>0?"gr-pos":(v<0?"gr-neg":"gr-flat"));
+  const PT = v => (typeof v==="number") ? SG(v)+"pt" : "—";
+  const CI = a => (Array.isArray(a)&&a.length===2) ? P(a[0])+"~"+P(a[1]) : "—";
+  const kpi = (l,v,cls) => '<div class="gr-kpi"><div class="l">'+esc(l)+'</div><div class="v '+(cls||"")+'">'+v+'</div></div>';
+  const groupTable = (items, keyTitle) => {
+    if(!items || !items.length) return '<div class="gr-sub">该维度暂无样本</div>';
+    let h='<div class="gr-tblwrap"><table class="gr-tbl"><thead><tr><th>'+esc(keyTitle)+'</th><th>场次</th><th>比分精确</th><th>精确率</th><th>精确CI</th><th>方向命中</th><th>方向率</th><th>方向CI</th><th>方向超额</th></tr></thead><tbody>';
+    items.forEach(x=>{
+      h+='<tr><td>'+esc(x.key)+'</td><td>'+x.n+'</td><td>'+x.exactHit+'</td><td><b>'+P(x.exactRate)+'</b></td><td>'+CI(x.exactWilson95)+'</td><td>'+x.dirHit+'</td><td><b>'+P(x.dirRate)+'</b></td><td>'+CI(x.dirWilson95)+'</td><td class="'+CC(x.dirVsBaseline)+'">'+PT(x.dirVsBaseline)+'</td></tr>';
+    });
+    return h+'</tbody></table></div>';
+  };
+  const picksHtml = (()=>{
+    const ps=t.picks||[];
+    if(!ps.length) return '<div class="gr-sub">今日批次暂无 🔥高信心 预测</div>';
+    let h='<div class="gr-tblwrap"><table class="gr-tbl"><thead><tr><th>编号</th><th>联赛</th><th>对阵</th><th>预测比分</th><th>方向</th><th>模型</th><th>高信心依据</th><th>结算状态</th></tr></thead><tbody>';
+    ps.forEach(p=>{
+      const mp = Array.isArray(p.modelPred) ? p.modelPred[0]+":"+p.modelPred[1] : "—";
+      let st = '<span class="gr-pend">'+esc(p.note||"未开奖 · 不计入正确率")+'</span>';
+      if(p.settled){
+        const txt = p.exactHit ? "✓精确 " : (p.dirHit ? "✓方向 " : "✗未中 ");
+        st = '<span class="'+(p.exactHit||p.dirHit?"gr-hit":"gr-miss")+'">'+txt+esc(p.score||"")+'</span>';
+      }
+      h+='<tr><td>'+esc(p.num)+'</td><td>'+esc(p.league)+'</td><td>'+esc(p.home)+' vs '+esc(p.away)+'</td><td><b>'+esc(p.predScore)+'</b></td><td>'+esc(p.dirName)+'</td><td>'+mp+'</td><td>'+esc(p.confWhy||"")+'</td><td>'+st+'</td></tr>';
+    });
+    return h+'</tbody></table></div>';
+  })();
+  const notes = (s.notes||[]).map(n=>'<li>'+esc(n)+'</li>').join("");
+  const sigE = (hot.exactTest||{}).significant, sigD = (hot.dirTest||{}).significant;
+  const sigTxt = (sigE||sigD) ? '至少一项达统计显著(p<0.05)' : '两项均未达统计显著(p≥0.05)';
+  el.innerHTML =
+    '<div class="gr-head" id="vzsHead">'+
+      '<div class="gr-top"><span class="gr-title">🔥 V站 高信心预测 · 比分与方向命中率</span>'+
+        '<span class="gr-batch">📅 '+esc(t.batchDate)+' '+esc(t.batchLabel)+' 竞彩批次 · '+t.highCount+' 场高信心</span>'+
+        '<span class="gr-toggle" id="vzsToggle">展开明细 ▾</span></div>'+
+      '<div class="gr-hero"><div><div class="gr-big">'+P(hot.dirRate)+' <small>高信心方向命中率</small></div>'+
+        '<div class="gr-sub">'+hot.n+' 场 · 方向命中 '+hot.dirHit+' · 比分精确 '+hot.exactHit+'（'+P(hot.exactRate)+'）　|　方向 Wilson 95%CI '+CI(hot.dirWilson95)+'</div></div></div>'+
+      '<div class="gr-kpis">'+
+        kpi('高信心样本',hot.n+' 场',"")+
+        kpi('比分精确命中率',P(hot.exactRate),"")+
+        kpi('比分精确 CI',CI(hot.exactWilson95),"")+
+        kpi('方向命中率',P(hot.dirRate),"")+
+        kpi('方向 CI',CI(hot.dirWilson95),"")+
+        kpi('方向超额(vs基线)',PT(hot.dirVsBaseline),CC(hot.dirVsBaseline))+
+        kpi('普通组方向率',P(normal.dirRate),"")+
+        kpi('全量方向率',P(o.dirRate),"")+
+        kpi('今日高信心',t.highCount+' 场',"")+
+        kpi('今日已开奖',t.settledCount+' / '+t.highCount,"")+
+      '</div>'+
+    '</div>'+
+    '<div class="gr-body" id="vzsBody">'+
+      '<div class="gr-sec"><h4>结论（先看这里）</h4><div class="gr-concl">'+esc(s.conclusion)+'</div>'+
+        '<div class="gr-sub" style="margin-top:6px">显著性：'+esc(sigTxt)+'；独立随机基线 比分 '+P(hot.exactBaseline)+' / 方向 '+P(hot.dirBaseline)+
+        '；组间 Fisher 双侧 p='+(typeof c.dirFisher==="number"?c.dirFisher.toFixed(4):"—")+'。样本量小，置信区间宽，请连带 CI 一起看，勿只看单点命中率。</div></div>'+
+      '<div class="gr-sec"><h4>今日竞彩批次 🔥高信心清单 · '+esc(t.batchDate)+' '+esc(t.batchLabel)+'（共 '+t.highCount+' 场，已开奖 '+t.settledCount+' 场）</h4>'+picksHtml+
+        '<div class="gr-sub" style="margin-top:6px">当天开出 '+t.totalMatches+' 场、V站 有比分预测 '+t.vzPredCount+' 场。严格按竞彩当天开售批次隔离，不与周六 / 周日混算；未开奖 '+t.pendingCount+' 场不计入正确率，赛后自动回填纳入统计。</div></div>'+
+      '<div class="gr-sec"><h4>三组对照（高信心 / 普通 / 无法判定）</h4>'+groupTable(s.byGroup,"分组")+
+        '<div class="gr-sub" style="margin-top:6px">「无法判定」= 赛前无模型预测快照，无法还原当时是否高信心，单列不参与对比；共 '+(s.excluded||{}).unknownConf+' 场。</div></div>'+
+      '<div class="gr-sec"><h4>时间窗口</h4>'+groupTable(s.windows,"窗口")+'</div>'+
+      '<div class="gr-sec"><h4>按联赛分层（样本≥3）</h4>'+groupTable(s.byLeague,"联赛")+'</div>'+
+      '<div class="gr-sec"><h4>近 30 日逐日</h4>'+groupTable(s.byDate,"日期")+'</div>'+
+      '<div class="gr-sec"><h4>统计口径（可逐条核对）</h4><ul class="gr-notes">'+notes+'</ul></div>'+
+    '</div>';
+  const head=document.getElementById("vzsHead"), body=document.getElementById("vzsBody"), tog=document.getElementById("vzsToggle");
+  if(head && body){
+    if(window.__vzsOpen){ body.classList.add("show"); if(tog) tog.textContent="收起明细 ▴"; }
+    head.onclick=()=>{
+      const open=body.classList.toggle("show");
+      window.__vzsOpen=open;
       if(tog) tog.textContent=open?"收起明细 ▴":"展开明细 ▾";
     };
   }
@@ -6363,6 +6480,7 @@ function renderAbStats(){
 }
 
 function renderVzhan(){
+  try{ renderVzHighStats(); }catch(e){}   // v1.7.126：切到比分预测 Tab 时同步刷新统计面板
   const vz = (typeof BUILT_VZHAN!=="undefined" && BUILT_VZHAN) ? BUILT_VZHAN : {};
   const gws = (typeof BUILT_VZGW!=="undefined" && BUILT_VZGW) ? BUILT_VZGW : {};
   const ms = vz.matches || [];
@@ -8037,10 +8155,12 @@ function refreshRealtimeData(showTip){
       if(d.expertHistory){ state.expertHistory = JSON.parse(JSON.stringify(d.expertHistory)); }
       // v1.7.124：正路正确率统计随 matches.json 一起热更新
       if(d.goodRateStats){ BUILT_DATA.goodRateStats = JSON.parse(JSON.stringify(d.goodRateStats)); }
+      // v1.7.126：V站 高信心命中率统计同步热更新
+      if(d.vzHighStats){ BUILT_DATA.vzHighStats = JSON.parse(JSON.stringify(d.vzHighStats)); }
       __lastRealtimeFetch = new Date().toLocaleString("zh-CN");
       // 重新渲染当前页面
       const curTab = state.tab;
-      if(curTab==="today"){ renderStats(); renderFocus(); renderFilters(); renderGoodRate(); renderCards(); renderTable(); }
+      if(curTab==="today"){ renderStats(); renderFocus(); renderFilters(); renderGoodRate(); try{ renderVzHighStats(); }catch(e){} renderCards(); renderTable(); }
       else if(curTab==="history"){ renderHistory(); }
       else if(curTab==="bd"){ renderBD(); }
       else if(curTab==="strongweak"){ renderStrongWeak(); }

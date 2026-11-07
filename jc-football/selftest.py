@@ -768,6 +768,149 @@ def check_good_rate(data, hist):
              len(picks), t.get("settledCount")))
 
 
+def check_vz_high_stats(data, hist):
+    """检查 12 V站 🔥高信心预测比分/方向命中率统计（v1.7.126）。
+
+    重点：按归档原始记录复算样本与命中，防止统计脚本换口径、把未开奖或
+    「无法判定」场次混进高信心组把命中率做高；再校验官方赛果一致性、
+    竞彩批次隔离、独立文件同源、前端与流水线/部署接线。
+    """
+    print("· 检查 12 V站 高信心预测命中率统计（v1.7.126）")
+    s = (data or {}).get("vzHighStats")
+    vh = load("vzhan_history.json", {}) or {}
+    recs = [r for r in (vh.get("matches") or {}).values()
+            if isinstance(r, dict) and r.get("finalH") is not None
+            and r.get("finalA") is not None and r.get("predH") is not None]
+    if not isinstance(s, dict) or not s.get("overall") or not s.get("groups") or not s.get("today"):
+        add("ERROR", "V站高信心统计",
+            "matches.json 缺少 vzHighStats（gen_vz_high_stats.py 未跑，或构建前被 fetch_scores 重写覆盖）")
+        return
+    if not recs:
+        add("ERROR", "V站高信心统计", "vzhan_history.json 无已结算归档，统计无数据支撑")
+        return
+
+    def oc(h, a):
+        return "H" if h > a else ("A" if a > h else "D")
+
+    def calc(rs):
+        return (len(rs),
+                sum(1 for r in rs if int(r["predH"]) == int(r["finalH"])
+                    and int(r["predA"]) == int(r["finalA"])),
+                sum(1 for r in rs if oc(int(r["predH"]), int(r["predA"]))
+                    == oc(int(r["finalH"]), int(r["finalA"]))))
+
+    # (1) 样本与命中复算：全量 + 三组
+    n, eh, dh = calc(recs)
+    o = s["overall"]
+    if (o.get("n"), o.get("exactHit"), o.get("dirHit")) != (n, eh, dh):
+        add("ERROR", "V站高信心统计",
+            "全量口径与归档复算不一致：统计 n=%s/精确%s/方向%s，复算 n=%s/精确%s/方向%s"
+            % (o.get("n"), o.get("exactHit"), o.get("dirHit"), n, eh, dh))
+    else:
+        print("  全量复算一致：%d 场 / 比分精确 %d / 方向命中 %d" % (n, eh, dh))
+    hot = [r for r in recs if r.get("confAvailable") and r.get("highConf")]
+    normal = [r for r in recs if r.get("confAvailable") and not r.get("highConf")]
+    unknown = [r for r in recs if not r.get("confAvailable")]
+    for key, rs in (("high", hot), ("normal", normal), ("unknown", unknown)):
+        g = s["groups"].get(key) or {}
+        cn, ce, cd = calc(rs)
+        if (g.get("n"), g.get("exactHit"), g.get("dirHit")) != (cn, ce, cd):
+            add("ERROR", "V站高信心统计",
+                "%s 组与归档复算不一致：统计 %s/%s/%s，复算 %s/%s/%s"
+                % (key, g.get("n"), g.get("exactHit"), g.get("dirHit"), cn, ce, cd))
+    if n != len(hot) + len(normal) + len(unknown):
+        add("ERROR", "V站高信心统计", "三组样本数之和 ≠ 全量样本数（分组有重叠或漏算）")
+
+    # (2) 官方赛果一致性：归档 finalH/finalA 必须等于 history.json 开奖结果
+    off = {}
+    for r in (hist or {}).get("records", []):
+        res = r.get("result") or {}
+        if res.get("cancel") or res.get("home") is None:
+            continue
+        off.setdefault((r.get("date"), r.get("num")), (int(res["home"]), int(res["away"])))
+    bad = []
+    for r in recs:
+        exp = off.get((r.get("date"), r.get("jcNum")))
+        if exp and (int(r["finalH"]), int(r["finalA"])) != exp:
+            bad.append(str(r.get("jcNum")))
+    if bad:
+        add("ERROR", "V站高信心统计", "归档赛果与官方开奖不一致：%s" % ", ".join(bad[:8]))
+    else:
+        print("  赛果对齐一致：%d 条归档均可在 history.json 找到同场次官方开奖" % len(recs))
+
+    # (3) 诚实口径与统计结构
+    for key in ("high", "normal"):
+        g = s["groups"].get(key) or {}
+        for f in ("exactRate", "exactWilson95", "dirRate", "dirWilson95",
+                  "exactBaseline", "dirBaseline"):
+            if g.get(f) is None:
+                add("ERROR", "V站高信心统计", "%s 组缺少关键字段 %s" % (key, f))
+        for rate, ci in (("exactRate", "exactWilson95"), ("dirRate", "dirWilson95")):
+            w = g.get(ci) or []
+            if len(w) != 2 or not (0 <= w[0] <= (g.get(rate) or 0) <= w[1] <= 100):
+                add("ERROR", "V站高信心统计", "%s 组 %s 置信区间异常：%s" % (key, ci, w))
+    if "不构成投注建议" not in (s.get("conclusion") or ""):
+        add("ERROR", "V站高信心统计", "结论缺少「不构成投注建议」的诚实声明")
+    if not (s.get("notes") or []):
+        add("ERROR", "V站高信心统计", "缺少可核对的统计口径说明")
+
+    # (4) 今日竞彩批次隔离：绝不混入周六/周日、未开奖不得计命中
+    t = s["today"]
+    picks = t.get("picks") or []
+    if t.get("highCount") != len(picks):
+        add("ERROR", "V站高信心统计", "今日高信心场次数与清单条数不一致")
+    prefix = t.get("batchPrefix") or ""
+    cross = [p.get("num") for p in picks
+             if prefix and not str(p.get("num") or "").startswith(prefix)]
+    if cross:
+        add("ERROR", "V站高信心统计", "今日清单混入非本竞彩批次的场次：%s" % ", ".join(map(str, cross)))
+    if (t.get("pendingCount") or 0) + (t.get("settledCount") or 0) != len(picks):
+        add("ERROR", "V站高信心统计", "今日已开奖 + 未开奖 ≠ 高信心清单条数")
+    unsettled_bad = [p.get("num") for p in picks
+                     if not p.get("settled") and (p.get("exactHit") is not None or p.get("dirHit") is not None)]
+    if unsettled_bad:
+        add("ERROR", "V站高信心统计", "未开奖场次被错误计入命中：%s" % ", ".join(map(str, unsettled_bad)))
+
+    # (5) 独立统计文件与页面内嵌字段必须同源
+    ind = load("vz_high_stats.json")
+    if not isinstance(ind, dict):
+        add("ERROR", "V站高信心统计", "缺少独立统计文件 vz_high_stats.json")
+    else:
+        def sig(x):
+            d = json.loads(json.dumps(x))
+            d.pop("generatedAt", None)
+            return json.dumps(d, ensure_ascii=False, sort_keys=True)
+        if sig(ind) != sig(s):
+            add("ERROR", "V站高信心统计", "vz_high_stats.json 与 matches.json.vzHighStats 不同源")
+
+    # (6) 前端模块 / 每日流水线 / 部署清单接线
+    try:
+        tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    except Exception:
+        tpl = ""
+    if "renderVzHighStats" not in tpl or 'id="vzHighStatsView"' not in tpl:
+        add("ERROR", "V站高信心统计", "template.html 缺少 V站 高信心统计渲染模块")
+    try:
+        sh = open(os.path.join(HERE, "run_daily.sh"), encoding="utf-8").read()
+    except Exception:
+        sh = ""
+    if "gen_vz_high_stats.py" not in sh:
+        add("ERROR", "V站高信心统计", "run_daily.sh 未接入 gen_vz_high_stats.py，刷新后统计不会更新")
+    if '"vzHighStats"' not in sh:
+        add("ERROR", "V站高信心统计", "部署指纹未纳入 vzHighStats，统计变化不会触发上线")
+    if "backfill_vzhan_history.py" not in sh:
+        add("ERROR", "V站高信心统计", "run_daily.sh 未接入 V站 赛果回溯，归档不会自动累积")
+    try:
+        dep = open(os.path.join(HERE, "deploy_cf.py"), encoding="utf-8").read()
+    except Exception:
+        dep = ""
+    if '"vz_high_stats.json"' not in dep:
+        add("ERROR", "V站高信心统计", "deploy_cf.py 未部署 vz_high_stats.json 独立副本")
+    print("  今日批次 %s（%s）：竞彩 %d 场 / 高信心 %d 场 / 已开奖 %d 场"
+          % (t.get("batchDate"), t.get("batchLabel"), t.get("totalMatches"),
+             len(picks), t.get("settledCount")))
+
+
 def check_vzhan_batch(data):
     """检查 11 V站比分按竞彩批次呈现（v1.7.125）。
 
@@ -856,6 +999,7 @@ def main():
     check_scorepred_freshness(load("score_predict.json"))
     check_pipeline_safeguards()
     check_good_rate(data, hist)
+    check_vz_high_stats(data, hist)
     check_vzhan_batch(data)
 
     errs = [i for i in issues if i["level"] == "ERROR"]

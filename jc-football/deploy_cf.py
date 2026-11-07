@@ -325,7 +325,9 @@ def main():
                       "vzhan_gateway_status.json",
                       "expert_history.json", "expert_stats.json",
                       # v1.7.124：正路推荐正确率统计（独立可核对副本）
-                      "good_rate_stats.json"]:
+                      "good_rate_stats.json",
+                      # v1.7.126：V站 🔥高信心预测比分/方向命中率统计（独立可核对副本）
+                      "vz_high_stats.json"]:
         src = os.path.join(BASE, data_file)
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
@@ -391,6 +393,9 @@ def main():
         # v1.7.124：正路统计为派生数据，每轮由 gen_good_rate.py 基于
         # history.json + matches.json 重算，不进自举包（避免旧快照覆盖线上累积）。
         "good_rate_stats.json",
+        # v1.7.126：V站 高信心统计同为派生数据，每轮由 gen_vz_high_stats.py 基于
+        # vzhan_history.json + vzhan_data.json + history.json 重算，同样不进自举包。
+        "vz_high_stats.json",
         # v1.7.93：V站完赛归档（含 highConf）跨轮累积，同理须排除出自举包，
         # 由生产端累积，冷启动从 Pages 副本恢复。
         "vzhan_history.json",
