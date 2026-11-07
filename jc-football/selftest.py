@@ -768,6 +768,73 @@ def check_good_rate(data, hist):
              len(picks), t.get("settledCount")))
 
 
+def check_vzhan_batch(data):
+    """检查 11 V站比分按竞彩批次呈现（v1.7.125）。
+
+    用户「周六的 V站 比分呢」暴露的展示层问题：数据齐全但「今日竞彩」被
+    UTC 最新日期误标成明天、V站 59 场周六周日混排且默认折叠。这里校验：
+      · vzhan_data.json 每场都有明确的竞彩批次（date + 编号前缀一致）
+      · 竞彩当天批次（safeParlay.batchDate）在 V站 数据里存在且有带比分场次
+      · template.html 已接入 jcTodayBatch() 权威口径与 V站 批次切换，且不再折叠
+    """
+    print("· 检查 11 V站比分竞彩批次隔离（v1.7.125）")
+    vz = load("vzhan_data.json")
+    if not isinstance(vz, dict) or not isinstance(vz.get("matches"), list):
+        add("ERROR", "V站批次", "vzhan_data.json 缺失或 matches 非列表")
+        return
+    ms = vz["matches"]
+    if not ms:
+        add("WARN", "V站批次", "V站情报 0 场（抓取失败会保留上次数据，请留意）")
+        return
+    # (1) 每场必须能归入唯一竞彩批次，且编号前缀与 date 的星期一致
+    wk = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+    import datetime as _dt
+    bad_pref = []
+    groups = {}
+    for m in ms:
+        d = m.get("date") or "未排期"
+        groups.setdefault(d, []).append(m)
+        pre = str(m.get("jcNum") or "")[:2]
+        if d != "未排期" and pre:
+            try:
+                w = wk[_dt.date.fromisoformat(d).weekday()]
+                if w != pre:
+                    bad_pref.append("%s(%s≠%s)" % (m.get("jcNum"), pre, w))
+            except Exception:
+                pass
+    if bad_pref:
+        add("ERROR", "V站批次", "编号前缀与赛程日期星期不一致：%s" % ", ".join(bad_pref[:6]))
+
+    # (2) 当天批次在 V站 数据里必须有带比分场次（用户要看的「周六 V站比分」）
+    bd = ((data or {}).get("safeParlay") or {}).get("batchDate")
+    if bd:
+        sub = groups.get(bd, [])
+        n_pred = sum(1 for m in sub if m.get("hasPred"))
+        if not sub:
+            add("ERROR", "V站批次", "竞彩当天批次 %s 在 V站 数据中无任何场次" % bd)
+        elif n_pred == 0:
+            add("ERROR", "V站批次", "竞彩当天批次 %s 共 %d 场，但无一场带 V站 预测比分" % (bd, len(sub)))
+        else:
+            print("  竞彩当天批次 %s：%d 场 / 带 V站比分 %d 场 / 在售批次 %s"
+                  % (bd, len(sub), n_pred, ", ".join(sorted(groups))))
+    # (3) 前端三处日期逻辑接线
+    tp = os.path.join(HERE, "template.html")
+    if os.path.exists(tp):
+        with open(tp, encoding="utf-8") as f:
+            t = f.read()
+        if "function jcTodayBatch" not in t:
+            add("ERROR", "V站批次", "template.html 缺少 jcTodayBatch() 竞彩当天批次权威口径")
+        if "vzbatch-chip" not in t:
+            add("ERROR", "V站批次", "template.html 缺少 V站 批次切换条")
+        if "const _jcToday = jcTodayBatch();" not in t:
+            add("ERROR", "V站批次", "比分预测 Tab 的 todayDate 仍未接入竞彩当天批次")
+        # V站情报区不应再默认折叠
+        import re as _re
+        seg = _re.search(r"V站·呼死狗情报.{0,80}", t)
+        if seg and 'class="sp-sec collapsed"' in t[t.rfind('<div class="sp-sec', 0, seg.start()):seg.start() + 20]:
+            add("WARN", "V站批次", "V站情报区疑似仍默认折叠")
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -789,6 +856,7 @@ def main():
     check_scorepred_freshness(load("score_predict.json"))
     check_pipeline_safeguards()
     check_good_rate(data, hist)
+    check_vzhan_batch(data)
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

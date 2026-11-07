@@ -1147,6 +1147,10 @@ footer b{color:var(--sub)}
 .focus-item .fi-cross{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px}
 .focus-item .fi-cross.ok{background:rgba(82,196,26,.12);color:var(--good);border:1px solid rgba(82,196,26,.35)}
 .focus-item .fi-cross.diff{background:rgba(250,173,20,.12);color:var(--warn);border:1px solid rgba(250,173,20,.4)}
+/* v1.7.125 V站情报 · 竞彩批次切换条 */
+.vz-batchbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 6px;padding:8px 10px;background:rgba(76,175,80,.05);border:1px solid var(--good);border-radius:8px}
+.vz-batchbar-t{font-size:11px;font-weight:700;color:var(--good);width:100%}
+.vz-batchnote{font-size:10.5px;color:var(--weak);line-height:1.6;margin:0 0 8px}
 /* v1.7.124 今日赛程 · 正路推荐正确率统计 */
 .gr-view{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:0 0 14px;overflow:hidden}
 .gr-head{padding:12px 14px;background:linear-gradient(135deg,var(--panel2),var(--panel));cursor:pointer;user-select:none}
@@ -1548,11 +1552,11 @@ footer b{color:var(--sub)}
       </div>
     </div>
 
-    <!-- 分区1.5：V站·呼死狗情报（中文原味，v1.7.75） -->
-    <div class="sp-sec collapsed">
+    <!-- 分区1.5：V站·呼死狗情报（中文原味，v1.7.75；v1.7.125 改为默认展开，按竞彩批次分组） -->
+    <div class="sp-sec">
       <div class="sp-sec-toggle" onclick="spToggleSec(this)"><span>🐶 V站·呼死狗情报（中文原味）</span><span class="sp-caret">▾</span></div>
       <div class="sp-sec-body">
-        <div class="sp-sub-head">V站 App「呼死狗」海外爆料员第一手情报<span class="tip">伤停/阵容/状态/渊源全中文直出，无需翻译；比分预测为呼死狗爆料员给出，与卡片「V站」徽标同源</span></div>
+        <div class="sp-sub-head">V站 App「呼死狗」海外爆料员第一手情报<span class="tip">伤停/阵容/状态/渊源全中文直出，无需翻译；比分预测为呼死狗爆料员给出，与卡片「V站」徽标同源。按竞彩当天开售批次展示，可切换周六/周日，绝不跨批次混排</span></div>
         <div style="margin:6px 0;font-size:11.5px;color:var(--sub)" id="vzSummary"></div>
         <div id="vzList"></div>
         <div id="vzBackfill" style="display:none;margin-top:10px"></div>
@@ -1799,8 +1803,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.124";
+const VERSION = "v1.7.125";
 const CHANGELOG = [
+  {
+    version: "v1.7.125",
+    date: "2026-11-07",
+    title: "V站比分按竞彩批次呈现：周六归周六、周日归周日，「今日竞彩」不再错标成明天",
+    details: [
+      "用户问「周六的 V站 比分呢」—— 数据其实齐全（全面刷新后周六 11-07 共 29 场、22 场带 V站 预测比分，周日 30 场、21 场带比分），问题全在展示层：日期批次没对齐竞彩当天开售赛程",
+      "根因①：比分预测 Tab 用「UTC 日期里最新有未开赛场次」猜「今日竞彩」，reverse 后选中了明天的在售批次（周日 11-08）并标成「📌 今日竞彩」展开，把真正的当天（周六 11-07）折叠在下面，用户找不到周六的 V站 比分",
+      "根因②：V站·呼死狗情报区默认折叠，且 59 场周六+周日混在一起排序，不按竞彩批次分组，无法单独看当天批次",
+      "根治：新增 jcTodayBatch() 统一权威口径，直接取 safeParlay.batchDate（fetch_daily 按竞彩批次算出、isToday=true），比分预测 Tab / 主力竞彩比分视图 / V站情报区三处共用，绝不靠 UTC 日期猜当天；今日分组头写明「当天开售批次」+ 周几 + V站比分场数",
+      "V站情报区改为默认展开、按竞彩批次（周六/周日）分组，新增批次切换条：每个 chip 显示周几+日期+带比分场数，当天批次带「当天」标记并默认选中；同一清单绝不跨批次混排，与分层串关 / 正路统计的批次隔离口径一致",
+      "主力竞彩比分视图日期默认锁定当天批次并强制置顶，按钮标出「· 当天」，不再 reverse 后默认选中明天",
+      "结论：本次为纯展示层批次对齐，不改任何预测数据、不改变命中口径；V站预测比分仍是爆料员给出、方向命中率约 42% 近随机，仅作情报参考，不构成投注建议"
+    ]
+  },
   {
     version: "v1.7.124",
     date: "2026-11-06",
@@ -3272,7 +3290,7 @@ const state = {
   lastFbTab: "today",
   histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false, parlayBatch: "",
   autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })(),
-  vzOnlyHot: false
+  vzOnlyHot: false, vzBatch: ""   // v1.7.125：V站情报按竞彩批次切换，默认当天开售批次
 };
 /* 恢复主题偏好 */
 (function(){
@@ -5776,6 +5794,22 @@ function spToggleDateGrp(el){
   const grp = el.closest(".sp-dategrp");
   if(grp) grp.classList.toggle("sp-dg-collapsed");
 }
+/* v1.7.125：竞彩当天批次（唯一权威口径，比分预测 / V站 / 主力竞彩共用）。
+   竞彩按「开售批次」出赛程，编号前缀（周六/周日）与赛程日期一一对应。
+   此前这几个板块用「UTC 日期里最新有未开赛场次」猜今日，结果把明天的在售批次
+   （周日 11-08）误标成「📌 今日竞彩」并展开，把真正的当天批次（周六 11-07）折叠，
+   用户「周六的 V站比分呢」正是此因。统一改取 safeParlay.batchDate（fetch_daily 按
+   竞彩批次算出、isToday=true），绝不靠日期猜。 */
+function jcTodayBatch(){
+  const sp = (typeof BUILT_DATA!=="undefined" && BUILT_DATA && BUILT_DATA.safeParlay) ? BUILT_DATA.safeParlay : {};
+  if(sp.batchDate) return {date: sp.batchDate, label: sp.batchLabel || "", key: sp.activeBatch || sp.batchDate};
+  const now = new Date(Date.now() + 8*3600*1000);
+  return {date: now.toISOString().slice(0,10), label: "", key: ""};
+}
+function jcWeekday(d){
+  const t = Date.parse(d + "T00:00:00Z");
+  return isNaN(t) ? "" : ["周日","周一","周二","周三","周四","周五","周六"][new Date(t).getUTCDay()];
+}
 
 /* ================= 比分预测 · WhoScored 区块（竞彩主干化，v1.7.23） =================
    口径（用户需求）：只显示竞彩每天开出的比赛；当天竞彩赛程【全部列出】为主干；
@@ -5861,16 +5895,24 @@ function renderWhoScored(){
   const vzAccTxt = ()=> vzAcc ? (vzAcc.n ? `综合命中率 方向 ${vzAcc.dir}% / 精确 ${vzAcc.exact}% · 样本 ${vzAcc.n} 场` : `综合命中率 待积累（样本 0 场，完赛后自动统计）`) : "";
   const lgStat = wsLeagueStat(wsMs);
   // 日期选项 = 竞彩销售日（matches.json 即当天开售赛程）
+  // v1.7.125：默认锁定竞彩当天开售批次（不再 reverse 后误选明天）；当天批次强制排在最前
   const jcDates = Array.from(new Set(jcAll.map(m=>m.date).filter(Boolean))).sort().reverse();
+  const _jcTb = jcTodayBatch();
   if(_wsMain){
   if(!jcDates.length){
     bar.innerHTML = `<div class="empty">暂无竞彩赛程数据（每日自动更新）</div>`;
     list.innerHTML = "";
   } else {
-    if(!state.wsJcDate || jcDates.indexOf(state.wsJcDate)<0) state.wsJcDate = jcDates[0];
+    if(!state.wsJcDate || jcDates.indexOf(state.wsJcDate)<0)
+      state.wsJcDate = (jcDates.indexOf(_jcTb.date)>=0 ? _jcTb.date : jcDates[0]);
+    // 最近14天，且把当天批次强制置顶，保证不会被历史日期挤出
+    const _chipDates = jcDates.slice(0,14);
+    const _ti = _chipDates.indexOf(_jcTb.date);
+    if(_ti > 0){ _chipDates.splice(_ti,1); _chipDates.unshift(_jcTb.date); }
+    else if(_ti < 0 && jcDates.indexOf(_jcTb.date)>=0){ _chipDates.unshift(_jcTb.date); }
     let bh = `<button class="sp-chip ${state.wsOnlyHot?"on":""}" data-act="hot">🔥只看高可信</button>`;
-    jcDates.slice(0,14).forEach(d=>{
-      bh += `<button class="sp-chip ${state.wsJcDate===d?"on":""}" data-dt="${d}">${d.slice(5).replace("-","/")}</button>`;
+    _chipDates.forEach(d=>{
+      bh += `<button class="sp-chip ${state.wsJcDate===d?"on":""}" data-dt="${d}">${d.slice(5).replace("-","/")}${d===_jcTb.date?" · 当天":""}</button>`;
     });
     bar.innerHTML = bh;
     bar.querySelectorAll(".sp-chip").forEach(b=>{
@@ -6326,8 +6368,23 @@ function renderVzhan(){
   const ms = vz.matches || [];
   const sum = $("#vzSummary"), list = $("#vzList");
   if(!list) return;
-  const np = ms.filter(m=>m.hasPred).length;
-  const ni = ms.filter(m=>m.hasPred || (m.vz_reports&&m.vz_reports.length) || (m.forecasts&&m.forecasts.length) || ((m.home_news||[]).length+(m.away_news||[]).length)).length;
+  /* v1.7.125 竞彩批次隔离：竞彩按开售批次出赛程，编号前缀（周六/周日）= 赛程日期。
+     此前把 59 场周六+周日混排、又默认折叠，用户「周六的 V站 比分呢」根本找不到。
+     现按批次分组，默认展示竞彩当天开售批次，可切换查看其它在售批次，绝不跨批次混排。 */
+  const _batches = {};
+  ms.forEach(m=>{
+    const d = m.date || "未排期";
+    if(!_batches[d]) _batches[d] = {date:d, label:(m.jcNum||"").slice(0,2)||"", list:[]};
+    _batches[d].list.push(m);
+  });
+  const _keys = Object.keys(_batches).sort((a,b)=> a==="未排期"?1:(b==="未排期"?-1:a.localeCompare(b)));
+  const _tb = jcTodayBatch();
+  if(!state.vzBatch || _batches[state.vzBatch]===undefined)
+    state.vzBatch = (_batches[_tb.date] ? _tb.date : (_keys[0]||""));
+  const _cur = _batches[state.vzBatch] || {date:state.vzBatch||"-", label:"", list:[]};
+  const msCur = _cur.list;
+  const np = msCur.filter(m=>m.hasPred).length;
+  const ni = msCur.filter(m=>m.hasPred || (m.vz_reports&&m.vz_reports.length) || (m.forecasts&&m.forecasts.length) || ((m.home_news||[]).length+(m.away_news||[]).length)).length;
   // v1.7.77：网关稳定性徽标
   let gw = "";
   if(gws && gws.status){
@@ -6341,15 +6398,30 @@ function renderVzhan(){
     }
   }
   if(sum){
-    sum.innerHTML = `竞彩 <b style="color:var(--text)">${ms.length}</b> 场 · 带情报 <b style="color:var(--text)">${ni}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
-    const _hotMs = ms.filter(m=>m.hasPred && vzConfidence(m, vzModelPred(m)).level==="high");
+    // 批次切换条：每个 chip 显示周几+日期+带比分场数，当天批次带「当天」标记
+    let chips = "";
+    if(_keys.length > 1){
+      chips = `<div class="vz-batchbar"><span class="vz-batchbar-t">📅 竞彩赛程批次</span>` + _keys.map(k=>{
+        const b = _batches[k];
+        const nP = b.list.filter(m=>m.hasPred).length;
+        const lb = (b.label ? b.label + " " : "") + k;
+        const today = (k === _tb.date);
+        return `<button class="sp-chip vzbatch-chip ${k===state.vzBatch?"on":""}" data-batch="${k}">${lb}${today?" · 当天":""} · ${nP}场比分</button>`;
+      }).join("") + `</div><div class="vz-batchnote">同一组合/清单绝不跨竞彩批次；默认展示竞彩当天开出的赛程，点击切换查看其它在售批次。</div>`;
+    }
+    sum.innerHTML = chips
+      + `当前批次 <b style="color:var(--text)">${_cur.label?_cur.label+" ":""}${_cur.date}</b>：竞彩 <b style="color:var(--text)">${msCur.length}</b> 场 · 带情报 <b style="color:var(--text)">${ni}</b> 场 · 带比分预测 <b style="color:var(--text)">${np}</b> 场 · 更新 ${vz.updatedAt||"-"}${gw}`;
+    const _hotMs = msCur.filter(m=>m.hasPred && vzConfidence(m, vzModelPred(m)).level==="high");
     sum.innerHTML += ` <button class="sp-chip ${state.vzOnlyHot?"on":""}" id="vzHotBtn">🔥只看高信心${_hotMs.length?`(${_hotMs.length})`:""}</button>`;
     const _hb = document.getElementById("vzHotBtn");
     if(_hb) _hb.onclick = ()=>{ state.vzOnlyHot = !state.vzOnlyHot; renderVzhan(); };
+    sum.querySelectorAll(".vzbatch-chip").forEach(b=>{
+      b.onclick = ()=>{ state.vzBatch = b.dataset.batch; state.vzOnlyHot = false; renderVzhan(); };
+    });
   }
-  if(!ms.length){ list.innerHTML = `<div class="empty">暂无 V站 情报（每日自动抓取）</div>`; return; }
-  // v1.7.86：高信心（V站·模型方向共识）置顶；「只看高信心」过滤
-  let view = ms.map(m=>({m, _conf: (m.hasPred ? vzConfidence(m, vzModelPred(m)) : {level:"normal", why:""})}));
+  if(!msCur.length){ list.innerHTML = `<div class="empty">该竞彩批次暂无 V站 情报（每日自动抓取）</div>`; return; }
+  // v1.7.86：高信心（V站·模型方向共识）置顶；「只看高信心」过滤（仅在当前批次内）
+  let view = msCur.map(m=>({m, _conf: (m.hasPred ? vzConfidence(m, vzModelPred(m)) : {level:"normal", why:""})}));
   if(state.vzOnlyHot) view = view.filter(x=>x._conf.level==="high");
   view.sort((a,b)=> ((a._conf.level==="high"?0:1) - (b._conf.level==="high"?0:1)) || (a.m.match_time||"").localeCompare(b.m.match_time||""));
   list.innerHTML = view.map(({m,_conf})=>{
@@ -6375,7 +6447,7 @@ function renderVzhan(){
         + `<span class="sp-actual">${m.finalH} <i>:</i> ${m.finalA}</span>`
         + `<span class="vz-hit ${_cls}">${_txt}</span></div>`;
     }
-    return `<div class="sp-card${_hot?" vz-hot":""}">
+    return `<div class="sp-card${_hot?" vz-hot":""}" data-batch="${_cur.date}" data-jcnum="${m.jcNum||""}">
       <div class="sp-teams">${spTeamCell(m.home)}<span class="sp-vs">vs</span>${spTeamCell(m.away)}${(m.league?`<span class="sp-league-tag">${m.league}</span>`:"")}${m.jcNum?`<span class="sp-jcnum" title="V站直接给出的竞彩编号">竞彩 ${m.jcNum}</span>`:``}</div>
       <div class="sp-scoreline">
         <div class="sp-predwrap"><div class="sp-label">比分预测${_hot?`<span class="vz-conf" title="${_conf.why}">🔥高信心</span>`:""}</div>${pred}</div>
@@ -6556,14 +6628,21 @@ function renderScorePred(){
   const view = (filt==="all" ? ms : ms.filter(m=>m.league===filt));
   const stName = {SCHEDULED:"未开赛", LIVE:"进行中", IN_PLAY:"进行中", PAUSED:"中场", FINISHED:"已结束", POSTPONED:"延期", SUSPENDED:"暂停", CANCELLED:"取消"};
   const outName = {H:"主胜", D:"平局", A:"客胜"};
-  /* v1.7.103：分期日显示——按竞彩日期(utcDate)分组，仅「今日竞彩」日期自动展开，其余折叠，
-     不再把所有日期的比赛堆成一片。today = 含在售(TIMED/Selling)/未开赛的最新日期 */
+  /* v1.7.103：分期日显示——按竞彩日期(utcDate)分组，仅「今日竞彩」日期自动展开，其余折叠。
+     v1.7.125 修复：today 原为「UTC 最新有未开赛场次的日期」，会把明天的在售批次（周日）
+     误标成今日并把真正的当天（周六）折叠。现统一取 jcTodayBatch()（= 竞彩当天开售批次
+     safeParlay.batchDate），只在该批次确实有比分预测记录时启用；否则才回退旧逻辑。 */
   const _dateOf = m => ((m.utcDate || m.date || "").slice(0,10)) || "未排期";
   const _stOf = m => (m.status||"").toUpperCase();
   const _datesAll = Array.from(new Set(view.map(_dateOf))).filter(d=>d!=="未排期").sort().reverse();
+  const _jcToday = jcTodayBatch();
   let todayDate = null;
-  for(const dt of _datesAll){ if(view.some(m=>_dateOf(m)===dt && _stOf(m)!=="FINISHED")){ todayDate = dt; break; } }
-  if(!todayDate && _datesAll.length) todayDate = _datesAll[0];
+  if(_jcToday.date && _datesAll.indexOf(_jcToday.date) >= 0){
+    todayDate = _jcToday.date;                      // 竞彩当天批次为唯一今日口径
+  } else {
+    for(const dt of _datesAll){ if(view.some(m=>_dateOf(m)===dt && _stOf(m)!=="FINISHED")){ todayDate = dt; break; } }
+    if(!todayDate && _datesAll.length) todayDate = _datesAll[0];
+  }
   const dateGroups = {};
   view.forEach(m=>{ const k=_dateOf(m); (dateGroups[k]=dateGroups[k]||[]).push(m); });
   const sortedDates = Object.keys(dateGroups).sort((a,b)=>{
@@ -6587,10 +6666,16 @@ function renderScorePred(){
     const _isToday = (dt===todayDate);
     const _collapsed = _isToday ? "" : " sp-dg-collapsed";
     const _caret = _isToday ? "▾" : "▸";
+    // v1.7.125：分组头标出周几与竞彩批次，今日组明确写「当天开售批次」，避免周六/周日混淆
+    const _wk = jcWeekday(dt);
+    const _nVz = gms.filter(m=>{ const jn=spJcNumOf(m,m.date); return jn && (vzByNumSp[jn]||[]).some(x=>x.predH!=null); }).length;
+    const _title = _isToday
+      ? "📌 今日竞彩 · "+dt+(_wk?" "+_wk:"")+"（当天开售批次）"
+      : dt+(_wk?" "+_wk:"");
     html += `<div class="sp-dategrp${_collapsed}">
       <div class="sp-dategrp-head" onclick="spToggleDateGrp(this)">
-        <span class="sp-dg-title">${_isToday ? "📌 今日竞彩 · "+dt : dt}</span>
-        <span class="sp-dg-meta">共 ${_n} 场 · 未开赛 ${_pend} · 已结束 ${_fin}</span>
+        <span class="sp-dg-title">${_title}</span>
+        <span class="sp-dg-meta">共 ${_n} 场 · V站比分 ${_nVz} · 未开赛 ${_pend} · 已结束 ${_fin}</span>
         <span class="sp-caret2">${_caret}</span>
       </div>
       <div class="sp-dategrp-body">`;
