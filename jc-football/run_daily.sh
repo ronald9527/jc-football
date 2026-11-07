@@ -89,17 +89,12 @@ if [ "$FETCH_RC" -ne 0 ]; then
 fi
 rm -f matches.json.bak_run
 
-# ---------- 每日自检（抓取后立即做，问题写进报告）----------
-log "==> 步骤1.2 数据自检 (selftest.py)"
-set +e
-"$PY" selftest.py
-SELF_RC=$?
-set -e
-if [ "$SELF_RC" -ne 0 ]; then
-  log "!! 自检发现问题（exit=$SELF_RC），自动执行修复流程"
-  "$PY" check_and_fix.py
-  "$PY" selftest.py || log "!! 修复后仍有问题，详见 selftest_report.json"
-fi
+# ---------- 每日自检：已前移到全部数据生成 + 页面构建之后（步骤2.6）----------
+# 旧位置（步骤1.2）在篮球 / 比分预测 / 正路统计尚未生成时运行，会稳定误报
+# 「篮球数据停更」「比分预测停更」「缺少 goodRateStats」3 条 ERROR，
+# 并误触发 check_and_fix.py 修复流程。2026-11-07 全量刷新实测：
+# 同一批数据最终自检 ERROR 0 / WARN 0，确认纯属顺序问题，非数据故障。
+# 现在由步骤2.6 在上线前做真正的门禁校验。
 
 if [ "$MODE" = "check" ]; then
   log "==> 步骤1.5 检查修复 (check_and_fix.py)"
@@ -397,6 +392,20 @@ if [ "$_refreshed" = "1" ]; then
   # 必须先重算统计再构建页面，否则页面统计区会退回旧字段或空白。
   "$PY" gen_good_rate.py 2>/dev/null || true
   "$PY" build_panel.py 2>/dev/null || true
+fi
+
+# ---------- 步骤2.6 最终数据自检（上线门禁）----------
+# 位置约束：必须在 gen_good_rate.py / build_panel.py / 陈旧豁免重抓全部完成之后。
+# 此时篮球、比分预测、正路统计、页面产物均已就绪，自检结果才反映真实状态。
+log "==> 步骤2.6 最终数据自检 (selftest.py)"
+set +e
+"$PY" selftest.py
+SELF_RC=$?
+set -e
+if [ "$SELF_RC" -ne 0 ]; then
+  log "!! 最终自检发现问题（exit=$SELF_RC），自动执行修复流程"
+  "$PY" check_and_fix.py
+  "$PY" selftest.py || log "!! 修复后仍有问题，详见 selftest_report.json"
 fi
 
 if [ "$MODE" = "deploy" ]; then

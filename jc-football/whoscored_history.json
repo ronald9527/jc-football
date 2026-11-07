@@ -8122,9 +8122,34 @@
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:1 可作小注参考"
    }
+  },
+  "1993962": {
+   "id": "1993962",
+   "date": "2026-11-03",
+   "league": "西甲",
+   "home": "Deportivo de A Coruna",
+   "away": "Osasuna",
+   "predH": 1,
+   "predA": 2,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": false,
+   "jcNum": "周一007",
+   "preConf": {
+    "dir": 45.4,
+    "exact": 11.5,
+    "dirLevel": "mid",
+    "exactLevel": "high",
+    "leagueN": 19,
+    "teamN": 3,
+    "sample": 22,
+    "outcome": "客胜",
+    "tip": "比分可信度高，可跟注比分 1:2"
+   }
   }
  },
- "updatedAt": "2026-11-06 00:54:25",
+ "updatedAt": "2026-11-07 11:50:24",
  "pending": {
   "1999682": {
    "date": "2026-10-31",
@@ -8166,26 +8191,6 @@
     "tip": "比分中等可信，比分 3:1 可作小注参考"
    }
   },
-  "1993962": {
-   "date": "2026-11-03",
-   "league": "西甲",
-   "home": "Deportivo de A Coruna",
-   "away": "Osasuna",
-   "jcNum": "周一007",
-   "predH": 1,
-   "predA": 2,
-   "conf": {
-    "dir": 45.4,
-    "exact": 11.5,
-    "dirLevel": "mid",
-    "exactLevel": "high",
-    "leagueN": 19,
-    "teamN": 3,
-    "sample": 22,
-    "outcome": "客胜",
-    "tip": "比分可信度高，可跟注比分 1:2"
-   }
-  },
   "1985905": {
    "date": "2026-11-05",
    "league": "比甲",
@@ -8202,6 +8207,86 @@
     "leagueN": 1,
     "teamN": 0,
     "sample": 1,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1995460": {
+   "date": "2026-11-07",
+   "league": "德甲",
+   "home": "Borussia Dortmund",
+   "away": "Elversberg",
+   "jcNum": "周六013",
+   "predH": 3,
+   "predA": 1,
+   "conf": {
+    "dir": 39.1,
+    "exact": 7.0,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 18,
+    "teamN": 7,
+    "sample": 25,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
+  },
+  "1995461": {
+   "date": "2026-11-08",
+   "league": "德甲",
+   "home": "FC Koln",
+   "away": "Bayer Leverkusen",
+   "jcNum": "周日016",
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 40.0,
+    "exact": 7.2,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 18,
+    "teamN": 5,
+    "sample": 23,
+    "outcome": "客胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+   }
+  },
+  "1982532": {
+   "date": "2026-11-08",
+   "league": "荷甲",
+   "home": "Twente",
+   "away": "Ajax",
+   "jcNum": "周日009",
+   "predH": 2,
+   "predA": 2,
+   "conf": {
+    "dir": 44.7,
+    "exact": 7.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 2,
+    "sample": 16,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 2:2 可作小注参考"
+   }
+  },
+  "1984140": {
+   "date": "2026-11-09",
+   "league": "法甲",
+   "home": "Lens",
+   "away": "Marseille",
+   "jcNum": "周日029",
+   "predH": 1,
+   "predA": 2,
+   "conf": {
+    "dir": 37.6,
+    "exact": 9.2,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 12,
+    "teamN": 8,
+    "sample": 20,
     "outcome": "客胜",
     "tip": "比分中等可信，比分 1:2 可作小注参考"
    }
