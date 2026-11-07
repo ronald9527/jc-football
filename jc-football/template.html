@@ -7712,7 +7712,7 @@ function renderExpertArticles(){
 
   const summary = $("#expertArticlesSummary");
   if(summary){
-    summary.innerHTML = `📝 专家当天发表文章 <b style="color:var(--accent)">${total}</b> 篇 · 按发布时间倒序（最新在前）· 第 ${page}/${pages} 页 · <span style="color:var(--good);">方向与比分均附原文依据，可逐条核对</span>`;
+    summary.innerHTML = `专家当天发表文章 <b style="color:var(--accent)">${total}</b> 篇 · 按发布时间倒序（最新在前）· 第 ${page}/${pages} 页 · <span style="color:var(--good);">方向与比分均附原文依据，可逐条核对</span>`;
   }
 
   const listBox = $("#expertArticlesList");
@@ -7750,14 +7750,14 @@ function renderExpertArticles(){
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;">
           ${isFirst ? '<span class="exp-article-new">最新</span>' : ''}
-          <span style="font-size:13px;font-weight:700;color:var(--text);">👤 ${a.expert||"未知专家"}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--text);">专家 ${a.expert||"未知专家"}</span>
           <span style="font-size:10.5px;color:#fff;background:var(--accent);padding:1px 7px;border-radius:9px;">${a.league||""}</span>
         </div>
-        <span style="font-size:11px;color:var(--sub);">🕒 ${pub}</span>
+        <span style="font-size:11px;color:var(--sub);">${pub}</span>
       </div>
       <div style="margin-top:6px;font-size:12.5px;font-weight:600;color:var(--text);">${EZ(a.home||"?")} <span style="color:var(--sub);font-weight:400;">vs</span> ${EZ(a.away||"?")}</div>
       ${recHtml}
-      ${analysis ? `<div style="margin-top:6px;font-size:11px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">📝 ${EZ(analysis)}</div>` : ""}
+      ${analysis ? `<div style="margin-top:6px;font-size:11px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">分析：${EZ(analysis)}</div>` : ""}
       ${a.contentSummary ? `<div style="margin-top:5px;font-size:10.5px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">正文：${EZ(a.contentSummary.slice(0,150))}</div>` : ""}
       ${a.trackRecord ? `<div style="margin-top:4px;font-size:10.5px;color:var(--sub);line-height:1.5;">自述战绩：${EZ(a.trackRecord.slice(0,110))}</div>` : ""}
       <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
