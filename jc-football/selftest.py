@@ -1079,6 +1079,115 @@ def check_expert_content(data):
           % (len(arts), total, len(disp)))
 
 
+
+def check_expert_stats(data):
+    """v1.7.128：专家命中率 / 排行榜 / 全部推荐附徽章 的离线一致性复算。"""
+    cat = "专家命中率(v1.7.128)"
+    ed = load("expert_recommendations.json", {}) or {}
+    eh = load("expert_history.json", {}) or {}
+    es = load("expert_stats.json", {}) or {}
+    lb = load("expert_leaderboard.json", {}) or {}
+    stats = es.get("stats", {}) or {}
+    board = es.get("leaderboard", []) or []
+    meta = es.get("meta", {}) or {}
+
+    try:
+        sys.path.insert(0, HERE)
+        from fetch_expert import calculate_expert_stats
+        recomputed = calculate_expert_stats(eh) or {}
+    except Exception as e:
+        add("ERROR", cat, "无法导入 fetch_expert.calculate_expert_stats 复算：%s" % e)
+        return
+
+    if not stats:
+        add("ERROR", cat, "expert_stats.json 无 stats")
+        return
+    if set(stats.keys()) != set(recomputed.keys()):
+        add("ERROR", cat, "专家集合与历史归档不一致：stats %d / 复算 %d"
+            % (len(stats), len(recomputed)))
+    for name, rc in recomputed.items():
+        st = stats.get(name)
+        if not st:
+            add("ERROR", cat, "缺专家 %s 的战绩" % name)
+            continue
+        for k in ("judged", "hits", "miss", "pending", "hitRate"):
+            if abs(float(st.get(k, 0)) - float(rc.get(k, 0))) > 0.05:
+                add("ERROR", cat, "%s 的 %s 不一致：页面 %.1f / 复算 %.1f"
+                    % (name, k, float(st.get(k, 0)), float(rc.get(k, 0))))
+                break
+    print("  · 专家战绩复算一致：%d 位专家" % len(recomputed))
+
+    j_all = sum(x.get("judged", 0) for x in recomputed.values())
+    h_all = sum(x.get("hits", 0) for x in recomputed.values())
+    p_all = sum(x.get("pending", 0) for x in recomputed.values())
+    for k, v in (("judgedRecords", j_all), ("hits", h_all), ("pendingRecords", p_all)):
+        if meta.get(k) != v:
+            add("ERROR", cat, "meta.%s=%r 与复算 %r 不一致" % (k, meta.get(k), v))
+
+    if not board:
+        add("ERROR", cat, "expert_stats.json 缺 leaderboard")
+    else:
+        ranks = [x.get("rank") for x in board]
+        if ranks != list(range(1, len(board) + 1)):
+            add("ERROR", cat, "排行榜 rank 不连续：%s" % ranks[:8])
+        grp = [0 if int(x.get("judged", 0)) >= 3 else
+               (1 if int(x.get("judged", 0)) >= 1 else 2) for x in board]
+        for i in range(1, len(board)):
+            if grp[i] < grp[i - 1]:
+                add("ERROR", cat, "排行榜第 %d 行样本分层倒挂（样本不足未沉底）" % (i + 1))
+                break
+            if grp[i] == grp[i - 1] and float(board[i - 1].get("hitRate", 0)) < float(board[i].get("hitRate", 0)):
+                add("ERROR", cat, "排行榜第 %d 行命中率未降序" % (i + 1))
+                break
+        if lb.get("leaderboard") and len(lb["leaderboard"]) != len(board):
+            add("ERROR", cat, "expert_leaderboard.json 与 expert_stats.json 行数不一致")
+        print("  · 排行榜 %d 行，排序与样本分层校验通过" % len(board))
+
+    def chk(item, name, where):
+        st = item.get("expertStats")
+        if not isinstance(st, dict):
+            add("ERROR", cat, "%s 缺 expertStats（专家 %s）" % (where, name))
+            return
+        ref = stats.get(name)
+        if ref:
+            if (abs(float(st.get("hitRate", 0)) - float(ref.get("hitRate", 0))) > 0.05
+                    or int(st.get("judged", 0)) != int(ref.get("judged", 0))):
+                add("ERROR", cat, "%s 的徽章数字与战绩不符（%s）" % (where, name))
+        elif int(st.get("judged", 0)) != 0:
+            add("ERROR", cat, "%s 无战绩却标了已判定场次（%s）" % (where, name))
+
+    n_main = n_oth = n_art = 0
+    for r in ed.get("recommendations", []):
+        chk(r, r.get("expertName", ""), "今日推荐主推 %s" % r.get("num", ""))
+        n_main += 1
+        for o in r.get("otherExperts", []):
+            chk(o, o.get("expertName", ""), "同场其他专家 %s" % r.get("num", ""))
+            n_oth += 1
+    for a in ed.get("articles", []):
+        for r in a.get("recommendations", []):
+            chk(r, a.get("expert", ""), "文章流推荐 %s" % a.get("id", ""))
+            n_art += 1
+    print("  · 命中率覆盖：主推 %d / 同场其他 %d / 文章流 %d 条" % (n_main, n_oth, n_art))
+    if n_art == 0:
+        add("WARN", cat, "文章流无推荐，无法校验覆盖")
+
+    bad_hit = [(d, r.get("expertName")) for d, recs in eh.items() for r in recs
+               if r.get("hit") not in (True, False, None)]
+    if bad_hit:
+        add("ERROR", cat, "历史归档 hit 出现非法值：%s" % bad_hit[:3])
+    try:
+        tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+        for token in ("expertRateBadge", "专家命中率排行榜", "leaderboardMeta"):
+            if token not in tpl:
+                add("ERROR", cat, "template.html 缺 %s（前端未接线）" % token)
+        sh = open(os.path.join(HERE, "run_daily.sh"), encoding="utf-8").read()
+        if "gen_expert_stats.py" not in sh:
+            add("ERROR", cat, "run_daily.sh 未接入 gen_expert_stats.py（赛后不会重算）")
+    except Exception as e:
+        add("ERROR", cat, "读取前端/流水线文件失败：%s" % e)
+    print("  · 赛后回填与前端/流水线接线校验完成")
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1103,6 +1212,7 @@ def main():
     check_vz_high_stats(data, hist)
     check_vzhan_batch(data)
     check_expert_content(data)
+    check_expert_stats(data)
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

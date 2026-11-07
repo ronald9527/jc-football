@@ -1183,6 +1183,10 @@ footer b{color:var(--sub)}
 .gr-notes{font-size:10.5px;color:var(--sub);line-height:1.85;padding-left:18px;margin:6px 0 0}
 .gr-notes li{margin:3px 0}
 @media (max-width:768px){.gr-big{font-size:28px}.gr-kpis{grid-template-columns:repeat(2,1fr)}}
+/* v1.7.128：专家命中率徽章（今日推荐 / 同场其他 / 专家文章 / 首页比赛卡 统一） */
+.exp-rate{display:inline-block;font-size:10px;line-height:1.5;padding:1px 7px;border-radius:9px;color:#fff;white-space:nowrap;font-weight:600;vertical-align:middle}
+.exp-rate.hi{background:var(--good)}.exp-rate.mid{background:var(--warn)}.exp-rate.lo{background:var(--bad)}
+.exp-rate-none{background:var(--panel);color:var(--sub);border:1px solid var(--border);font-weight:400}
 /* v1.7.126：V站 🔥高信心预测命中率统计（复用 .gr-* 卡片，金色标题区分） */
 .vzs-view{margin:2px 0 14px}
 .vzs-view .gr-title{color:var(--gold,#e8b339)}
@@ -1467,13 +1471,13 @@ footer b{color:var(--sub)}
     </div>
     <!-- 专家排行榜 -->
     <div id="expertRankWrap" style="margin:8px 0;background:var(--panel2);border-radius:10px;overflow:hidden;">
-      <div id="expertRankHeader" onclick="document.getElementById('expertRankBody').style.display=document.getElementById('expertRankBody').style.display==='none'?'block':'none';" style="padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13px;color:var(--text);">
-        <span>🏆 专家排行榜（按推荐分排序）</span>
-        <span id="expertRankToggle" style="font-size:11px;color:var(--sub);">点击展开 ▼</span>
+      <div id="expertRankHeader" onclick="var _b=document.getElementById('expertRankBody'),_t=document.getElementById('expertRankToggle');var _open=_b.style.display!=='none';_b.style.display=_open?'none':'block';if(_t)_t.textContent=_open?'点击展开':'点击收起';" style="padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13px;color:var(--text);">
+        <span>专家命中率排行榜（按命中率排序 · 赛后回溯自动更新）</span>
+        <span id="expertRankToggle" style="font-size:11px;color:var(--sub);">点击收起</span>
       </div>
-      <div id="expertRankBody" style="display:none;padding:0 8px 8px;">
+      <div id="expertRankBody" style="display:block;padding:0 8px 8px;">
         <div id="expertRankList"></div>
-        <div style="font-size:10px;color:var(--sub);margin-top:6px;padding:0 4px;">推荐分=命中×10-错误×3+连胜加成(上限+10)+稳定奖励(≥5场且≥60%+20)；赛果回溯后自动更新</div>
+        <div id="expertRankNote" style="font-size:10px;color:var(--sub);line-height:1.65;margin-top:6px;padding:0 4px;"></div>
       </div>
     </div>
     <div style="margin:8px 0;font-size:11.5px;color:var(--sub)" id="expertSummary"></div>
@@ -1811,10 +1815,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.127";
+const VERSION = "v1.7.128";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.128",
+    date: "2026-11-07",
+    title: "全部专家推荐附命中率 + 命中率排行榜 + 赛后回溯自动重算",
+    details: [
+      "用户要求「全部专家的推荐都要附上命中率，命中率排行榜也要统计好，赛后回溯以后统计好」—— 查清三个缺口：①只有 11 条主推荐带 expertStats，同场其他专家与 23 篇专家文章里的推荐一条命中率都没有；②专家排行榜按「推荐分」排序且默认折叠，不是命中率榜；③fetch_expert.py 先算命中率后做赛果回填，且 backfill_history() 里 `date >= today` 把当天已完赛场次全部跳过，赛后统计永远是上一轮口径",
+      "新增 gen_expert_stats.py 作为「赛后回溯之后」的统一统计入口：先用同源 backfill_history() 重跑官方赛果回填（幂等，只补 hit 为空且有赛果的记录，绝不改已结算战绩），再用同源 calculate_expert_stats() 复算，补 Wilson 95%CI、样本层级（足量/偏少/不足/无战绩）与排行榜名次，产出 expert_stats.json / expert_leaderboard.json 与可离线核对的 专家命中率排行榜.html",
+      "命中率回填到【全部】推荐：主推荐 11 条、同场其他专家 11 条、专家文章流 23 条；页面新增统一 expertRateBadge()，今日推荐 / 同场其他 / 专家文章 / 首页比赛卡四处都显示「命中率X%(N场)」，无已判定场次如实标「暂无往绩」，绝不留空",
+      "排行榜改为按命中率排序并默认展开：已判定≥3场进主榜按命中率降序，1-2场样本不足者整体沉底（防「1战1中100%」霸榜，也避免 0% 但场次多反被顶到第一），每行显示 95%CI、已判定、待结算、近10场与样本层级，底部写明赛后回溯更新时间与统计口径",
+      "修正 fetch_expert.backfill_history() 跳过当天记录的 bug，并补上旧归档「竞彩让球3/1/0」方向编码的判定能力；run_daily.sh 在 sp_results.py 赛果回填之后无条件执行统计引擎再重建页面，部署指纹 / Pages 副本 / selftest 复算校验全链路接线",
+      "当前实测：25 位专家、已结算 49 条 / 命中 17 条 / 待结算 32 条；榜首 史密斯 66.7%(3场)、布海东 66.7%(3场)，2 场 100% 的冒险王与杨震标注「样本不足」沉底。命中率高不等于可盈利，本统计不含赔率与 ROI"
+    ]
+  },
   {
     version: "v1.7.127",
     date: "2026-11-07",
@@ -3619,6 +3636,25 @@ function cardHtml(m){
     ${renderBSDDetail(m)}
   </article>`;
 }
+/* v1.7.128：全部专家推荐统一的命中率徽章。
+   数据源优先取页面内嵌 state.expertStats（赛后回溯重算后的唯一真相源），
+   缺失时退回该条推荐自带的 expertStats；无已判定场次如实标「暂无往绩」。 */
+function expertStatOf(name, fallback){
+  const s = (state.expertStats || {})[name];
+  return s || fallback || null;
+}
+function expertRateBadge(name, fallback){
+  const s = expertStatOf(name, fallback);
+  const j = Number(s && s.judged) || 0;
+  if(!s || j <= 0) return '<span class="exp-rate exp-rate-none">暂无往绩</span>';
+  const r = Number(s.hitRate) || 0;
+  const cls = r >= 60 ? 'hi' : (r >= 50 ? 'mid' : 'lo');
+  const tier = s.tierLabel || (j >= 5 ? '样本足量' : (j >= 3 ? '样本偏少' : '样本不足'));
+  const ci = (s.ciLow != null && s.ciHigh != null) ? ('95%CI ' + s.ciLow + '%~' + s.ciHigh + '%') : '';
+  const tip = '已判定' + j + '场 · 命中' + (Number(s.hits)||0) + ' · 未中' + (Number(s.miss)||0)
+    + ' · 待结算' + (Number(s.pending)||0) + ' · ' + tier + (ci ? (' · ' + ci) : '');
+  return '<span class="exp-rate ' + cls + '" title="' + tip + '">命中率' + r + '%(' + j + '场)</span>';
+}
 /* 单场比赛专家推荐 */
 function renderExpertForMatch(m){
   const recs = (state.expert && state.expert.recommendations) || [];
@@ -3628,12 +3664,11 @@ function renderExpertForMatch(m){
     <div style="font-size:11.5px;font-weight:600;color:var(--text);margin-bottom:4px;">👥 专家推荐（92玩球）</div>`;
   matchRecs.forEach(r=>{
     const stats = r.expertStats || {};
-    const hitColor = (stats.hitRate||0)>=60 ? "var(--good)" : ((stats.hitRate||0)>=50 ? "var(--warn)" : "var(--bad)");
     html += `<div style="margin:4px 0;font-size:11.5px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <span style="color:var(--text);font-weight:600;">${r.expertName||""}</span>
       <span style="color:var(--accent);font-weight:700;">${r.recommend||""}</span>
       ${r.scorePred ? `<span style="color:var(--sub);">比分 ${r.scorePred}</span>` : ""}
-      ${(stats.judged||0)>0 ? `<span style="font-size:10px;padding:1px 6px;border-radius:8px;background:${hitColor};color:#fff;">命中率${stats.hitRate||0}%(${stats.judged}场)</span>` : ""}
+      ${expertRateBadge(r.expertName||"", stats)}
       <a href="javascript:void(0)" onclick="openExpertArticle('${r.sourceUrl||'#'}','92玩球')" style="color:var(--accent);text-decoration:underline;font-size:10px;">原文</a>
     </div>`;
     if(r.reason) html += `<div style="font-size:10.5px;color:var(--sub);margin:2px 0 4px 0;line-height:1.4;">📝 ${r.reason}</div>`;
@@ -3644,7 +3679,7 @@ function renderExpertForMatch(m){
           <span style="color:var(--text);">${o.expertName||""}</span>
           <span style="color:var(--accent);">${o.recommend||""}</span>
           ${o.scorePred ? `<span style="color:var(--sub);">${o.scorePred}</span>` : ""}
-          ${(o.judged||0)>0 ? `<span style="font-size:10px;color:var(--sub);">${o.hitRate}%</span>` : ""}
+          ${expertRateBadge(o.expertName||"", o.expertStats)}
         </div>`;
       });
     }
@@ -7549,32 +7584,47 @@ function renderExpert(){
   const view = state.expertView || "today";
   document.querySelectorAll("#expertView .seg button").forEach(b=>b.classList.toggle("on", b.dataset.expertView===view));
 
-  /* 专家排行榜渲染 */
+  /* v1.7.128 专家命中率排行榜：按命中率排序、样本不足沉底、默认展开 */
   const rankList = $("#expertRankList");
   const rankWrap = $("#expertRankWrap");
   const expStats = state.expertStats || {};
-  const statsArr = Object.values(expStats).filter(s=>s && s.expert);
+  const lb = (state.expert && Array.isArray(state.expert.leaderboard)) ? state.expert.leaderboard : null;
+  const statsArr = lb ? lb.slice() : Object.values(expStats).filter(s=>s && s.expert);
+  const lbMeta = (state.expert && state.expert.leaderboardMeta) || {};
+  if(!lb){
+    statsArr.sort((a,b)=>{
+      const ja=+(a.judged||0), jb=+(b.judged||0);
+      const ga=ja>=3?0:(ja>=1?1:2), gb=jb>=3?0:(jb>=1?1:2);
+      if(ga!==gb) return ga-gb;
+      return (+(b.hitRate||0))-(+(a.hitRate||0)) || (+(b.ciLow||0))-(+(a.ciLow||0)) || jb-ja;
+    });
+  }
   if(statsArr.length > 0 && rankList){
-    statsArr.sort((a,b)=> (b.score||0) - (a.score||0));
-    let rankHtml = `<div style="display:grid;grid-template-columns:32px 1fr 50px 55px 45px 50px;gap:4px;padding:6px 4px;font-size:10.5px;font-weight:600;color:var(--sub);border-bottom:1px solid var(--border);">
-      <span>#</span><span>专家</span><span style="text-align:center;">推荐分</span><span style="text-align:center;">命中率</span><span style="text-align:center;">已判定</span><span style="text-align:center;">连红</span>
+    let rankHtml = `<div style="display:grid;grid-template-columns:30px 1fr 62px 52px 52px 46px;gap:4px;padding:6px 4px;font-size:10.5px;font-weight:600;color:var(--sub);border-bottom:1px solid var(--border);">
+      <span>#</span><span>专家</span><span style="text-align:center;">命中率</span><span style="text-align:center;">已判定</span><span style="text-align:center;">待结算</span><span style="text-align:center;">近10场</span>
     </div>`;
     statsArr.forEach((s,i)=>{
-      const medal = i===0 ? "🥇" : (i===1 ? "🥈" : (i===2 ? "🥉" : (i+1)));
-      const rateCls = s.hitRate>=60 ? "var(--good)" : (s.hitRate>=50 ? "var(--warn)" : "var(--bad)");
-      const newTag = s.isNew ? '<span style="font-size:9px;background:var(--accent);color:#fff;padding:1px 4px;border-radius:3px;margin-left:3px;">新</span>' : '';
-      rankHtml += `<div style="display:grid;grid-template-columns:32px 1fr 50px 55px 45px 50px;gap:4px;padding:6px 4px;font-size:11px;align-items:center;border-bottom:1px solid rgba(0,0,0,0.04);">
-        <span style="font-weight:600;">${medal}</span>
-        <span style="font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.expert}${newTag}</span>
-        <span style="text-align:center;font-weight:700;color:var(--accent);">${s.score||0}</span>
-        <span style="text-align:center;font-weight:600;color:${rateCls};">${s.hitRate||0}%</span>
-        <span style="text-align:center;color:var(--sub);">${s.judged||0}场</span>
-        <span style="text-align:center;color:${s.streak>0?'var(--good)':'var(--sub)'};">${s.streak>0?'🔥'+s.streak:'-'}</span>
+      const medal = String(i+1);
+      const mStyle = i<3 ? "display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#f7b733,#fc4a1a);color:#fff;font-size:10px;font-weight:700;" : "font-weight:600;";
+      const r = +(s.hitRate||0), j = +(s.judged||0);
+      const rateCls = r>=60 ? "var(--good)" : (r>=50 ? "var(--warn)" : "var(--bad)");
+      const tier = s.tierLabel || (j>=5 ? "样本足量" : (j>=3 ? "样本偏少" : "样本不足"));
+      const ci = (s.ciLow!=null && j>0) ? ("95%CI " + s.ciLow + "%~" + s.ciHigh + "%") : "暂无往绩";
+      const weak = j<3 ? "opacity:.62;" : "";
+      rankHtml += `<div style="display:grid;grid-template-columns:30px 1fr 62px 52px 52px 46px;gap:4px;padding:6px 4px;font-size:11px;align-items:center;border-bottom:1px solid rgba(0,0,0,0.04);${weak}">
+        <span style="${mStyle}">${medal}</span>
+        <span style="font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${EZ(s.expert||"")}<i style="display:block;font-size:9.5px;color:var(--sub);font-weight:400;font-style:normal;">${EZ(tier)} · ${EZ(ci)}</i></span>
+        <span style="text-align:center;font-weight:700;color:${rateCls};">${r}%</span>
+        <span style="text-align:center;color:var(--sub);">${j}场</span>
+        <span style="text-align:center;color:var(--sub);">${+(s.pending||0)}</span>
+        <span style="text-align:center;color:var(--sub);">${+(s.recent10Rate||0)}%</span>
       </div>`;
     });
     rankList.innerHTML = rankHtml;
+    const note = $("#expertRankNote");
+    if(note) note.innerHTML = "命中率 = 命中 / 已判定；已判定≥3场进主榜按命中率降序，1-2场样本不足者沉底（防「1战1中100%」霸榜）。Wilson 95%CI 只反映样本不确定性，命中率高≠可盈利（不含赔率与ROI）。赛果回溯后自动重算 · 更新于 " + EZ(lbMeta.generatedAt || (state.expert && state.expert.updatedAt) || "") + " · 已结算 " + EZ(String(lbMeta.judgedRecords||"")) + " 条 / 待结算 " + EZ(String(lbMeta.pendingRecords||"")) + " 条";
   } else if(rankList) {
-    rankList.innerHTML = '<div style="padding:12px;text-align:center;font-size:11.5px;color:var(--sub);">📊 暂无专家战绩数据，今日比赛结束赛果回溯后自动更新排行榜</div>';
+    rankList.innerHTML = '<div style="padding:12px;text-align:center;font-size:11.5px;color:var(--sub);">暂无专家战绩数据，今日比赛结束赛果回溯后自动更新排行榜</div>';
   }
   if(rankWrap) rankWrap.style.display = (view==="articles") ? "none" : "block";
   const artWrap = $("#expertArticlesWrap");
@@ -7661,7 +7711,6 @@ function renderExpert(){
     } else {
       matchRecs.forEach(r=>{
         const stats = r.expertStats || {};
-        const hitColor = (stats.hitRate||0)>=60 ? "var(--good)" : ((stats.hitRate||0)>=50 ? "var(--warn)" : "var(--bad)");
         html += `<div style="margin-top:8px;padding:8px;background:var(--panel2);border-radius:8px;">
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <span style="font-size:14px;font-weight:700;color:var(--accent);">${r.recommend||""}</span>
@@ -7671,7 +7720,7 @@ function renderExpert(){
           </div>
           <div style="margin-top:5px;font-size:11.5px;color:var(--sub);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <span>👤 <b style="color:var(--text);">${r.expertName||""}</b></span>
-            ${(stats.judged||0)>0 ? `<span style="font-size:10px;padding:1px 7px;border-radius:9px;background:${hitColor};color:#fff;">命中率${stats.hitRate||0}%(${stats.judged}场)</span>` : '<span style="font-size:10px;padding:1px 7px;border-radius:9px;background:var(--panel);color:var(--sub);">新专家</span>'}
+            ${expertRateBadge(r.expertName||"", stats)}
             <a href="javascript:void(0)" onclick="openExpertArticle('${r.sourceUrl||'#'}','92玩球')" style="color:var(--accent);text-decoration:underline;">原文</a>
           </div>
           ${r.reason ? `<div style="margin-top:5px;font-size:11px;color:var(--sub);line-height:1.5;">📝 ${EZ(r.reason)}</div>` : ""}
@@ -7680,6 +7729,7 @@ function renderExpert(){
             ${r.otherExperts.map(o=>`<div style="margin:3px 0;">
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 <span style="color:var(--text);">${o.expertName||""}</span>
+                ${expertRateBadge(o.expertName||"", o.expertStats)}
                 <span style="color:var(--accent);font-weight:600;">${o.recommend||""}</span>
                 ${o.scorePred ? `<span style="color:var(--sub);">${o.scorePred}</span>` : ""}
                 ${o.sourceUrl ? `<a href="javascript:void(0)" onclick="openExpertArticle('${o.sourceUrl}','92玩球')" style="color:var(--accent);text-decoration:underline;font-size:10px;">原文</a>` : ""}
@@ -7735,6 +7785,7 @@ function renderExpertArticles(){
         ? `<div style="font-size:10.5px;color:var(--sub);margin-bottom:3px;">${EZ(r.home)} vs ${EZ(r.away||"")}</div>` : "";
       recHtml += `<div style="margin-top:5px;padding:6px 8px;background:var(--panel2);border-radius:7px;font-size:11.5px;">
         ${pairTxt}
+        <div style="font-size:10.5px;color:var(--sub);margin-bottom:3px;">专家 ${EZ(a.expert||"")} ${expertRateBadge(a.expert||"", r.expertStats)}</div>
         <span style="font-weight:700;color:var(--accent);font-size:13px;">${EZ(r.recommend||"-")}</span>
         ${r.score ? `<span style="color:var(--sub);margin-left:8px;">比分 ${EZ(r.score)}</span>` : ""}
         ${r.playType ? `<span style="font-size:10px;color:var(--sub);margin-left:6px;border:1px solid var(--border);border-radius:4px;padding:0 4px;">${EZ(r.playType)}</span>` : ""}

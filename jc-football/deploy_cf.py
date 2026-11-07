@@ -324,6 +324,8 @@ def main():
                       "vzhan_data.json", "vzhan_history.json",
                       "vzhan_gateway_status.json",
                       "expert_history.json", "expert_stats.json",
+                      # v1.7.128：专家命中率排行榜（独立可核对副本）
+                      "expert_leaderboard.json",
                       # v1.7.124：正路推荐正确率统计（独立可核对副本）
                       "good_rate_stats.json",
                       # v1.7.126：V站 🔥高信心预测比分/方向命中率统计（独立可核对副本）
@@ -396,6 +398,9 @@ def main():
         # v1.7.126：V站 高信心统计同为派生数据，每轮由 gen_vz_high_stats.py 基于
         # vzhan_history.json + vzhan_data.json + history.json 重算，同样不进自举包。
         "vz_high_stats.json",
+        # v1.7.128：专家命中率排行榜同为派生数据，每轮由 gen_expert_stats.py
+        # 基于 expert_history.json + 官方赛果重算，不进自举包。
+        "expert_leaderboard.json",
         # v1.7.93：V站完赛归档（含 highConf）跨轮累积，同理须排除出自举包，
         # 由生产端累积，冷启动从 Pages 副本恢复。
         "vzhan_history.json",

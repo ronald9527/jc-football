@@ -1768,6 +1768,13 @@ def backfill_history(history, matches):
         """根据推荐文本判定命中（支持胜平负/让球/双选）"""
         if not rec_text:
             return None
+        # v1.7.128：旧归档里的「竞彩让球3/1/0」编码（3=让胜 1=让平 0=让负），
+        # 扩充判定能力；只对尚未结算的记录生效，不改任何已有 hit。
+        import re as _re
+        _code = _re.search(r"竞彩让球([310])", rec_text)
+        if _code:
+            _map = {"3": "h", "1": "d", "0": "a"}
+            return hhad_result == _map[_code.group(1)] if hhad_result else None
         # 让球双选（重心让X防让Y）：命中其一即中，必须排在单让球判断之前
         if "让平/让负" in rec_text:
             return hhad_result in ("d", "a") if hhad_result else None
@@ -1798,7 +1805,10 @@ def backfill_history(history, matches):
 
     updated = 0
     for date, day_recs in history.items():
-        if date >= today:
+        # v1.7.128：旧逻辑 `date >= today` 会把当天已完赛场次全部跳过，
+        # 导致当日专家推荐永远不结算。改为只跳过未来日期；过去与当天
+        # 只要能对齐官方赛果就回填，赛后统计才完整。
+        if date > today:
             continue
         for r in day_recs:
             key = f"{date}|{r.get('home','')}vs{r.get('away','')}"
@@ -2014,6 +2024,14 @@ def main():
     total = sum(len(v) for v in history.values())
     hits = sum(1 for v in history.values() for r in v if r.get("hit") is True)
     print(f"  历史回填：{backfill} 场，累计 {total} 条，命中 {hits} 条")
+    # v1.7.128：抓取链路结束后统一走赛后统计引擎（回填→复算→排行榜→
+    # 回填全部推荐→离线报告）。延迟 import 避免与 gen_expert_stats 顶层的
+    # `from fetch_expert import ...` 形成循环依赖。
+    try:
+        import gen_expert_stats
+        gen_expert_stats.main()
+    except Exception as e:
+        print(f"  !! 专家命中率统计失败（保留已有统计）：{e}")
     print("[高手推荐] 完成", flush=True)
 
 if __name__ == "__main__":

@@ -421,6 +421,13 @@ if [ "$_refreshed" = "1" ]; then
   "$PY" build_panel.py 2>/dev/null || true
 fi
 
+# ---------- 步骤2.5c 专家命中率·赛后回溯重算（v1.7.128）----------
+# 位置约束：必须在 sp_results.py / fetch_scores.py 赛果回填、2.5b 重算之后，
+# 2.6 自检之前。命中率必须基于本轮最新官方赛果，否则页面数字停留在上一轮口径。
+log "==> 步骤2.5c 专家命中率·赛后回溯重算 (gen_expert_stats.py)"
+"$PY" gen_expert_stats.py || log "!! 专家命中率统计失败（保留上次统计），继续其余模块"
+"$PY" build_panel.py 2>/dev/null || true
+
 # ---------- 步骤2.6 最终数据自检（上线门禁）----------
 # 位置约束：必须在 gen_good_rate.py / build_panel.py / 陈旧豁免重抓全部完成之后。
 # 此时篮球、比分预测、正路统计、页面产物均已就绪，自检结果才反映真实状态。
@@ -482,6 +489,9 @@ parts += filehash("expert_stats.json")
 parts += filehash("expert_content.py")
 parts += filehash("fetch_expert.py")
 parts += filehash("rebuild_expert_history.py")
+# v1.7.128：专家命中率榜与统计引擎变化也要触发上线
+parts += filehash("expert_leaderboard.json")
+parts += filehash("gen_expert_stats.py")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")

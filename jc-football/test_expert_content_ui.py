@@ -15,6 +15,7 @@
 import asyncio
 import json
 import os
+import re
 import sys
 from playwright.async_api import async_playwright
 
@@ -45,7 +46,10 @@ async def main():
         await page.wait_for_timeout(300)
 
         html = await page.content()
-        ck('const VERSION = "v1.7.127"' in html, "页面版本 v1.7.127")
+        # 版本跟随 template.html 真相源，避免每次升版都要改测试
+        tpl_ver = re.search(r'const VERSION = "([^"]+)"',
+                            open(os.path.join(HERE, "template.html"), encoding="utf-8").read()).group(1)
+        ck('const VERSION = "%s"' % tpl_ver in html, "页面版本 %s" % tpl_ver)
 
         # 进入高手推荐
         await page.click('button[data-tab="expert"]')
