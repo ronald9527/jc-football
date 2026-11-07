@@ -1811,8 +1811,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.126";
+const VERSION = "v1.7.127";
+// 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
+const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.127",
+    date: "2026-11-07",
+    title: "高手推荐文章内容逐篇核对：方向不再反着推、理由不再半截、原文可回溯",
+    details: [
+      "用户要求「搜索起来，认真检查好高手推荐的文章内容，不要出错」——逐篇抓 92wq 原文核对后发现旧解析器把赔率描述当结论：冒险王原文「本场比赛看好欧塞尔不败」被推成「客胜」（方向完全相反），比分建议「1：1、2：1」只取到「2比1」，理由开头「场比赛」缺字、战绩残留 &nbsp; 且断在「（SP17」",
+      "新增 expert_content.py 结构化解析：方向只认「明确推荐标记句 / 结论动词句」，逐句（从后往前）判定，赔率描述（客胜偏高/让步力度/开出组合）、历史战绩（上轮大胜/10轮不败）、比分建议句里的「建议/看好」一律不当结论；单句同时出现主客词时取靠后那个；支持让球3/让球0 等旧式写法；无明确方向的文章（如刘建宏只有「总结：某队更有办法」）宁可不产推荐，绝不硬猜",
+      "比分只从「比分参考/建议/观点/内容：」标记句提取全部候选，不再因前 20 字出现「历史交锋」就误杀 1:1；结论句里直接写比分（如「罗马大胜，2-0，3-1」）也能兜底取到；每条推荐附 directionEvidence（方向原句）与 scoreEvidence（比分原句），页面可逐条回溯核对",
+      "正文统一清洗页脚广告/HTML 实体/其它文章导流行，理由取完整结论句+比分句并去重（旧版会把整段重复贴两遍），专家战绩只收「连红/近N中N」战绩句、不再截断在半句；4 篇「正文需登录可见」的空壳文章直接排除，不再显示「未知专家」空卡",
+      "全量重抓当天 27 篇 → 23 篇有效文章、11 条推荐；逐篇回归 23/23 PASS（方向、比分、队名、理由清洗、战绩）；修正后的方向包括 冒险王 客胜→主胜/平局、彭雷 主胜→让负、张晓彬 主胜/平局→主胜、罗辑 客胜→让胜、徐弋 客胜→客胜/平局、张羽鸿 主胜→客胜；史密斯「二串一」第二场（葡超阿尔韦卡）不再被文章级联赛误过滤",
+      "rebuild_expert_history.py 用同源解析器重跑 47 篇历史原文：修正 21 条半截/带噪音的理由、0 条残留噪音，3 条「当时标注与原文方向不一致」只标注存疑与依据、不偷改已结算命中；selftest 新增逐条复算校验，流水线 1.8869 与部署指纹全链路接线"
+    ]
+  },
   {
     version: "v1.7.126",
     date: "2026-11-07",
@@ -7609,7 +7624,8 @@ function renderExpert(){
             · 出处：${r.source||""}
             · 信心：${r.confidence||"-"}%
           </div>
-          ${r.reason ? `<div style="font-size:11px;color:var(--sub);margin-top:3px;">理由：${r.reason}</div>` : ""}
+          ${r.reason ? `<div style="font-size:11px;color:var(--sub);margin-top:3px;">理由：${EZ(r.reason)}</div>` : ""}
+          ${r.directionDisputed ? `<div style="font-size:10.5px;color:var(--warn);margin-top:4px;line-height:1.5;background:rgba(250,173,20,.08);border:1px solid rgba(250,173,20,.28);border-radius:6px;padding:5px 7px;">存疑 · 原文方向与当时标注不一致：原文解析「${EZ(r.parsedDirection||"")}」，依据「${EZ((r.directionEvidence||"").slice(0,70))}」。此处保留当时标注以保证命中统计可追溯，仅供复查参考。</div>` : ""}
         </div>`;
       });
     });
@@ -7658,7 +7674,8 @@ function renderExpert(){
             ${(stats.judged||0)>0 ? `<span style="font-size:10px;padding:1px 7px;border-radius:9px;background:${hitColor};color:#fff;">命中率${stats.hitRate||0}%(${stats.judged}场)</span>` : '<span style="font-size:10px;padding:1px 7px;border-radius:9px;background:var(--panel);color:var(--sub);">新专家</span>'}
             <a href="javascript:void(0)" onclick="openExpertArticle('${r.sourceUrl||'#'}','92玩球')" style="color:var(--accent);text-decoration:underline;">原文</a>
           </div>
-          ${r.reason ? `<div style="margin-top:5px;font-size:11px;color:var(--sub);line-height:1.5;">📝 ${r.reason}</div>` : ""}
+          ${r.reason ? `<div style="margin-top:5px;font-size:11px;color:var(--sub);line-height:1.5;">📝 ${EZ(r.reason)}</div>` : ""}
+          ${r.directionEvidence && r.directionEvidence!==r.reason ? `<div style="margin-top:3px;font-size:10.5px;color:var(--sub);line-height:1.5;opacity:.85;">原文结论：${EZ(r.directionEvidence)}</div>` : ""}
           ${r.otherExperts && r.otherExperts.length>0 ? `<div style="margin-top:5px;font-size:11px;border-top:1px solid var(--border);padding-top:4px;">
             ${r.otherExperts.map(o=>`<div style="margin:3px 0;">
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
@@ -7695,7 +7712,7 @@ function renderExpertArticles(){
 
   const summary = $("#expertArticlesSummary");
   if(summary){
-    summary.innerHTML = `📝 专家当天发表文章 <b style="color:var(--accent)">${total}</b> 篇 · 按发布时间倒序（最新在前）· 第 ${page}/${pages} 页`;
+    summary.innerHTML = `📝 专家当天发表文章 <b style="color:var(--accent)">${total}</b> 篇 · 按发布时间倒序（最新在前）· 第 ${page}/${pages} 页 · <span style="color:var(--good);">方向与比分均附原文依据，可逐条核对</span>`;
   }
 
   const listBox = $("#expertArticlesList");
@@ -7713,16 +7730,22 @@ function renderExpertArticles(){
     const recs = a.recommendations || [];
     let recHtml = "";
     recs.forEach(r=>{
+      // 多场文章（作者二串一）：每条推荐标出自己的对阵，避免与文章标题对阵混淆
+      const pairTxt = (r.home && (r.home!==a.home || r.away!==a.away))
+        ? `<div style="font-size:10.5px;color:var(--sub);margin-bottom:3px;">${EZ(r.home)} vs ${EZ(r.away||"")}</div>` : "";
       recHtml += `<div style="margin-top:5px;padding:6px 8px;background:var(--panel2);border-radius:7px;font-size:11.5px;">
-        <span style="font-weight:700;color:var(--accent);font-size:13px;">${r.recommend||"-"}</span>
-        ${r.score ? `<span style="color:var(--sub);margin-left:8px;">比分 ${r.score}</span>` : ""}
-        ${r.playType ? `<span style="font-size:10px;color:var(--sub);margin-left:6px;border:1px solid var(--border);border-radius:4px;padding:0 4px;">${r.playType}</span>` : ""}
+        ${pairTxt}
+        <span style="font-weight:700;color:var(--accent);font-size:13px;">${EZ(r.recommend||"-")}</span>
+        ${r.score ? `<span style="color:var(--sub);margin-left:8px;">比分 ${EZ(r.score)}</span>` : ""}
+        ${r.playType ? `<span style="font-size:10px;color:var(--sub);margin-left:6px;border:1px solid var(--border);border-radius:4px;padding:0 4px;">${EZ(r.playType)}</span>` : ""}
+        ${r.evidence ? `<div style="margin-top:4px;font-size:10.5px;color:var(--sub);line-height:1.5;">原文结论：${EZ(r.evidence)}</div>` : ""}
       </div>`;
     });
     if(!recHtml){
-      recHtml = `<div style="margin-top:5px;font-size:11px;color:var(--sub);">该文未解析到明确推荐项</div>`;
+      recHtml = `<div style="margin-top:5px;font-size:11px;color:var(--sub);line-height:1.5;">该文未给出明确胜平负方向（仅作分析参考，不计入推荐与命中统计）</div>`;
     }
     const analysis = (recs[0] && recs[0].analysis) ? recs[0].analysis.slice(0, 120) : "";
+    const ckOk = (a.contentCheck||{}).ok === true;
     html += `<div class="exp-article-card${isFirst ? ' exp-article-first' : ''}" style="margin:10px 0;padding:12px;background:var(--panel);border-radius:10px;border:1px solid var(--border);${isFirst ? 'border-color:var(--accent);' : ''}">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -7732,12 +7755,14 @@ function renderExpertArticles(){
         </div>
         <span style="font-size:11px;color:var(--sub);">🕒 ${pub}</span>
       </div>
-      <div style="margin-top:6px;font-size:12.5px;font-weight:600;color:var(--text);">${a.home||"?"} <span style="color:var(--sub);font-weight:400;">vs</span> ${a.away||"?"}</div>
+      <div style="margin-top:6px;font-size:12.5px;font-weight:600;color:var(--text);">${EZ(a.home||"?")} <span style="color:var(--sub);font-weight:400;">vs</span> ${EZ(a.away||"?")}</div>
       ${recHtml}
-      ${analysis ? `<div style="margin-top:6px;font-size:11px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">📝 ${analysis}</div>` : ""}
-      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      ${analysis ? `<div style="margin-top:6px;font-size:11px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">📝 ${EZ(analysis)}</div>` : ""}
+      ${a.contentSummary ? `<div style="margin-top:5px;font-size:10.5px;color:var(--sub);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">正文：${EZ(a.contentSummary.slice(0,150))}</div>` : ""}
+      ${a.trackRecord ? `<div style="margin-top:4px;font-size:10.5px;color:var(--sub);line-height:1.5;">自述战绩：${EZ(a.trackRecord.slice(0,110))}</div>` : ""}
+      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
         <a href="javascript:void(0)" onclick="openExpertArticle('${a.url||'#'}','92玩球')" style="color:var(--accent);text-decoration:underline;font-size:11.5px;">查看原文 ›</a>
-        <span style="font-size:10.5px;color:var(--sub);">92玩球 · ${a.id||""}</span>
+        <span style="font-size:10.5px;color:var(--sub);">${ckOk ? '<span style="color:var(--good);">内容已核对</span> · ' : ''}92玩球 · ${a.id||""}</span>
       </div>
     </div>`;
   });

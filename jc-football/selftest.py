@@ -978,6 +978,107 @@ def check_vzhan_batch(data):
             add("WARN", "V站批次", "V站情报区疑似仍默认折叠")
 
 
+def check_expert_content(data):
+    """v1.7.127 高手推荐「文章内容」准确性自检。
+
+    逐篇/逐条复算：方向依据句是否在正文中、比分是否来自比分原句、
+    理由/战绩是否含页脚噪音或 HTML 实体、方向值是否合法；
+    另核对竞彩当天批次隔离、历史归档文本、流水线与前端接线。
+    """
+    ed = load("expert_recommendations.json", {})
+    if not ed:
+        add("ERROR", "高手推荐内容", "expert_recommendations.json 缺失")
+        return
+    arts = ed.get("articles", [])
+    if not arts:
+        add("ERROR", "高手推荐内容", "专家文章流为空")
+        return
+    try:
+        from expert_content import verify_recommendation
+    except Exception as e:
+        add("ERROR", "高手推荐内容", "expert_content.py 无法导入：%s" % str(e)[:60])
+        return
+
+    noise = re.compile(r'(1、本站网址|就爱玩球|&nbsp;|喜欢的话可以分享|本站提供|文章观点仅供参考)')
+    valid = {"主胜", "客胜", "平局", "主胜/平局", "客胜/平局",
+             "让胜", "让平", "让负", "让胜/让平", "让胜/让负", "让平/让负"}
+    bad_art, bad_rec = [], []
+    total = 0
+    for a in arts:
+        aid = a.get("id", "?")
+        if not a.get("expert"):
+            bad_art.append("%s 缺专家署名（空壳文章不得入流）" % aid)
+        if not a.get("contentSegments"):
+            bad_art.append("%s 缺正文段落，无法回溯核对" % aid)
+        ck = a.get("contentCheck") or {}
+        if not ck.get("ok"):
+            bad_art.append("%s 内容校验未通过：%s" %
+                           (aid, "; ".join(ck.get("issues", [])[:2])))
+        for f in ("reason", "trackRecord", "contentSummary", "analysis"):
+            if noise.search(str(a.get(f) or "")):
+                bad_art.append("%s 的 %s 含页脚/HTML 实体噪音" % (aid, f))
+        segs = a.get("contentSegments") or []
+        for r in a.get("recommendations", []):
+            total += 1
+            if r.get("recommend") not in valid:
+                bad_rec.append("%s 方向值非法：%s" % (aid, r.get("recommend")))
+            for f in ("analysis", "evidence", "scoreEvidence"):
+                if noise.search(str(r.get(f) or "")):
+                    bad_rec.append("%s 的 %s 含噪音" % (aid, f))
+            chk = dict(r)
+            chk["trackRecord"] = a.get("trackRecord", "")
+            ok, issues = verify_recommendation(chk, segs)
+            if not ok:
+                bad_rec.append("%s [%s]：%s" %
+                               (aid, r.get("recommend"), "; ".join(issues)))
+    for x in bad_art[:8]:
+        add("ERROR", "高手推荐内容", x)
+    if len(bad_art) > 8:
+        add("ERROR", "高手推荐内容", "另有 %d 篇文章异常" % (len(bad_art) - 8))
+    for x in bad_rec[:8]:
+        add("ERROR", "高手推荐内容", x)
+    if len(bad_rec) > 8:
+        add("ERROR", "高手推荐内容", "另有 %d 条推荐异常" % (len(bad_rec) - 8))
+
+    # 竞彩当天批次隔离：推荐编号必须落在本批次赛程里
+    batch = ((data.get("safeParlay") or {}).get("batchDate")
+             or ed.get("batchDate") or "")
+    valid_nums = {m.get("num") for m in data.get("matches", [])
+                  if m.get("date") == batch}
+    recs = ed.get("recommendations", [])
+    if valid_nums:
+        cross = [r.get("num") for r in recs if r.get("num") not in valid_nums]
+        if cross:
+            add("ERROR", "高手推荐内容",
+                "推荐混入非本竞彩批次（%s）的编号：%s" % (batch, ", ".join(map(str, cross[:6]))))
+    # 历史归档：理由不得残留噪音，存疑标注必须有原文依据
+    eh = load("expert_history.json", {})
+    dirty = sum(1 for v in eh.values() for r in v if noise.search(str(r.get("reason") or "")))
+    if dirty:
+        add("ERROR", "高手推荐内容", "历史归档仍有 %d 条理由含页脚噪音/半截句" % dirty)
+    disp = [r for v in eh.values() for r in v if r.get("directionDisputed")]
+    if any(not r.get("directionEvidence") for r in disp):
+        add("ERROR", "高手推荐内容", "历史「方向存疑」标注缺少原文依据")
+    # 流水线 / 前端接线
+    try:
+        rd = open(os.path.join(HERE, "run_daily.sh"), encoding="utf-8").read()
+        if "rebuild_expert_history.py" not in rd:
+            add("ERROR", "高手推荐内容", "run_daily.sh 未接入历史文章修复")
+        if 'filehash("expert_recommendations.json")' not in rd:
+            add("ERROR", "高手推荐内容", "部署指纹未纳入高手推荐数据，改动不会触发上线")
+        tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+        if "directionEvidence" not in tpl:
+            add("ERROR", "高手推荐内容", "前端未展示「方向原文依据」")
+        if "contentSummary" not in tpl:
+            add("ERROR", "高手推荐内容", "前端未展示文章正文摘要")
+        if "directionDisputed" not in tpl:
+            add("ERROR", "高手推荐内容", "前端未提示历史方向存疑")
+    except Exception as e:
+        add("ERROR", "高手推荐内容", "流水线/前端接线检查失败：%s" % str(e)[:60])
+    print("  高手推荐内容：%d 篇文章 / %d 条推荐逐条复算，历史存疑标注 %d 条"
+          % (len(arts), total, len(disp)))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1001,6 +1102,7 @@ def main():
     check_good_rate(data, hist)
     check_vz_high_stats(data, hist)
     check_vzhan_batch(data)
+    check_expert_content(data)
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

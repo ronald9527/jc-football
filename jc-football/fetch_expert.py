@@ -14,6 +14,13 @@
 """
 import json, time, os, re, urllib.request
 
+# v1.7.127：文章内容结构化解析 + 逐篇校验（结论句优先，杜绝方向错判）
+try:
+    from expert_content import parse_structured, verify_recommendation, clean_segments
+except Exception as _e:  # pragma: no cover
+    parse_structured = verify_recommendation = clean_segments = None
+    print("!! expert_content 导入失败，将回退旧解析: %s" % _e, flush=True)
+
 # 强制北京时间（CI 容器为 UTC，时间戳必须用东八区）
 os.environ.setdefault("TZ", "Asia/Shanghai")
 time.tzset()
@@ -111,6 +118,13 @@ def fetch_92wq_articles():
                 expert = em.group(1)
             elif '今日解读' in title:
                 expert = "92玩球编辑部"
+            if not expert:
+                # 「一航说球 周六023 …」「盘球先生实证剖析：…」等旧式署名
+                em_alt = re.match(
+                    r'^([\u4e00-\u9fa5A-Za-z0-9·]{2,10}?(?:说球|看球|解球|侃球|品球|实证剖析|实证|剖析))',
+                    title)
+                if em_alt:
+                    expert = em_alt.group(1)
             league = ""
             lm = re.search(r'【([\u4e00-\u9fa5A-Za-z]+)】', title)
             if lm and lm.group(1) not in ['今日解读', '冰岛超']:
@@ -119,7 +133,7 @@ def fetch_92wq_articles():
             if is_non_football(league, title):
                 continue
             home = away = ""
-            mm = re.search(r'([\u4e00-\u9fa5A-Za-z0-9·]{2,})VS([\u4e00-\u9fa5A-Za-z0-9·]{2,})', title)
+            mm = re.search(r'([\u4e00-\u9fa5A-Za-z0-9·]{2,})\s*VS\s*([\u4e00-\u9fa5A-Za-z0-9·]{2,})', title)
             if mm:
                 home = mm.group(1).strip()
                 away = mm.group(2).strip()
@@ -197,6 +211,55 @@ def fetch_92wq_articles():
     result = [all_articles[vid] for vid in all_ids]
     print(f"  92玩球：当天({today})帖子{len(all_articles)}条（新帖子{len(new_ids)}条，首尾:{today_min_id}~{today_max_id}）")
     return result
+
+def parse_article_92wq_v2(url, expert_default="", home_default="", away_default="", pub_date=""):
+    """v1.7.127 结构化解析：方向只认「明确推荐句 / 结论动词句」，逐条内容校验。
+
+    返回 (recs, trackRecord, contentSummary, contentSegments, contentCheck)；
+    抓取失败或无正文时返回 None，由调用方回退旧解析器（避免整批文章消失）。
+    """
+    if parse_structured is None:
+        return None
+    headers = {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15",
+        "Referer": "https://www.92wq.com/",
+    }
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            html = resp.read().decode("utf-8", errors="ignore")
+    except Exception as e:
+        print("  [v2] 抓取失败 %s: %s" % (url, str(e)[:60]), flush=True)
+        return None
+    r = parse_structured(html, expert=expert_default, home=home_default,
+                         away=away_default, pub_date=pub_date)
+    if not r.get("checked"):
+        # 正文为空：VIP / 登录可见的隐藏内容文章，绝不能当作「高手推荐文章」入库
+        return [], "", "", [], {
+            "ok": False, "empty": True, "engine": "expert_content 1.7.127",
+            "issues": ["正文为空或需登录可见，已排除"]}
+    segs = r["segments"]
+    ok_recs, issues_all = [], []
+    for rec in r["recommendations"]:
+        chk = dict(rec)
+        chk["trackRecord"] = r["trackRecord"]
+        ok, issues = verify_recommendation(chk, segs)
+        if ok:
+            ok_recs.append(rec)
+        else:
+            issues_all.append("%s: %s" % (rec.get("recommend", "?"), "; ".join(issues)))
+            print("  [内容校验拦截] %s %s -> %s" %
+                  (expert_default, rec.get("recommend"), "; ".join(issues)), flush=True)
+    meta = {
+        "ok": not issues_all,
+        "parsed": len(r["recommendations"]),
+        "passed": len(ok_recs),
+        "issues": issues_all,
+        "engine": "expert_content 1.7.127",
+        "hasTrackRecord": bool(r["trackRecord"]),
+    }
+    return ok_recs, r["trackRecord"], r["contentSummary"], segs[:40], meta
+
 
 def parse_article_92wq(url, expert_default="", home_default="", away_default=""):
     """解析92玩球文章，提取推荐"""
@@ -1534,7 +1597,12 @@ def build_recommendations(articles_data, matches, expert_stats=None):
             # === 交叉验证2: 联赛名称核实 ===
             article_league = article.get("league", "")
             matched_league = matched.get("league", "")
-            if article_league and matched_league:
+            # 多场文章（如作者「二串一」）里第二场的联赛与文章标题联赛不同，
+            # 不能拿文章级联赛去核对，否则会把正确匹配误删（v1.7.127）。
+            _is_secondary = bool(
+                article.get("home") and r.get("home") and
+                not team_match(r.get("home", ""), article.get("home", "")))
+            if article_league and matched_league and not _is_secondary:
                 # 联赛关键词匹配（去除"精英联赛""联赛杯"等后缀后比较核心词）
                 def league_core(l):
                     for suffix in ["精英联赛", "联赛杯", "联赛", "杯", "超", "甲", "乙", "冠"]:
@@ -1589,6 +1657,9 @@ def build_recommendations(articles_data, matches, expert_stats=None):
                 "trackRecord": article.get("trackRecord", ""),
                 "reason": r.get("analysis", "") or r.get("score", ""),
                 "scorePred": r.get("score", ""),
+                # v1.7.127：方向/比分原文依据，可逐条回溯核对
+                "directionEvidence": r.get("evidence", ""),
+                "scoreEvidence": r.get("scoreEvidence", ""),
                 "hit": None,
                 "actualScore": None,
                 "isExpert": True,
@@ -1847,19 +1918,51 @@ def main():
     new_articles = fetch_92wq_articles()
     print(f"  92玩球新文章：{len(new_articles)} 篇")
 
-    # 2. 抓取新文章提取推荐
+    # 2. 抓取新文章提取推荐（v1.7.127：结构化结论解析 + 逐条内容校验）
+    #    所有抓到的文章都进「专家文章」流，即使该文没有明确推荐方向（宁缺勿错）。
     new_articles_data = []
+    _empty_ids = set()
     for a in new_articles:
-        recs, track = parse_article_92wq(a["url"], a.get("expert", ""), a.get("home", ""), a.get("away", ""))
-        if recs:
+        res = parse_article_92wq_v2(
+            a["url"], a.get("expert", ""), a.get("home", ""), a.get("away", ""),
+            a.get("pubDate", ""))
+        if res is None:
+            # 抓取失败/无正文 → 回退旧解析器，避免整批文章消失
+            recs, track = parse_article_92wq(
+                a["url"], a.get("expert", ""), a.get("home", ""), a.get("away", ""))
             a["recommendations"] = recs
             a["trackRecord"] = track
-            new_articles_data.append(a)
-            print(f"  [{a['expert']}] {a['home']}vs{a['away']} -> {len(recs)}场推荐")
+            a["contentSummary"] = ""
+            a["contentSegments"] = []
+            a["contentCheck"] = {"ok": False, "engine": "legacy-fallback",
+                                 "issues": ["v2 未取到正文，已回退旧解析器"]}
+        else:
+            recs, track, summary, segs, meta = res
+            if meta.get("empty"):
+                _empty_ids.add(a.get("id"))
+                print("  [排除] 正文为空/隐藏内容：%s" % a.get("title", "")[:50], flush=True)
+                time.sleep(0.3)
+                continue
+            a["recommendations"] = recs
+            a["trackRecord"] = track
+            a["contentSummary"] = summary
+            a["contentSegments"] = segs
+            a["contentCheck"] = meta
+        new_articles_data.append(a)
+        _flag = "" if (a.get("contentCheck") or {}).get("ok") else " [待复核]"
+        print(f"  [{a['expert']}] {a['home']}vs{a['away']} -> {len(recs)}场推荐{_flag}")
         time.sleep(0.3)
 
-    # 合并新旧文章（新文章在前，旧文章在后）
-    articles_data = new_articles_data + old_articles
+    # 合并：本轮全量重抓的在前；旧数据只补「本轮没抓到且内容可信」的文章。
+    # 旧格式（无 contentSegments）、无署名、本轮判定为空正文的一律不带入，
+    # 避免把上一版的错误方向/半截理由残留到新数据里。
+    _new_ids = {x.get("id") for x in new_articles_data}
+    _legacy = [
+        x for x in old_articles
+        if x.get("id") not in _new_ids and x.get("id") not in _empty_ids
+        and x.get("expert") and x.get("contentSegments")
+    ]
+    articles_data = new_articles_data + _legacy
 
     # 3. 专家历史战绩核查（从历史推荐记录计算真实命中率）
     history_for_stats = load_json("expert_history.json")

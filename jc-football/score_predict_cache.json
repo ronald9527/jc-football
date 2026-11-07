@@ -1,6 +1,6 @@
 {
  "4287": {
-  "ts": 1793172956.184159,
+  "ts": 1794023182.199369,
   "name": "Clube do Remo",
   "matches": [
    {
@@ -417,6 +417,32 @@
     "ga": 1,
     "hg": 1,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555067,
+    "utc": "2026-10-29T00:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1770,
+    "oppName": "Botafogo FR",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555077,
+    "utc": "2026-11-05T22:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1769,
+    "oppName": "SE Palmeiras",
+    "gf": 1,
+    "ga": 6,
+    "hg": 6,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -1266,18 +1292,18 @@
   ]
  },
  "1779": {
-  "ts": 1793124189.644637,
+  "ts": 1794023166.695292,
   "name": "SC Corinthians Paulista",
   "matches": [
    {
     "id": 554743,
     "utc": "2026-01-28T23:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 1,
+    "home": true,
+    "oppId": 1777,
+    "oppName": "EC Bahia",
+    "gf": 1,
+    "ga": 2,
     "hg": 1,
     "ag": 2,
     "status": "FINISHED"
@@ -1286,11 +1312,11 @@
     "id": 554763,
     "utc": "2026-02-12T23:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 2,
+    "home": true,
+    "oppId": 4286,
+    "oppName": "RB Bragantino",
+    "gf": 2,
+    "ga": 0,
     "hg": 2,
     "ag": 0,
     "status": "FINISHED"
@@ -1325,11 +1351,11 @@
     "id": 554783,
     "utc": "2026-03-12T00:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 0,
+    "home": true,
+    "oppId": 4241,
+    "oppName": "Coritiba FBC",
+    "gf": 0,
+    "ga": 2,
     "hg": 0,
     "ag": 2,
     "status": "FINISHED"
@@ -1364,9 +1390,9 @@
     "id": 554812,
     "utc": "2026-03-22T23:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
+    "home": true,
+    "oppId": 1783,
+    "oppName": "CR Flamengo",
     "gf": 1,
     "ga": 1,
     "hg": 1,
@@ -1390,11 +1416,11 @@
     "id": 554833,
     "utc": "2026-04-05T22:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 1,
-    "ga": 0,
+    "home": true,
+    "oppId": 6684,
+    "oppName": "SC Internacional",
+    "gf": 0,
+    "ga": 1,
     "hg": 0,
     "ag": 1,
     "status": "FINISHED"
@@ -1416,9 +1442,9 @@
     "id": 554842,
     "utc": "2026-04-12T21:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
+    "home": true,
+    "oppId": 1769,
+    "oppName": "SE Palmeiras",
     "gf": 0,
     "ga": 0,
     "hg": 0,
@@ -1429,11 +1455,11 @@
     "id": 557134,
     "utc": "2026-04-16T00:30:00Z",
     "comp": "CLI",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 2,
+    "home": true,
+    "oppId": 4441,
+    "oppName": "Independiente Santa Fe",
+    "gf": 2,
+    "ga": 0,
     "hg": 2,
     "ag": 0,
     "status": "FINISHED"
@@ -1455,11 +1481,11 @@
     "id": 554865,
     "utc": "2026-04-26T19:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 1,
+    "home": true,
+    "oppId": 1780,
+    "oppName": "CR Vasco da Gama",
+    "gf": 1,
+    "ga": 0,
     "hg": 1,
     "ag": 0,
     "status": "FINISHED"
@@ -1468,11 +1494,11 @@
     "id": 557136,
     "utc": "2026-05-01T00:00:00Z",
     "comp": "CLI",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 2,
+    "home": true,
+    "oppId": 5184,
+    "oppName": "CA Peñarol",
+    "gf": 2,
+    "ga": 0,
     "hg": 2,
     "ag": 0,
     "status": "FINISHED"
@@ -1507,11 +1533,11 @@
     "id": 554882,
     "utc": "2026-05-10T21:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 3,
+    "home": true,
+    "oppId": 1776,
+    "oppName": "São Paulo FC",
+    "gf": 3,
+    "ga": 2,
     "hg": 3,
     "ag": 2,
     "status": "FINISHED"
@@ -1546,11 +1572,11 @@
     "id": 554900,
     "utc": "2026-05-24T21:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 1,
+    "home": true,
+    "oppId": 1766,
+    "oppName": "CA Mineiro",
+    "gf": 1,
+    "ga": 0,
     "hg": 1,
     "ag": 0,
     "status": "FINISHED"
@@ -1559,11 +1585,11 @@
     "id": 557142,
     "utc": "2026-05-28T00:30:00Z",
     "comp": "CLI",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 0,
+    "home": true,
+    "oppId": 7580,
+    "oppName": "CA Platense",
+    "gf": 0,
+    "ga": 2,
     "hg": 0,
     "ag": 2,
     "status": "FINISHED"
@@ -1585,11 +1611,11 @@
     "id": 554923,
     "utc": "2026-07-23T22:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 3,
+    "home": true,
+    "oppId": 4287,
+    "oppName": "Clube do Remo",
+    "gf": 3,
+    "ga": 0,
     "hg": 3,
     "ag": 0,
     "status": "FINISHED"
@@ -1611,9 +1637,9 @@
     "id": 554943,
     "utc": "2026-07-30T22:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
+    "home": true,
+    "oppId": 1768,
+    "oppName": "CA Paranaense",
     "gf": 0,
     "ga": 0,
     "hg": 0,
@@ -1650,11 +1676,11 @@
     "id": 554963,
     "utc": "2026-08-16T22:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 1,
+    "home": true,
+    "oppId": 1771,
+    "oppName": "Cruzeiro EC",
+    "gf": 1,
+    "ga": 2,
     "hg": 1,
     "ag": 2,
     "status": "FINISHED"
@@ -1663,11 +1689,11 @@
     "id": 564470,
     "utc": "2026-08-21T00:30:00Z",
     "comp": "CLI",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 0,
-    "ga": 1,
+    "home": true,
+    "oppId": 2070,
+    "oppName": "CA Rosario Central",
+    "gf": 1,
+    "ga": 0,
     "hg": 1,
     "ag": 0,
     "status": "FINISHED"
@@ -1689,11 +1715,11 @@
     "id": 554983,
     "utc": "2026-08-30T19:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 1,
-    "ga": 0,
+    "home": true,
+    "oppId": 6685,
+    "oppName": "Santos FC",
+    "gf": 0,
+    "ga": 1,
     "hg": 0,
     "ag": 1,
     "status": "FINISHED"
@@ -1702,11 +1728,11 @@
     "id": 554992,
     "utc": "2026-09-06T22:30:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 2,
-    "ga": 1,
+    "home": true,
+    "oppId": 1772,
+    "oppName": "Chapecoense AF",
+    "gf": 1,
+    "ga": 2,
     "hg": 1,
     "ag": 2,
     "status": "FINISHED"
@@ -1741,11 +1767,11 @@
     "id": 576249,
     "utc": "2026-09-17T00:30:00Z",
     "comp": "CLI",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 1,
-    "ga": 0,
+    "home": true,
+    "oppId": 2051,
+    "oppName": "Estudiantes de La Plata",
+    "gf": 0,
+    "ga": 1,
     "hg": 0,
     "ag": 1,
     "status": "FINISHED"
@@ -1754,11 +1780,11 @@
     "id": 555012,
     "utc": "2026-09-20T19:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
-    "gf": 3,
-    "ga": 1,
+    "home": true,
+    "oppId": 1765,
+    "oppName": "Fluminense FC",
+    "gf": 1,
+    "ga": 3,
     "hg": 1,
     "ag": 3,
     "status": "FINISHED"
@@ -1793,9 +1819,9 @@
     "id": 555044,
     "utc": "2026-10-19T23:00:00Z",
     "comp": "BSA",
-    "home": false,
-    "oppId": 1779,
-    "oppName": "SC Corinthians Paulista",
+    "home": true,
+    "oppId": 1782,
+    "oppName": "EC Vitória",
     "gf": 1,
     "ga": 1,
     "hg": 1,
@@ -1813,6 +1839,32 @@
     "ga": 3,
     "hg": 3,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555063,
+    "utc": "2026-10-30T23:00:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 4364,
+    "oppName": "Mirassol FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555078,
+    "utc": "2026-11-05T00:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1776,
+    "oppName": "São Paulo FC",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -3597,7 +3649,7 @@
   ]
  },
  "1770": {
-  "ts": 1793172964.898521,
+  "ts": 1794023143.579786,
   "name": "Botafogo FR",
   "matches": [
    {
@@ -4067,6 +4119,32 @@
     "hg": 3,
     "ag": 0,
     "status": "FINISHED"
+   },
+   {
+    "id": 555067,
+    "utc": "2026-10-29T00:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 4287,
+    "oppName": "Clube do Remo",
+    "gf": 1,
+    "ga": 2,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555071,
+    "utc": "2026-11-05T00:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1766,
+    "oppName": "CA Mineiro",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
    }
   ]
  },
@@ -4480,7 +4558,7 @@
   ]
  },
  "1771": {
-  "ts": 1793124172.407446,
+  "ts": 1794023191.032351,
   "name": "Cruzeiro EC",
   "matches": [
    {
@@ -5002,11 +5080,37 @@
     "hg": 1,
     "ag": 0,
     "status": "FINISHED"
+   },
+   {
+    "id": 555060,
+    "utc": "2026-10-29T22:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1766,
+    "oppName": "CA Mineiro",
+    "gf": 1,
+    "ga": 0,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555074,
+    "utc": "2026-11-06T00:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1777,
+    "oppName": "EC Bahia",
+    "gf": 3,
+    "ga": 2,
+    "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
    }
   ]
  },
  "1776": {
-  "ts": 1793123828.806506,
+  "ts": 1794023158.696619,
   "name": "São Paulo FC",
   "matches": [
    {
@@ -5423,6 +5527,32 @@
     "ga": 1,
     "hg": 1,
     "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555061,
+    "utc": "2026-10-29T00:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1777,
+    "oppName": "EC Bahia",
+    "gf": 2,
+    "ga": 3,
+    "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555078,
+    "utc": "2026-11-05T00:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1779,
+    "oppName": "SC Corinthians Paulista",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -6837,7 +6967,7 @@
   ]
  },
  "1766": {
-  "ts": 1793166606.073608,
+  "ts": 1794023151.251661,
   "name": "CA Mineiro",
   "matches": [
    {
@@ -7254,6 +7384,32 @@
     "ga": 3,
     "hg": 3,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555060,
+    "utc": "2026-10-29T22:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1771,
+    "oppName": "Cruzeiro EC",
+    "gf": 0,
+    "ga": 1,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555071,
+    "utc": "2026-11-05T00:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1770,
+    "oppName": "Botafogo FR",
+    "gf": 0,
+    "ga": 1,
+    "hg": 1,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -8259,7 +8415,7 @@
   ]
  },
  "1769": {
-  "ts": 1793172933.073532,
+  "ts": 1794023174.222738,
   "name": "SE Palmeiras",
   "matches": [
    {
@@ -8833,11 +8989,37 @@
     "hg": 2,
     "ag": 0,
     "status": "FINISHED"
+   },
+   {
+    "id": 555068,
+    "utc": "2026-10-28T22:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 6685,
+    "oppName": "Santos FC",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555077,
+    "utc": "2026-11-05T22:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 4287,
+    "oppName": "Clube do Remo",
+    "gf": 6,
+    "ga": 1,
+    "hg": 6,
+    "ag": 1,
+    "status": "FINISHED"
    }
   ]
  },
  "1777": {
-  "ts": 1793123821.385143,
+  "ts": 1794023198.597406,
   "name": "EC Bahia",
   "matches": [
    {
@@ -9280,6 +9462,32 @@
     "ga": 1,
     "hg": 1,
     "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555061,
+    "utc": "2026-10-29T00:30:00Z",
+    "comp": "BSA",
+    "home": true,
+    "oppId": 1776,
+    "oppName": "São Paulo FC",
+    "gf": 3,
+    "ga": 2,
+    "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 555074,
+    "utc": "2026-11-06T00:30:00Z",
+    "comp": "BSA",
+    "home": false,
+    "oppId": 1771,
+    "oppName": "Cruzeiro EC",
+    "gf": 2,
+    "ga": 3,
+    "hg": 3,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -13656,7 +13864,7 @@
   ]
  },
  "7": {
-  "ts": 1791514049.116042,
+  "ts": 1794023220.589207,
   "name": "Hamburger SV",
   "matches": [
    {
@@ -13708,6 +13916,71 @@
     "gf": 2,
     "ga": 1,
     "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565818,
+    "utc": "2026-10-10T13:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 2,
+    "oppName": "TSG 1899 Hoffenheim",
+    "gf": 3,
+    "ga": 2,
+    "hg": 2,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565822,
+    "utc": "2026-10-17T13:30:00Z",
+    "comp": "BL1",
+    "home": true,
+    "oppId": 10,
+    "oppName": "VfB Stuttgart",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565834,
+    "utc": "2026-10-24T13:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 29,
+    "oppName": "SC Paderborn 07",
+    "gf": 0,
+    "ga": 1,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565844,
+    "utc": "2026-11-01T16:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 19,
+    "oppName": "Eintracht Frankfurt",
+    "gf": 1,
+    "ga": 3,
+    "hg": 3,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565852,
+    "utc": "2026-11-06T19:30:00Z",
+    "comp": "BL1",
+    "home": true,
+    "oppId": 18,
+    "oppName": "Borussia Mönchengladbach",
+    "gf": 3,
+    "ga": 1,
+    "hg": 3,
     "ag": 1,
     "status": "FINISHED"
    }
@@ -20930,7 +21203,7 @@
   ]
  },
  "672": {
-  "ts": 1791585538.580226,
+  "ts": 1794023206.107873,
   "name": "Willem II Tilburg",
   "matches": [
    {
@@ -21021,6 +21294,71 @@
     "gf": 0,
     "ga": 1,
     "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558876,
+    "utc": "2026-10-11T10:15:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 676,
+    "oppName": "FC Utrecht",
+    "gf": 1,
+    "ga": 3,
+    "hg": 3,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558868,
+    "utc": "2026-10-17T19:00:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 6806,
+    "oppName": "Sparta Rotterdam",
+    "gf": 2,
+    "ga": 3,
+    "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558861,
+    "utc": "2026-10-24T16:45:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 1909,
+    "oppName": "SC Cambuur-Leeuwarden",
+    "gf": 1,
+    "ga": 6,
+    "hg": 1,
+    "ag": 6,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558853,
+    "utc": "2026-10-31T17:45:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 674,
+    "oppName": "PSV",
+    "gf": 0,
+    "ga": 7,
+    "hg": 7,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558845,
+    "utc": "2026-11-06T19:00:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 684,
+    "oppName": "PEC Zwolle",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
     "ag": 1,
     "status": "FINISHED"
    }
@@ -21791,7 +22129,7 @@
   ]
  },
  "684": {
-  "ts": 1791585598.465316,
+  "ts": 1794023213.3244,
   "name": "PEC Zwolle",
   "matches": [
    {
@@ -21883,6 +22221,71 @@
     "ga": 3,
     "hg": 3,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558874,
+    "utc": "2026-10-11T12:30:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 1909,
+    "oppName": "SC Cambuur-Leeuwarden",
+    "gf": 0,
+    "ga": 1,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558867,
+    "utc": "2026-10-18T10:15:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 718,
+    "oppName": "Go Ahead Eagles",
+    "gf": 4,
+    "ga": 1,
+    "hg": 4,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558862,
+    "utc": "2026-10-24T14:30:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 676,
+    "oppName": "FC Utrecht",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558849,
+    "utc": "2026-11-01T11:15:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 680,
+    "oppName": "ADO Den Haag",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558845,
+    "utc": "2026-11-06T19:00:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 672,
+    "oppName": "Willem II Tilburg",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -23259,7 +23662,7 @@
   ]
  },
  "18": {
-  "ts": 1791585723.372666,
+  "ts": 1794023228.663834,
   "name": "Borussia Mönchengladbach",
   "matches": [
    {
@@ -23312,6 +23715,71 @@
     "ga": 4,
     "hg": 3,
     "ag": 4,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565814,
+    "utc": "2026-10-11T13:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 1,
+    "oppName": "1. FC Köln",
+    "gf": 1,
+    "ga": 2,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565826,
+    "utc": "2026-10-18T15:30:00Z",
+    "comp": "BL1",
+    "home": true,
+    "oppId": 2,
+    "oppName": "TSG 1899 Hoffenheim",
+    "gf": 1,
+    "ga": 2,
+    "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565833,
+    "utc": "2026-10-23T18:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 10,
+    "oppName": "VfB Stuttgart",
+    "gf": 3,
+    "ga": 2,
+    "hg": 2,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565839,
+    "utc": "2026-10-31T14:30:00Z",
+    "comp": "BL1",
+    "home": true,
+    "oppId": 29,
+    "oppName": "SC Paderborn 07",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 565852,
+    "utc": "2026-11-06T19:30:00Z",
+    "comp": "BL1",
+    "home": false,
+    "oppId": 7,
+    "oppName": "Hamburger SV",
+    "gf": 1,
+    "ga": 3,
+    "hg": 3,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]

@@ -282,6 +282,11 @@ if [ "$_EXP_N" = "0" ]; then
   log "   今日暂无专家发文，回退抓最近一批（$_YDAY）"
   JC_EXPERT_DATE="$_YDAY" "$PY" fetch_expert.py || log "!! 回退批次抓取失败（保留上次数据），继续其余模块"
 fi
+# v1.7.127：用与当天抓取同源的结构化解析器重跑历史文章原文，
+# 修正理由截断/页脚噪音/比分漏提取；只补文本与依据，不改已结算的命中方向。
+log "==> 步骤1.8869 高手推荐·历史文章修复 (rebuild_expert_history.py)"
+set +e
+"$PY" rebuild_expert_history.py || log "!! 历史文章修复失败（保留上次归档），继续其余模块"
 set -e
 
 # ---------- 步骤1.887：模型 vs WhoScored 命中率 A/B 对比（独立分析，零耦合核心数据）----------
@@ -469,6 +474,14 @@ parts += filehash("basketball_ai_accuracy.json")
 # 页面却不更新；归档是跨轮累积的持久档案，单独计入指纹。
 parts += filehash("vzhan_history.json")
 parts += filehash("vzhan_data.json")
+# v1.7.127：高手推荐文章内容/历史归档变化也要触发上线（此前完全没进指纹，
+# 专家文章修好了页面却可能因「数据无变化」被判定跳过部署）。
+parts += filehash("expert_recommendations.json")
+parts += filehash("expert_history.json")
+parts += filehash("expert_stats.json")
+parts += filehash("expert_content.py")
+parts += filehash("fetch_expert.py")
+parts += filehash("rebuild_expert_history.py")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")

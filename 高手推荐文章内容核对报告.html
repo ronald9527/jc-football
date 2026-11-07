@@ -1,0 +1,78 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>高手推荐文章内容逐篇核对报告 · v1.7.127</title>
+<style>
+:root{--bg:#0d1117;--pn:#161b22;--pn2:#1c2430;--bd:#30363d;--tx:#e6edf3;--sub:#8b949e;--ac:#58a6ff;--good:#3fb950;--warn:#d29922;--bad:#f85149}
+*{box-sizing:border-box}body{margin:0;padding:16px;background:var(--bg);color:var(--tx);font:14px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:26px 0 10px;padding-left:9px;border-left:3px solid var(--ac)}
+.sub{color:var(--sub);font-size:12px;margin-bottom:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin:14px 0}
+.kpi{background:var(--pn);border:1px solid var(--bd);border-radius:9px;padding:11px}
+.kpi b{display:block;font-size:21px;color:var(--ac)}.kpi span{font-size:11px;color:var(--sub)}
+.box{background:var(--pn);border:1px solid var(--bd);border-radius:9px;padding:12px;margin:10px 0;font-size:12.5px}
+.box.warn{border-color:rgba(210,153,34,.45);background:rgba(210,153,34,.08)}
+.box.good{border-color:rgba(63,185,80,.4);background:rgba(63,185,80,.07)}
+table{width:100%;border-collapse:collapse;font-size:11.5px;background:var(--pn);border-radius:8px;overflow:hidden}
+th,td{padding:7px 8px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th{background:var(--pn2);color:var(--sub);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:none}.dir{color:var(--ac)}.ev{color:var(--sub);max-width:250px}
+s{color:var(--bad);opacity:.85}.nodir td{color:var(--warn)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+code{background:var(--pn2);padding:1px 5px;border-radius:4px;color:var(--ac);font-size:11px}
+ul{margin:6px 0 0 18px;padding:0}li{margin:3px 0}
+footer{margin-top:26px;color:var(--sub);font-size:11px;border-top:1px solid var(--bd);padding-top:10px}
+</style></head><body>
+<h1>高手推荐 · 文章内容逐篇核对报告</h1>
+<div class="sub">批次 2026-11-07（周六）· 数据源 92玩球 92wq.com · 生成版本 v1.7.127 · 每条推荐均附原文结论与比分原句，可点「查看原文」回溯</div>
+<div class="kpis">
+<div class="kpi"><b>23</b><span>当天抓取文章（有效）</span></div>
+<div class="kpi"><b>11</b><span>进入今日推荐</span></div>
+<div class="kpi"><b>23/23</b><span>逐篇回归 PASS</span></div>
+<div class="kpi"><b>0 / 0</b><span>自检 ERROR / WARN</span></div>
+<div class="kpi"><b>14/14</b><span>页面 UI 回归 PASS</span></div>
+</div>
+
+<h2>一、先查清的根因</h2>
+<div class="box warn">旧解析器在「比分建议」段落里用正则抓<b>第一个裸方向词</b>，把描述赔率的「<b>客胜偏高</b>」当成作者结论。
+结果原文写着「<b>本场比赛看好欧塞尔不败</b>」，页面却推「<b>客胜</b>」——方向完全相反。
+同一段里「比分建议 1：1、2：1」只取到 2:1（1:1 因前 20 字出现「历史交锋」被误杀），
+理由开头「场比赛」缺字、战绩残留 <code>&amp;nbsp;</code> 且断在「（SP17」。</div>
+<div class="box">此外还查出：4 篇「正文需登录可见」的空壳文章混进文章流显示「未知专家」；
+作者「二串一」文章里的第二场（葡超）被文章级「西甲」联赛核对误删；
+刘建宏那篇全文只有一句模糊「总结：某队更有办法」，却被硬猜成「客胜」。</div>
+
+<h2>二、这次怎么改（不再出错的机制）</h2>
+<div class="box good"><ul>
+<li><b>方向只认结论句</b>：明确推荐标记句（推荐/观点/方向/竞彩建议…）与结论动词句（看好 X 不败、支持 X 带走 3 分、大胜、博客胜…），逐句从后往前判定；赔率描述（偏高/给到/开出/让步力度）、历史战绩（上轮大胜/10 轮不败）、比分建议句里的「建议/看好」一律不算结论。</li>
+<li><b>无明确方向就不产推荐</b>：宁缺勿错，页面如实写「该文未给出明确胜平负方向」。</li>
+<li><b>比分从比分标记句取全部候选</b>：比分参考/建议/观点/内容：，不再误杀 1:1；结论句里直接写比分（罗马大胜，2-0，3-1）也能兜底。</li>
+<li><b>每条推荐带 directionEvidence / scoreEvidence</b>：页面可逐条看到「原文结论」与「比分原句」，自检脚本离线复算两者是否真在正文里。</li>
+<li><b>正文统一清洗</b>：页脚广告、其它文章导流行、HTML 实体；理由取完整句并去重，战绩只收战绩句不再截断半句。</li>
+<li><b>空壳文章排除</b>：清洗后无正文的直接不入文章流；多场文章按场次独立解析、不再拿文章级联赛误过滤。</li>
+</ul></div>
+
+<h2>三、逐篇核对表（23 篇 / 23 条推荐）</h2>
+<div class="scroll"><table><thead><tr><th>文章 ID</th><th>专家</th><th>对阵</th><th>方向</th><th>比分</th><th>原文结论依据</th><th>校验</th></tr></thead>
+<tbody><tr><td>view-329496.htm</td><td>张晓彬</td><td>罗马 vs 萨索洛</td><td><b class='dir'>主胜</b></td><td>比分2比0、3比1</td><td class='ev'>罗马大胜，2-0，3-1。</td><td>通过</td></tr><tr><td>view-329452.htm</td><td>冒险王</td><td>欧塞尔 vs 巴黎FC</td><td><b class='dir'>主胜/平局</b></td><td>比分1比1、2比1</td><td class='ev'>本场比赛看好欧塞尔不败。</td><td>通过</td></tr><tr><td>view-329480.htm</td><td>张磊</td><td>阿尔维卡 vs 卡萨皮亚</td><td><b class='dir'>主胜</b></td><td>比分2比0</td><td class='ev'>关注方向：3</td><td>通过</td></tr><tr><td>view-329463.htm</td><td>史密斯</td><td>奥萨苏纳 vs 毕尔巴鄂</td><td><b class='dir'>客胜</b></td><td>比分1比2、1比3</td><td class='ev'>推荐：竞彩客胜</td><td>通过</td></tr><tr><td>view-329463.htm</td><td>史密斯</td><td>阿尔韦卡 vs 卡萨皮亚</td><td><b class='dir'>主胜</b></td><td>比分2比0、1比0</td><td class='ev'>推荐：竞彩主胜</td><td>通过</td></tr><tr><td>view-329482.htm</td><td>杨震</td><td>奥萨苏纳 vs 毕尔巴鄂</td><td><b class='dir'>客胜</b></td><td>—</td><td class='ev'>本场对决，支持毕尔巴鄂作客带走3分。</td><td>通过</td></tr><tr><td>view-329484.htm</td><td>彭雷</td><td>斯图加特 vs 不来梅</td><td><b class='dir'>让负</b></td><td>比分2比2、2比3</td><td class='ev'>让负，比分2比2和2比3。</td><td>通过</td></tr><tr><td>view-329490.htm</td><td>阿莲</td><td>斯图加特 vs 不来梅</td><td><b class='dir'>主胜</b></td><td>比分2比0、2比1</td><td class='ev'>竞彩数据给出斯图加特让步，而且给出了两档低位的支持力度，并没有顾忌不莱梅状态和排名优势，可见对双方实力还是有所甄别，本场比赛期待斯图加特主场有好的表现，推荐胜，比分推荐2-0或者2-1。</td><td>通过</td></tr><tr><td>view-329497.htm</td><td>宋昭毅</td><td>诺丁汉 vs 曼城</td><td><b class='dir'>客胜</b></td><td>比分0比2、1比2</td><td class='ev'>这场曼城实力占优，取胜的希望更大，看好曼城客场取胜找回状态。</td><td>通过</td></tr><tr><td>view-329506.htm</td><td>范德彪</td><td>斯图加特 vs 不来梅</td><td><b class='dir'>让负</b></td><td>比分1比1、1比2</td><td class='ev'>斯图加特让球负</td><td>通过</td></tr><tr><td>view-329507.htm</td><td>中.誉</td><td>斯图加特 vs 不来梅</td><td><b class='dir'>客胜</b></td><td>—</td><td class='ev'>双方对攻战，我直接博客胜。</td><td>通过</td></tr><tr><td>view-329481.htm</td><td>罗辑</td><td>帕尔马 vs 博洛尼亚</td><td><b class='dir'>让胜</b></td><td>比分0比0、1比1</td><td class='ev'>帕尔马让胜</td><td>通过</td></tr><tr><td>view-329483.htm</td><td>布海东</td><td>帕尔马 vs 博洛尼亚</td><td><b class='dir'>客胜</b></td><td>比分0比2、1比2</td><td class='ev'>个人观点：负</td><td>通过</td></tr><tr><td>view-329461.htm</td><td>工体博哥</td><td>西班牙人 vs 拉科</td><td><b class='dir'>客胜/平局</b></td><td>—</td><td class='ev'>西班牙人主场不败金身面临真正考验，拉科鲁尼亚客场守住不败是更值得信赖的方向。</td><td>通过</td></tr><tr><td>view-329462.htm</td><td>航哥</td><td>西班牙人 vs 拉科</td><td><b class='dir'>让负</b></td><td>比分2比2、1比2</td><td class='ev'>我的观点：让负</td><td>通过</td></tr><tr class='nodir'><td>view-329489.htm</td><td>刘建宏</td><td>帕德博恩 vs 法兰克福</td><td colspan='3'>该文未给出明确胜平负方向 — 仅作分析参考，不计入推荐与命中统计</td><td>帕德博恩最近两轮联赛都没丢球，上轮在客场0比0战平门兴，防线退回禁区附近时能够保持紧凑。球队在主场也会主动上抢，拿到球后常从两翼送球，找蒂格</td></tr><tr><td>view-329476.htm</td><td>晓哥看球</td><td>马拉加 vs 桑坦德</td><td><b class='dir'>主胜</b></td><td>比分2比1、2比0</td><td class='ev'>观点：胜（马拉加取胜）</td><td>通过</td></tr><tr><td>view-329485.htm</td><td>绿茵七号位</td><td>马拉加 vs 桑坦德</td><td><b class='dir'>让负</b></td><td>比分1比3、2比3</td><td class='ev'>竞足单选：让负</td><td>通过</td></tr><tr><td>view-329493.htm</td><td>秦游夏</td><td>马拉加 vs 桑坦德</td><td><b class='dir'>客胜/平局</b></td><td>比分1比1、1比2</td><td class='ev'>本场看好客队不败。</td><td>通过</td></tr><tr><td>view-329465.htm</td><td>敬真</td><td>朴次茅斯 vs 斯托克城</td><td><b class='dir'>让负</b></td><td>比分1比1、1比2</td><td class='ev'>方向：让球负</td><td>通过</td></tr><tr><td>view-329478.htm</td><td>徐弋</td><td>朴次茅斯 vs 斯托克城</td><td><b class='dir'>客胜/平局</b></td><td>比分1比1、2比2、1比2</td><td class='ev'>综合双方状态、人员和战术特点，本场支持斯托克城客场至少拿到一分。</td><td>通过</td></tr><tr><td>view-329464.htm</td><td>张羽鸿</td><td>珀斯 vs 纽喷气机</td><td><b class='dir'>客胜</b></td><td>比分2比2、1比2</td><td class='ev'>推荐： 纽喷</td><td>通过</td></tr><tr><td>view-329475.htm</td><td>蒋娴</td><td>金泉尚武 vs 安养FC</td><td><b class='dir'>让负</b></td><td>比分1比1、1比2</td><td class='ev'>竞彩建议：让球负</td><td>通过</td></tr><tr><td>view-329479.htm</td><td>晓哥看球</td><td>金泉尚武 vs 安养FC</td><td><b class='dir'>让负</b></td><td>比分1比1、1比2</td><td class='ev'>观点：让负（安养FC不败）</td><td>通过</td></tr></tbody></table></div>
+<div class="sub">注：无方向行的「校验」列显示正文摘要；「通过」= 方向依据在正文中、比分与原句一致、理由/战绩无页脚噪音与 HTML 实体。</div>
+
+<h2>四、旧版 → 修正 对照（逐篇人工核过原文）</h2>
+<div class="scroll"><table><thead><tr><th>专家</th><th>对阵</th><th>旧方向</th><th>修正后</th><th>比分</th><th>原文结论</th><th>错在哪</th></tr></thead>
+<tbody><tr><td>冒险王</td><td>欧塞尔 vs 巴黎FC</td><td><s>客胜</s></td><td><b class='dir'>主胜/平局</b></td><td><s>比分2比1</s> → 比分1比1、2比1</td><td class='ev'>本场比赛看好欧塞尔不败。比分建议1：1、2：1。</td><td>旧版把赔率描述「客胜偏高」当成结论，方向与原文完全相反；比分漏掉 1:1</td></tr><tr><td>彭雷</td><td>斯图加特 vs 不来梅</td><td><s>主胜</s></td><td><b class='dir'>让负</b></td><td><s>比分2比2、2比3</s> → 比分2比2、2比3</td><td class='ev'>让负，比分2比2和2比3。</td><td>旧版抓「主胜热门，我们去客队？」里的主胜，漏掉作者独立写的「让负」</td></tr><tr><td>张晓彬</td><td>罗马 vs 萨索洛</td><td><s>主胜/平局</s></td><td><b class='dir'>主胜</b></td><td><s>比分2比0、3比1</s> → 比分2比0、3比1</td><td class='ev'>罗马大胜，2-0，3-1。</td><td>旧版被正文「罗马10轮不败」带偏成不败双选；原文结论是「大胜」</td></tr><tr><td>罗辑</td><td>帕尔马 vs 博洛尼亚</td><td><s>客胜</s></td><td><b class='dir'>让胜</b></td><td><s>比分0比0、1比1</s> → 比分0比0、1比1</td><td class='ev'>帕尔马 让胜 ／ 比分 0比0 1比1</td><td>旧版把赔率句「本场客胜给到1.65」当结论；作者实际给的是让球玩法</td></tr><tr><td>徐弋</td><td>朴次茅斯 vs 斯托克城</td><td><s>客胜</s></td><td><b class='dir'>客胜/平局</b></td><td><s>比分1比1、2比2、1比2</s> → 比分1比1、2比2、1比2</td><td class='ev'>本场支持斯托克城客场至少拿到一分。</td><td>「至少拿到一分」是不败双选，旧版压成单选客胜</td></tr><tr><td>刘建宏</td><td>帕德博恩 vs 法兰克福</td><td><s>客胜</s></td><td><b class='dir'>不产出推荐</b></td><td><s>（无）</s> → （无）</td><td class='ev'>总结：整体而言，法兰克福更有办法把抢下来的球变成得分机会…</td><td>全文无明确胜平负/让球方向词，旧版硬猜；现在如实标注「未给出明确方向」</td></tr><tr><td>史密斯</td><td>奥萨苏纳 vs 毕尔巴鄂（二串一）</td><td><s>第二场被误过滤</s></td><td><b class='dir'>两场都入库</b></td><td><s>—</s> → —</td><td class='ev'>推荐：竞彩客胜／推荐：竞彩主胜（第二场 阿尔韦卡 vs 卡萨皮亚）</td><td>多场文章第二场是葡超，旧版拿文章级「西甲」核对联赛把它删了</td></tr></tbody></table></div>
+
+<h2>五、历史归档：只修文本，不偷改命中</h2>
+<div class="box">用同一套解析器重跑 47 篇历史原文：修正 <b>21 条</b>半截/带噪音的理由，页脚噪音残留 <b>0 条</b>。
+以下 <b>3 条</b>「当时标注与原文方向不一致」<b>只标注存疑 + 附原文依据</b>，保留原 recommend / hit / result，
+保证历史命中统计可追溯，绝不事后改方向把战绩「修好看」。</div>
+<div class="scroll"><table><thead><tr><th>日期</th><th>编号</th><th>对阵</th><th>当时标注</th><th>原文解析</th><th>原文依据</th></tr></thead>
+<tbody><tr><td>2026-10-27</td><td>周二008</td><td>科隆 vs 柏林联合</td><td>客胜</td><td>让负</td><td class='ev'>竞彩建议：让球负</td></tr><tr><td>2026-10-30</td><td>周五004</td><td>勒阿弗尔 vs 巴黎圣日尔曼</td><td>客胜</td><td>让负</td><td class='ev'>个人观点：让球负</td></tr><tr><td>2026-11-06</td><td>周五011</td><td>德比郡 vs 博尔顿</td><td>主胜</td><td>客胜/平局</td><td class='ev'>本场比赛看好博尔顿不败。</td></tr></tbody></table></div>
+
+<h2>六、上线验证</h2>
+<div class="box good"><ul>
+<li><code>test_expert_content.py</code> 23 篇源站原文逐篇断言（方向 / 比分 / 队名 / 理由清洗 / 战绩）：<b>PASS 23 / FAIL 0</b></li>
+<li><code>selftest.py</code> 新增逐条复算（依据句在正文、比分与原句一致、方向合法、批次隔离、流水线接线）：<b>ERROR 0 / WARN 0</b></li>
+<li>页面 UI 回归：<b>PASS 14 / FAIL 0</b>；node --check / py_compile / bash -n 全过</li>
+<li>流水线 1.8868 → 1.8869（历史修复）→ 2.6 自检门禁；部署指纹纳入 expert 三件套与解析脚本，内容改动必定触发上线</li>
+</ul></div>
+<footer>本报告由 gen_expert_check_report.py 基于 expert_recommendations.json / expert_history.json 生成，可离线查看。数据仅供参考，不构成投注建议。</footer>
+</body></html>
