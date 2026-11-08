@@ -8147,9 +8147,59 @@
     "outcome": "客胜",
     "tip": "比分可信度高，可跟注比分 1:2"
    }
+  },
+  "1985905": {
+   "id": "1985905",
+   "date": "2026-11-05",
+   "league": "比甲",
+   "home": "Kortrijk",
+   "away": "KV Mechelen",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 3,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": null,
+   "preConf": {
+    "dir": 43.7,
+    "exact": 8.2,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 1,
+    "teamN": 0,
+    "sample": 1,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1995460": {
+   "id": "1995460",
+   "date": "2026-11-07",
+   "league": "德甲",
+   "home": "Borussia Dortmund",
+   "away": "Elversberg",
+   "predH": 3,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": false,
+   "outcomeHit": true,
+   "jcNum": "周六013",
+   "preConf": {
+    "dir": 39.1,
+    "exact": 7.0,
+    "dirLevel": "low",
+    "exactLevel": "low",
+    "leagueN": 18,
+    "teamN": 7,
+    "sample": 25,
+    "outcome": "主胜",
+    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
+   }
   }
  },
- "updatedAt": "2026-11-07 11:50:24",
+ "updatedAt": "2026-11-08 16:58:38",
  "pending": {
   "1999682": {
    "date": "2026-10-31",
@@ -8189,46 +8239,6 @@
     "sample": 32,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 3:1 可作小注参考"
-   }
-  },
-  "1985905": {
-   "date": "2026-11-05",
-   "league": "比甲",
-   "home": "Kortrijk",
-   "away": "KV Mechelen",
-   "jcNum": null,
-   "predH": 1,
-   "predA": 2,
-   "conf": {
-    "dir": 43.7,
-    "exact": 8.2,
-    "dirLevel": "mid",
-    "exactLevel": "mid",
-    "leagueN": 1,
-    "teamN": 0,
-    "sample": 1,
-    "outcome": "客胜",
-    "tip": "比分中等可信，比分 1:2 可作小注参考"
-   }
-  },
-  "1995460": {
-   "date": "2026-11-07",
-   "league": "德甲",
-   "home": "Borussia Dortmund",
-   "away": "Elversberg",
-   "jcNum": "周六013",
-   "predH": 3,
-   "predA": 1,
-   "conf": {
-    "dir": 39.1,
-    "exact": 7.0,
-    "dirLevel": "low",
-    "exactLevel": "low",
-    "leagueN": 18,
-    "teamN": 7,
-    "sample": 25,
-    "outcome": "主胜",
-    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
    }
   },
   "1995461": {
@@ -8289,6 +8299,26 @@
     "sample": 20,
     "outcome": "客胜",
     "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1995464": {
+   "date": "2026-11-09",
+   "league": "德甲",
+   "home": "Hoffenheim",
+   "away": "Schalke 04",
+   "jcNum": "周日027",
+   "predH": 2,
+   "predA": 1,
+   "conf": {
+    "dir": 38.7,
+    "exact": 8.5,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 18,
+    "teamN": 5,
+    "sample": 23,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
    }
   }
  }

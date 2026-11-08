@@ -2180,7 +2180,7 @@
       "num": "周日007",
       "league": "西甲",
       "home": "埃尔切",
-      "away": "皇家贝蒂斯",
+      "away": "贝蒂斯",
       "kickoff": "2026-11-08 21:00",
       "date": "2026-11-08",
       "recommend": "客胜",
@@ -2199,7 +2199,7 @@
       "actualScore": null,
       "isExpert": true,
       "expertStats": {
-        "total": 8,
+        "total": 9,
         "judged": 5,
         "hits": 1,
         "miss": 4,
@@ -2214,9 +2214,9 @@
     },
     {
       "num": "周日008",
-      "league": "芬超",
+      "league": "芬兰超级联赛",
       "home": "库奥皮奥",
-      "away": "国际图尔库",
+      "away": "国际图尔",
       "kickoff": "2026-11-08 21:00",
       "date": "2026-11-08",
       "recommend": "让胜",
@@ -2287,7 +2287,7 @@
     {
       "num": "周日012",
       "league": "英超",
-      "home": "伊普斯维奇",
+      "home": "伊普斯",
       "away": "伯恩茅斯",
       "kickoff": "2026-11-08 22:00",
       "date": "2026-11-08",
@@ -2317,8 +2317,7 @@
         "isNew": true
       },
       "otherExperts": [],
-      "expertCount": 1,
-      "contentRebuilt": true
+      "expertCount": 1
     },
     {
       "num": "周日013",
@@ -2409,14 +2408,25 @@
         "streak": 0,
         "isNew": false
       },
-      "otherExperts": [],
-      "expertCount": 1,
+      "otherExperts": [
+        {
+          "expertName": "晓哥看球",
+          "recommend": "主胜",
+          "scorePred": "比分2比1、3比1",
+          "reason": "观点：胜（皇家社会取胜） 内容：2-1 3-1",
+          "sourceUrl": "https://www.92wq.com/view-329618.htm",
+          "hitRate": 20.0,
+          "judged": 5,
+          "isNew": false
+        }
+      ],
+      "expertCount": 2,
       "contentRebuilt": true
     },
     {
       "num": "周日018",
       "league": "瑞超",
-      "home": "AIK索尔纳",
+      "home": "索尔纳",
       "away": "赫根",
       "kickoff": "2026-11-08 23:30",
       "date": "2026-11-08",
@@ -2452,7 +2462,7 @@
     {
       "num": "周日019",
       "league": "荷甲",
-      "home": "阿尔克马尔",
+      "home": "阿尔克马",
       "away": "格罗宁根",
       "kickoff": "2026-11-08 23:45",
       "date": "2026-11-08",
@@ -2476,89 +2486,6 @@
         "judged": 6,
         "hits": 0,
         "miss": 6,
-        "hitRate": 0.0,
-        "recent10Rate": 0.0,
-        "streak": 0,
-        "isNew": false
-      },
-      "otherExperts": [],
-      "expertCount": 1,
-      "contentRebuilt": true
-    },
-    {
-      "num": "周日028",
-      "league": "意甲",
-      "home": "佛罗伦萨",
-      "away": "尤文图斯",
-      "kickoff": "2026-11-09 03:45",
-      "date": "2026-11-08",
-      "recommend": "主胜/平局",
-      "recommendKey": "h,d",
-      "odds": "-",
-      "confidence": 78,
-      "expertName": "工体博哥",
-      "source": "92玩球",
-      "sourceUrl": "https://www.92wq.com/view-329570.htm",
-      "trackRecord": "昨天英冠再次拿下2场达到7连红！ 今天法甲和瑞超追连红，早场澳超9中7！",
-      "reason": "尤文残阵加上体能劣势，佛罗伦萨在主场打破长期不胜魔咒的动力足以支撑他们至少拿到一分，佛罗伦萨主场不败是稳妥方向。",
-      "scorePred": "",
-      "directionEvidence": "尤文残阵加上体能劣势，佛罗伦萨在主场打破长期不胜魔咒的动力足以支撑他们至少拿到一分，佛罗伦萨主场不败是稳妥方向。",
-      "scoreEvidence": "",
-      "hit": null,
-      "actualScore": null,
-      "isExpert": true,
-      "expertStats": {
-        "total": 4,
-        "judged": 3,
-        "hits": 2,
-        "miss": 1,
-        "hitRate": 66.7,
-        "recent10Rate": 66.7,
-        "streak": 2,
-        "isNew": false
-      },
-      "otherExperts": [
-        {
-          "expertName": "冒险王",
-          "recommend": "主胜/平局",
-          "scorePred": "比分1比1、2比1",
-          "reason": "本场比赛看好佛罗伦萨不败。 比分建议1：1、2：1。",
-          "sourceUrl": "https://www.92wq.com/view-329571.htm",
-          "hitRate": 66.7,
-          "judged": 3,
-          "isNew": false
-        }
-      ],
-      "expertCount": 2,
-      "contentRebuilt": true
-    },
-    {
-      "num": "周日030",
-      "league": "西甲",
-      "home": "马德里竞技",
-      "away": "巴塞罗那",
-      "kickoff": "2026-11-09 04:00",
-      "date": "2026-11-08",
-      "recommend": "让胜",
-      "recommendKey": "hh",
-      "odds": "-",
-      "confidence": 78,
-      "expertName": "张磊",
-      "source": "92玩球",
-      "sourceUrl": "https://www.92wq.com/view-329596.htm",
-      "trackRecord": "",
-      "reason": "关注方向：让球3 比分参考：3-2",
-      "scorePred": "比分3比2",
-      "directionEvidence": "关注方向：让球3",
-      "scoreEvidence": "比分参考：3-2",
-      "hit": null,
-      "actualScore": null,
-      "isExpert": true,
-      "expertStats": {
-        "total": 5,
-        "judged": 3,
-        "hits": 0,
-        "miss": 3,
         "hitRate": 0.0,
         "recent10Rate": 0.0,
         "streak": 0,

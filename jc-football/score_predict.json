@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-08 16:56:58",
+ "updatedAt": "2026-11-08 19:07:21",
  "source": "football-data.org + 独立 Poisson 模型",
  "isolation": true,
  "note": "独立数据源：football-data.org 赛程/赛果 + 自建透明 Poisson 比分模型；与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。足球数据未覆盖的联赛（亚冠/德国杯/瑞超等）用竞彩赔率隐含 Poisson 兜底，保证每天全部竞彩比赛都有自建比分预测。",
@@ -40323,13 +40323,13 @@
     "away": "全北现代",
     "predH": 1,
     "predA": 2,
-    "actH": null,
-    "actA": null,
+    "actH": 3,
+    "actA": 2,
     "predOutcome": "A",
-    "actOutcome": null,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "actOutcome": "H",
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.0
    },
    {
     "id": "2042614",
