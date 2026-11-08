@@ -8197,9 +8197,34 @@
     "outcome": "主胜",
     "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
    }
+  },
+  "1982532": {
+   "id": "1982532",
+   "date": "2026-11-08",
+   "league": "荷甲",
+   "home": "Twente",
+   "away": "Ajax",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日009",
+   "preConf": {
+    "dir": 44.7,
+    "exact": 7.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 2,
+    "sample": 16,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 2:2 可作小注参考"
+   }
   }
  },
- "updatedAt": "2026-11-08 16:58:38",
+ "updatedAt": "2026-11-09 01:32:51",
  "pending": {
   "1999682": {
    "date": "2026-10-31",
@@ -8250,35 +8275,15 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 40.0,
-    "exact": 7.2,
-    "dirLevel": "low",
-    "exactLevel": "low",
-    "leagueN": 18,
-    "teamN": 5,
-    "sample": 23,
-    "outcome": "客胜",
-    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
-   }
-  },
-  "1982532": {
-   "date": "2026-11-08",
-   "league": "荷甲",
-   "home": "Twente",
-   "away": "Ajax",
-   "jcNum": "周日009",
-   "predH": 2,
-   "predA": 2,
-   "conf": {
-    "dir": 44.7,
-    "exact": 7.9,
+    "dir": 41.0,
+    "exact": 7.0,
     "dirLevel": "mid",
-    "exactLevel": "mid",
-    "leagueN": 14,
-    "teamN": 2,
-    "sample": 16,
-    "outcome": "平局",
-    "tip": "比分中等可信，比分 2:2 可作小注参考"
+    "exactLevel": "low",
+    "leagueN": 19,
+    "teamN": 5,
+    "sample": 24,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
   },
   "1984140": {
@@ -8290,8 +8295,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 37.6,
-    "exact": 9.2,
+    "dir": 37.7,
+    "exact": 9.1,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -8310,13 +8315,13 @@
    "predH": 2,
    "predA": 1,
    "conf": {
-    "dir": 38.7,
-    "exact": 8.5,
+    "dir": 39.6,
+    "exact": 8.4,
     "dirLevel": "low",
     "exactLevel": "mid",
-    "leagueN": 18,
+    "leagueN": 19,
     "teamN": 5,
-    "sample": 23,
+    "sample": 24,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:1 可作小注参考"
    }

@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-08 08:56:59",
+ "updatedAt": "2026-11-08 17:31:34",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
  "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
@@ -499,8 +499,8 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 37.6,
-    "exact": 9.2,
+    "dir": 37.7,
+    "exact": 9.1,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -674,13 +674,13 @@
    "predA": 1,
    "evaluated": false,
    "conf": {
-    "dir": 38.7,
-    "exact": 8.5,
+    "dir": 39.6,
+    "exact": 8.4,
     "dirLevel": "low",
     "exactLevel": "mid",
-    "leagueN": 18,
+    "leagueN": 19,
     "teamN": 5,
-    "sample": 23,
+    "sample": 24,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:1 可作小注参考"
    }
@@ -2520,15 +2520,15 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 40.0,
-    "exact": 7.2,
-    "dirLevel": "low",
+    "dir": 41.0,
+    "exact": 7.0,
+    "dirLevel": "mid",
     "exactLevel": "low",
-    "leagueN": 18,
+    "leagueN": 19,
     "teamN": 5,
-    "sample": 23,
+    "sample": 24,
     "outcome": "客胜",
-    "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 客胜）"
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
   },
   {
@@ -16016,6 +16016,31 @@
  ],
  "history": [
   {
+   "id": "1982532",
+   "date": "2026-11-08",
+   "league": "荷甲",
+   "home": "Twente",
+   "away": "Ajax",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日009",
+   "preConf": {
+    "dir": 44.7,
+    "exact": 7.9,
+    "dirLevel": "mid",
+    "exactLevel": "mid",
+    "leagueN": 14,
+    "teamN": 2,
+    "sample": 16,
+    "outcome": "平局",
+    "tip": "比分中等可信，比分 2:2 可作小注参考"
+   }
+  },
+  {
    "id": "1995460",
    "date": "2026-11-07",
    "league": "德甲",
@@ -24215,6 +24240,7 @@
   }
  ],
  "historyDateList": [
+  "2026-11-08",
   "2026-11-07",
   "2026-11-05",
   "2026-11-03",
@@ -24242,9 +24268,9 @@
  ],
  "reliable": {
   "overall": {
-   "n": 432,
-   "exactHit": 8.3,
-   "outcomeHit": 42.8
+   "n": 433,
+   "exactHit": 8.5,
+   "outcomeHit": 43.0
   },
   "leagues": [
    {
@@ -24270,6 +24296,12 @@
     "n": 7,
     "exactHit": 14.3,
     "outcomeHit": 42.9
+   },
+   {
+    "league": "荷甲",
+    "n": 15,
+    "exactHit": 13.3,
+    "outcomeHit": 53.3
    },
    {
     "league": "土超",
@@ -24312,12 +24344,6 @@
     "n": 26,
     "exactHit": 7.7,
     "outcomeHit": 53.8
-   },
-   {
-    "league": "荷甲",
-    "n": 14,
-    "exactHit": 7.1,
-    "outcomeHit": 50.0
    },
    {
     "league": "德甲",
@@ -24473,8 +24499,8 @@
    }
   ],
   "baseline": {
-   "dir": 42.8,
-   "exact": 8.3
+   "dir": 43.0,
+   "exact": 8.5
   }
  }
 }
