@@ -4558,7 +4558,7 @@
   ]
  },
  "1771": {
-  "ts": 1794023191.032351,
+  "ts": 1794128121.56582,
   "name": "Cruzeiro EC",
   "matches": [
    {
@@ -9019,7 +9019,7 @@
   ]
  },
  "1777": {
-  "ts": 1794023198.597406,
+  "ts": 1794128129.59678,
   "name": "EC Bahia",
   "matches": [
    {
@@ -13864,7 +13864,7 @@
   ]
  },
  "7": {
-  "ts": 1794023220.589207,
+  "ts": 1794128153.259721,
   "name": "Hamburger SV",
   "matches": [
    {
@@ -19585,7 +19585,7 @@
   ]
  },
  "511": {
-  "ts": 1793103421.840843,
+  "ts": 1794128180.343906,
   "name": "Toulouse FC",
   "matches": [
    {
@@ -19690,6 +19690,32 @@
     "ga": 0,
     "hg": 0,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 559645,
+    "utc": "2026-11-01T19:45:00Z",
+    "comp": "FL1",
+    "home": false,
+    "oppId": 516,
+    "oppName": "Olympique de Marseille",
+    "gf": 0,
+    "ga": 2,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 559638,
+    "utc": "2026-11-06T19:45:00Z",
+    "comp": "FL1",
+    "home": true,
+    "oppId": 576,
+    "oppName": "RC Strasbourg Alsace",
+    "gf": 3,
+    "ga": 1,
+    "hg": 3,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -21203,7 +21229,7 @@
   ]
  },
  "672": {
-  "ts": 1794023206.107873,
+  "ts": 1794128137.186415,
   "name": "Willem II Tilburg",
   "matches": [
    {
@@ -22129,7 +22155,7 @@
   ]
  },
  "684": {
-  "ts": 1794023213.3244,
+  "ts": 1794128144.768103,
   "name": "PEC Zwolle",
   "matches": [
    {
@@ -23248,7 +23274,7 @@
   ]
  },
  "576": {
-  "ts": 1793103532.052046,
+  "ts": 1794128188.389828,
   "name": "RC Strasbourg Alsace",
   "matches": [
    {
@@ -23353,6 +23379,32 @@
     "ga": 3,
     "hg": 3,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 559647,
+    "utc": "2026-11-01T14:00:00Z",
+    "comp": "FL1",
+    "home": true,
+    "oppId": 519,
+    "oppName": "AJ Auxerre",
+    "gf": 5,
+    "ga": 1,
+    "hg": 5,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 559638,
+    "utc": "2026-11-06T19:45:00Z",
+    "comp": "FL1",
+    "home": false,
+    "oppId": 511,
+    "oppName": "Toulouse FC",
+    "gf": 1,
+    "ga": 3,
+    "hg": 3,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -23662,7 +23714,7 @@
   ]
  },
  "18": {
-  "ts": 1794023228.663834,
+  "ts": 1794128172.635879,
   "name": "Borussia Mönchengladbach",
   "matches": [
    {
@@ -27072,7 +27124,7 @@
   ]
  },
  "454": {
-  "ts": 1793169166.842237,
+  "ts": 1794128195.635281,
   "name": "Venezia FC",
   "matches": [
    {
@@ -27177,6 +27229,45 @@
     "ga": 1,
     "hg": 1,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558550,
+    "utc": "2026-10-28T17:30:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 108,
+    "oppName": "FC Internazionale Milano",
+    "gf": 0,
+    "ga": 2,
+    "hg": 0,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558543,
+    "utc": "2026-11-01T11:30:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 7397,
+    "oppName": "Como 1907",
+    "gf": 0,
+    "ga": 1,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558537,
+    "utc": "2026-11-06T19:45:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 115,
+    "oppName": "Udinese Calcio",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -27454,7 +27545,7 @@
   ]
  },
  "115": {
-  "ts": 1793169209.781606,
+  "ts": 1794128204.945429,
   "name": "Udinese Calcio",
   "matches": [
    {
@@ -27559,6 +27650,45 @@
     "ga": 2,
     "hg": 0,
     "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558553,
+    "utc": "2026-10-28T17:30:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 112,
+    "oppName": "Parma Calcio 1913",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558542,
+    "utc": "2026-10-31T17:00:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 100,
+    "oppName": "AS Roma",
+    "gf": 2,
+    "ga": 5,
+    "hg": 2,
+    "ag": 5,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558537,
+    "utc": "2026-11-06T19:45:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 454,
+    "oppName": "Venezia FC",
+    "gf": 1,
+    "ga": 2,
+    "hg": 2,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]

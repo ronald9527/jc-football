@@ -1,40 +1,71 @@
 {
  "version": "v1.7.124",
- "generatedAt": "2026-11-07 11:51:03",
+ "generatedAt": "2026-11-08 16:59:24",
  "scope": "竞彩足球 · 正路(good)判定 · 胜平负方向",
  "today": {
-  "batchDate": "2026-11-07",
-  "batchLabel": "周六",
-  "batchPrefix": "周六",
+  "batchDate": "2026-11-08",
+  "batchLabel": "周日",
+  "batchPrefix": "周日",
   "isToday": true,
-  "totalMatches": 29,
-  "goodCount": 5,
+  "totalMatches": 25,
+  "goodCount": 7,
   "settledCount": 0,
-  "pendingCount": 5,
+  "pendingCount": 7,
   "batchesAvailable": [
-   {
-    "date": "2026-11-07",
-    "label": "周六",
-    "count": 29
-   },
    {
     "date": "2026-11-08",
     "label": "周日",
-    "count": 30
+    "count": 25
    }
   ],
   "picks": [
    {
-    "id": "2042594",
-    "num": "周六013",
-    "league": "德甲",
-    "home": "多特蒙德",
-    "away": "埃尔沃斯堡",
-    "kickoff": "2026-11-07 22:30",
+    "id": "2042629",
+    "num": "周日018",
+    "league": "瑞超",
+    "home": "AIK索尔纳",
+    "away": "赫根",
+    "kickoff": "2026-11-08 23:30",
     "dir": "a",
     "dirName": "客胜",
-    "odds": 9.0,
-    "prob": 10.0,
+    "odds": 1.48,
+    "prob": 59.0,
+    "stars": 5,
+    "status": "Selling",
+    "settled": false,
+    "hit": null,
+    "score": null,
+    "note": "未开奖，不计入正确率"
+   },
+   {
+    "id": "2042621",
+    "num": "周日010",
+    "league": "挪超",
+    "home": "特罗姆瑟",
+    "away": "博德闪耀",
+    "kickoff": "2026-11-08 21:30",
+    "dir": "h",
+    "dirName": "主胜",
+    "odds": 6.4,
+    "prob": 14.0,
+    "stars": 4,
+    "status": "Selling",
+    "settled": false,
+    "hit": null,
+    "score": null,
+    "note": "未开奖，不计入正确率"
+   },
+   {
+    "id": "2042630",
+    "num": "周日019",
+    "league": "荷甲",
+    "home": "阿尔克马尔",
+    "away": "格罗宁根",
+    "kickoff": "2026-11-08 23:45",
+    "dir": "h",
+    "dirName": "主胜",
+    "odds": 1.33,
+    "prob": 66.0,
     "stars": 3,
     "status": "Selling",
     "settled": false,
@@ -43,70 +74,70 @@
     "note": "未开奖，不计入正确率"
    },
    {
-    "id": "2042597",
-    "num": "周六016",
-    "league": "英超",
-    "home": "富勒姆",
-    "away": "纽卡斯尔联",
-    "kickoff": "2026-11-07 23:00",
-    "dir": "d",
-    "dirName": "平局",
-    "odds": 3.45,
-    "prob": 26.0,
-    "stars": 3,
-    "status": "Selling",
-    "settled": false,
-    "hit": null,
-    "score": null,
-    "note": "未开奖，不计入正确率"
-   },
-   {
-    "id": "2042605",
-    "num": "周六024",
+    "id": "2042633",
+    "num": "周日022",
     "league": "德甲",
-    "home": "斯图加特",
-    "away": "云达不来梅",
-    "kickoff": "2026-11-08 01:30",
-    "dir": "h",
-    "dirName": "主胜",
-    "odds": 1.51,
-    "prob": 58.0,
-    "stars": 3,
-    "status": "Selling",
-    "settled": false,
-    "hit": null,
-    "score": null,
-    "note": "未开奖，不计入正确率"
-   },
-   {
-    "id": "2042611",
-    "num": "周六030",
-    "league": "美职",
-    "home": "皇家盐湖城",
-    "away": "洛杉矶银河",
-    "kickoff": "2026-11-08 08:00",
-    "dir": "h",
-    "dirName": "主胜",
-    "odds": 1.6,
-    "prob": 55.0,
-    "stars": 3,
-    "status": "Selling",
-    "settled": false,
-    "hit": null,
-    "score": null,
-    "note": "未开奖，不计入正确率"
-   },
-   {
-    "id": "2042583",
-    "num": "周六002",
-    "league": "日乙",
-    "home": "鸟栖沙岩",
-    "away": "富山胜利",
-    "kickoff": "2026-11-07 13:00",
+    "home": "弗赖堡",
+    "away": "柏林联合",
+    "kickoff": "2026-11-09 00:30",
     "dir": "d",
     "dirName": "平局",
-    "odds": 3.45,
-    "prob": 26.0,
+    "odds": 4.5,
+    "prob": 20.0,
+    "stars": 3,
+    "status": "Selling",
+    "settled": false,
+    "hit": null,
+    "score": null,
+    "note": "未开奖，不计入正确率"
+   },
+   {
+    "id": "2042619",
+    "num": "周日008",
+    "league": "芬超",
+    "home": "库奥皮奥",
+    "away": "国际图尔库",
+    "kickoff": "2026-11-08 21:00",
+    "dir": "a",
+    "dirName": "客胜",
+    "odds": 1.73,
+    "prob": 51.0,
+    "stars": 2,
+    "status": "Selling",
+    "settled": false,
+    "hit": null,
+    "score": null,
+    "note": "未开奖，不计入正确率"
+   },
+   {
+    "id": "2042635",
+    "num": "周日024",
+    "league": "西甲",
+    "home": "比利亚雷亚尔",
+    "away": "赫塔费",
+    "kickoff": "2026-11-09 01:30",
+    "dir": "h",
+    "dirName": "主胜",
+    "odds": 1.29,
+    "prob": 68.0,
+    "stars": 2,
+    "status": "Selling",
+    "settled": false,
+    "hit": null,
+    "score": null,
+    "note": "未开奖，不计入正确率"
+   },
+   {
+    "id": "2042636",
+    "num": "周日025",
+    "league": "西甲",
+    "home": "维戈塞尔塔",
+    "away": "莱万特",
+    "kickoff": "2026-11-09 01:30",
+    "dir": "h",
+    "dirName": "主胜",
+    "odds": 1.66,
+    "prob": 53.0,
     "stars": 2,
     "status": "Selling",
     "settled": false,
@@ -117,41 +148,41 @@
   ]
  },
  "overall": {
-  "n": 125,
-  "hit": 70,
-  "miss": 55,
-  "rate": 56.0,
+  "n": 129,
+  "hit": 72,
+  "miss": 57,
+  "rate": 55.81,
   "wilson95": [
-   47.25,
-   64.39
+   47.2,
+   64.09
   ],
-  "pricedN": 111,
-  "pricedRate": 54.05,
-  "marketDeVig": 48.67,
-  "breakEven": 55.05,
-  "avgOdds": 2.273,
-  "roi": -1.73,
-  "vsDeVig": 7.33,
-  "vsBreakEven": -1.0,
+  "pricedN": 115,
+  "pricedRate": 53.91,
+  "marketDeVig": 48.28,
+  "breakEven": 54.61,
+  "avgOdds": 2.328,
+  "roi": -2.44,
+  "vsDeVig": 7.54,
+  "vsBreakEven": -0.7,
   "testVsDeVig": {
-   "expectedHits": 54.03,
-   "z": 3.328,
-   "pOneSided": 0.000438,
+   "expectedHits": 55.52,
+   "z": 3.377,
+   "pOneSided": 0.000366,
    "significant": true
   },
   "testVsBreakEven": {
-   "expectedHits": 61.11,
-   "z": -0.239,
-   "pOneSided": 0.594405,
+   "expectedHits": 62.81,
+   "z": -0.171,
+   "pOneSided": 0.567964,
    "significant": false
   }
  },
  "excluded": {
   "na": 0,
-  "pending": 7,
-  "otherVerdict": 401
+  "pending": 3,
+  "otherVerdict": 421
  },
- "conclusion": "正路判定历史 125 战 70 中，正确率 56.00%（Wilson 95%CI 47.25%~64.39%）。市场去水隐含 48.67%，表观超额 +7.33pt（单侧 p=0.0004，方向判断似有超出定价的迹象）；但下注必须付抽水：盈亏平衡线是 55.05%，有赔率的 111 场实际命中 54.05%，相对盈亏线 -1.00pt，均注 ROI -1.73%（单侧 p=0.5944，未跑赢）。周度超额在 −22.7pt~+24.6pt 之间剧烈波动，样本仍不足以证明稳定可提现的优势。结论：可作方向参考，不构成盈利依据。",
+ "conclusion": "正路判定历史 129 战 72 中，正确率 55.81%（Wilson 95%CI 47.20%~64.09%）。市场去水隐含 48.28%，表观超额 +7.54pt（单侧 p=0.0004，方向判断似有超出定价的迹象）；但下注必须付抽水：盈亏平衡线是 54.61%，有赔率的 115 场实际命中 53.91%，相对盈亏线 -0.70pt，均注 ROI -2.44%（单侧 p=0.5680，未跑赢）。周度超额在 −22.7pt~+24.6pt 之间剧烈波动，样本仍不足以证明稳定可提现的优势。结论：可作方向参考，不构成盈利依据。",
  "byStars": [
   {
    "n": 4,
@@ -216,32 +247,32 @@
    "key": "2星"
   },
   {
-   "n": 53,
-   "hit": 20,
-   "miss": 33,
-   "rate": 37.74,
+   "n": 57,
+   "hit": 22,
+   "miss": 35,
+   "rate": 38.6,
    "wilson95": [
-    25.94,
-    51.19
+    27.06,
+    51.57
    ],
-   "pricedN": 53,
-   "pricedRate": 37.74,
-   "marketDeVig": 34.53,
-   "breakEven": 39.06,
-   "avgOdds": 2.999,
-   "roi": -2.42,
-   "vsDeVig": 3.2,
-   "vsBreakEven": -1.33,
+   "pricedN": 57,
+   "pricedRate": 38.6,
+   "marketDeVig": 34.73,
+   "breakEven": 39.3,
+   "avgOdds": 3.059,
+   "roi": -3.81,
+   "vsDeVig": 3.87,
+   "vsBreakEven": -0.71,
    "testVsDeVig": {
-    "expectedHits": 18.3,
-    "z": 0.516,
-    "pOneSided": 0.302849,
+    "expectedHits": 19.79,
+    "z": 0.648,
+    "pOneSided": 0.258606,
     "significant": false
    },
    "testVsBreakEven": {
-    "expectedHits": 20.7,
-    "z": -0.211,
-    "pOneSided": 0.583495,
+    "expectedHits": 22.4,
+    "z": -0.117,
+    "pOneSided": 0.546603,
     "significant": false
    },
    "key": "3星"
@@ -342,32 +373,32 @@
    "key": "1.00~1.50"
   },
   {
-   "n": 26,
-   "hit": 16,
+   "n": 28,
+   "hit": 18,
    "miss": 10,
-   "rate": 61.54,
+   "rate": 64.29,
    "wilson95": [
-    42.53,
-    77.57
+    45.83,
+    79.29
    ],
-   "pricedN": 26,
-   "pricedRate": 61.54,
-   "marketDeVig": 52.97,
-   "breakEven": 59.92,
-   "avgOdds": 1.677,
-   "roi": 1.58,
-   "vsDeVig": 8.57,
-   "vsBreakEven": 1.62,
+   "pricedN": 28,
+   "pricedRate": 64.29,
+   "marketDeVig": 53.22,
+   "breakEven": 60.24,
+   "avgOdds": 1.668,
+   "roi": 5.43,
+   "vsDeVig": 11.07,
+   "vsBreakEven": 4.05,
    "testVsDeVig": {
-    "expectedHits": 13.77,
-    "z": 0.878,
-    "pOneSided": 0.189987,
+    "expectedHits": 14.9,
+    "z": 1.177,
+    "pOneSided": 0.119669,
     "significant": false
    },
    "testVsBreakEven": {
-    "expectedHits": 15.58,
-    "z": 0.169,
-    "pOneSided": 0.43284,
+    "expectedHits": 16.87,
+    "z": 0.439,
+    "pOneSided": 0.330179,
     "significant": false
    },
    "key": "1.50~2.00"
@@ -404,32 +435,32 @@
    "key": "2.00~3.00"
   },
   {
-   "n": 35,
+   "n": 37,
    "hit": 10,
-   "miss": 25,
-   "rate": 28.57,
+   "miss": 27,
+   "rate": 27.03,
    "wilson95": [
-    16.33,
-    45.06
+    15.4,
+    42.98
    ],
-   "pricedN": 35,
-   "pricedRate": 28.57,
-   "marketDeVig": 24.06,
-   "breakEven": 27.19,
-   "avgOdds": 3.774,
-   "roi": 6.77,
-   "vsDeVig": 4.51,
-   "vsBreakEven": 1.38,
+   "pricedN": 37,
+   "pricedRate": 27.03,
+   "marketDeVig": 23.74,
+   "breakEven": 26.84,
+   "avgOdds": 3.903,
+   "roi": 1.0,
+   "vsDeVig": 3.28,
+   "vsBreakEven": 0.19,
    "testVsDeVig": {
-    "expectedHits": 8.42,
-    "z": 0.626,
-    "pOneSided": 0.265658,
+    "expectedHits": 8.79,
+    "z": 0.472,
+    "pOneSided": 0.318575,
     "significant": false
    },
    "testVsBreakEven": {
-    "expectedHits": 9.52,
-    "z": 0.185,
-    "pOneSided": 0.426758,
+    "expectedHits": 9.93,
+    "z": 0.026,
+    "pOneSided": 0.489461,
     "significant": false
    },
    "key": "3.00 以上"
@@ -654,6 +685,37 @@
    "key": "韩职"
   },
   {
+   "n": 6,
+   "hit": 3,
+   "miss": 3,
+   "rate": 50.0,
+   "wilson95": [
+    18.76,
+    81.24
+   ],
+   "pricedN": 5,
+   "pricedRate": 40.0,
+   "marketDeVig": 29.85,
+   "breakEven": 33.84,
+   "avgOdds": 4.146,
+   "roi": 12.2,
+   "vsDeVig": 20.15,
+   "vsBreakEven": 6.16,
+   "testVsDeVig": {
+    "expectedHits": 1.49,
+    "z": 1.577,
+    "pOneSided": 0.05742,
+    "significant": false
+   },
+   "testVsBreakEven": {
+    "expectedHits": 1.69,
+    "z": 0.317,
+    "pOneSided": 0.37576,
+    "significant": false
+   },
+   "key": "德甲"
+  },
+  {
    "n": 5,
    "hit": 2,
    "miss": 3,
@@ -686,37 +748,6 @@
   }
  ],
  "byDate": [
-  {
-   "n": 2,
-   "hit": 2,
-   "miss": 0,
-   "rate": 100.0,
-   "wilson95": [
-    34.24,
-    100.0
-   ],
-   "pricedN": 1,
-   "pricedRate": 100.0,
-   "marketDeVig": 51.48,
-   "breakEven": 58.14,
-   "avgOdds": 1.72,
-   "roi": 72.0,
-   "vsDeVig": 48.52,
-   "vsBreakEven": 41.86,
-   "testVsDeVig": {
-    "expectedHits": 0.51,
-    "z": 2.972,
-    "pOneSided": 0.001481,
-    "significant": true
-   },
-   "testVsBreakEven": {
-    "expectedHits": 0.58,
-    "z": 0.849,
-    "pOneSided": 0.198074,
-    "significant": false
-   },
-   "key": "2026-09-23"
-  },
   {
    "n": 2,
    "hit": 1,
@@ -1585,6 +1616,37 @@
     "significant": false
    },
    "key": "2026-11-06"
+  },
+  {
+   "n": 4,
+   "hit": 2,
+   "miss": 2,
+   "rate": 50.0,
+   "wilson95": [
+    15.0,
+    85.0
+   ],
+   "pricedN": 4,
+   "pricedRate": 50.0,
+   "marketDeVig": 37.32,
+   "breakEven": 42.51,
+   "avgOdds": 3.855,
+   "roi": -22.25,
+   "vsDeVig": 12.68,
+   "vsBreakEven": 7.49,
+   "testVsDeVig": {
+    "expectedHits": 1.49,
+    "z": 0.577,
+    "pOneSided": 0.28208,
+    "significant": false
+   },
+   "testVsBreakEven": {
+    "expectedHits": 1.7,
+    "z": 0.342,
+    "pOneSided": 0.366236,
+    "significant": false
+   },
+   "key": "2026-11-07"
   }
  ],
  "weekly": [
@@ -1868,32 +1930,32 @@
    "key": "2026-W44"
   },
   {
-   "n": 11,
-   "hit": 5,
-   "miss": 6,
-   "rate": 45.45,
+   "n": 15,
+   "hit": 7,
+   "miss": 8,
+   "rate": 46.67,
    "wilson95": [
-    21.27,
-    71.99
+    24.81,
+    69.88
    ],
-   "pricedN": 11,
-   "pricedRate": 45.45,
-   "marketDeVig": 65.58,
-   "breakEven": 74.72,
-   "avgOdds": 1.366,
-   "roi": -38.45,
-   "vsDeVig": -20.12,
-   "vsBreakEven": -29.27,
+   "pricedN": 15,
+   "pricedRate": 46.67,
+   "marketDeVig": 58.04,
+   "breakEven": 66.13,
+   "avgOdds": 2.03,
+   "roi": -34.13,
+   "vsDeVig": -11.38,
+   "vsBreakEven": -19.47,
    "testVsDeVig": {
-    "expectedHits": 7.21,
-    "z": -1.433,
-    "pOneSided": 0.924018,
+    "expectedHits": 8.71,
+    "z": -0.96,
+    "pOneSided": 0.831389,
     "significant": false
    },
    "testVsBreakEven": {
-    "expectedHits": 8.22,
-    "z": -2.303,
-    "pOneSided": 0.989372,
+    "expectedHits": 9.92,
+    "z": -1.77,
+    "pOneSided": 0.961644,
     "significant": false
    },
    "key": "2026-W45"
@@ -1901,125 +1963,125 @@
  ],
  "windows": [
   {
-   "n": 14,
-   "hit": 6,
+   "n": 15,
+   "hit": 7,
    "miss": 8,
-   "rate": 42.86,
+   "rate": 46.67,
    "wilson95": [
-    21.38,
-    67.41
+    24.81,
+    69.88
    ],
-   "pricedN": 14,
-   "pricedRate": 42.86,
-   "marketDeVig": 61.86,
-   "breakEven": 70.49,
-   "avgOdds": 1.531,
-   "roi": -41.64,
-   "vsDeVig": -19.01,
-   "vsBreakEven": -27.63,
+   "pricedN": 15,
+   "pricedRate": 46.67,
+   "marketDeVig": 58.04,
+   "breakEven": 66.13,
+   "avgOdds": 2.03,
+   "roi": -34.13,
+   "vsDeVig": -11.38,
+   "vsBreakEven": -19.47,
    "testVsDeVig": {
-    "expectedHits": 8.66,
-    "z": -1.522,
-    "pOneSided": 0.936008,
+    "expectedHits": 8.71,
+    "z": -0.96,
+    "pOneSided": 0.831389,
     "significant": false
    },
    "testVsBreakEven": {
-    "expectedHits": 9.87,
-    "z": -2.403,
-    "pOneSided": 0.991867,
+    "expectedHits": 9.92,
+    "z": -1.77,
+    "pOneSided": 0.961644,
     "significant": false
    },
    "key": "近7日"
   },
   {
-   "n": 42,
-   "hit": 27,
+   "n": 44,
+   "hit": 29,
    "miss": 15,
-   "rate": 64.29,
+   "rate": 65.91,
    "wilson95": [
-    49.17,
-    77.01
+    51.14,
+    78.12
    ],
-   "pricedN": 37,
-   "pricedRate": 62.16,
-   "marketDeVig": 56.14,
-   "breakEven": 63.69,
-   "avgOdds": 1.886,
-   "roi": 6.19,
-   "vsDeVig": 8.14,
-   "vsBreakEven": -1.53,
+   "pricedN": 39,
+   "pricedRate": 64.1,
+   "marketDeVig": 55.83,
+   "breakEven": 63.36,
+   "avgOdds": 1.997,
+   "roi": 8.72,
+   "vsDeVig": 10.08,
+   "vsBreakEven": 0.74,
    "testVsDeVig": {
-    "expectedHits": 20.77,
-    "z": 2.226,
-    "pOneSided": 0.013013,
+    "expectedHits": 21.77,
+    "z": 2.518,
+    "pOneSided": 0.005895,
     "significant": true
    },
    "testVsBreakEven": {
-    "expectedHits": 23.57,
-    "z": -0.215,
-    "pOneSided": 0.585272,
+    "expectedHits": 24.71,
+    "z": 0.107,
+    "pOneSided": 0.457436,
     "significant": false
    },
    "key": "近30日"
   },
   {
    "n": 109,
-   "hit": 63,
-   "miss": 46,
-   "rate": 57.8,
+   "hit": 64,
+   "miss": 45,
+   "rate": 58.72,
    "wilson95": [
-    48.42,
-    66.65
+    49.33,
+    67.51
    ],
    "pricedN": 95,
-   "pricedRate": 55.79,
-   "marketDeVig": 50.14,
-   "breakEven": 56.73,
-   "avgOdds": 2.224,
-   "roi": -3.74,
-   "vsDeVig": 7.66,
-   "vsBreakEven": -0.94,
+   "pricedRate": 56.84,
+   "marketDeVig": 50.03,
+   "breakEven": 56.62,
+   "avgOdds": 2.272,
+   "roi": -1.73,
+   "vsDeVig": 8.68,
+   "vsBreakEven": 0.22,
    "testVsDeVig": {
-    "expectedHits": 47.64,
-    "z": 3.469,
-    "pOneSided": 0.000261,
+    "expectedHits": 47.53,
+    "z": 3.721,
+    "pOneSided": 9.9e-05,
     "significant": true
    },
    "testVsBreakEven": {
-    "expectedHits": 53.89,
-    "z": -0.211,
-    "pOneSided": 0.583435,
+    "expectedHits": 53.79,
+    "z": 0.049,
+    "pOneSided": 0.480468,
     "significant": false
    },
    "key": "近60日"
   },
   {
-   "n": 125,
-   "hit": 70,
-   "miss": 55,
-   "rate": 56.0,
+   "n": 129,
+   "hit": 72,
+   "miss": 57,
+   "rate": 55.81,
    "wilson95": [
-    47.25,
-    64.39
+    47.2,
+    64.09
    ],
-   "pricedN": 111,
-   "pricedRate": 54.05,
-   "marketDeVig": 48.67,
-   "breakEven": 55.05,
-   "avgOdds": 2.273,
-   "roi": -1.73,
-   "vsDeVig": 7.33,
-   "vsBreakEven": -1.0,
+   "pricedN": 115,
+   "pricedRate": 53.91,
+   "marketDeVig": 48.28,
+   "breakEven": 54.61,
+   "avgOdds": 2.328,
+   "roi": -2.44,
+   "vsDeVig": 7.54,
+   "vsBreakEven": -0.7,
    "testVsDeVig": {
-    "expectedHits": 54.03,
-    "z": 3.328,
-    "pOneSided": 0.000438,
+    "expectedHits": 55.52,
+    "z": 3.377,
+    "pOneSided": 0.000366,
     "significant": true
    },
    "testVsBreakEven": {
-    "expectedHits": 61.11,
-    "z": -0.239,
-    "pOneSided": 0.594405,
+    "expectedHits": 62.81,
+    "z": -0.171,
+    "pOneSided": 0.567964,
     "significant": false
    },
    "key": "全量"
@@ -2028,13 +2090,13 @@
  "notes": [
   "正路 = 系统判定 good（预测市场热门方向打出）；bad/cold 为反指、warn 为谨慎、无判定，均不计入本统计。",
   "命中判定：官方开奖赛果的胜平负方向 had 与判定方向 dir 一致记「命中」，不一致记「未中」；与 judge_hit() 完全同口径。",
-  "样本只取已结算记录 hitFlag ∈ (hit, miss)；取消/走水 n-a 共 0 条、待开奖 7 条一律排除，不拿来凑样本。",
+  "样本只取已结算记录 hitFlag ∈ (hit, miss)；取消/走水 n-a 共 0 条、待开奖 3 条一律排除，不拿来凑样本。",
   "市场去水隐含概率 = 三项赔率倒数归一化，代表市场定价的「理论真概率」；赔率缺失时用赛前 prob 字段补。",
   "盈亏平衡命中率 = 1/推荐方向赔率 的均值，含庄家抽水，是「按赔率下注不亏钱」必须跨过的线；它高于去水隐含概率。",
-  "ROI = 每场 1 单位均注，命中收 (赔率−1)、未中亏 1；只用有完整赔率的 111 场计算。",
+  "ROI = 每场 1 单位均注，命中收 (赔率−1)、未中亏 1；只用有完整赔率的 115 场计算。",
   "正确率高于「去水隐含」只说明方向判断略优于市场共识，不代表赚钱；能否盈利必须看是否跑赢「盈亏平衡线」与 ROI。",
-  "今日赛程严格按竞彩批次隔离：只统计 2026-11-07（周六）当天开出的 29 场，绝不混入周六/周日批次。",
-  "今日 5 场正路推荐中已开奖 0 场、未开奖 5 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
+  "今日赛程严格按竞彩批次隔离：只统计 2026-11-08（周日）当天开出的 25 场，绝不混入周六/周日批次。",
+  "今日 7 场正路推荐中已开奖 0 场、未开奖 7 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
   "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
  ]
 }

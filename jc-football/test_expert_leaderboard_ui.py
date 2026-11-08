@@ -3,9 +3,9 @@
 """test_expert_leaderboard_ui.py —— v1.7.128 专家命中率 / 排行榜 UI 回归
 
 断言（手机视口 390×844，默认本地 http://127.0.0.1:8901/index.html）：
-  1. 页面版本 v1.7.128
+  1. 页面版本跟随 template.html（数据驱动）
   2. 命中率排行榜默认展开、标题为命中率口径、写明赛后回溯自动重算
-  3. 榜单行数与 leaderboard 一致，榜首为 66.7%（不是按推荐分/场次排序）
+  3. 榜单行数与 leaderboard 一致，榜首命中率 = leaderboard[0].hitRate（数据驱动）
   4. 榜单标注样本层级与 Wilson 95%CI
   5. 今日推荐【每个】专家（主推 + 同场其他）都带 .exp-rate 徽章
   6. 专家文章流【每条】推荐都带 .exp-rate 徽章
@@ -35,9 +35,22 @@ async def main():
     main_n = len(ed.get("recommendations", []))
     oth_n = sum(len(r.get("otherExperts", [])) for r in ed.get("recommendations", []))
     art_n = sum(len(a.get("recommendations", [])) for a in ed.get("articles", []))
-    board_n = len(es.get("leaderboard", []))
-    print("数据：主推 %d / 同场其他 %d / 文章流 %d / 榜 %d 行" %
-          (main_n, oth_n, art_n, board_n))
+    board = es.get("leaderboard", [])
+    board_n = len(board)
+    # v1.7.129：版本与榜首命中率数据驱动，避免升版/赛果回溯后误报
+    import re as _re
+    tpl_ver = _re.search(r'const VERSION = "([^"]+)"',
+                         open(os.path.join(HERE, "template.html"), encoding="utf-8").read()).group(1)
+    # 前端显示会对命中率做整数化（75.0 → 75%），期望值同步归一，避免格式误报
+    def _fmt_rate(v):
+        try:
+            f = float(v)
+            return ("%d" % round(f)) if f == int(f) else ("%g" % f)
+        except (TypeError, ValueError):
+            return str(v)
+    top_rate = _fmt_rate(board[0].get("hitRate")) + "%" if board else ""
+    print("数据：主推 %d / 同场其他 %d / 文章流 %d / 榜 %d 行 / 榜首 %s" %
+          (main_n, oth_n, art_n, board_n, top_rate))
 
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
@@ -51,7 +64,7 @@ async def main():
         await page.wait_for_timeout(300)
 
         html = await page.content()
-        ck('const VERSION = "v1.7.128"' in html, "页面版本 v1.7.128")
+        ck('const VERSION = "%s"' % tpl_ver in html, "页面版本 %s" % tpl_ver)
 
         await page.click('button[data-tab="expert"]')
         await page.wait_for_timeout(600)
@@ -66,7 +79,8 @@ async def main():
         rows = await page.locator("#expertRankList > div").count()
         ck(rows - 1 == board_n, "榜单行数与 leaderboard 一致", "%d 行" % (rows - 1))
         first_rate = await page.locator("#expertRankList > div").nth(1).inner_text()
-        ck("66.7%" in first_rate, "榜首为 66.7%（非按推荐分排序）",
+        ck(bool(top_rate) and top_rate in first_rate,
+           "榜首命中率 %s 与 leaderboard 一致（非按推荐分排序）" % top_rate,
            first_rate[:70].replace("\n", " "))
 
         today_badges = await page.locator("#expertList .exp-rate").count()

@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>刷新按钮诊断与修复报告 · v1.7.129</title>
+<style>
+:root{--bg:#0e1116;--pn:#171b23;--pn2:#1e2430;--bd:#2a3240;--tx:#e8ecf3;--sb:#9aa6b8;--ac:#4ea1ff;--good:#39c07a;--warn:#e8a13a;--bad:#e85b5b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:18px;max-width:920px;margin:0 auto}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:26px 0 12px;padding-left:10px;border-left:3px solid var(--ac)}
+.sub{color:var(--sb);font-size:12px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:12px}
+.kpi .v{font-size:19px;font-weight:700;color:var(--ac)}.kpi .l{font-size:11px;color:var(--sb);margin-top:2px}
+table{width:100%;border-collapse:collapse;font-size:12px;background:var(--pn);border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th{background:var(--pn2);color:var(--sb);font-weight:600;font-size:11px}
+td.tm{white-space:nowrap;color:var(--sb);font-family:ui-monospace,monospace;font-size:11px;width:120px}
+td.st{white-space:nowrap;font-weight:600;width:110px}
+tr.ok td.st{color:var(--good)}tr.warn td.st{color:var(--warn)}tr.bad td.st{color:var(--bad)}
+tr.bad{background:rgba(232,91,91,.05)}
+.fix{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.fixh{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.no{display:inline-flex;width:21px;height:21px;border-radius:6px;background:var(--ac);color:#fff;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.fixb{color:var(--sb);font-size:12.5px}
+.note{background:var(--pn2);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--sb);margin-top:12px}
+.note b{color:var(--tx)}code{background:var(--pn2);padding:1px 5px;border-radius:4px;color:#ffd479;font-size:11.5px}
+.foot{margin-top:24px;color:var(--sb);font-size:11px;text-align:center;border-top:1px solid var(--bd);padding-top:14px}
+</style></head><body>
+<h1>刷新按钮诊断与修复报告</h1>
+<div class="sub">竞彩智析 · 足球数据中枢 &nbsp;|&nbsp; v1.7.129 &nbsp;|&nbsp; 生成于 2026-11-08 16:59:47</div>
+
+<h2>一、问题与结论</h2>
+<div class="note">
+用户反馈「刷新按钮还是没啥用处，按了还是旧数据」。逐层排查
+<b>按钮 → Cloudflare Function /api/refresh → GitHub Actions workflow_dispatch → 海外 runner 跑 run_daily.sh deploy</b>，
+结论不是「按钮没接线」或「PAT 失效」：<b>按钮成功触发了 CI，但 CI 在海外根本跑不完</b>。
+竞彩官方接口 <code>webapi.sporttery.cn</code> 对美国机房 IP 恒定返回 HTTP 567，
+主赛程虽能回退 500.com，但「赔率历史」逐场 30s 超时 ×30 场、「赛果回填」逐条 929 条
+累计烧满 90 分钟，被 <code>timeout-minutes</code> 强杀（run <code>cancelled</code>），
+永远走不到「构建 + 部署」。前端又把「是否重载 / 是否成功」全赌在这个 run 上，
+于是数据 <code>updateTime</code> 一直锁在旧批次，顶栏持续红字「非今日批次」。
+</div>
+
+<h2>二、当前数据状态（本次刷新后）</h2>
+<div class="kpis">
+<div class="kpi"><div class="v">2026-11-08 16:38:10</div><div class="l">数据更新于（此前 11-07 11:45）</div></div>
+<div class="kpi"><div class="v">25 场</div><div class="l">当前竞彩在售</div></div>
+<div class="kpi"><div class="v">2026-11-08 25 场</div><div class="l">赛程批次分布</div></div>
+<div class="kpi"><div class="v">v1.7.129</div><div class="l">页面版本</div></div>
+</div>
+<div class="note">周六已完赛场次滚入 <code>history.json</code>（929 条赛果库独立保存），
+所以「当前在售」场次数比历史累积少属正常日期滚动，赛果回溯不丢。
+本次已把竞彩赛程、赛果回填、正路 / V站 / 专家命中率统计全部推进到 11-08 今日批次。</div>
+
+<h2>三、线上 CI 证据链（2026-11-08 实拉 run 42449366462 日志）</h2>
+<table><thead><tr><th>北京时间</th><th>环节</th><th>实际发生</th></tr></thead><tbody>
+<tr class='ok'><td class='tm'>13:05:15</td><td class='st'>用户按「刷新数据」</td><td>POST /api/refresh → workflow_dispatch run 42449366462 创建成功</td></tr><tr class='warn'><td class='tm'>13:20:42</td><td class='st'>CI 排队</td><td>concurrency 组 daily-refresh 里堆积的僵尸 run 串行，排队 15 分钟才轮到</td></tr><tr class='bad'><td class='tm'>13:21:32</td><td class='st'>官方接口被拒</td><td>webapi.sporttery.cn 对美国 IP 返回 HTTP 567，回退 500.com 抓到 30 场</td></tr><tr class='bad'><td class='tm'>13:22:33~13:38:20</td><td class='st'>赔率历史卡死</td><td>逐场请求官方接口，每场 30s 超时，30 场累计 16 分钟且全部失败</td></tr><tr class='bad'><td class='tm'>13:38:20~14:33:01</td><td class='st'>赛果回填卡死</td><td>对 929 条历史记录逐条打官方开奖接口，单步烧掉 55 分钟</td></tr><tr class='bad'><td class='tm'>14:33:01~14:50:55</td><td class='st'>二次回填卡死</td><td>「回填历史记录库未回填赛果」再烧 17 分钟</td></tr><tr class='bad'><td class='tm'>14:50:55</td><td class='st'>被强杀</td><td>job 跑满 timeout-minutes:90 → conclusion=cancelled，永远走不到「构建+部署」</td></tr><tr class='bad'><td class='tm'>—</td><td class='st'>前端表现</td><td>轮询到 cancelled 或一直空等 → 不重载 → updateTime 锁死 → 顶栏红字「非今日批次」</td></tr>
+</tbody></table>
+
+<h2>四、修复项（一次做完整，治本不打补丁）</h2>
+<div class='fix'><div class='fixh'><span class='no'>1</span>前端·主路径重构</div><div class='fixb'>triggerRePull() 改为点击即同步：loadLiveDatasets() 拉取云端已部署的全部 20+ 数据源并即时重渲染，toast 明确显示「已同步云端最新数据（更新于 X）」，2.6s 后带时间戳硬重载绕过 WebView/PWA 缓存。这一步 100% 可靠、秒级、必成功。</div></div><div class='fix'><div class='fixh'><span class='no'>2</span>前端·CI 降级</div><div class='fixb'>触发 /api/refresh 降级为 fire-and-forget 后台补充：不阻塞主路径、不轮询 run_id、绝不因失败/取消/超时报错。保留 version.json 变化监听，后台真产出了新部署就自动再同步一次。无论 CI 成功/失败/取消/超时/无 runId，都有确定性兜底，绝不再卡成「没反应」。</div></div><div class='fix'><div class='fixh'><span class='no'>3</span>抓取·官方接口熔断</div><div class='fixb'>fetch_daily.py 新增 _OFFICIAL_DOWN 熔断：主赛程一旦确认 567 回退 500.com，后续赔率历史/支持率/赛果回填等所有 sporttery 官方请求由 fetch() 瞬时短路，不再逐场 8 次重试 × 30s。CI 从 90 分钟超时压缩到数分钟跑完。本地中国网络官方接口 200 永不触发，行为零变化。</div></div><div class='fix'><div class='fixh'><span class='no'>4</span>抓取·回填提速</div><div class='fixb'>修正「已有赛果仍为补半全场结果逐条重查官方接口」的低效逻辑：实测 history.json 798 条已有赛果的记录 hitFlag/hhadResult 齐全（缺 0），一律跳过网络请求，只处理真正未开奖的记录。</div></div><div class='fix'><div class='fixh'><span class='no'>5</span>CI·配置修复</div><div class='fixb'>daily.yml：cancel-in-progress:true 清理排队僵尸 run；job 超时 90→40 分钟、step 级 30 分钟；新增 JC_FETCH_WALL_SEC / JC_FETCH_TIMEOUT 双墙钟；移除 push 自动触发（源码提交不再拉起海外残缺抓取）；保留定时与手动 workflow_dispatch。</div></div><div class='fix'><div class='fixh'><span class='no'>6</span>部署·残缺守卫</div><div class='fixb'>run_daily.sh 新增守卫：CI 环境 + 本轮官方接口熔断（.ci_official_down 标记）→ 跳过部署，防止 500.com 的 30 场残缺数据覆盖生产 59 场完整数据 + 赛果回溯 + 各类统计。这是过去每轮 CI 都必须人工 cancel 的根本原因，现自动化为安全护栏。</div></div><div class='fix'><div class='fixh'><span class='no'>7</span>验证·接线</div><div class='fixb'>selftest.py 新增 check_refresh_chain() 与流水线护栏校验；test_refresh_button_ui.py 让 /api/refresh 永不返回以模拟最坏 CI，验证按钮主路径不受影响。</div></div>
+
+<h2>五、验证口径</h2>
+<div class="note">
+· <b>按钮主路径</b>：拦截并让 <code>/api/refresh</code> 永不返回（模拟 CI 90 分钟超时），
+按钮仍在 1.4s 内发起对 <code>matches.json / version.json / vzhan_data.json</code> 等
+云端数据源的拉取、即时给出「已同步…（更新于 X）」反馈、按钮恢复可点、无负面报错。<br>
+· <b>自检</b>：selftest.py 新增 <code>check_refresh_chain()</code>，校验前端不再赌 CI、
+后端函数仍触发 dispatch、CI 清队列 / 去 push / 墙钟 / 残缺守卫齐全。<br>
+· <b>诚实边界</b>：海外 CI 拿不到中国竞彩官方接口，本就在架构上无法独立产出「完整」数据；
+因此「数据保鲜」由本地全量刷新 + 部署负责，按钮负责「把云端最新数据即时同步到手机」。
+CI 触发仅作尽力补充，且加了残缺守卫，绝不会再用 30 场覆盖生产 59 场。
+</div>
+
+<div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 数据源：线上 GitHub Actions 日志 / 本地 matches.json · 站点 https://jc-football-1eo.pages.dev/</div>
+</body></html>

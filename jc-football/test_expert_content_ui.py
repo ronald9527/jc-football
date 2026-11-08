@@ -3,13 +3,15 @@
 """test_expert_content_ui.py —— v1.7.127 高手推荐文章内容 UI 验证
 
 断言（手机视口 390×844，默认本地 http://127.0.0.1:8901/index.html）：
-  1. 页面 VERSION = v1.7.127
-  2. 专家文章流 23 篇，摘要含「方向与比分均附原文依据」
-  3. 冒险王：方向「主胜/平局」、比分「比分1比1、2比1」、原文依据「本场比赛看好欧塞尔不败」
-  4. 不再出现旧的错误方向（周六026 不显示「客胜」），无「未知专家」空卡
-  5. 「未给出明确胜平负方向」的无方向文章有诚实说明（刘建宏）
-  6. 历史战绩：3 条「原文方向与当时标注不一致」存疑提示
-  7. 今日推荐：周六026 显示修正后的「主胜/平局」
+  v1.7.129 起全面数据驱动，不硬编码某一天的文章数/专家名/比分/版本号，
+  源站每天刷新后测试仍可复用：
+  1. 页面 VERSION 跟随 template.html 真相源
+  2. 专家文章流篇数 = expert_recommendations.json 的 articles 数，摘要含「原文依据」
+  3. 遍历全部分页：数据里真实存在的「原文结论依据」文本在页面可见
+  4. 无「未知专家」空壳卡片，文章显示「内容已核对」标记
+  5. 数据里存在无明确方向文章时，页面有「未给出明确胜平负方向」诚实说明
+  6. 历史战绩「原文方向与当时标注不一致」存疑提示数 ≥ 数据里的存疑数
+  7. 今日推荐区有内容、无空卡
   8. 无 JS 错误
 """
 import asyncio
@@ -34,6 +36,21 @@ async def main():
     ed = json.load(open(os.path.join(HERE, "expert_recommendations.json"), encoding="utf-8"))
     eh = json.load(open(os.path.join(HERE, "expert_history.json"), encoding="utf-8"))
     n_disp = sum(1 for v in eh.values() for r in v if r.get("directionDisputed"))
+    # v1.7.129：断言全面数据驱动，不再硬编码某一天的文章数/专家名/比分。
+    # 源站每天的文章与对阵都不同，写死会在每次刷新后误报（11-08 实测 23→19 篇）。
+    arts = ed.get("articles", [])
+    n_art = len(arts)
+    # 取一条真实的「原文结论依据」文本，用于验证页面确实渲染了原文依据
+    sample_ev = ""
+    for a in arts:
+        for r in a.get("recommendations", []):
+            e = (r.get("evidence") or r.get("directionEvidence") or "").strip()
+            if e and len(e) >= 6:
+                sample_ev = e[:12]
+                break
+        if sample_ev:
+            break
+    has_nodir = any(not a.get("recommendations") for a in arts)
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
         page = await browser.new_page(viewport={"width": 390, "height": 844})
@@ -51,42 +68,40 @@ async def main():
                             open(os.path.join(HERE, "template.html"), encoding="utf-8").read()).group(1)
         ck('const VERSION = "%s"' % tpl_ver in html, "页面版本 %s" % tpl_ver)
 
-        # 进入高手推荐
+        # 进入高手推荐：今日推荐区有内容、无未知专家空卡（结构性断言）
         await page.click('button[data-tab="expert"]')
         await page.wait_for_timeout(500)
         today_txt = await page.inner_text("#expertView")
-        ck("主胜/平局" in today_txt, "今日推荐出现修正后的「主胜/平局」")
-        ck("比分1比1、2比1" in today_txt, "今日推荐出现完整比分建议 1:1、2:1")
-        # 周六026 区块内不能还是「客胜」
-        seg = today_txt.split("周六026")[-1].split("周六027")[0] if "周六026" in today_txt else ""
-        ck("客胜" not in seg, "周六026 不再显示错误方向「客胜」", seg[:80].replace("\n", " "))
+        n_today = len(ed.get("recommendations", []))
+        ck(n_today > 0 and len(today_txt) > 100, "今日推荐区有内容（数据 %d 条）" % n_today)
+        ck("未知专家" not in today_txt, "今日推荐无「未知专家」空卡")
 
-        # 专家文章流
+        # 专家文章流：遍历全部分页收集文本（分页，第一页只有部分文章）
         await page.click('button[data-expert-view="articles"]')
         await page.wait_for_timeout(600)
-        art_txt = await page.inner_text("#expertArticlesWrap")
         summary = await page.inner_text("#expertArticlesSummary")
-        ck(("23" in summary and "篇" in summary), "专家文章流共 23 篇", summary[:90])
+        ck((str(n_art) in summary and "篇" in summary), "专家文章流共 %d 篇（数据驱动）" % n_art, summary[:90])
         ck("方向与比分均附原文依据" in summary, "摘要标注可逐条核对")
-        ck("本场比赛看好欧塞尔不败" in art_txt, "冒险王原文结论依据可见")
-        ck("内容已核对" in art_txt, "文章显示「✅ 内容已核对」")
-        ck("未知专家" not in art_txt, "无「未知专家」空壳卡片")
-        ck("比分1比1、2比1" in art_txt, "文章流比分为完整 1:1、2:1")
-        # 逐页找刘建宏那篇（无明确方向）
+
         pages = await page.locator("#expertArticlesPager button").count()
-        found_nodir = "未给出明确胜平负方向" in art_txt
-        if not found_nodir:
-            for i in range(2, 8):
-                btns = page.locator("#expertArticlesPager button", has_text=str(i))
-                if await btns.count() == 0:
-                    break
-                await btns.first.click()
-                await page.wait_for_timeout(300)
-                art_txt = await page.inner_text("#expertArticlesWrap")
-                if "未给出明确胜平负方向" in art_txt:
-                    found_nodir = True
-                    break
-        ck(found_nodir, "无明确方向文章有诚实说明（不硬猜）", "页数=%d" % pages)
+        all_art = await page.inner_text("#expertArticlesWrap")
+        for i in range(2, 10):
+            btns = page.locator("#expertArticlesPager button", has_text=str(i))
+            if await btns.count() == 0:
+                break
+            await btns.first.click()
+            await page.wait_for_timeout(280)
+            all_art += "\n" + await page.inner_text("#expertArticlesWrap")
+
+        # 原文结论依据：用数据里的真实文本验证页面确实渲染（不再写死「欧塞尔不败」）
+        ck(bool(sample_ev) and sample_ev in all_art,
+           "原文结论依据可见（数据样本「%s」）" % sample_ev, "" if sample_ev else "无样本")
+        ck("内容已核对" in all_art, "文章显示「内容已核对」标记")
+        ck("未知专家" not in all_art, "无「未知专家」空壳卡片")
+        # 无明确方向文章：数据里有才要求页面诚实说明，没有则跳过（避免每年误报）
+        found_nodir = "未给出明确胜平负方向" in all_art
+        ck(found_nodir if has_nodir else True,
+           "无明确方向文章有诚实说明（数据存在=%s）" % has_nodir, "页数=%d" % pages)
 
         # 历史战绩存疑提示
         await page.click('button[data-expert-view="history"]')

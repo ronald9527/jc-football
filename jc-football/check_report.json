@@ -1,29 +1,15 @@
 {
-  "checkTime": "2026-11-07 11:45:38",
+  "checkTime": "2026-11-08 16:59:26",
   "integrity_issues": [
     "history.json 存在 3 条重复记录(date+num)"
   ],
   "consistency_issues": [],
-  "freshness_issues": [
-    "周五014 开赛超3小时未回填赛果",
-    "周五013 开赛超3小时未回填赛果",
-    "周五010 开赛超3小时未回填赛果",
-    "周五011 开赛超3小时未回填赛果",
-    "周五012 开赛超3小时未回填赛果",
-    "周五008 开赛超3小时未回填赛果",
-    "周五009 开赛超3小时未回填赛果",
-    "周五007 开赛超3小时未回填赛果",
-    "周五004 开赛超3小时未回填赛果",
-    "周五005 开赛超3小时未回填赛果",
-    "周五006 开赛超3小时未回填赛果",
-    "周五003 开赛超3小时未回填赛果",
-    "周五002 开赛超3小时未回填赛果"
-  ],
+  "freshness_issues": [],
   "code_issues": [],
   "rules_issues": [],
   "integrity_fixed": 0,
-  "consistency_fixed": 49,
+  "consistency_fixed": 12,
   "marks_cleared": 0,
-  "total_fixed": 49,
-  "total_issues": 14
+  "total_fixed": 12,
+  "total_issues": 1
 }

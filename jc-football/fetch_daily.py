@@ -25,6 +25,50 @@ HEADERS = {
     "Referer": "https://www.sporttery.cn/",
     "Accept": "application/json, text/plain, */*",
 }
+
+# ---------------------------------------------------------------------------
+# v1.7.129：海外 CI 官方接口「全局熔断」+ 单进程网络墙钟
+# 根因（2026-11-08 线上 CI 日志实证）：GitHub Actions 机房在美国，
+# webapi.sporttery.cn 对其恒定返回 HTTP 567。主赛程能回退 500.com，
+# 但后续「赔率历史」30 场、「赛果回填」929 条仍会逐场调用官方接口，
+# 每次 fetch() 8 次重试 × 30s 超时 → 16 分钟 + 55 分钟 = 90 分钟被
+# timeout-minutes 强杀（run cancelled），流水线永远走不到「构建+部署」，
+# 刷新按钮因此永远拿不到新数据。
+# 修复：主赛程一旦确认官方接口不可用并回退备用源，即置 _OFFICIAL_DOWN，
+# 之后所有 sporttery 官方接口请求瞬时失败（不再重试/不再 sleep），
+# 让 CI 在数分钟内跑完全部步骤。本地中国网络官方接口 HTTP 200，
+# 永不置位该标志，行为与改动前完全一致。
+# ---------------------------------------------------------------------------
+_OFFICIAL_DOWN = False
+_FETCH_WALL_SEC = float(os.environ.get("JC_FETCH_WALL_SEC", "0") or 0)  # 0=不限（本地）
+_FETCH_T0 = time.time()
+# 回填 / 赔率历史等「逐条打官方接口」步骤的单步硬墙钟（与网络状态无关）。
+# WAF 是概率性的：主赛程可能侥幸放行，后续接口却全被 567，此时熔断标志未置位，
+# 逐条 8 次重试 × sleep 会把单步拖到几百秒。硬墙钟保证任何网络情况下都能按时收尾，
+# 且赛果回填是幂等的（查不完的记录下一轮自动补），跳过绝不损坏已结算数据。
+_STEP_WALL_SEC = float(os.environ.get("JC_STEP_WALL_SEC", "60") or 60)
+_WAF_FAILS = [0]
+
+
+def _note_waf_fail():
+    """连续多轮 fetch 全被 WAF 拒绝 → 自动置熔断（覆盖「主赛程侥幸成功但后续全 567」）。"""
+    global _OFFICIAL_DOWN
+    _WAF_FAILS[0] += 1
+    if _WAF_FAILS[0] >= 3 and not _OFFICIAL_DOWN:
+        _OFFICIAL_DOWN = True
+        print("  [熔断] 连续 %d 轮官方接口被 WAF 拒绝，后续官方请求瞬时短路"
+              % _WAF_FAILS[0], flush=True)
+
+
+def _official_blocked(url):
+    """官方接口是否应被瞬时短路（不占用任何网络时间）。"""
+    if "webapi.sporttery.cn" not in url:
+        return False                       # 500.com 等非官方源不受影响
+    if _OFFICIAL_DOWN:
+        return True                        # 主赛程已确认官方不可达
+    if _FETCH_WALL_SEC and (time.time() - _FETCH_T0) > _FETCH_WALL_SEC:
+        return True                        # 单进程网络总预算耗尽（CI 兜底）
+    return False
 CALC_URL = "https://webapi.sporttery.cn/gateway/uniform/football/getMatchCalculatorV1.qry?channel=c&clientCode=3001"
 SUPPORT_URL = "https://webapi.sporttery.cn/gateway/jc/common/getSupportRateV1.qry"
 BONUS_URL = "https://webapi.sporttery.cn/gateway/uniform/football/getFixedBonusV1.qry"
@@ -164,6 +208,10 @@ def fetch(url, must_contain=None, tries=8):
     由调用方按「官方暂无数据」降级处理；只有全程被拦/网络失败才返回
     {"success": False, "errorMessage": ...}。
     """
+    # v1.7.129：官方接口熔断时瞬时失败，避免海外 CI 逐场 8 次重试 × 30s
+    # 累加成 90 分钟超时（详见文件头 _OFFICIAL_DOWN 说明）。
+    if _official_blocked(url):
+        return {"success": False, "errorMessage": "官方接口不可用(海外CI熔断/网络预算耗尽)"}
     last_body, last_err = "", ""
     for i in range(tries):
         try:
@@ -188,9 +236,13 @@ def fetch(url, must_contain=None, tries=8):
         break
     if last_body:
         try:
+            _WAF_FAILS[0] = 0            # 本轮成功，重置连续失败计数
             return json.loads(last_body)
         except Exception as e:
             return {"success": False, "errorMessage": "JSON 解析失败: %r" % e}
+    # 耗尽重试仍失败：若失败原因是 WAF 拒绝（403/567），累计自动熔断
+    if any(c in (last_err or "") for c in ("HTTP 403", "HTTP 567")):
+        _note_waf_fail()
     return {"success": False, "errorMessage": last_err or "未知错误"}
 
 def to_float(x):
@@ -606,11 +658,25 @@ def backfill_results(records):
     """对已开赛且未回填的记录调用官方开奖接口回填赛果"""
     now = time.time()
     done = 0
+    # v1.7.129：赛果回填提速（CI 90 分钟超时的最大元凶）。
+    # 旧逻辑对「已有 result 但缺 halfFullResult」的历史记录也逐条打官方开奖接口，
+    # 本地 798 条 × 30s、海外 CI 929 条 × 8 次重试 × 30s → 单独一步就烧 55 分钟。
+    # 实测 798 条已有 result 的记录 hitFlag / hhadResult 齐全（缺 0），
+    # 命中判定完全不依赖再查一次；半全场 tab 早已下线，halfFullResult 仅剩 2 条为空，
+    # 为它重查全库得不偿失。故：已有赛果一律跳过网络请求，只处理真正未开奖的记录。
+    _t0 = time.time()
     for rec in records:
+        # 单步硬墙钟：无论网络是否被 WAF 概率性拦截，回填最多跑 _STEP_WALL_SEC 秒。
+        # 幂等设计 —— 本轮没查完的记录下一轮自动补，绝不损坏已有赛果。
+        if time.time() - _t0 > _STEP_WALL_SEC:
+            print("  赛果回填达到 %ds 墙钟，剩余记录下一轮补齐" % int(_STEP_WALL_SEC), flush=True)
+            break
         if rec.get("result") is not None and rec.get("result") != {}:
-            # 已有赛果但缺半全场结果，补查一次
-            if rec.get("halfFullResult"):
-                continue
+            continue
+        # 海外 CI 官方接口熔断后，未开奖记录也无法查到赛果，直接整体跳过，
+        # 避免对 131 条无赛果记录逐条空等（下一轮网络恢复后自动补齐）。
+        if _official_blocked(BONUS_URL):
+            break
         kick = rec.get("kickoff") or ""
         if not kick:
             continue
@@ -1067,11 +1133,30 @@ def main():
     # must_contain：WAF 会概率性放行却返回空数据（success:true 但无 matchInfoList，
     # 实测约 1/15），带上该参数后空响应也会触发重试；重试后仍是合法空响应时
     # 走下方「官方暂无在售比赛」降级路径。
+    global _OFFICIAL_DOWN
+    # 每轮先清熔断标记；只有本轮官方接口确实不可用才重新写，避免上一轮
+    # 熔断残留导致下一轮（网络恢复）被部署守卫误判。
+    _down_flag = os.path.join(HERE, ".ci_official_down")
+    try:
+        os.remove(_down_flag)
+    except OSError:
+        pass
     calc = fetch(CALC_URL, must_contain="matchInfoList")
     matches = []
     match_ids = []
     blocks = []
     if not calc.get("success"):
+        # v1.7.129：主赛程官方接口不可用（海外 CI 恒定 567）→ 置全局熔断。
+        # 后续赔率历史 / 支持率 / 赛果回填等所有 sporttery 官方请求将被
+        # fetch() 瞬时短路，CI 从 90 分钟超时压缩到数分钟内跑完全部步骤。
+        # 同时落标记文件，供 run_daily.sh 的「残缺部署守卫」识别：
+        # 海外 CI 只有 500.com 残缺赛程，绝不能让它部署覆盖生产完整数据。
+        _OFFICIAL_DOWN = True
+        try:
+            with open(_down_flag, "w", encoding="utf-8") as _f:
+                _f.write(time.strftime("%Y-%m-%d %H:%M:%S") + " official api down (overseas CI)\n")
+        except OSError:
+            pass
         # 官方接口不可用 -> 回退备用源 500.com。
         # 背景：竞彩官方接口封锁海外 IP（GitHub Actions 机房在美国，稳定返回
         # HTTP 567），而 500.com 竞彩页面海外实测可达（HTTP 200）且数据为服务端
@@ -1274,12 +1359,31 @@ def main():
         m["verdict"], m["hits"], m["score"] = evaluate(m, cfg)
 
     print("[3.5/6] 抓取赔率历史（资金流向）...", flush=True)
-    for m in matches:
-        odds_hist = fetch_odds_history(m["id"])
-        m["mov"] = odds_hist["mov"]
-        m["hadOpen"] = odds_hist["hadOpen"]
-        m["hhadOpen"] = odds_hist["hhadOpen"]
-        time.sleep(0.4)
+    if _official_blocked(BONUS_URL):
+        # 海外 CI：官方赔率历史接口同样 567，逐场请求只会白等（实测 16 分钟全失败）。
+        # 走 500.com 备用源的场次本就没有官方赔率历史，直接留空即可。
+        print("  官方接口熔断：跳过赔率历史（备用源场次无官方赔率历史）", flush=True)
+        for m in matches:
+            m["mov"] = {"h": None, "d": None, "a": None}
+            m["hadOpen"] = None
+            m["hhadOpen"] = None
+    else:
+        _oh_t0 = time.time()
+        for m in matches:
+            # 概率性 WAF：主赛程侥幸放行但赔率历史逐场被 567 时，
+            # 单步墙钟保证不拖垮整轮（赔率历史属锦上添花，缺了不影响推荐主流程）。
+            if time.time() - _oh_t0 > _STEP_WALL_SEC or _official_blocked(BONUS_URL):
+                for _m in matches:
+                    _m.setdefault("mov", {"h": None, "d": None, "a": None})
+                    _m.setdefault("hadOpen", None)
+                    _m.setdefault("hhadOpen", None)
+                print("  赔率历史达到墙钟/熔断，剩余场次留空（不影响主流程）", flush=True)
+                break
+            odds_hist = fetch_odds_history(m["id"])
+            m["mov"] = odds_hist["mov"]
+            m["hadOpen"] = odds_hist["hadOpen"]
+            m["hhadOpen"] = odds_hist["hhadOpen"]
+            time.sleep(0.4)
     # 赔率变动参与评分后重新判定一次
     for m in matches:
         m["verdict"], m["hits"], m["score"] = evaluate(m, cfg)

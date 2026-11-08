@@ -670,6 +670,71 @@ def check_pipeline_safeguards():
     else:
         add("ERROR", "隔离", "run_daily.sh 部署指纹漏算篮球文件：%s（篮球更新不触发上线）"
             % ", ".join(missing))
+    # (3) v1.7.129：刷新链路护栏（CI 超时根治）不得被误删
+    _r129 = {
+        "timeout \"$FETCH_WALL\"": "run_daily.sh 缺 fetch_daily.py 硬墙钟",
+        ".ci_official_down": "run_daily.sh 缺『残缺数据部署守卫』",
+    }
+    for token, msg in _r129.items():
+        if token not in src:
+            add("ERROR", "刷新链路", msg + "（v1.7.129 根治项）")
+    try:
+        fd = open("fetch_daily.py", encoding="utf-8").read()
+        for token, msg in (("_OFFICIAL_DOWN", "官方接口熔断标志"),
+                           ("_official_blocked", "熔断短路判定"),
+                           ("JC_FETCH_WALL_SEC", "单进程网络墙钟")):
+            if token not in fd:
+                add("ERROR", "刷新链路", "fetch_daily.py 缺 %s（CI 将再次 90 分钟超时）" % msg)
+    except Exception:
+        add("WARN", "刷新链路", "fetch_daily.py 不可读")
+
+
+def check_refresh_chain():
+    """检查 12 刷新按钮链路（v1.7.129）：按钮不再赌 CI、云端配置能跑完且不覆盖生产。"""
+    print("· 检查 12 刷新按钮链路（v1.7.129）")
+    # (1) 前端：主路径即时同步，CI 仅后台 fire-and-forget，不轮询 run / 不因失败报错
+    try:
+        t = open("template.html", encoding="utf-8").read()
+    except Exception:
+        add("ERROR", "刷新链路", "template.html 不可读")
+        return
+    must = {
+        "loadLiveDatasets(false).then": "刷新按钮主路径未即时拉取云端全部数据",
+        "setTimeout(__hardReload, 2600)": "刷新按钮缺硬重载兜底",
+        'fetch("/api/refresh", {method:"POST", cache:"no-store"}).catch(()=>{})': "CI 触发未降级为 fire-and-forget",
+    }
+    for token, msg in must.items():
+        if token not in t:
+            add("ERROR", "刷新链路", msg)
+    # 旧实现特征（赌 CI）必须消失：不得再轮询 run_id / 不再因 conclusion 报错
+    for token in ("api/refresh?run_id=", "云端任务失败(", "抓取耗时较长"):
+        if token in t:
+            add("ERROR", "刷新链路", "仍残留『赌 CI 结果』的旧逻辑：%s" % token)
+    # (2) 后端函数存在且仍触发 workflow_dispatch
+    try:
+        fn = open("functions/api/refresh.js", encoding="utf-8").read()
+        # refresh.js 用 `const WF = "daily.yml"` + 模板串 `${WF}/dispatches`
+        if 'WF = "daily.yml"' not in fn or "/dispatches" not in fn:
+            add("ERROR", "刷新链路", "refresh.js 未触发 daily.yml 的 workflow_dispatch")
+    except Exception:
+        add("WARN", "刷新链路", "functions/api/refresh.js 不可读")
+    # (3) 生效的 workflow 配置：清队列 / 去 push / 收紧超时 / 墙钟
+    for wf in (".github/workflows/daily.yml",):
+        # selftest 在 jc-football/ 下运行，根 workflow 在上一级；两份都查
+        for path in (os.path.join(HERE, wf), os.path.join(os.path.dirname(HERE), wf)):
+            if not os.path.exists(path):
+                continue
+            w = open(path, encoding="utf-8").read()
+            if "cancel-in-progress: true" not in w:
+                add("ERROR", "刷新链路", "%s 未开启 cancel-in-progress（僵尸 run 会排队堵塞刷新）" % path)
+            if "branches: [main]" in w and "on:" in w:
+                # push 触发已移除的判据：文件中不应再有 push 段
+                import re as _re
+                if _re.search(r"^\s*push:\s*$", w, _re.M):
+                    add("ERROR", "刷新链路", "%s 仍保留 push 自动触发（源码提交会拉起海外残缺抓取）" % path)
+            if "JC_FETCH_WALL_SEC" not in w and "JC_FETCH_TIMEOUT" not in w:
+                add("WARN", "刷新链路", "%s 未设置抓取墙钟环境变量（依赖脚本内置 600s）" % path)
+    print("  刷新按钮：即时同步 + 硬重载 + CI 后台尽力（不赌 run 结果），链路护栏齐全")
 
 
 def check_good_rate(data, hist):
@@ -1213,6 +1278,7 @@ def main():
     check_vzhan_batch(data)
     check_expert_content(data)
     check_expert_stats(data)
+    check_refresh_chain()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

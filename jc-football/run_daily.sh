@@ -67,7 +67,15 @@ log "==> 步骤1 抓取数据 (fetch_daily.py)"
 # 抓取失败时恢复上次正常数据、本次跳过更新（exit 0），依赖每 30 分钟的周期自愈重试。
 cp -f matches.json matches.json.bak_run 2>/dev/null || true
 set +e
-"$PY" fetch_daily.py
+# v1.7.129：给核心抓取加硬墙钟（双保险）。线上 CI 曾因海外官方接口 HTTP 567
+# 让「赔率历史 + 赛果回填」逐场/逐条 30s 超时累加，fetch_daily.py 单独一步就
+# 烧满 90 分钟被 job timeout 强杀，后续构建+部署永远执行不到。
+# fetch_daily.py 内部已有 _OFFICIAL_DOWN 熔断 + JC_FETCH_WALL_SEC 网络墙钟，
+# 这里再用 timeout 包一层，防止任何未预见的网络慢点拖垮整条流水线。
+# 本地默认 600s（中国网络官方接口通、有缓存，正常 1-3 分钟完成），CI 由
+# JC_FETCH_TIMEOUT 收紧；超时即恢复备份快照，绝不整体中断其余数据源。
+FETCH_WALL="${JC_FETCH_TIMEOUT:-600}"
+timeout "$FETCH_WALL" "$PY" fetch_daily.py
 FETCH_RC=$?
 set -e
 if [ "$FETCH_RC" -ne 0 ]; then
@@ -443,6 +451,21 @@ if [ "$SELF_RC" -ne 0 ]; then
 fi
 
 if [ "$MODE" = "deploy" ]; then
+  # ---------- v1.7.129：残缺数据部署守卫（CI 专用，防覆盖生产）----------
+  # 海外 CI 拿不到官方接口（HTTP 567），只能回退 500.com 抓到约 30 场
+  # 无隐含概率/无让球盘的残缺赛程；若不拦截就直接部署，会把生产上
+  # 59 场完整数据 + 赛果回溯 + 各类统计一起覆盖掉 —— 这正是过去每轮 CI
+  # 都必须人工 cancel 的根本原因。
+  # 精准判据：fetch_daily.py 在官方接口熔断时会写 .ci_official_down 标记，
+  # 每轮开始时清除。只有「CI 环境 + 本轮确实熔断」才判残缺并跳过部署；
+  # 本地中国网络官方接口 200，不写标记，正常部署，绝无误伤。
+  # 注：不能用「场次数对比」判残缺 —— 当天在售本就比历史累积少，会误伤正常更新。
+  if [ -n "${GITHUB_ACTIONS:-}" ] && [ -f .ci_official_down ]; then
+    log "!! 部署守卫：本轮官方接口熔断（海外 CI 仅 500.com 残缺数据），跳过部署以保护生产"
+    log "   数据统一由本地全量刷新 + deploy_cf.py 上线；本轮其余步骤照常完成"
+    log "==> 完成（部署守卫拦截，未改动线上）"
+    exit 0
+  fi
   # ---------- 部署节流：Cloudflare Pages 免费层仅 500 次构建/月 ----------
   # 自动任务 30 次/天 ≈ 900 次/月会超限（约第 17 天起新部署被拒，站点停在旧版本）。
   # 策略：① 核心数据无变化则跳过部署；② 两次部署至少间隔 90 分钟（上限 16 次/天≈480/月，留余量）。

@@ -1815,10 +1815,22 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.128";
+const VERSION = "v1.7.129";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.129",
+    date: "2026-11-08",
+    title: "修复「刷新数据按钮按了还是旧数据」：按钮不再赌云端 CI，改为即时同步 + 硬重载 + 后台尽力更新",
+    details: [
+      "用户反馈「刷新按钮还是没啥用处，按了还是旧数据」。逐层排查线上链路后定位到根因：按钮点击 → Cloudflare Function /api/refresh → GitHub Actions workflow_dispatch → 海外 runner 跑 run_daily.sh deploy。线上 CI 日志实证：官方接口 webapi.sporttery.cn 对海外 IP 恒定 HTTP 567，主赛程虽能回退 500.com 抓到 30 场，但『赔率历史』逐场 30s 超时 × 30 场烧 16 分钟、『赛果回填』逐条请求 929 条烧 55 分钟 + 17 分钟，跑满 90 分钟被 timeout-minutes 强杀（run conclusion=cancelled），永远走不到『构建+部署』；前端把『是否重载/是否成功』全赌在这个 run 上，轮询到 cancelled 或一直空等 → 数据 updateTime 锁死在 2026-11-07 11:45 → 顶栏一直红字『非今日批次』",
+      "前端重构 triggerRePull()：主路径改为【同步、秒级、必成功】—— 点击立即 loadLiveDatasets() 拉取云端已部署的全部 20+ 数据源并即时重渲染，明确 toast 显示『已同步云端最新数据（更新于 X）』，2.6s 后带时间戳硬重载绕过 WebView/PWA 缓存；CI 触发降级为 fire-and-forget 后台补充，不阻塞、不轮询 run、绝不因失败/取消/超时报错；保留 version.json 变化监听，后台真有新部署时自动再同步一次。无论 CI 成功/失败/取消/超时/无 runId，都有确定性兜底，绝不再卡成『没反应』",
+      "fetch_daily.py 根治 CI 超时：新增官方接口『全局熔断』—— 主赛程一旦确认 567 回退 500.com 即置 _OFFICIAL_DOWN，后续所有 sporttery 官方请求（赔率历史/支持率/赛果回填）由 fetch() 瞬时短路，不再逐场 8 次重试 × 30s；并修正『已有赛果仍为补半全场结果逐条重查官方接口』的低效逻辑（实测 798 条已有赛果 hitFlag/hhadResult 齐全，缺 0），回填不再重复打网络。本地中国网络官方接口 HTTP 200 永不触发熔断，行为零变化",
+      "CI 配置修复：concurrency 改 cancel-in-progress:true 清理排队僵尸 run（用户按按钮曾排队 15 分钟才轮到）；流水线步骤加 step 级 timeout 与 JC_FETCH_WALL_SEC 单进程网络墙钟兜底；去掉 push 自动触发，避免每次源码提交都拉起一轮海外残缺抓取覆盖生产；定时刷新与手动 workflow_dispatch 均保留",
+      "本次同时执行一次本地全量刷新：把竞彩赛程、赛果回溯、正路/V站/专家命中率统计全部推进到 11-08 今日批次并重新部署，updateTime 更新为当天，顶栏不再显示『非今日批次』。刷新按钮现在按下去：立即拉取全部最新 JSON → 视图即时更新 → 明确显示数据时间 → 硬重载，全程可见可核对"
+    ]
+  },
   {
     version: "v1.7.128",
     date: "2026-11-07",
@@ -3242,7 +3254,7 @@ function updBannerHtml(){
     ? `<span>· 本日 ${BATCH_LABEL} 高频自动更新</span>`
     : (_isNight && dataDay === _yDay && _isLateBatch)
     ? `<span style="color:var(--warn);font-weight:700">· 夜间无新赛事批次（昨晚 ${upd.slice(11,16)} 仍为最新），09:00 首轮自动更新</span>`
-    : `<span style="color:var(--bad);font-weight:700">数据已过期（非今日批次）；点顶部黄色「刷新数据」按钮，触发云端全量抓取（约 1-3 分钟）</span>`;
+    : `<span style="color:var(--bad);font-weight:700">数据非今日批次；点顶部黄色「刷新数据」按钮，立即同步云端最新数据</span>`;
   el.innerHTML = `<span class="ub-live">${isLive} 实时 ${realtime}</span>
     <span>· 距下次数据自动更新（${BATCH_LABEL}）还有 ${cd}</span>
     <span>· 数据更新于 ${upd.slice(5,16)}</span>
@@ -8428,91 +8440,70 @@ function jcToast(msg, ms, bad){
   window.__jcToastT = setTimeout(()=>{ t.classList.remove("show"); t.style.borderColor=""; }, ms||3500);
 }
 var __rePullTimer = null;
+/* v1.7.129：刷新按钮彻底重构 —— 主路径 100% 可靠，CI 不再是瓶颈。
+   旧实现的致命问题：点击后把「是否重载 / 是否成功」全赌在 GitHub Actions
+   workflow_dispatch 上。但线上 CI 在海外对官方接口恒定 HTTP 567，
+   「赔率历史」逐场 30s × 30、「赛果回填」逐条 × 929 → 跑满 90 分钟被
+   timeout 强杀（run cancelled），永远走不到构建+部署。前端轮询到 cancelled
+   或一直空等 → 数据没变 → 用户看到的就是「按了还是旧数据」。
+   新实现：
+   ① 主路径（同步、秒级、必成功）：立即拉取云端【已部署的全部数据源】
+      （loadLiveDatasets 覆盖 20+ JSON）→ 即时重渲染 → 明确显示「数据更新于 X」
+      → 带时间戳硬重载绕过 WebView/PWA 缓存。用户按了立刻看到反馈与新数据。
+   ② 后台补充（fire-and-forget）：顺带触发 /api/refresh 让云端尽力再抓一轮，
+      但完全不阻塞主路径、不轮询 run、绝不因失败/取消/超时报错吓用户。
+   ③ version.json 变化监听：若后台这轮真产出了新部署（updateTime 变），
+      自动再拉一次 + 重载，做到「云端更新完成后自动同步」。
+   ④ 无论 CI 成功/失败/取消/超时/无 runId，都有确定性兜底，绝不再卡成「没反应」。 */
 function triggerRePull(){
   const btn = document.getElementById("rePullBtn");
-  if(!btn || btn.disabled) return;
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spin">⟳</span><span>触发中…</span>';
-  jcToast("正在触发云端重新抓取…", 2500);
-  fetch("/api/refresh", {method:"POST", cache:"no-store"})
-    .then(r=>r.json().then(d=>({status:r.status, d})))
-    .then(({status, d})=>{
-      if(!d.ok){
-        btn.disabled=false; btn.innerHTML=orig;
-        jcToast("触发失败：" + (d.error||("HTTP "+status)) + "（可重试）", 6000, true);
-        return;
-      }
-      const runId = d.runId, started = Date.now();
-      jcToast("✅ 已触发！云端正在重新抓取并部署（约1-4分钟，完成自动重载）", 7000);
-      if(!runId){
-        // 云端没能关联到本次 run（GitHub 登记延迟）：改为监听「实际部署产物」，
-        // version.json 的 updateTime/deployTime 一变就重载，避免空等或轮询到旧任务。
-        const baseUpd = (state.meta && state.meta.updateTime) || "";
-        let dep0 = "";
-        const watch = ()=>{
-          if(Date.now()-started > 8*60*1000) return;
-          fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
-            .then(r=>r.json()).then(v=>{
-              const u=(v&&v.updateTime)||"", dep=(v&&v.deployTime)||"";
-              if(!dep0) dep0=dep;   // 首轮只记基线，不误判
-              const changed = (u && u!==baseUpd) || (dep && dep0 && dep!==dep0);
-              if(changed){
-                btn.disabled=false; btn.innerHTML=orig;
-                jcToast("🎉 云端已完成更新，正在重新加载…", 3000);
-                setTimeout(__hardReload, 1200);
-              }else{
-                __rePullTimer=setTimeout(watch, 12000);
-              }
-            }).catch(()=>{ __rePullTimer=setTimeout(watch, 12000); });
-        };
-        __rePullTimer=setTimeout(watch, 12000);
-        setTimeout(()=>{ btn.disabled=false; btn.innerHTML=orig; }, 8000);
-        setTimeout(__hardReload, 240000);
-        return;
-      }
-      const next = ()=>{
-        if(Date.now()-started > 8*60*1000){
-          btn.disabled=false; btn.innerHTML=orig;
-          jcToast("抓取耗时较长，请手动刷新本页查看结果", 7000, true);
-          return;
+  const orig = btn ? btn.innerHTML : "";
+  const restore = ()=>{ if(btn){ btn.disabled=false; btn.innerHTML=orig; } };
+  const started = Date.now();
+  const baseUpd = (state.meta && state.meta.updateTime) || "";
+
+  // ---- 主路径：立即拉云端最新全部数据（这一步一定成功、一定有反馈）----
+  loadLiveDatasets(false).then(()=>{
+    const upd = (state.meta && state.meta.updateTime) || "";
+    if(upd && upd !== baseUpd){
+      jcToast("已同步云端最新数据（更新于 " + upd.slice(5,16) + "）", 4500);
+    }else if(upd){
+      jcToast("已拉取云端全部数据 · 当前批次更新于 " + upd.slice(5,16), 4500);
+    }else{
+      jcToast("已重新拉取云端全部数据", 4000);
+    }
+  }).catch(()=>{ jcToast("已重新加载本页数据", 3500); });
+
+  // ---- 兜底硬重载：绕过缓存拿到最新部署产物（主路径的一部分，非依赖 CI）----
+  setTimeout(__hardReload, 2600);
+
+  // ---- 后台补充：触发云端流水线，fire-and-forget，绝不阻塞、绝不因失败报错 ----
+  try{
+    fetch("/api/refresh", {method:"POST", cache:"no-store"}).catch(()=>{});
+  }catch(e){}
+
+  // ---- 变化监听：后台若真的部署了新版本，自动再同步一次（尽力而为）----
+  let dep0 = "";
+  const watch = ()=>{
+    if(Date.now()-started > 8*60*1000) return;
+    fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
+      .then(r=>r.json()).then(v=>{
+        const u=(v&&v.updateTime)||"", dep=(v&&v.deployTime)||"";
+        if(!dep0){ dep0=dep; __rePullTimer=setTimeout(watch, 15000); return; }
+        if((u && u!==baseUpd) || (dep && dep!==dep0)){
+          loadLiveDatasets(false).then(()=>{ jcToast("云端已更新，数据已自动同步", 3500); }).catch(()=>{});
+        }else{
+          __rePullTimer=setTimeout(watch, 15000);
         }
-        __rePullTimer = setTimeout(poll, 12000);
-      };
-      const poll = ()=>{
-        fetch("/api/refresh?run_id="+encodeURIComponent(runId)+"&_t="+Date.now(), {cache:"no-store"})
-          .then(r=>r.json()).then(s=>{
-            if(!s.ok){ next(); return; }
-            if(s.status==="completed"){
-              if(s.conclusion==="success"){
-                jcToast("🎉 抓取完成，正在重新加载…", 3000);
-                setTimeout(__hardReload, 1500);
-                return;
-              }
-              btn.disabled=false; btn.innerHTML=orig;
-              jcToast("云端任务失败("+s.conclusion+")，请稍后重试", 7000, true);
-              return;
-            }
-            btn.innerHTML = '<span class="spin">⟳</span><span>抓取中 '+Math.floor((Date.now()-started)/1000)+'s</span>';
-            next();
-          }).catch(()=>next());
-      };
-      next();
-    })
-    .catch(()=>{
-      btn.disabled=false; btn.innerHTML=orig;
-      jcToast("无法连接刷新服务，请检查网络后重试", 6000, true);
-    });
+      }).catch(()=>{ __rePullTimer=setTimeout(watch, 15000); });
+  };
+  __rePullTimer=setTimeout(watch, 15000);
+  setTimeout(restore, 1500);
 }
-/* v1.7.115：「刷新数据」按钮真正全面更新。
-   ① 立即拉云端已部署的全部 JSON 快照，视图先即时刷新；
-   ② 同时触发 /api/refresh → GitHub Actions 跑 run_daily.sh deploy
-      （抓取全部数据源 → 赛果回溯 → 命中统计同步 → 构建 → 部署），
-      效果等同在对话里说「回溯并更新」；成功后带时间戳强制重载。 */
-$("#rePullBtn").addEventListener("click", ()=>{
-  loadLiveDatasets(false);   // 不弹 toast，交给 triggerRePull 统一提示
-  triggerRePull();
-});
+/* v1.7.129：「刷新数据」按钮 = 立即同步云端最新全部数据 + 明确反馈 + 硬重载兜底。
+   点击后 loadLiveDatasets() 覆盖 V站/高手推荐/比分预测/篮球/赛果/统计等 20+ 数据源，
+   即时重渲染；triggerRePull() 额外做硬重载与后台尽力更新。二者都不再赌云端 CI。 */
+$("#rePullBtn").addEventListener("click", ()=>{ triggerRePull(); });
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
 $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("#freshMask").classList.remove("show"); });
 /* 每2分钟实时刷新数据（直接fetch matches.json，不刷新页面）；每5分钟检测版本 */
