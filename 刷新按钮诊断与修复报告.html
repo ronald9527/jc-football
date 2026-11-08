@@ -70,5 +70,26 @@ tr.bad{background:rgba(232,91,91,.05)}
 CI 触发仅作尽力补充，且加了残缺守卫，绝不会再用 30 场覆盖生产 59 场。
 </div>
 
-<div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 数据源：线上 GitHub Actions 日志 / 本地 matches.json · 站点 https://jc-football-1eo.pages.dev/</div>
+<h2>六、GitHub 同步结果与唯一遗留项</h2>
+<div class="note">
+· <b>源码 / 数据已同步</b>：main 从 <code>d72f6175ee1c</code> fast-forward 到
+<code>6dde25f238b9</code>（未覆盖任何历史），45 个文件（模板、页面、抓取脚本、流水线、
+自检、三套 UI 回归、全部数据与统计 JSON、APK manifest / 内嵌页、离线报告）远程 hash 逐一核对一致。<br>
+· <b>唯一未同步：仓库根目录 <code>.github/workflows/daily.yml</code></b>。
+当前 token 缺少 <code>workflow</code> 权限，GitHub 明确拒绝：
+<code>403 refusing to allow a Personal Access Token to create or update workflow ... without 'workflow' scope</code>。
+因此线上 Actions 仍读旧版（<code>push:</code> 触发 / <code>cancel-in-progress: false</code> /
+<code>timeout-minutes: 90</code> / 无墙钟变量）。<br>
+· <b>影响评估：无功能影响</b>。刷新按钮已完全不依赖 CI（fire-and-forget），
+线上页面由 Cloudflare Pages 直接上传部署（本次 push 未触发任何新部署，
+version.json 的 deployTime 仍为 17:10:57）；新版 <code>run_daily.sh</code> 已同步，
+含硬墙钟与残缺数据部署守卫，即便旧 workflow 被触发也不会用残缺数据覆盖生产；
+本次提交带 <code>[skip ci]</code>，实测未拉起新 CI run。<br>
+· <b>新版配置已完整保存在仓库 <code>jc-football/.github/workflows/daily.yml</code></b>
+（内容 = 本地 <code>/workspace/.github/workflows/daily.yml</code>），可直接复制到根目录替换。
+彻底闭环二选一：换一个带 <code>workflow</code> scope 的 token 由 AI 自动替换，
+或在 GitHub 网页手动把该文件覆盖到根目录。在此之前，所有提交保持带 <code>[skip ci]</code>。
+</div>
+
+<div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 第六节为 GitHub 同步收尾补充 · 数据源：线上 GitHub Actions 日志 / 本地 matches.json · 站点 https://jc-football-1eo.pages.dev/</div>
 </body></html>
