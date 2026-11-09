@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-09 12:05:27",
+ "updatedAt": "2026-11-10 01:03:45",
  "source": "football-data.org",
  "enabled": true,
  "dateFrom": "2026-11-08",
@@ -73,19 +73,6 @@
    "winner": "DRAW"
   },
   {
-   "competition": "FL1",
-   "league": "法甲",
-   "home": "Stade Rennais FC 1901",
-   "away": "Lille OSC",
-   "utcDate": "2026-11-08T14:00:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 1,
-    "away": 2
-   },
-   "winner": "AWAY_TEAM"
-  },
-  {
    "competition": "SA",
    "league": "意甲",
    "home": "Genoa CFC",
@@ -123,6 +110,19 @@
     "away": 0
    },
    "winner": "HOME_TEAM"
+  },
+  {
+   "competition": "FL1",
+   "league": "法甲",
+   "home": "Stade Rennais FC 1901",
+   "away": "Lille OSC",
+   "utcDate": "2026-11-08T14:00:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 1,
+    "away": 2
+   },
+   "winner": "AWAY_TEAM"
   },
   {
    "competition": "PL",
@@ -218,19 +218,6 @@
   {
    "competition": "DED",
    "league": "荷甲",
-   "home": "SC Cambuur-Leeuwarden",
-   "away": "PSV",
-   "utcDate": "2026-11-08T15:45:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 2,
-    "away": 5
-   },
-   "winner": "AWAY_TEAM"
-  },
-  {
-   "competition": "DED",
-   "league": "荷甲",
    "home": "AZ",
    "away": "FC Groningen",
    "utcDate": "2026-11-08T15:45:00Z",
@@ -240,6 +227,19 @@
     "away": 3
    },
    "winner": "HOME_TEAM"
+  },
+  {
+   "competition": "DED",
+   "league": "荷甲",
+   "home": "SC Cambuur-Leeuwarden",
+   "away": "PSV",
+   "utcDate": "2026-11-08T15:45:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 2,
+    "away": 5
+   },
+   "winner": "AWAY_TEAM"
   },
   {
    "competition": "FL1",
@@ -398,19 +398,6 @@
    "winner": "AWAY_TEAM"
   },
   {
-   "competition": "FL1",
-   "league": "法甲",
-   "home": "Racing Club de Lens",
-   "away": "Olympique de Marseille",
-   "utcDate": "2026-11-08T19:45:00Z",
-   "status": "FINISHED",
-   "score": {
-    "home": 1,
-    "away": 2
-   },
-   "winner": "AWAY_TEAM"
-  },
-  {
    "competition": "SA",
    "league": "意甲",
    "home": "ACF Fiorentina",
@@ -422,6 +409,19 @@
     "away": 2
    },
    "winner": "DRAW"
+  },
+  {
+   "competition": "FL1",
+   "league": "法甲",
+   "home": "Racing Club de Lens",
+   "away": "Olympique de Marseille",
+   "utcDate": "2026-11-08T19:45:00Z",
+   "status": "FINISHED",
+   "score": {
+    "home": 1,
+    "away": 2
+   },
+   "winner": "AWAY_TEAM"
   },
   {
    "competition": "PD",

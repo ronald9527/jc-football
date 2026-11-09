@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-09 04:07:16",
+ "updatedAt": "2026-11-09 17:05:32",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
  "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
@@ -2520,15 +2520,15 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 41.1,
-    "exact": 7.1,
+    "dir": 42.1,
+    "exact": 8.7,
     "dirLevel": "mid",
-    "exactLevel": "low",
-    "leagueN": 19,
+    "exactLevel": "mid",
+    "leagueN": 20,
     "teamN": 5,
-    "sample": 24,
+    "sample": 25,
     "outcome": "客胜",
-    "tip": "方向中等可信，方向「客胜」可作小注参考"
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
    }
   },
   {

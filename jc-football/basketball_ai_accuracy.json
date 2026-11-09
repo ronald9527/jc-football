@@ -9141,29 +9141,29 @@
      "dir": "a",
      "conf": 51.8,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "h",
      "conf": 65.6,
      "gl": "-10.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "h",
      "conf": 54.6,
      "gl": "+221.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l3",
      "conf": 51.8,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "93:130"
   },
   {
    "date": "2026-11-08",
@@ -9180,29 +9180,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 50.0,
      "gl": "+12.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "h",
      "conf": 50.5,
      "gl": "+221.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l3",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "117:97"
   },
   {
    "date": "2026-11-08",
@@ -9219,29 +9219,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 61.7,
      "gl": "+8.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 55.3,
      "gl": "+237.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l2",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "114:108"
   },
   {
    "date": "2026-11-08",
@@ -9258,29 +9258,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     },
     "hdc": {
      "dir": "h",
      "conf": 52.4,
      "gl": "+2.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 50.0,
      "gl": "+229.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l3",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "123:139"
   },
   {
    "date": "2026-11-09",
@@ -9429,23 +9429,23 @@
      "dir": "a",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "h",
      "conf": 52.5,
      "gl": "222.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l3",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "93:130"
   },
   {
    "date": "2026-11-09",
@@ -9462,23 +9462,23 @@
      "dir": "h",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "h",
      "conf": 56.7,
      "gl": "222.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l2",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "117:97"
   },
   {
    "date": "2026-11-09",
@@ -9495,23 +9495,23 @@
      "dir": "h",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "l",
      "conf": 60.5,
      "gl": "238.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "114:108"
   },
   {
    "date": "2026-11-09",
@@ -9528,23 +9528,23 @@
      "dir": "h",
      "conf": 50.9,
      "gl": null,
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 50.4,
      "gl": "229.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.0,
      "gl": null,
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "123:139"
   },
   {
    "date": "2026-11-08",
@@ -9917,7 +9917,304 @@
    },
    "topHit": null,
    "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042675",
+   "num": "周一301",
+   "league": "德国篮球联赛",
+   "home": "耶拿科学城",
+   "away": "汉堡塔楼",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 61.2,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 61.2,
+     "gl": "168.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l4",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042676",
+   "num": "周一302",
+   "league": "美职篮",
+   "home": "活塞",
+   "away": "奇才",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 52.7,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 52.7,
+     "gl": "217.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l5",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042677",
+   "num": "周一303",
+   "league": "美职篮",
+   "home": "黄蜂",
+   "away": "骑士",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 60.3,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 60.3,
+     "gl": "215.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l5",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042678",
+   "num": "周一304",
+   "league": "美职篮",
+   "home": "老鹰",
+   "away": "湖人",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 59.1,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.6,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 59.1,
+     "gl": "238.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l4",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042679",
+   "num": "周一305",
+   "league": "美职篮",
+   "home": "猛龙",
+   "away": "灰熊",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 56.9,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 56.9,
+     "gl": "229.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l5",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042680",
+   "num": "周一306",
+   "league": "美职篮",
+   "home": "独行侠",
+   "away": "步行者",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 51.9,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 51.9,
+     "gl": "224.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l3",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042681",
+   "num": "周一307",
+   "league": "美职篮",
+   "home": "火箭",
+   "away": "掘金",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 56.0,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 56.0,
+     "gl": "219.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042682",
+   "num": "周一308",
+   "league": "美职篮",
+   "home": "太阳",
+   "away": "马刺",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 51.7,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 51.7,
+     "gl": "228.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l2",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-10",
+   "id": "2042683",
+   "num": "周一309",
+   "league": "美职篮",
+   "home": "勇士",
+   "away": "鹈鹕",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 60.5,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 60.5,
+     "gl": "235.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
   }
  ],
- "updatedAt": "2026-11-09 12:11:21"
+ "updatedAt": "2026-11-10 01:07:50"
 }
