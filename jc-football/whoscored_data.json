@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-08 17:31:34",
+ "updatedAt": "2026-11-09 04:07:16",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
  "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
@@ -499,8 +499,8 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 37.7,
-    "exact": 9.1,
+    "dir": 37.8,
+    "exact": 9.2,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -674,8 +674,8 @@
    "predA": 1,
    "evaluated": false,
    "conf": {
-    "dir": 39.6,
-    "exact": 8.4,
+    "dir": 39.8,
+    "exact": 8.5,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 19,
@@ -2520,8 +2520,8 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 41.0,
-    "exact": 7.0,
+    "dir": 41.1,
+    "exact": 7.1,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 19,
@@ -16016,6 +16016,56 @@
  ],
  "history": [
   {
+   "id": "1984140",
+   "date": "2026-11-09",
+   "league": "法甲",
+   "home": "Lens",
+   "away": "Marseille",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日029",
+   "preConf": {
+    "dir": 37.8,
+    "exact": 9.2,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 12,
+    "teamN": 8,
+    "sample": 20,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  {
+   "id": "1995464",
+   "date": "2026-11-09",
+   "league": "德甲",
+   "home": "Hoffenheim",
+   "away": "Schalke 04",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日027",
+   "preConf": {
+    "dir": 39.8,
+    "exact": 8.5,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 19,
+    "teamN": 5,
+    "sample": 24,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
    "id": "1982532",
    "date": "2026-11-08",
    "league": "荷甲",
@@ -24240,6 +24290,7 @@
   }
  ],
  "historyDateList": [
+  "2026-11-09",
   "2026-11-08",
   "2026-11-07",
   "2026-11-05",
@@ -24268,11 +24319,17 @@
  ],
  "reliable": {
   "overall": {
-   "n": 433,
-   "exactHit": 8.5,
-   "outcomeHit": 43.0
+   "n": 435,
+   "exactHit": 9.0,
+   "outcomeHit": 43.2
   },
   "leagues": [
+   {
+    "league": "法甲",
+    "n": 13,
+    "exactHit": 23.1,
+    "outcomeHit": 30.8
+   },
    {
     "league": "西甲",
     "n": 21,
@@ -24284,12 +24341,6 @@
     "n": 22,
     "exactHit": 18.2,
     "outcomeHit": 50.0
-   },
-   {
-    "league": "法甲",
-    "n": 12,
-    "exactHit": 16.7,
-    "outcomeHit": 25.0
    },
    {
     "league": "葡超",
@@ -24328,6 +24379,12 @@
     "outcomeHit": 21.4
    },
    {
+    "league": "德甲",
+    "n": 20,
+    "exactHit": 10.0,
+    "outcomeHit": 35.0
+   },
+   {
     "league": "Europa League",
     "n": 34,
     "exactHit": 8.8,
@@ -24344,12 +24401,6 @@
     "n": 26,
     "exactHit": 7.7,
     "outcomeHit": 53.8
-   },
-   {
-    "league": "德甲",
-    "n": 19,
-    "exactHit": 5.3,
-    "outcomeHit": 31.6
    },
    {
     "league": "英乙",
@@ -24396,6 +24447,12 @@
     "outcomeHit": 66.7
    },
    {
+    "team": "Hoffenheim",
+    "n": 4,
+    "exactHit": 50.0,
+    "outcomeHit": 50.0
+   },
+   {
     "team": "Nottingham Forest",
     "n": 3,
     "exactHit": 33.3,
@@ -24406,6 +24463,12 @@
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 100.0
+   },
+   {
+    "team": "Schalke 04",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
    },
    {
     "team": "Inter Miami CF",
@@ -24450,12 +24513,6 @@
     "outcomeHit": 33.3
    },
    {
-    "team": "Hoffenheim",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
-   },
-   {
     "team": "Sporting CP",
     "n": 3,
     "exactHit": 33.3,
@@ -24490,17 +24547,11 @@
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 33.3
-   },
-   {
-    "team": "Paris Saint-Germain",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
    }
   ],
   "baseline": {
-   "dir": 43.0,
-   "exact": 8.5
+   "dir": 43.2,
+   "exact": 9.0
   }
  }
 }

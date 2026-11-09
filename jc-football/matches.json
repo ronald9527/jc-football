@@ -1,654 +1,31 @@
 {
- "updateTime": "2026-11-09 01:29:40",
- "count": 7,
+ "updateTime": "2026-11-09 12:05:09",
+ "count": 4,
  "matches": [
   {
-   "id": "1428197",
-   "num": "周日024",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 01:30",
-   "time": "01:30",
-   "league": "西甲",
-   "home": "比利亚雷",
-   "away": "赫塔费",
-   "hr": "11",
-   "ar": "15",
-   "hrn": 11,
-   "arn": 15,
-   "status": "",
-   "had": {
-    "h": 1.31,
-    "d": 4.35,
-    "a": 6.85
-   },
-   "hhad": {
-    "h": 2.1,
-    "d": 3.41,
-    "a": 2.7,
-    "goal": "-1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": 67.0,
-    "d": 20.2,
-    "a": 12.8
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": 41.8,
-    "d": 25.7,
-    "a": 32.5
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.8,
-   "verdict": null,
-   "hits": [],
-   "score": {
-    "dir": "h",
-    "score": 0.0,
-    "stars": 0,
-    "kelly": {
-     "h": 0.878,
-     "d": 0.879,
-     "a": 0.877
-    },
-    "kellyDiff": {
-     "h": 0.0,
-     "d": 0.1,
-     "a": -0.1
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": []
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "-1"
-   },
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐上盘（—，综合评分2.5）",
-    "dir": "h",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
-   "scoreRec": {
-    "predicted": "1:2",
-    "alternatives": [
-     "0:1",
-     "0:2",
-     "0:3"
-    ],
-    "confidence": 80,
-    "expHome": 1.2,
-    "expAway": 1.5,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率67.0%",
-     "竞彩让球-1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 5,
-     "w": 4,
-     "d": 1,
-     "l": 0,
-     "wr": 80,
-     "form": "胜平胜胜胜",
-     "home_wr": 67,
-     "away_wr": 100,
-     "hdp_wr": 75,
-     "gf": 2.2,
-     "ga": 1.0,
-     "src": "500球队页"
-    },
-    "away": {
-     "n": 6,
-     "w": 4,
-     "d": 2,
-     "l": 0,
-     "wr": 67,
-     "form": "胜胜平平胜胜",
-     "home_wr": 67,
-     "away_wr": 67,
-     "hdp_wr": 50,
-     "gf": 2.17,
-     "ga": 0.5,
-     "src": "500球队页"
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 5,
-     "gf": 2.2,
-     "ga": 1.0
-    },
-    "away": {
-     "n": 6,
-     "gf": 2.17,
-     "ga": 0.5
-    }
-   },
-   "h2h": null,
-   "hkmo": {
-    "fid": "1428197",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "比利亚雷",
-    "away": "赫塔费",
-    "league": "西甲",
-    "num": "周日024",
-    "kickoff": "2026-11-09 01:30",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    }
-   }
-  },
-  {
-   "id": "1428183",
-   "num": "周日025",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 01:30",
-   "time": "01:30",
-   "league": "西甲",
-   "home": "塞尔塔",
-   "away": "莱万特",
-   "hr": "12",
-   "ar": "17",
-   "hrn": 12,
-   "arn": 17,
-   "status": "",
-   "had": {
-    "h": 1.65,
-    "d": 3.17,
-    "a": 4.6
-   },
-   "hhad": {
-    "h": 3.19,
-    "d": 3.25,
-    "a": 1.93,
-    "goal": "-1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": 53.2,
-    "d": 27.7,
-    "a": 19.1
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": 27.5,
-    "d": 27.0,
-    "a": 45.5
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.8,
-   "verdict": null,
-   "hits": [],
-   "score": {
-    "dir": "h",
-    "score": 0.0,
-    "stars": 0,
-    "kelly": {
-     "h": 0.878,
-     "d": 0.878,
-     "a": 0.879
-    },
-    "kellyDiff": {
-     "h": 0.0,
-     "d": 0.0,
-     "a": 0.1
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": []
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "-1"
-   },
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐上盘（—，综合评分2.5）",
-    "dir": "h",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
-   "scoreRec": {
-    "predicted": "1:2",
-    "alternatives": [
-     "0:1",
-     "0:2",
-     "0:3"
-    ],
-    "confidence": 71,
-    "expHome": 1.2,
-    "expAway": 1.5,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率53.2%",
-     "竞彩让球-1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 6,
-     "w": 4,
-     "d": 2,
-     "l": 0,
-     "wr": 67,
-     "form": "胜平胜平胜胜",
-     "home_wr": 67,
-     "away_wr": 67,
-     "hdp_wr": 50,
-     "gf": 1.83,
-     "ga": 0.17,
-     "src": "500球队页"
-    },
-    "away": {
-     "n": 6,
-     "w": 3,
-     "d": 3,
-     "l": 0,
-     "wr": 50,
-     "form": "胜胜平平胜平",
-     "home_wr": 50,
-     "away_wr": 50,
-     "hdp_wr": 67,
-     "gf": 2.0,
-     "ga": 1.17,
-     "src": "500球队页"
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 6,
-     "gf": 1.83,
-     "ga": 0.17
-    },
-    "away": {
-     "n": 6,
-     "gf": 2.0,
-     "ga": 1.17
-    }
-   },
-   "h2h": null,
-   "hkmo": {
-    "fid": "1428183",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "塞尔塔",
-    "away": "莱万特",
-    "league": "西甲",
-    "num": "周日025",
-    "kickoff": "2026-11-09 01:30",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    }
-   }
-  },
-  {
-   "id": "1438197",
-   "num": "周日026",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 02:00",
-   "time": "02:00",
-   "league": "葡超",
-   "home": "吉马良斯",
-   "away": "波尔图",
-   "hr": "13",
+   "id": "1491201",
+   "num": "周二001",
+   "week": "周二",
+   "date": "2026-11-11",
+   "kickoff": "2026-11-11 03:00",
+   "time": "03:00",
+   "league": "英锦标赛",
+   "home": "伯顿",
+   "away": "诺茨郡",
+   "hr": "2",
    "ar": "1",
-   "hrn": 13,
+   "hrn": 2,
    "arn": 1,
    "status": "",
    "had": {
-    "h": 6.45,
-    "d": 4.4,
-    "a": 1.32
+    "h": 2.2,
+    "d": 3.38,
+    "a": 2.57
    },
    "hhad": {
-    "h": 2.68,
-    "d": 3.25,
-    "a": 2.18,
-    "goal": "+1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": 13.6,
-    "d": 19.9,
-    "a": 66.5
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": 32.7,
-    "d": 27.0,
-    "a": 40.3
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.7,
-   "verdict": {
-    "t": "good",
-    "txt": "客队排名[1]优于主队[13]达12位且客胜概率66.5%，实力+市场双确认",
-    "dir": "a",
-    "stars": 3,
-    "score": 1.83,
-    "reasons": [
-     "组10排名压制·客胜+1.83×1.22",
-     "智能引擎·校准83%·EV+9%·值得考虑（正期望）"
-    ]
-   },
-   "hits": [
-    {
-     "g": "组10排名压制",
-     "t": "good",
-     "dir": "a",
-     "label": "客队排名[1]优于主队[13]达12位且客胜概率66.5%，实力+市场双确认",
-     "cond": "排名差12位(≥7.4)，客胜概率66.5%≥45%"
-    }
-   ],
-   "score": {
-    "dir": "a",
-    "score": 1.83,
-    "stars": 3,
-    "kelly": {
-     "h": 0.877,
-     "d": 0.876,
-     "a": 0.878
-    },
-    "kellyDiff": {
-     "h": 0.0,
-     "d": -0.1,
-     "a": 0.1
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": [
-     "组10排名压制·客胜+1.83×1.22",
-     "智能引擎·校准83%·EV+9%·值得考虑（正期望）"
-    ]
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "smart": {
-    "dir": "a",
-    "odds": 1.32,
-    "p_off": 0.665,
-    "alpha": 0.1602,
-    "p_cal": 0.8252,
-    "ev": 0.0893,
-    "stars": 4,
-    "advice": "值得考虑（正期望）",
-    "reasons": [
-     "官方概率66%",
-     "区间55-70% alpha+13.4pt",
-     "规则信号1组 alpha+2.6pt"
-    ],
-    "type": "good"
-   },
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让负（综合评分0.0）",
-    "dir": "a",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "+1"
-   },
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐下盘（—，综合评分2.5）",
-    "dir": "a",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
-   "scoreRec": {
-    "predicted": "2:1",
-    "alternatives": [
-     "1:0",
-     "1:1",
-     "1:2"
-    ],
-    "confidence": 79,
-    "expHome": 1.5,
-    "expAway": 1.2,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.5·客队预期进球1.2",
-     "热门方向客胜概率66.5%",
-     "竞彩让球1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 6,
-     "w": 3,
-     "d": 3,
-     "l": 0,
-     "wr": 50,
-     "form": "平胜胜平胜平",
-     "home_wr": 33,
-     "away_wr": 67,
-     "hdp_wr": 25,
-     "gf": 1.67,
-     "ga": 0.33,
-     "src": "500球队页"
-    },
-    "away": {
-     "n": 5,
-     "w": 5,
-     "d": 0,
-     "l": 0,
-     "wr": 100,
-     "form": "胜胜胜胜胜",
-     "home_wr": 100,
-     "away_wr": 100,
-     "hdp_wr": 75,
-     "gf": 3.0,
-     "ga": 0.8,
-     "src": "500球队页"
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 6,
-     "gf": 1.67,
-     "ga": 0.33
-    },
-    "away": {
-     "n": 5,
-     "gf": 3.0,
-     "ga": 0.8
-    }
-   },
-   "h2h": null,
-   "hkmo": {
-    "fid": "1438197",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "吉马良斯",
-    "away": "波尔图",
-    "league": "葡超",
-    "num": "周日026",
-    "kickoff": "2026-11-09 02:00",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    }
-   },
-   "modelPred": {
-    "h": 0,
-    "a": 2
-   }
-  },
-  {
-   "id": "1428637",
-   "num": "周日027",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 02:30",
-   "time": "02:30",
-   "league": "德甲",
-   "home": "霍芬海姆",
-   "away": "沙尔克04",
-   "hr": "14",
-   "ar": "17",
-   "hrn": 14,
-   "arn": 17,
-   "status": "",
-   "had": {
-    "h": 1.4,
-    "d": 4.25,
-    "a": 5.3
-   },
-   "hhad": {
-    "h": 2.23,
-    "d": 3.65,
-    "a": 2.4,
+    "h": 4.55,
+    "d": 3.95,
+    "a": 1.5,
     "goal": "-1"
    },
    "ttg": {},
@@ -657,9 +34,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 62.8,
-    "d": 20.7,
-    "a": 16.6
+    "h": 39.9,
+    "d": 26.0,
+    "a": 34.1
    },
    "hadSup": {
     "h": null,
@@ -667,203 +44,9 @@
     "a": null
    },
    "hhadProb": {
-    "h": 39.4,
-    "d": 24.1,
-    "a": 36.6
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.9,
-   "verdict": null,
-   "hits": [],
-   "score": {
-    "dir": "h",
-    "score": 0.0,
-    "stars": 0,
-    "kelly": {
-     "h": 0.879,
-     "d": 0.88,
-     "a": 0.88
-    },
-    "kellyDiff": {
-     "h": 0.0,
-     "d": 0.1,
-     "a": 0.1
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": []
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让胜（综合评分0.0）",
-    "dir": "h",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "-1"
-   },
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐上盘（—，综合评分2.5）",
-    "dir": "h",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
-   "scoreRec": {
-    "predicted": "1:2",
-    "alternatives": [
-     "0:1",
-     "0:2",
-     "0:3"
-    ],
-    "confidence": 77,
-    "expHome": 1.2,
-    "expAway": 1.5,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率62.8%",
-     "竞彩让球-1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 6,
-     "w": 4,
-     "d": 2,
-     "l": 0,
-     "wr": 67,
-     "form": "平胜平胜胜胜",
-     "home_wr": 100,
-     "away_wr": 50,
-     "hdp_wr": 50,
-     "gf": 2.17,
-     "ga": 0.5,
-     "src": "500球队页"
-    },
-    "away": {
-     "n": 5,
-     "w": 2,
-     "d": 3,
-     "l": 0,
-     "wr": 40,
-     "form": "胜平胜平平",
-     "home_wr": 0,
-     "away_wr": 67,
-     "hdp_wr": 33,
-     "gf": 0.8,
-     "ga": 0.2,
-     "src": "500球队页"
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 6,
-     "gf": 2.17,
-     "ga": 0.5
-    },
-    "away": {
-     "n": 5,
-     "gf": 0.8,
-     "ga": 0.2
-    }
-   },
-   "h2h": null,
-   "hkmo": {
-    "fid": "1428637",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "霍芬海姆",
-    "away": "沙尔克04",
-    "league": "德甲",
-    "num": "周日027",
-    "kickoff": "2026-11-09 02:30",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    }
-   }
-  },
-  {
-   "id": "1414197",
-   "num": "周日028",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 03:45",
-   "time": "03:45",
-   "league": "意甲",
-   "home": "佛罗伦萨",
-   "away": "尤文图斯",
-   "hr": "15",
-   "ar": "7",
-   "hrn": 15,
-   "arn": 7,
-   "status": "",
-   "had": {
-    "h": 3.4,
-    "d": 3.28,
-    "a": 1.85
-   },
-   "hhad": {
-    "h": 1.69,
-    "d": 3.48,
-    "a": 3.85,
-    "goal": "+1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": 25.8,
-    "d": 26.8,
-    "a": 47.4
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": 52.0,
-    "d": 25.2,
-    "a": 22.8
+    "h": 19.3,
+    "d": 22.2,
+    "a": 58.5
    },
    "hhadSup": {
     "h": null,
@@ -879,237 +62,6 @@
    "eKey": null,
    "absValue": null,
    "returnRate": 87.8,
-   "verdict": {
-    "t": "good",
-    "txt": "客队排名[7]优于主队[15]达8位且客胜概率47.4%，实力+市场双确认",
-    "dir": "a",
-    "stars": 3,
-    "score": 1.83,
-    "reasons": [
-     "组10排名压制·客胜+1.83×1.22",
-     "智能引擎·校准51%·EV-6%·不建议（负期望）"
-    ]
-   },
-   "hits": [
-    {
-     "g": "组10排名压制",
-     "t": "good",
-     "dir": "a",
-     "label": "客队排名[7]优于主队[15]达8位且客胜概率47.4%，实力+市场双确认",
-     "cond": "排名差8位(≥7.4)，客胜概率47.4%≥45%"
-    }
-   ],
-   "score": {
-    "dir": "a",
-    "score": 1.83,
-    "stars": 3,
-    "kelly": {
-     "h": 0.877,
-     "d": 0.879,
-     "a": 0.877
-    },
-    "kellyDiff": {
-     "h": -0.1,
-     "d": 0.1,
-     "a": -0.1
-    },
-    "mov": {
-     "h": null,
-     "d": null,
-     "a": null
-    },
-    "reasons": [
-     "组10排名压制·客胜+1.83×1.22",
-     "智能引擎·校准51%·EV-6%·不建议（负期望）"
-    ]
-   },
-   "mov": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hadOpen": null,
-   "hhadOpen": null,
-   "smart": {
-    "dir": "a",
-    "odds": 1.85,
-    "p_off": 0.474,
-    "alpha": 0.036,
-    "p_cal": 0.51,
-    "ev": -0.0566,
-    "stars": 1,
-    "advice": "不建议（负期望）",
-    "reasons": [
-     "官方概率47%",
-     "区间45-55% alpha+0.9pt",
-     "规则信号1组 alpha+2.6pt"
-    ],
-    "type": "good"
-   },
-   "hhadVerdict": {
-    "t": "good",
-    "txt": "推荐让负（综合评分0.0）",
-    "dir": "a",
-    "stars": 1,
-    "score": 0.0,
-    "reasons": [],
-    "goal": "+1"
-   },
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐下盘（—，综合评分2.5）",
-    "dir": "a",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
-   "scoreRec": {
-    "predicted": "2:1",
-    "alternatives": [
-     "1:0",
-     "1:1",
-     "1:2"
-    ],
-    "confidence": 68,
-    "expHome": 1.5,
-    "expAway": 1.2,
-    "totalGoals": 2.5,
-    "reasons": [
-     "预期总进球2.5球",
-     "主队预期进球1.5·客队预期进球1.2",
-     "热门方向客胜概率47.4%",
-     "竞彩让球1球调整"
-    ]
-   },
-   "form": {
-    "home": {
-     "n": 5,
-     "w": 3,
-     "d": 2,
-     "l": 0,
-     "wr": 60,
-     "form": "平胜胜平胜",
-     "home_wr": 33,
-     "away_wr": 100,
-     "hdp_wr": 67,
-     "gf": 2.0,
-     "ga": 1.0,
-     "src": "500球队页"
-    },
-    "away": {
-     "n": 5,
-     "w": 3,
-     "d": 2,
-     "l": 0,
-     "wr": 60,
-     "form": "胜胜平平胜",
-     "home_wr": 67,
-     "away_wr": 50,
-     "hdp_wr": 40,
-     "gf": 1.8,
-     "ga": 0.6,
-     "src": "500球队页"
-    }
-   },
-   "attack": {
-    "home": {
-     "n": 5,
-     "gf": 2.0,
-     "ga": 1.0
-    },
-    "away": {
-     "n": 5,
-     "gf": 1.8,
-     "ga": 0.6
-    }
-   },
-   "h2h": null,
-   "hkmo": {
-    "fid": "1414197",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "佛罗伦萨",
-    "away": "尤文图斯",
-    "league": "意甲",
-    "num": "周日028",
-    "kickoff": "2026-11-09 03:45",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    }
-   }
-  },
-  {
-   "id": "1415167",
-   "num": "周日029",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 03:45",
-   "time": "03:45",
-   "league": "法甲",
-   "home": "朗斯",
-   "away": "马赛",
-   "hr": "9",
-   "ar": "6",
-   "hrn": 9,
-   "arn": 6,
-   "status": "",
-   "had": {
-    "h": 2.28,
-    "d": 3.32,
-    "a": 2.5
-   },
-   "hhad": {
-    "h": 4.65,
-    "d": 4.35,
-    "a": 1.44,
-    "goal": "-1"
-   },
-   "ttg": {},
-   "goalsExp": null,
-   "hhProb": null,
-   "aaProb": null,
-   "_src": "500.com",
-   "hadProb": {
-    "h": 38.5,
-    "d": 26.4,
-    "a": 35.1
-   },
-   "hadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "hhadProb": {
-    "h": 18.9,
-    "d": 20.2,
-    "a": 60.9
-   },
-   "hhadSup": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "votes": {
-    "h": null,
-    "d": null,
-    "a": null
-   },
-   "eValue": null,
-   "eKey": null,
-   "absValue": null,
-   "returnRate": 87.7,
    "verdict": null,
    "hits": [],
    "score": {
@@ -1118,13 +70,13 @@
     "stars": 0,
     "kelly": {
      "h": 0.878,
-     "d": 0.876,
-     "a": 0.877
+     "d": 0.879,
+     "a": 0.876
     },
     "kellyDiff": {
-     "h": 0.1,
-     "d": -0.1,
-     "a": 0.0
+     "h": 0.0,
+     "d": 0.1,
+     "a": -0.2
     },
     "mov": {
      "h": null,
@@ -1176,64 +128,64 @@
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率38.5%",
+     "热门方向主胜概率39.9%",
      "竞彩让球-1球调整"
     ]
    },
    "form": {
     "home": {
      "n": 6,
-     "w": 6,
-     "d": 0,
+     "w": 4,
+     "d": 2,
      "l": 0,
-     "wr": 100,
-     "form": "胜胜胜胜胜胜",
-     "home_wr": 100,
-     "away_wr": 100,
-     "hdp_wr": 40,
-     "gf": 2.0,
+     "wr": 67,
+     "form": "胜胜胜平平胜",
+     "home_wr": 67,
+     "away_wr": 67,
+     "hdp_wr": 75,
+     "gf": 1.83,
      "ga": 0.5,
      "src": "500球队页"
     },
     "away": {
-     "n": 5,
-     "w": 5,
-     "d": 0,
+     "n": 6,
+     "w": 4,
+     "d": 2,
      "l": 0,
-     "wr": 100,
-     "form": "胜胜胜胜胜",
-     "home_wr": 100,
-     "away_wr": 100,
-     "hdp_wr": 25,
-     "gf": 2.4,
-     "ga": 0.8,
+     "wr": 67,
+     "form": "平平胜胜胜胜",
+     "home_wr": 75,
+     "away_wr": 50,
+     "hdp_wr": 67,
+     "gf": 2.33,
+     "ga": 0.83,
      "src": "500球队页"
     }
    },
    "attack": {
     "home": {
      "n": 6,
-     "gf": 2.0,
+     "gf": 1.83,
      "ga": 0.5
     },
     "away": {
-     "n": 5,
-     "gf": 2.4,
-     "ga": 0.8
+     "n": 6,
+     "gf": 2.33,
+     "ga": 0.83
     }
    },
    "h2h": null,
    "hkmo": {
-    "fid": "1415167",
+    "fid": "1491201",
     "hk": null,
     "mo": null,
     "both_drop": false,
     "common_drop_dirs": [],
-    "home": "朗斯",
-    "away": "马赛",
-    "league": "法甲",
-    "num": "周日029",
-    "kickoff": "2026-11-09 03:45",
+    "home": "伯顿",
+    "away": "诺茨郡",
+    "league": "英锦标赛",
+    "num": "周二001",
+    "kickoff": "2026-11-11 03:00",
     "asian": {
      "open": "—",
      "open_num": null,
@@ -1242,35 +194,31 @@
      "change": "none",
      "diff": 0
     }
-   },
-   "modelPred": {
-    "h": 1,
-    "a": 2
    }
   },
   {
-   "id": "1428131",
-   "num": "周日030",
-   "week": "周日",
-   "date": "2026-11-09",
-   "kickoff": "2026-11-09 04:00",
-   "time": "04:00",
-   "league": "西甲",
-   "home": "马竞",
-   "away": "巴萨",
-   "hr": "3",
+   "id": "1491190",
+   "num": "周二002",
+   "week": "周二",
+   "date": "2026-11-11",
+   "kickoff": "2026-11-11 03:30",
+   "time": "03:30",
+   "league": "英锦标赛",
+   "home": "布罗姆利",
+   "away": "米尔顿",
+   "hr": "4",
    "ar": "1",
-   "hrn": 3,
+   "hrn": 4,
    "arn": 1,
    "status": "",
    "had": {
-    "h": 3.47,
-    "d": 4.35,
-    "a": 1.61
+    "h": 4.05,
+    "d": 3.92,
+    "a": 1.57
    },
    "hhad": {
-    "h": 1.95,
-    "d": 3.96,
+    "h": 2.02,
+    "d": 3.7,
     "a": 2.67,
     "goal": "+1"
    },
@@ -1280,9 +228,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 25.3,
-    "d": 20.2,
-    "a": 54.5
+    "h": 21.7,
+    "d": 22.4,
+    "a": 55.9
    },
    "hadSup": {
     "h": null,
@@ -1290,8 +238,8 @@
     "a": null
    },
    "hhadProb": {
-    "h": 45.0,
-    "d": 22.2,
+    "h": 43.4,
+    "d": 23.7,
     "a": 32.9
    },
    "hhadSup": {
@@ -1315,14 +263,14 @@
     "score": 0.0,
     "stars": 0,
     "kelly": {
-     "h": 0.878,
-     "d": 0.879,
-     "a": 0.877
+     "h": 0.879,
+     "d": 0.878,
+     "a": 0.878
     },
     "kellyDiff": {
-     "h": 0.0,
-     "d": 0.1,
-     "a": -0.1
+     "h": 0.1,
+     "d": 0.0,
+     "a": 0.0
     },
     "mov": {
      "h": null,
@@ -1367,71 +315,459 @@
      "1:1",
      "1:2"
     ],
-    "confidence": 72,
+    "confidence": 73,
     "expHome": 1.5,
     "expAway": 1.2,
     "totalGoals": 2.5,
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球1.5·客队预期进球1.2",
-     "热门方向客胜概率54.5%",
+     "热门方向客胜概率55.9%",
      "竞彩让球1球调整"
     ]
    },
    "form": {
     "home": {
-     "n": 5,
-     "w": 4,
+     "n": 6,
+     "w": 5,
      "d": 1,
      "l": 0,
-     "wr": 80,
-     "form": "胜平胜胜胜",
-     "home_wr": 100,
-     "away_wr": 0,
-     "hdp_wr": 75,
-     "gf": 2.0,
-     "ga": 0.4,
+     "wr": 83,
+     "form": "胜胜平胜胜胜",
+     "home_wr": 0,
+     "away_wr": 100,
+     "hdp_wr": 40,
+     "gf": 2.5,
+     "ga": 0.83,
      "src": "500球队页"
     },
     "away": {
-     "n": 5,
-     "w": 5,
+     "n": 6,
+     "w": 6,
      "d": 0,
      "l": 0,
      "wr": 100,
-     "form": "胜胜胜胜胜",
+     "form": "胜胜胜胜胜胜",
      "home_wr": 100,
      "away_wr": 100,
      "hdp_wr": 80,
-     "gf": 4.6,
-     "ga": 1.0,
+     "gf": 3.83,
+     "ga": 0.83,
      "src": "500球队页"
     }
    },
    "attack": {
     "home": {
-     "n": 5,
-     "gf": 2.0,
-     "ga": 0.4
+     "n": 6,
+     "gf": 2.5,
+     "ga": 0.83
     },
     "away": {
-     "n": 5,
-     "gf": 4.6,
-     "ga": 1.0
+     "n": 6,
+     "gf": 3.83,
+     "ga": 0.83
     }
    },
    "h2h": null,
    "hkmo": {
-    "fid": "1428131",
+    "fid": "1491190",
     "hk": null,
     "mo": null,
     "both_drop": false,
     "common_drop_dirs": [],
-    "home": "马竞",
-    "away": "巴萨",
-    "league": "西甲",
-    "num": "周日030",
-    "kickoff": "2026-11-09 04:00",
+    "home": "布罗姆利",
+    "away": "米尔顿",
+    "league": "英锦标赛",
+    "num": "周二002",
+    "kickoff": "2026-11-11 03:30",
+    "asian": {
+     "open": "—",
+     "open_num": null,
+     "current": "—",
+     "current_num": null,
+     "change": "none",
+     "diff": 0
+    }
+   }
+  },
+  {
+   "id": "1491222",
+   "num": "周三005",
+   "week": "周三",
+   "date": "2026-11-12",
+   "kickoff": "2026-11-12 03:00",
+   "time": "03:00",
+   "league": "英锦标赛",
+   "home": "谢周三",
+   "away": "阿克宁顿",
+   "hr": "1",
+   "ar": "2",
+   "hrn": 1,
+   "arn": 2,
+   "status": "",
+   "had": {
+    "h": 1.37,
+    "d": 4.4,
+    "a": 5.5
+   },
+   "hhad": {
+    "h": 2.12,
+    "d": 3.73,
+    "a": 2.5,
+    "goal": "-1"
+   },
+   "ttg": {},
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "_src": "500.com",
+   "hadProb": {
+    "h": 64.1,
+    "d": 20.0,
+    "a": 16.0
+   },
+   "hadSup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hhadProb": {
+    "h": 41.4,
+    "d": 23.5,
+    "a": 35.1
+   },
+   "hhadSup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "votes": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "eValue": null,
+   "eKey": null,
+   "absValue": null,
+   "returnRate": 87.8,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.878,
+     "d": 0.88,
+     "a": 0.88
+    },
+    "kellyDiff": {
+     "h": 0.0,
+     "d": 0.2,
+     "a": 0.2
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "mov": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hadOpen": null,
+   "hhadOpen": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 78,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率64.1%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "form": {
+    "home": {
+     "n": 6,
+     "w": 3,
+     "d": 3,
+     "l": 0,
+     "wr": 50,
+     "form": "平平平胜胜胜",
+     "home_wr": 33,
+     "away_wr": 67,
+     "hdp_wr": 20,
+     "gf": 2.0,
+     "ga": 0.5,
+     "src": "500球队页"
+    },
+    "away": {
+     "n": 6,
+     "w": 2,
+     "d": 4,
+     "l": 0,
+     "wr": 33,
+     "form": "平平胜平平胜",
+     "home_wr": 50,
+     "away_wr": 0,
+     "hdp_wr": 100,
+     "gf": 1.33,
+     "ga": 0.67,
+     "src": "500球队页"
+    }
+   },
+   "attack": {
+    "home": {
+     "n": 6,
+     "gf": 2.0,
+     "ga": 0.5
+    },
+    "away": {
+     "n": 6,
+     "gf": 1.33,
+     "ga": 0.67
+    }
+   },
+   "h2h": null,
+   "hkmo": {
+    "fid": "1491222",
+    "hk": null,
+    "mo": null,
+    "both_drop": false,
+    "common_drop_dirs": [],
+    "home": "谢周三",
+    "away": "阿克宁顿",
+    "league": "英锦标赛",
+    "num": "周三005",
+    "kickoff": "2026-11-12 03:00",
+    "asian": {
+     "open": "—",
+     "open_num": null,
+     "current": "—",
+     "current_num": null,
+     "change": "none",
+     "diff": 0
+    }
+   }
+  },
+  {
+   "id": "1491207",
+   "num": "周三006",
+   "week": "周三",
+   "date": "2026-11-12",
+   "kickoff": "2026-11-12 03:00",
+   "time": "03:00",
+   "league": "英锦标赛",
+   "home": "巴恩斯利",
+   "away": "奥德汉姆",
+   "hr": "4",
+   "ar": "1",
+   "hrn": 4,
+   "arn": 1,
+   "status": "",
+   "had": {
+    "h": 1.75,
+    "d": 3.72,
+    "a": 3.35
+   },
+   "hhad": {
+    "h": 3.22,
+    "d": 3.7,
+    "a": 1.79,
+    "goal": "-1"
+   },
+   "ttg": {},
+   "goalsExp": null,
+   "hhProb": null,
+   "aaProb": null,
+   "_src": "500.com",
+   "hadProb": {
+    "h": 50.2,
+    "d": 23.6,
+    "a": 26.2
+   },
+   "hadSup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hhadProb": {
+    "h": 27.3,
+    "d": 23.7,
+    "a": 49.0
+   },
+   "hhadSup": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "votes": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "eValue": null,
+   "eKey": null,
+   "absValue": null,
+   "returnRate": 87.8,
+   "verdict": null,
+   "hits": [],
+   "score": {
+    "dir": "h",
+    "score": 0.0,
+    "stars": 0,
+    "kelly": {
+     "h": 0.879,
+     "d": 0.878,
+     "a": 0.878
+    },
+    "kellyDiff": {
+     "h": 0.1,
+     "d": 0.0,
+     "a": 0.0
+    },
+    "mov": {
+     "h": null,
+     "d": null,
+     "a": null
+    },
+    "reasons": []
+   },
+   "mov": {
+    "h": null,
+    "d": null,
+    "a": null
+   },
+   "hadOpen": null,
+   "hhadOpen": null,
+   "hhadVerdict": {
+    "t": "good",
+    "txt": "推荐让胜（综合评分0.0）",
+    "dir": "h",
+    "stars": 1,
+    "score": 0.0,
+    "reasons": [],
+    "goal": "-1"
+   },
+   "asianVerdict": {
+    "t": "good",
+    "txt": "推荐上盘（—，综合评分2.5）",
+    "dir": "h",
+    "stars": 4,
+    "score": 2.5,
+    "asianLine": "—",
+    "asianOpen": "—",
+    "asianChange": "none",
+    "reasons": [
+     "核心方向一致+2.0"
+    ]
+   },
+   "scoreRec": {
+    "predicted": "1:2",
+    "alternatives": [
+     "0:1",
+     "0:2",
+     "0:3"
+    ],
+    "confidence": 70,
+    "expHome": 1.2,
+    "expAway": 1.5,
+    "totalGoals": 2.5,
+    "reasons": [
+     "预期总进球2.5球",
+     "主队预期进球1.2·客队预期进球1.5",
+     "热门方向主胜概率50.2%",
+     "竞彩让球-1球调整"
+    ]
+   },
+   "form": {
+    "home": {
+     "n": 6,
+     "w": 5,
+     "d": 1,
+     "l": 0,
+     "wr": 83,
+     "form": "胜平胜胜胜胜",
+     "home_wr": 50,
+     "away_wr": 100,
+     "hdp_wr": 0,
+     "gf": 3.17,
+     "ga": 1.17,
+     "src": "500球队页"
+    },
+    "away": {
+     "n": 6,
+     "w": 3,
+     "d": 3,
+     "l": 0,
+     "wr": 50,
+     "form": "平平胜胜胜平",
+     "home_wr": 50,
+     "away_wr": 50,
+     "hdp_wr": 50,
+     "gf": 2.17,
+     "ga": 0.83,
+     "src": "500球队页"
+    }
+   },
+   "attack": {
+    "home": {
+     "n": 6,
+     "gf": 3.17,
+     "ga": 1.17
+    },
+    "away": {
+     "n": 6,
+     "gf": 2.17,
+     "ga": 0.83
+    }
+   },
+   "h2h": null,
+   "hkmo": {
+    "fid": "1491207",
+    "hk": null,
+    "mo": null,
+    "both_drop": false,
+    "common_drop_dirs": [],
+    "home": "巴恩斯利",
+    "away": "奥德汉姆",
+    "league": "英锦标赛",
+    "num": "周三006",
+    "kickoff": "2026-11-12 03:00",
     "asian": {
      "open": "—",
      "open_num": null,
@@ -15135,55 +14471,10 @@
   ]
  },
  "strongWeak": {
-  "generatedAt": "2026-11-09 01:29:40",
-  "searchDate": "2026-11-09 01:29",
-  "count": 1,
-  "matches": [
-   {
-    "num": "周日027",
-    "home": "霍芬海姆",
-    "away": "沙尔克04",
-    "strongTeam": "霍芬海姆",
-    "weakTeam": "沙尔克04",
-    "strongIsHome": true,
-    "gapLevel": "悬殊",
-    "gapScore": 9,
-    "reasons": [
-     "竞彩让球1球，实力差距明显",
-     "胜平负概率差距46%（63% vs 17%），强弱分明",
-     "强队场均进球2.17球，进攻火力充足",
-     "近期胜率差距27%（67% vs 40%），状态有差距",
-     "强队主场胜率100%，主场龙属性极强"
-    ],
-    "scorers": [],
-    "strongInfo": "胜率67%·主场胜率100%·场均进2.17球·失0.5球·概率63%",
-    "weakInfo": "胜率40%·客场胜率67%·场均进0.8球·失0.2球·概率17%",
-    "recommendation": "主胜",
-    "recommendOdds": 1.4,
-    "hhadRecommendation": "让胜",
-    "hhadStars": 1,
-    "hhadScore": 0.0,
-    "goal": -1,
-    "rankGap": "",
-    "injuryInfo": "",
-    "injuryDetail": [],
-    "topScorer": "",
-    "isBrutal": false,
-    "h2hInfo": "",
-    "haInfo": "强队主场胜率100% vs 弱队客场胜率67%，主客场差距33%",
-    "homeAdvantage": {
-     "strongIsHome": true,
-     "strongHomeWr": 100,
-     "weakAwayWr": 67,
-     "label": "主场",
-     "strongHaWr": 100,
-     "weakHaWr": 67
-    },
-    "dataSource": "竞彩官方赔率/概率/让球 + 500球队近况/攻防数据",
-    "searchDate": "2026-11-09 01:29",
-    "verified": true
-   }
-  ]
+  "generatedAt": "2026-11-09 12:05:09",
+  "searchDate": "2026-11-09 12:05",
+  "count": 0,
+  "matches": []
  },
  "strongWeakHistory": {
   "2026-09-13": {
@@ -16394,351 +15685,16 @@
   },
   "2026-11-09": {
    "date": "2026-11-09",
-   "generatedAt": "2026-11-09 01:29:40",
-   "count": 1,
-   "matches": [
-    {
-     "num": "周日027",
-     "home": "霍芬海姆",
-     "away": "沙尔克04",
-     "strongTeam": "霍芬海姆",
-     "weakTeam": "沙尔克04",
-     "recommendation": "主胜",
-     "recommendOdds": 1.4,
-     "hhadRecommendation": "让胜",
-     "goal": -1,
-     "gapLevel": "悬殊",
-     "gapScore": 9,
-     "topScorer": "",
-     "isBrutal": false,
-     "result": "",
-     "hit": null,
-     "hhadHit": null
-    }
-   ]
+   "generatedAt": "2026-11-09 12:05:09",
+   "count": 0,
+   "matches": []
   }
  },
  "halfFull": {
-  "generatedAt": "2026-11-09 01:29:40",
+  "generatedAt": "2026-11-09 12:05:09",
   "searchDate": "2026-11-09",
-  "count": 7,
-  "matches": [
-   {
-    "num": "周日024",
-    "home": "比利亚雷",
-    "away": "赫塔费",
-    "league": "西甲",
-    "kickoff": "2026-11-09 01:30",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 32.5,
-    "recommend2": "负负",
-    "recommend2Key": "aa",
-    "confidence2": 16.1,
-    "probDist": {
-     "胜胜": 32.5,
-     "负负": 16.1,
-     "平胜": 15.9,
-     "平平": 10.6,
-     "胜平": 7.3,
-     "平负": 6.6,
-     "负胜": 4.6,
-     "负平": 4.5,
-     "胜负": 2.0
-    },
-    "fullProb": {
-     "h": 67.0,
-     "d": 20.2,
-     "a": 12.8
-    },
-    "halfProb": {
-     "h": 41.8,
-     "d": 33.0,
-     "a": 25.2
-    },
-    "expGoals": {
-     "homeHalf": 0.54,
-     "awayHalf": 0.68,
-     "homeFull": 1.2,
-     "awayFull": 1.5
-    },
-    "reasons": [
-     "全场主胜概率67%，主队优势明显",
-     "半场平局概率33%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日026",
-    "home": "吉马良斯",
-    "away": "波尔图",
-    "league": "葡超",
-    "kickoff": "2026-11-09 02:00",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 32.3,
-    "recommend2": "胜胜",
-    "recommend2Key": "hh",
-    "confidence2": 16.4,
-    "probDist": {
-     "负负": 32.3,
-     "胜胜": 16.4,
-     "平负": 11.8,
-     "平胜": 10.5,
-     "平平": 10.5,
-     "负平": 7.3,
-     "胜平": 4.6,
-     "胜负": 4.6,
-     "负胜": 2.0
-    },
-    "fullProb": {
-     "h": 13.6,
-     "d": 19.9,
-     "a": 66.5
-    },
-    "halfProb": {
-     "h": 25.5,
-     "d": 32.9,
-     "a": 41.6
-    },
-    "expGoals": {
-     "homeHalf": 0.68,
-     "awayHalf": 0.54,
-     "homeFull": 1.5,
-     "awayFull": 1.2
-    },
-    "reasons": [
-     "全场客胜概率66%，客队优势明显",
-     "半场平局概率33%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日027",
-    "home": "霍芬海姆",
-    "away": "沙尔克04",
-    "league": "德甲",
-    "kickoff": "2026-11-09 02:30",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 31.0,
-    "recommend2": "负负",
-    "recommend2Key": "aa",
-    "confidence2": 17.4,
-    "probDist": {
-     "胜胜": 31.0,
-     "负负": 17.4,
-     "平胜": 15.6,
-     "平平": 10.6,
-     "胜平": 7.1,
-     "平负": 7.0,
-     "负平": 4.8,
-     "负胜": 4.5,
-     "胜负": 2.0
-    },
-    "fullProb": {
-     "h": 62.8,
-     "d": 20.7,
-     "a": 16.6
-    },
-    "halfProb": {
-     "h": 40.1,
-     "d": 33.2,
-     "a": 26.7
-    },
-    "expGoals": {
-     "homeHalf": 0.54,
-     "awayHalf": 0.68,
-     "homeFull": 1.2,
-     "awayFull": 1.5
-    },
-    "reasons": [
-     "全场主胜概率63%，主队优势明显",
-     "半场平局概率33%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日030",
-    "home": "马竞",
-    "away": "巴萨",
-    "league": "西甲",
-    "kickoff": "2026-11-09 04:00",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 28.1,
-    "recommend2": "胜胜",
-    "recommend2Key": "hh",
-    "confidence2": 20.4,
-    "probDist": {
-     "负负": 28.1,
-     "胜胜": 20.4,
-     "平胜": 11.8,
-     "平负": 10.7,
-     "平平": 10.6,
-     "负平": 6.6,
-     "胜平": 5.4,
-     "胜负": 4.3,
-     "负胜": 2.1
-    },
-    "fullProb": {
-     "h": 25.3,
-     "d": 20.2,
-     "a": 54.5
-    },
-    "halfProb": {
-     "h": 30.2,
-     "d": 33.0,
-     "a": 36.8
-    },
-    "expGoals": {
-     "homeHalf": 0.68,
-     "awayHalf": 0.54,
-     "homeFull": 1.5,
-     "awayFull": 1.2
-    },
-    "reasons": [
-     "全场胜负接近（主25%/平20%/客55%）",
-     "半场平局概率33%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日025",
-    "home": "塞尔塔",
-    "away": "莱万特",
-    "league": "西甲",
-    "kickoff": "2026-11-09 01:30",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 27.9,
-    "recommend2": "负负",
-    "recommend2Key": "aa",
-    "confidence2": 18.6,
-    "probDist": {
-     "胜胜": 27.9,
-     "负负": 18.6,
-     "平胜": 16.2,
-     "平平": 11.5,
-     "平负": 8.2,
-     "胜平": 6.5,
-     "负平": 5.0,
-     "负胜": 4.2,
-     "胜负": 1.8
-    },
-    "fullProb": {
-     "h": 53.2,
-     "d": 27.7,
-     "a": 19.1
-    },
-    "halfProb": {
-     "h": 36.3,
-     "d": 36.0,
-     "a": 27.7
-    },
-    "expGoals": {
-     "homeHalf": 0.54,
-     "awayHalf": 0.68,
-     "homeFull": 1.2,
-     "awayFull": 1.5
-    },
-    "reasons": [
-     "全场胜负接近（主53%/平28%/客19%）",
-     "半场平局概率36%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日028",
-    "home": "佛罗伦萨",
-    "away": "尤文图斯",
-    "league": "意甲",
-    "kickoff": "2026-11-09 03:45",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 25.5,
-    "recommend2": "胜胜",
-    "recommend2Key": "hh",
-    "confidence2": 20.9,
-    "probDist": {
-     "负负": 25.5,
-     "胜胜": 20.9,
-     "平胜": 13.1,
-     "平平": 11.4,
-     "平负": 11.1,
-     "负平": 6.1,
-     "胜平": 5.5,
-     "胜负": 4.0,
-     "负胜": 2.3
-    },
-    "fullProb": {
-     "h": 25.8,
-     "d": 26.8,
-     "a": 47.4
-    },
-    "halfProb": {
-     "h": 30.4,
-     "d": 35.6,
-     "a": 33.9
-    },
-    "expGoals": {
-     "homeHalf": 0.68,
-     "awayHalf": 0.54,
-     "homeFull": 1.5,
-     "awayFull": 1.2
-    },
-    "reasons": [
-     "全场胜负接近（主26%/平27%/客47%）",
-     "半场平局概率36%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   },
-   {
-    "num": "周日029",
-    "home": "朗斯",
-    "away": "马赛",
-    "league": "法甲",
-    "kickoff": "2026-11-09 03:45",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 24.4,
-    "recommend2": "胜胜",
-    "recommend2Key": "hh",
-    "confidence2": 22.0,
-    "probDist": {
-     "负负": 24.4,
-     "胜胜": 22.0,
-     "平胜": 14.4,
-     "平平": 11.3,
-     "平负": 9.8,
-     "负平": 6.1,
-     "胜平": 5.5,
-     "负胜": 3.6,
-     "胜负": 2.9
-    },
-    "fullProb": {
-     "h": 38.5,
-     "d": 26.4,
-     "a": 35.1
-    },
-    "halfProb": {
-     "h": 30.4,
-     "d": 35.5,
-     "a": 34.1
-    },
-    "expGoals": {
-     "homeHalf": 0.54,
-     "awayHalf": 0.68,
-     "homeFull": 1.2,
-     "awayFull": 1.5
-    },
-    "reasons": [
-     "全场胜负接近（主38%/平26%/客35%）",
-     "半场平局概率35%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   }
-  ]
+  "count": 0,
+  "matches": []
  },
  "halfFullHistory": {
   "2026-10-09": {
@@ -27100,273 +26056,37 @@
   },
   "2026-11-09": {
    "date": "2026-11-09",
-   "generatedAt": "2026-11-09 01:29:40",
-   "count": 7,
-   "matches": [
-    {
-     "num": "周日024",
-     "home": "比利亚雷",
-     "away": "赫塔费",
-     "league": "西甲",
-     "kickoff": "2026-11-09 01:30",
-     "recommend": "胜胜",
-     "recommendKey": "hh",
-     "confidence": 32.5,
-     "recommend2": "负负",
-     "confidence2": 16.1,
-     "probDist": {
-      "胜胜": 32.5,
-      "负负": 16.1,
-      "平胜": 15.9,
-      "平平": 10.6,
-      "胜平": 7.3,
-      "平负": 6.6,
-      "负胜": 4.6,
-      "负平": 4.5,
-      "胜负": 2.0
-     },
-     "actualHalfFull": "?h",
-     "hit": null,
-     "fullScore": {
-      "home": 2,
-      "away": 0
-     }
-    },
-    {
-     "num": "周日026",
-     "home": "吉马良斯",
-     "away": "波尔图",
-     "league": "葡超",
-     "kickoff": "2026-11-09 02:00",
-     "recommend": "负负",
-     "recommendKey": "aa",
-     "confidence": 32.3,
-     "recommend2": "胜胜",
-     "confidence2": 16.4,
-     "probDist": {
-      "负负": 32.3,
-      "胜胜": 16.4,
-      "平负": 11.8,
-      "平胜": 10.5,
-      "平平": 10.5,
-      "负平": 7.3,
-      "胜平": 4.6,
-      "胜负": 4.6,
-      "负胜": 2.0
-     },
-     "actualHalfFull": "?a",
-     "hit": null,
-     "fullScore": {
-      "home": 0,
-      "away": 2
-     }
-    },
-    {
-     "num": "周日027",
-     "home": "霍芬海姆",
-     "away": "沙尔克04",
-     "league": "德甲",
-     "kickoff": "2026-11-09 02:30",
-     "recommend": "胜胜",
-     "recommendKey": "hh",
-     "confidence": 31.0,
-     "recommend2": "负负",
-     "confidence2": 17.4,
-     "probDist": {
-      "胜胜": 31.0,
-      "负负": 17.4,
-      "平胜": 15.6,
-      "平平": 10.6,
-      "胜平": 7.1,
-      "平负": 7.0,
-      "负平": 4.8,
-      "负胜": 4.5,
-      "胜负": 2.0
-     },
-     "actualHalfFull": "?a",
-     "hit": null,
-     "fullScore": {
-      "home": 1,
-      "away": 2
-     }
-    },
-    {
-     "num": "周日030",
-     "home": "马竞",
-     "away": "巴萨",
-     "league": "西甲",
-     "kickoff": "2026-11-09 04:00",
-     "recommend": "负负",
-     "recommendKey": "aa",
-     "confidence": 28.1,
-     "recommend2": "胜胜",
-     "confidence2": 20.4,
-     "probDist": {
-      "负负": 28.1,
-      "胜胜": 20.4,
-      "平胜": 11.8,
-      "平负": 10.7,
-      "平平": 10.6,
-      "负平": 6.6,
-      "胜平": 5.4,
-      "胜负": 4.3,
-      "负胜": 2.1
-     },
-     "actualHalfFull": "?h",
-     "hit": null,
-     "fullScore": {
-      "home": 2,
-      "away": 1
-     }
-    },
-    {
-     "num": "周日025",
-     "home": "塞尔塔",
-     "away": "莱万特",
-     "league": "西甲",
-     "kickoff": "2026-11-09 01:30",
-     "recommend": "胜胜",
-     "recommendKey": "hh",
-     "confidence": 27.9,
-     "recommend2": "负负",
-     "confidence2": 18.6,
-     "probDist": {
-      "胜胜": 27.9,
-      "负负": 18.6,
-      "平胜": 16.2,
-      "平平": 11.5,
-      "平负": 8.2,
-      "胜平": 6.5,
-      "负平": 5.0,
-      "负胜": 4.2,
-      "胜负": 1.8
-     },
-     "actualHalfFull": "?a",
-     "hit": null,
-     "fullScore": {
-      "home": 1,
-      "away": 2
-     }
-    },
-    {
-     "num": "周日028",
-     "home": "佛罗伦萨",
-     "away": "尤文图斯",
-     "league": "意甲",
-     "kickoff": "2026-11-09 03:45",
-     "recommend": "负负",
-     "recommendKey": "aa",
-     "confidence": 25.5,
-     "recommend2": "胜胜",
-     "confidence2": 20.9,
-     "probDist": {
-      "负负": 25.5,
-      "胜胜": 20.9,
-      "平胜": 13.1,
-      "平平": 11.4,
-      "平负": 11.1,
-      "负平": 6.1,
-      "胜平": 5.5,
-      "胜负": 4.0,
-      "负胜": 2.3
-     },
-     "actualHalfFull": "?a",
-     "hit": null,
-     "fullScore": {
-      "home": 1,
-      "away": 2
-     }
-    },
-    {
-     "num": "周日029",
-     "home": "朗斯",
-     "away": "马赛",
-     "league": "法甲",
-     "kickoff": "2026-11-09 03:45",
-     "recommend": "负负",
-     "recommendKey": "aa",
-     "confidence": 24.4,
-     "recommend2": "胜胜",
-     "confidence2": 22.0,
-     "probDist": {
-      "负负": 24.4,
-      "胜胜": 22.0,
-      "平胜": 14.4,
-      "平平": 11.3,
-      "平负": 9.8,
-      "负平": 6.1,
-      "胜平": 5.5,
-      "负胜": 3.6,
-      "胜负": 2.9
-     },
-     "actualHalfFull": "?d",
-     "hit": null,
-     "fullScore": {
-      "home": 2,
-      "away": 2
-     }
-    }
-   ]
+   "generatedAt": "2026-11-09 12:05:09",
+   "count": 0,
+   "matches": []
   }
  },
  "goodRateStats": {
   "version": "v1.7.124",
-  "generatedAt": "2026-11-09 01:37:49",
+  "generatedAt": "2026-11-09 12:11:21",
   "scope": "竞彩足球 · 正路(good)判定 · 胜平负方向",
   "today": {
-   "batchDate": "2026-11-09",
-   "batchLabel": "周日",
-   "batchPrefix": "周日",
-   "isToday": true,
-   "totalMatches": 7,
-   "goodCount": 2,
+   "batchDate": "2026-11-11",
+   "batchLabel": "周二",
+   "batchPrefix": "周二",
+   "isToday": false,
+   "totalMatches": 2,
+   "goodCount": 0,
    "settledCount": 0,
-   "pendingCount": 2,
+   "pendingCount": 0,
    "batchesAvailable": [
     {
-     "date": "2026-11-09",
-     "label": "周日",
-     "count": 7
-    }
-   ],
-   "picks": [
-    {
-     "id": "1438197",
-     "num": "周日026",
-     "league": "葡超",
-     "home": "吉马良斯",
-     "away": "波尔图",
-     "kickoff": "2026-11-09 02:00",
-     "dir": "a",
-     "dirName": "客胜",
-     "odds": 1.32,
-     "prob": 66.5,
-     "stars": 3,
-     "status": "-",
-     "settled": false,
-     "hit": null,
-     "score": null,
-     "note": "未开奖，不计入正确率"
+     "date": "2026-11-11",
+     "label": "周二",
+     "count": 2
     },
     {
-     "id": "1414197",
-     "num": "周日028",
-     "league": "意甲",
-     "home": "佛罗伦萨",
-     "away": "尤文图斯",
-     "kickoff": "2026-11-09 03:45",
-     "dir": "a",
-     "dirName": "客胜",
-     "odds": 1.85,
-     "prob": 47.4,
-     "stars": 3,
-     "status": "-",
-     "settled": false,
-     "hit": null,
-     "score": null,
-     "note": "未开奖，不计入正确率"
+     "date": "2026-11-12",
+     "label": "周三",
+     "count": 2
     }
-   ]
+   ],
+   "picks": []
   },
   "overall": {
    "n": 129,
@@ -29316,14 +28036,14 @@
    "盈亏平衡命中率 = 1/推荐方向赔率 的均值，含庄家抽水，是「按赔率下注不亏钱」必须跨过的线；它高于去水隐含概率。",
    "ROI = 每场 1 单位均注，命中收 (赔率−1)、未中亏 1；只用有完整赔率的 115 场计算。",
    "正确率高于「去水隐含」只说明方向判断略优于市场共识，不代表赚钱；能否盈利必须看是否跑赢「盈亏平衡线」与 ROI。",
-   "今日赛程严格按竞彩批次隔离：只统计 2026-11-09（周日）当天开出的 7 场，绝不混入周六/周日批次。",
-   "今日 2 场正路推荐中已开奖 0 场、未开奖 2 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
+   "今日赛程严格按竞彩批次隔离：只统计 2026-11-11（周二）当天开出的 2 场，绝不混入周六/周日批次。",
+   "今日 0 场正路推荐中已开奖 0 场、未开奖 0 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
    "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
   ]
  },
  "vzHighStats": {
   "version": "v1.7.126",
-  "generatedAt": "2026-11-09 01:37:49",
+  "generatedAt": "2026-11-09 12:11:21",
   "scope": "V站·呼死狗 🔥高信心预测 · 比分精确命中 / 胜平负方向命中",
   "source": {
    "predictions": "vzhan_data.json（V站 report/info 赛前预测比分）",
@@ -29332,20 +28052,26 @@
    "archive": "vzhan_history.json（赛前固化 highConf + 赛果归档）"
   },
   "today": {
-   "batchDate": "2026-11-09",
-   "batchLabel": "周日",
-   "batchPrefix": "周日",
-   "isToday": true,
-   "totalMatches": 7,
+   "batchDate": "2026-11-11",
+   "batchLabel": "周二",
+   "batchPrefix": "周二",
+   "isToday": false,
+   "totalMatches": 2,
    "vzPredCount": 0,
    "highCount": 0,
    "settledCount": 0,
    "pendingCount": 0,
    "batchesAvailable": [
     {
-     "date": "2026-11-09",
-     "label": "周日",
-     "count": 7,
+     "date": "2026-11-11",
+     "label": "周二",
+     "count": 2,
+     "highCount": 0
+    },
+    {
+     "date": "2026-11-12",
+     "label": "周三",
+     "count": 2,
      "highCount": 0
     }
    ],
@@ -29493,8 +28219,8 @@
   },
   "excluded": {
    "unknownConf": 38,
-   "pending": 4,
-   "noResult": 1
+   "pending": 0,
+   "noResult": 4
   },
   "conclusion": "V站 🔥高信心（V站·模型 方向共识）历史 18 场：预测比分精确命中 1 场（5.56%，Wilson 95%CI 0.99%~25.76%），方向命中 10 场（55.56%，Wilson 95%CI 33.72%~75.44%）。独立随机基线：比分 8.77%、方向 33.48%；高信心相对基线的比分超额 -3.21pt、方向超额 +22.08pt（二项精确单侧 p=0.8084 / 0.0446，至少一项达到统计显著）。与普通组（n=20，比分 10.00%、方向 40.00%）相比，方向差 +15.56pt（Fisher 双侧 p=0.5160，差异不显著）。可判定高信心口径的场次仅 38 场，样本有限、置信区间宽，方向表现显著优于随机基线；另有 38 场因赛前无模型快照无法判定，已单列不参与对比。结论：仅作回溯描述，不构成稳定优势证明，不构成投注建议。",
   "byGroup": [
@@ -30195,7 +28921,7 @@
    "独立随机基线 = 该组预测方向（比分）分布 × 全量实际方向（比分）分布之积求和，代表「预测与赛果完全独立」时的期望命中率；另列朴素 1/3 仅作参照，不作为判定标准。",
    "显著性：小样本采用二项精确单侧检验（vs 基线）与 Fisher 精确检验 / 两比例 z 检验（组间），并给出 Wilson 95% 置信区间；p<0.05 才称显著，样本不足时如实标注。",
    "本统计不含赔率、返奖率与 ROI：命中率高于基线只说明方向判断可能优于随机，不代表可盈利；竞彩抽水决定长期期望为负。",
-   "今日清单严格按竞彩当天开售批次 2026-11-09（周日）隔离，只列当天 7 场里的高信心预测；未开奖 0 场不计入任何命中率，赛后自动回填纳入统计。",
+   "今日清单严格按竞彩当天开售批次 2026-11-11（周二）隔离，只列当天 2 场里的高信心预测；未开奖 0 场不计入任何命中率，赛后自动回填纳入统计。",
    "归档档案由 fetch_vzhan.py 每日增量累积、backfill_vzhan_history.py 一次性全量回溯重建，随部署上云跨轮保留；统计每次刷新重算。",
    "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
   ]

@@ -8222,9 +8222,59 @@
     "outcome": "平局",
     "tip": "比分中等可信，比分 2:2 可作小注参考"
    }
+  },
+  "1984140": {
+   "id": "1984140",
+   "date": "2026-11-09",
+   "league": "法甲",
+   "home": "Lens",
+   "away": "Marseille",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日029",
+   "preConf": {
+    "dir": 37.8,
+    "exact": 9.2,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 12,
+    "teamN": 8,
+    "sample": 20,
+    "outcome": "客胜",
+    "tip": "比分中等可信，比分 1:2 可作小注参考"
+   }
+  },
+  "1995464": {
+   "id": "1995464",
+   "date": "2026-11-09",
+   "league": "德甲",
+   "home": "Hoffenheim",
+   "away": "Schalke 04",
+   "predH": 2,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日027",
+   "preConf": {
+    "dir": 39.8,
+    "exact": 8.5,
+    "dirLevel": "low",
+    "exactLevel": "mid",
+    "leagueN": 19,
+    "teamN": 5,
+    "sample": 24,
+    "outcome": "主胜",
+    "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
   }
  },
- "updatedAt": "2026-11-09 01:32:51",
+ "updatedAt": "2026-11-09 12:07:28",
  "pending": {
   "1999682": {
    "date": "2026-10-31",
@@ -8275,8 +8325,8 @@
    "predH": 1,
    "predA": 2,
    "conf": {
-    "dir": 41.0,
-    "exact": 7.0,
+    "dir": 41.1,
+    "exact": 7.1,
     "dirLevel": "mid",
     "exactLevel": "low",
     "leagueN": 19,
@@ -8284,46 +8334,6 @@
     "sample": 24,
     "outcome": "客胜",
     "tip": "方向中等可信，方向「客胜」可作小注参考"
-   }
-  },
-  "1984140": {
-   "date": "2026-11-09",
-   "league": "法甲",
-   "home": "Lens",
-   "away": "Marseille",
-   "jcNum": "周日029",
-   "predH": 1,
-   "predA": 2,
-   "conf": {
-    "dir": 37.7,
-    "exact": 9.1,
-    "dirLevel": "low",
-    "exactLevel": "mid",
-    "leagueN": 12,
-    "teamN": 8,
-    "sample": 20,
-    "outcome": "客胜",
-    "tip": "比分中等可信，比分 1:2 可作小注参考"
-   }
-  },
-  "1995464": {
-   "date": "2026-11-09",
-   "league": "德甲",
-   "home": "Hoffenheim",
-   "away": "Schalke 04",
-   "jcNum": "周日027",
-   "predH": 2,
-   "predA": 1,
-   "conf": {
-    "dir": 39.6,
-    "exact": 8.4,
-    "dirLevel": "low",
-    "exactLevel": "mid",
-    "leagueN": 19,
-    "teamN": 5,
-    "sample": 24,
-    "outcome": "主胜",
-    "tip": "比分中等可信，比分 2:1 可作小注参考"
    }
   }
  }
