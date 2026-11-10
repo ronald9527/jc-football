@@ -8198,6 +8198,31 @@
     "tip": "该联赛/球队历史命中偏低，建议谨慎（方向预测 主胜）"
    }
   },
+  "1995461": {
+   "id": "1995461",
+   "date": "2026-11-08",
+   "league": "德甲",
+   "home": "FC Koln",
+   "away": "Bayer Leverkusen",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日016",
+   "preConf": {
+    "dir": 41.0,
+    "exact": 7.0,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 19,
+    "teamN": 5,
+    "sample": 24,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
+   }
+  },
   "1982532": {
    "id": "1982532",
    "date": "2026-11-08",
@@ -8237,8 +8262,8 @@
    "outcomeHit": true,
    "jcNum": "周日029",
    "preConf": {
-    "dir": 37.8,
-    "exact": 9.2,
+    "dir": 37.7,
+    "exact": 9.1,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -8262,8 +8287,8 @@
    "outcomeHit": true,
    "jcNum": "周日027",
    "preConf": {
-    "dir": 39.8,
-    "exact": 8.5,
+    "dir": 39.6,
+    "exact": 8.4,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 19,
@@ -8274,7 +8299,7 @@
    }
   }
  },
- "updatedAt": "2026-11-10 13:40:11",
+ "updatedAt": "2026-11-10 23:24:31",
  "pending": {
   "1999682": {
    "date": "2026-10-31",
@@ -8314,26 +8339,6 @@
     "sample": 32,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 3:1 可作小注参考"
-   }
-  },
-  "1995461": {
-   "date": "2026-11-08",
-   "league": "德甲",
-   "home": "FC Koln",
-   "away": "Bayer Leverkusen",
-   "jcNum": "周日016",
-   "predH": 1,
-   "predA": 2,
-   "conf": {
-    "dir": 42.1,
-    "exact": 8.7,
-    "dirLevel": "mid",
-    "exactLevel": "mid",
-    "leagueN": 20,
-    "teamN": 5,
-    "sample": 25,
-    "outcome": "客胜",
-    "tip": "比分中等可信，比分 1:2 可作小注参考"
    }
   }
  }
