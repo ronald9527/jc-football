@@ -1815,10 +1815,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.129";
+const VERSION = "v1.7.130";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.130",
+    date: "2026-11-10",
+    title: "修复「刷新按钮按了没拉到最新数据」：数据重新上线 + 按钮诚实显示批次新鲜度 + 修自检误报",
+    details: [
+      "用户反馈「刷新按钮，按了以后没有拉新最新数据」。实测线上 matches.json / vzhan_data.json / expert_stats.json 等全部停在 2026-11-08 16:38，而当前已是 11-10 —— 云端两天没推新数据。按钮的职责是「把云端已部署的数据秒级同步到手机」，它无法凭空拉到比云端更新的数据；上游停更才是「按了还是旧数据」的真正原因，不是按钮坏了",
+      "深挖上游断点：每小时自动刷新任务在跑（lastRunAt 今天 12:59），但线上数据没变。该任务跑在冷启动沙箱，指令里缺少「下载线上代码包 + 重建 Cloudflare 部署凭证」的自举步骤（对比早期已停用任务是有这两步的），因此每轮抓取/部署无法真正落地。本次已用本地全量刷新把数据推进到 11-10 今日批次并重新部署，按钮按下去立即能拿到新数据",
+      "刷新按钮改为【诚实显示数据新鲜度】：新增北京时间今日批次判定 __bjToday()，点击拉取云端全部数据后按三种情况给反馈 —— ①拉到比本页更新的数据：显示「已同步云端最新数据（更新于 X）」；②已是今日最新：显示「已是今日最新数据」；③云端仍是旧批次：明确显示「云端数据仍是 X 批次（N 小时前），已发起后台更新，稍后会自动同步」，不再含糊说「已拉取云端全部数据」让人误以为成功。刷新结果写入 sessionStorage，2.6s 硬重载后仍能显示一次，解决「按了好像没反应」的体感",
+      "顶栏「数据非今日批次」提示改用北京时间判定（避免设备时区误判），文案改为如实说明「云端当前为 X 批次；点刷新同步云端现有数据，后台更新完成后会自动同步」，不再暗示点一下就能凭空变出新数据；「距下次自动更新」倒计时保留但不再作为数据新鲜的承诺",
+      "修正自检误报：V站批次检查原先把「竞彩当天场次无一场带 V站 预测比分」直接判 ERROR。今日 8 场为英锦标赛/日联杯等小众杯赛，V站网关实测 UP（61ms、连续失败 0）、情报已抓到 8 场，只是数据源当天未出比分，属【数据源无覆盖】而非抓取故障。改为按网关状态 + 数据时间戳区分：网关异常或数据陈旧仍报 ERROR，网关正常且情报已更新则如实降级为 WARN，既有可核对的依据，也不掩盖真故障",
+      "本次全量刷新结果：竞彩 8 场（周二 2 场英锦标赛 + 周三 6 场日联杯/英锦标赛）、history.json 937 条、V站 8 场、高手推荐当天 6 篇新文章、专家战绩 25 位；正路/V站/专家命中率统计全部按最新赛果重算。今日无分层串关推荐是证据门槛正常拦截（周中小赛事、候选不满足档位），按「不要乱推荐」要求不强行凑单"
+    ]
+  },
   {
     version: "v1.7.129",
     date: "2026-11-08",
@@ -3222,39 +3235,76 @@ const THEMES = [
   {key:"cyber", name:"赛博朋克", preview:"#0a0a1a"},
   {key:"warm", name:"暖橙", preview:"#1a1208"}
 ];
-function nextBatch(now){
-  const sec = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
+/* v1.7.130：统一用北京时间(UTC+8)判定「今日批次」与下次更新倒计时，
+   不再依赖设备本地时区（非东八区设备曾把今日数据误标成「非今日」）。 */
+function __bjNow(){
+  const d = new Date(Date.now() + 8*3600*1000);
+  return { day:d.toISOString().slice(0,10), hour:d.getUTCHours(),
+           min:d.getUTCMinutes(), sec:d.getUTCSeconds() };
+}
+function __bjToday(){ return __bjNow().day; }
+/* 数据新鲜度：fresh=今日批次 / stale=旧批次 / unknown=无时间戳。
+   hours 按数据自带北京时间(+08:00)换算，避免设备时区误差。 */
+function __dataFresh(upd){
+  if(!upd) return {level:"unknown", day:"", hours:0};
+  const day = upd.slice(0,10);
+  let ts = 0, hours = 0;
+  try{ ts = Date.parse(upd.replace(" ","T") + "+08:00"); }catch(e){}
+  if(!ts || isNaN(ts)){ try{ ts = new Date(upd.replace(/-/g,"/")).getTime(); }catch(e){} }
+  if(ts && !isNaN(ts)) hours = Math.max(0, (Date.now() - ts)/3600000);
+  return {level: day >= __bjToday() ? "fresh" : "stale", day:day, hours:hours};
+}
+/* 刷新结果跨硬重载保留：triggerRePull 2.6s 后 location.replace 会重建页面，
+   toast 随之消失，用户会误以为「按了没反应」。用 sessionStorage 带一次。 */
+function __persistPull(msg){
+  try{ sessionStorage.setItem("jcPullToast", JSON.stringify({msg:msg, ts:Date.now()})); }catch(e){}
+}
+function __consumePull(){
+  try{
+    const raw = sessionStorage.getItem("jcPullToast");
+    if(!raw) return;
+    sessionStorage.removeItem("jcPullToast");
+    const o = JSON.parse(raw);
+    if(o && o.msg && (Date.now()-o.ts) < 30000) jcToast(o.msg, 5000);
+  }catch(e){}
+}
+function nextBatchFromSec(sec){
   for (const b of BATCH_SECS){ if (b > sec) return b; }
   return BATCH_SECS[0] + 86400; // 已过全部批次，指向明日 09:00
+}
+function nextBatch(now){
+  return nextBatchFromSec(now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds());
 }
 function updBannerHtml(){
   const el = $("#updBanner");
   if (!el) return;
+  const bj = __bjNow();                 // v1.7.130：统一北京时间，避免设备时区误判
   const now = new Date();
   const upd = state.meta.updateTime || "";
   const dataDay = upd.slice(0,10);
-  const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  const nb = nextBatch(now);
-  const diff = Math.max(0, nb - (now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds()));
+  const today = bj.day;
+  const nb = nextBatchFromSec(bj.hour*3600 + bj.min*60 + bj.sec);
+  const diff = Math.max(0, nb - (bj.hour*3600 + bj.min*60 + bj.sec));
   const h = String(Math.floor(diff/3600)).padStart(2,"0");
   const m = String(Math.floor(diff%3600/60)).padStart(2,"0");
   const s = String(Math.floor(diff%60)).padStart(2,"0");
   const cd = `<span class="ub-cd">${h}:${m}:${s}</span>`;
-  const isLive = now.getSeconds()%2===0 ? "●" : "○";
-  const realtime = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}:${String(now.getSeconds()).padStart(2,"0")}`;
+  const isLive = bj.sec%2===0 ? "●" : "○";
+  const realtime = `${String(bj.hour).padStart(2,"0")}:${String(bj.min).padStart(2,"0")}:${String(bj.sec).padStart(2,"0")}`;
   const autoTxt = state.autoReload ? `<button class="ub-btn" id="ubToggle">自动刷新:开</button>`
                                    : `<button class="ub-btn off" id="ubToggle">自动刷新:关</button>`;
   // 夜间宽容：凌晨 0-9 点打开页面时，昨晚 20:00 后的批次属正常「无新赛事」数据，
   // 非抓取任务故障（定时批次 9:00 才启动），不应误报红色「已过期/任务未执行」。
-  const _y = new Date(now.getTime() - 86400000);
-  const _yDay = `${_y.getFullYear()}-${String(_y.getMonth()+1).padStart(2,"0")}-${String(_y.getDate()).padStart(2,"0")}`;
-  const _isNight = now.getHours() < 9;
+  const _y = new Date(Date.now() + 8*3600*1000 - 86400000);
+  const _yDay = _y.toISOString().slice(0,10);
+  const _isNight = bj.hour < 9;
   const _isLateBatch = upd.slice(11,13) >= "20";
+  const fresh = __dataFresh(upd);
   const expireTxt = dataDay >= today
-    ? `<span>· 本日 ${BATCH_LABEL} 高频自动更新</span>`
+    ? `<span>· 本日 ${BATCH_LABEL} 自动更新</span>`
     : (_isNight && dataDay === _yDay && _isLateBatch)
     ? `<span style="color:var(--warn);font-weight:700">· 夜间无新赛事批次（昨晚 ${upd.slice(11,16)} 仍为最新），09:00 首轮自动更新</span>`
-    : `<span style="color:var(--bad);font-weight:700">数据非今日批次；点顶部黄色「刷新数据」按钮，立即同步云端最新数据</span>`;
+    : `<span style="color:var(--bad);font-weight:700">云端当前为 ${fresh.day.slice(5)||"旧"} 批次（约 ${Math.round(fresh.hours)} 小时前）；点刷新同步云端现有数据，后台更新完成后会自动同步</span>`;
   el.innerHTML = `<span class="ub-live">${isLive} 实时 ${realtime}</span>
     <span>· 距下次数据自动更新（${BATCH_LABEL}）还有 ${cd}</span>
     <span>· 数据更新于 ${upd.slice(5,16)}</span>
@@ -8463,15 +8513,24 @@ function triggerRePull(){
   const baseUpd = (state.meta && state.meta.updateTime) || "";
 
   // ---- 主路径：立即拉云端最新全部数据（这一步一定成功、一定有反馈）----
+  // v1.7.130：按北京时间如实判定云端批次新鲜度，不再含糊说「已拉取全部数据」
   loadLiveDatasets(false).then(()=>{
     const upd = (state.meta && state.meta.updateTime) || "";
+    const fresh = __dataFresh(upd);
+    let msg, bad = false, ms = 4500;
     if(upd && upd !== baseUpd){
-      jcToast("已同步云端最新数据（更新于 " + upd.slice(5,16) + "）", 4500);
-    }else if(upd){
-      jcToast("已拉取云端全部数据 · 当前批次更新于 " + upd.slice(5,16), 4500);
+      msg = "已同步云端最新数据（更新于 " + upd.slice(5,16) + "）";
+    }else if(fresh.level === "fresh"){
+      msg = "已是今日最新数据（更新于 " + (upd.slice(5,16) || "-") + "），云端暂无更新";
+    }else if(fresh.level === "stale"){
+      bad = true; ms = 6000;
+      msg = "云端数据仍是 " + fresh.day.slice(5) + " 批次（约 " + Math.round(fresh.hours)
+          + " 小时前），已发起后台更新，数据上线后会自动同步";
     }else{
-      jcToast("已重新拉取云端全部数据", 4000);
+      msg = "已重新拉取云端全部数据";
     }
+    jcToast(msg, ms, bad);
+    __persistPull(msg);   // 2.6s 后硬重载会清掉 toast，跨重载再显示一次
   }).catch(()=>{ jcToast("已重新加载本页数据", 3500); });
 
   // ---- 兜底硬重载：绕过缓存拿到最新部署产物（主路径的一部分，非依赖 CI）----
@@ -8510,6 +8569,8 @@ $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("
 setInterval(()=>refreshRealtimeData(false), 120000);
 setInterval(()=>checkNewVersion(false), 300000);
 setTimeout(()=>refreshRealtimeData(false), 5000);
+/* v1.7.130：硬重载后把上一次「刷新数据」的结果再显示一次，避免 toast 被重载吞掉 */
+setTimeout(__consumePull, 900);
 /* 页面加载 8 秒后比对版本：若云端数据比本页更新超过 10 分钟，说明本页被缓存，强制刷新 */
 setTimeout(()=>{
   if(!window.fetch) return;

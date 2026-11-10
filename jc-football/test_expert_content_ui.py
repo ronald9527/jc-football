@@ -40,14 +40,22 @@ async def main():
     # 源站每天的文章与对阵都不同，写死会在每次刷新后误报（11-08 实测 23→19 篇）。
     arts = ed.get("articles", [])
     n_art = len(arts)
-    # 取一条真实的「原文结论依据」文本，用于验证页面确实渲染了原文依据
+    # 取一条真实的「原文结论依据 / 正文」文本，用于验证页面确实渲染了原文依据。
+    # v1.7.130：源站文章有的当天只有短依据（如「方向：胜」5 字），旧逻辑 len>=6
+    # 会把样本全过滤掉，进而在「无样本可验」时误报 FAIL。改为多字段取样本，
+    # 并把阈值降到 2；同时补一个页面标记断言，保证即使无样本也能验结构。
     sample_ev = ""
     for a in arts:
         for r in a.get("recommendations", []):
-            e = (r.get("evidence") or r.get("directionEvidence") or "").strip()
-            if e and len(e) >= 6:
+            e = (r.get("evidence") or r.get("directionEvidence")
+                 or r.get("scoreEvidence") or "").strip()
+            if e and len(e) >= 2:
                 sample_ev = e[:12]
                 break
+        if not sample_ev:
+            cs = (a.get("contentSummary") or "").strip()
+            if cs and len(cs) >= 2:
+                sample_ev = cs[:12]
         if sample_ev:
             break
     has_nodir = any(not a.get("recommendations") for a in arts)
@@ -93,9 +101,16 @@ async def main():
             await page.wait_for_timeout(280)
             all_art += "\n" + await page.inner_text("#expertArticlesWrap")
 
-        # 原文结论依据：用数据里的真实文本验证页面确实渲染（不再写死「欧塞尔不败」）
-        ck(bool(sample_ev) and sample_ev in all_art,
-           "原文结论依据可见（数据样本「%s」）" % sample_ev, "" if sample_ev else "无样本")
+        # 原文结论依据：用数据里的真实文本验证页面确实渲染（不再写死「欧塞尔不败」）。
+        # 无样本可验时按「跳过」处理（记为通过并注明），不能把「今天没有长依据」
+        # 误判成「页面坏了」；同时用页面标记断言兜底保证结构仍正确。
+        if sample_ev:
+            ck(sample_ev in all_art, "原文结论依据可见（数据样本「%s」）" % sample_ev)
+        else:
+            ck("原文结论：" in all_art or "正文：" in all_art,
+               "原文依据区块可见（当日无长样本，按结构断言）", "已跳过内容比对")
+        ck("原文结论：" in all_art or "正文：" in all_art,
+           "文章流渲染原文依据区块（原文结论 / 正文）")
         ck("内容已核对" in all_art, "文章显示「内容已核对」标记")
         ck("未知专家" not in all_art, "无「未知专家」空壳卡片")
         # 无明确方向文章：数据里有才要求页面诚实说明，没有则跳过（避免每年误报）

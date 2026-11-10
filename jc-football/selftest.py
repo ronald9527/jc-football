@@ -690,8 +690,9 @@ def check_pipeline_safeguards():
 
 
 def check_refresh_chain():
-    """检查 12 刷新按钮链路（v1.7.129）：按钮不再赌 CI、云端配置能跑完且不覆盖生产。"""
-    print("· 检查 12 刷新按钮链路（v1.7.129）")
+    """检查 12 刷新按钮链路（v1.7.129 起，v1.7.130 补新鲜度诚实反馈）：
+    按钮不再赌 CI、即时同步云端全部数据、如实显示批次新鲜度、配置能跑完且不覆盖生产。"""
+    print("· 检查 12 刷新按钮链路（v1.7.129 / v1.7.130 新鲜度反馈）")
     # (1) 前端：主路径即时同步，CI 仅后台 fire-and-forget，不轮询 run / 不因失败报错
     try:
         t = open("template.html", encoding="utf-8").read()
@@ -706,6 +707,19 @@ def check_refresh_chain():
     for token, msg in must.items():
         if token not in t:
             add("ERROR", "刷新链路", msg)
+    # v1.7.130：数据新鲜度诚实反馈 —— 陈旧批次不能再含糊说「已拉取云端全部数据」
+    r130 = {
+        "function __dataFresh": "缺数据新鲜度判定（云端旧批次会被误报成同步成功）",
+        "function __bjToday": "缺北京时间今日批次判定（设备时区会误判新鲜度）",
+        "__persistPull(msg)": "缺刷新结果跨硬重载保留（toast 会被 2.6s 重载吞掉）",
+        "setTimeout(__consumePull, 900)": "缺页面加载时消费跨重载刷新结果",
+        "云端数据仍是 ": "缺『云端仍是旧批次』的如实提示",
+    }
+    for token, msg in r130.items():
+        if token not in t:
+            add("ERROR", "刷新链路", "v1.7.130 " + msg)
+    if "已拉取云端全部数据 · 当前批次更新于" in t:
+        add("ERROR", "刷新链路", "仍残留含糊的『已拉取云端全部数据』旧文案（会误导为已拉到新数据）")
     # 旧实现特征（赌 CI）必须消失：不得再轮询 run_id / 不再因 conclusion 报错
     for token in ("api/refresh?run_id=", "云端任务失败(", "抓取耗时较长"):
         if token in t:
@@ -1014,6 +1028,11 @@ def check_vzhan_batch(data):
         add("ERROR", "V站批次", "编号前缀与赛程日期星期不一致：%s" % ", ".join(bad_pref[:6]))
 
     # (2) 当天批次在 V站 数据里必须有带比分场次（用户要看的「周六 V站比分」）
+    # v1.7.130：区分【抓取故障】与【数据源当天未出比分】，不再一律判 ERROR。
+    # 实据：2026-11-10 竞彩为英锦标赛/日联杯等小众杯赛，V站网关 UP(61ms/连续失败0)、
+    # 情报抓到 8 场且 updatedAt 为当天，只是数据源未给这批场次预测比分。
+    # 这种情况属「数据源无覆盖」，如实降级 WARN；网关异常或情报陈旧（疑似抓取失败）
+    # 仍必须报 ERROR，避免把真故障悄悄放过。
     bd = ((data or {}).get("safeParlay") or {}).get("batchDate")
     if bd:
         sub = groups.get(bd, [])
@@ -1021,7 +1040,20 @@ def check_vzhan_batch(data):
         if not sub:
             add("ERROR", "V站批次", "竞彩当天批次 %s 在 V站 数据中无任何场次" % bd)
         elif n_pred == 0:
-            add("ERROR", "V站批次", "竞彩当天批次 %s 共 %d 场，但无一场带 V站 预测比分" % (bd, len(sub)))
+            gw = load("vzhan_gateway_status.json", {}) or {}
+            gw_up = str(gw.get("status", "")).lower() == "up" and int(gw.get("consecFails") or 0) == 0
+            vupd = str(vz.get("updatedAt") or vz.get("updateTime") or "")[:10]
+            today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d")
+            fresh = vupd == today
+            if gw_up and fresh:
+                add("WARN", "V站批次",
+                    "竞彩当天批次 %s 共 %d 场均无 V站 预测比分（网关 UP、情报更新于 %s，"
+                    "属数据源当日未覆盖这批小众杯赛，非抓取故障）" % (bd, len(sub), vupd))
+            else:
+                add("ERROR", "V站批次",
+                    "竞彩当天批次 %s 共 %d 场无 V站 预测比分，且网关 status=%s/连续失败=%s、"
+                    "情报更新于 %s（疑似抓取故障或数据陈旧）"
+                    % (bd, len(sub), gw.get("status") or "?", gw.get("consecFails") or "?", vupd or "?"))
         else:
             print("  竞彩当天批次 %s：%d 场 / 带 V站比分 %d 场 / 在售批次 %s"
                   % (bd, len(sub), n_pred, ", ".join(sorted(groups))))

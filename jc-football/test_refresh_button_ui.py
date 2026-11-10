@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""test_refresh_button_ui.py —— v1.7.129「刷新数据」按钮链路 UI 回归
+"""test_refresh_button_ui.py —— 「刷新数据」按钮链路 UI 回归（v1.7.129 / v1.7.130）
 
 背景：旧实现把「是否重载/是否成功」全赌在 GitHub Actions workflow_dispatch 上，
 而线上 CI 在海外对官方接口恒定 HTTP 567 → 90 分钟超时被强杀（run cancelled），
 前端轮询到 cancelled 或一直空等 → 数据没变 → 用户看到「按了还是旧数据」。
+v1.7.130 又修一层：上游停更时云端本身就是旧批次，按钮会如实显示「云端数据仍是
+X 批次（约 N 小时前）」，不再含糊说「已拉取云端全部数据」让人误以为成功。
 
 本测试用路由拦截让 /api/refresh 【永不返回 / 直接失败】，模拟最坏的 CI 场景，
 断言按钮的即时同步主路径完全不受影响：
-  1. 页面版本 v1.7.129
+  1. 页面版本（从 template.html 动态读，避免版本升级后测试硬编码失效）
   2. 点击「刷新数据」后，【立即】发起对 matches.json / version.json 等云端数据源
      的请求（证明主路径是即时拉数据，不是在等 CI）
-  3. 即使 /api/refresh 挂起，toast 仍在数秒内显示「已同步/已拉取…数据」
-     （旧实现此时按钮文案是「触发中…」并一直转圈）
+  3. 即使 /api/refresh 挂起，toast 仍在数秒内显示数据同步反馈
   4. 不出现「触发失败 / 云端任务失败 / 无法连接刷新服务 / 抓取耗时较长」等
      让人以为按钮坏了的负面提示
   5. 按钮在 ~1.5s 内恢复可点击（不因 CI 挂起而永久 disabled）
-  6. 触发硬重载（location.replace 带 cacheBust）——用 init script 记录
-  7. 无 JS 运行错误
+  6. 新鲜度判定函数真实可用（旧批次判 stale、今日批次判 fresh）
+  7. 前端含跨硬重载结果保留、无 JS 运行错误
 """
 import asyncio
 import json
@@ -77,7 +78,12 @@ async def main():
         await page.evaluate("() => { window.__hardReload = function(){ window.__hardReloadStubbed = true; }; }")
 
         html = await page.content()
-        ck('const VERSION = "v1.7.129"' in html, "页面版本 v1.7.129")
+        # 版本从 template.html 动态读，避免每次升版都要改测试
+        tpl = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+        import re as _re
+        m = _re.search(r'const VERSION = "(v[\d.]+)"', tpl)
+        ver = m.group(1) if m else ""
+        ck(bool(ver) and ('const VERSION = "%s"' % ver) in html, "页面版本与 template 一致 " + ver)
 
         # 清空基线请求记录，只看点击之后
         reqs.clear()
@@ -115,9 +121,25 @@ async def main():
         ck(not disabled, "按钮在 CI 挂起时仍快速恢复可点击")
 
         # 校验前端源码：CI 触发为 fire-and-forget，不再轮询 run_id
-        src = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+        src = tpl
         ck("api/refresh?run_id=" not in src, "前端已移除 run_id 轮询（不再赌 CI 结果）")
         ck('setTimeout(__hardReload, 2600)' in src, "前端含硬重载兜底")
+        ck("已拉取云端全部数据 · 当前批次更新于" not in src, "已移除含糊的『已拉取全部数据』误导文案")
+
+        # v1.7.130：新鲜度判定函数真实可用（不依赖 CI、不依赖设备时区）
+        try:
+            fresh = await page.evaluate("""() => ({
+                stale: __dataFresh('2026-11-08 16:38:10').level,
+                fresh: __dataFresh(new Date(Date.now()+8*3600*1000).toISOString().slice(0,10)+' 09:00:00').level,
+                today: __bjToday()
+            })""")
+            ck(fresh["stale"] == "stale", "旧批次被判定为 stale（不再误报同步成功）", fresh)
+            ck(fresh["fresh"] == "fresh", "今日批次被判定为 fresh", fresh)
+            ck(bool(_re.match(r'^\d{4}-\d{2}-\d{2}$', fresh["today"])), "北京时间今日格式正确", fresh["today"])
+        except Exception as e:
+            ck(False, "新鲜度判定函数可执行", str(e)[:120])
+        ck("__persistPull(msg)" in src and "setTimeout(__consumePull, 900)" in src,
+           "刷新结果跨硬重载保留已接线")
 
         ck(not errors, "无 JS 运行错误", errors[:3])
 

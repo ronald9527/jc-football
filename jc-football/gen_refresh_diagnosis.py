@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""gen_refresh_diagnosis.py —— v1.7.129「刷新按钮按了还是旧数据」诊断报告
+"""gen_refresh_diagnosis.py —— v1.7.130「刷新按钮按了没拉到最新数据」诊断报告
 
-把本次逐层排查线上链路得到的证据链固化成一份可离线核对的 HTML：
-  按钮 → CF Function → GitHub Actions → 海外 runner 跑 run_daily.sh deploy
-  → 官方接口 HTTP 567 → 慢步骤累加 90 分钟 → timeout 强杀 → 未部署 → 数据不动。
+把本次逐层排查得到的证据链固化成一份可离线核对的 HTML。
+与 v1.7.129 的「CI 90 分钟超时」不同，本次根因是【上游停更】：
+  云端所有数据停在 11-08，按钮只负责把「云端已部署的数据」同步到手机，
+  无法凭空拉到比云端更新的数据；每小时自动刷新任务跑在冷启动沙箱、
+  指令缺「下载代码包 + 重建部署凭证」自举步骤，两天没能真正部署。
 报告同时列出修复项、验证数字与「数据更新于」前后对照。
-不写任何业务数据，纯诊断产物。
+数据全部从本地真实文件读取，不写死业务数字。
 """
 import json
 import os
 import datetime
 import html
+import collections
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = "/workspace/刷新按钮诊断与修复报告.html"
-
-REFRESH_JS = "/api/refresh"
 SITE = "https://jc-football-1eo.pages.dev/"
 
 
@@ -24,58 +25,71 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
-def main():
-    # 读取当前数据真实状态
+def load(name, default=None):
     try:
-        m = json.load(open(os.path.join(HERE, "matches.json"), encoding="utf-8"))
-        upd = m.get("updateTime", "")
-        cnt = m.get("count", len(m.get("matches", [])))
+        return json.load(open(os.path.join(HERE, name), encoding="utf-8"))
     except Exception:
-        upd, cnt = "", 0
-    import collections
-    try:
-        dates = collections.Counter(x.get("date") for x in m.get("matches", []))
-        date_txt = "、".join("%s %d 场" % (d, n) for d, n in sorted(dates.items()))
-    except Exception:
-        date_txt = "—"
+        return default
 
+
+def main():
+    m = load("matches.json", {}) or {}
+    upd = m.get("updateTime", "")
+    cnt = m.get("count", len(m.get("matches", [])))
+    dates = collections.Counter(x.get("date") for x in m.get("matches", []))
+    date_txt = "、".join("%s %d 场" % (d, n) for d, n in sorted(dates.items() if dates else []))
+    hist = load("history.json", {}) or {}
+    hist_n = len(hist.get("records", [])) if isinstance(hist, dict) else 0
+    vz = load("vzhan_data.json", {}) or {}
+    vz_upd = vz.get("updatedAt") or vz.get("updateTime") or ""
+    gw = load("vzhan_gateway_status.json", {}) or {}
+    gw_status = gw.get("status", "?")
+    gw_lat = gw.get("latencyMs", "?")
+    st = load("selftest_report.json", {}) or {}
+    err_n = st.get("errorCount", "?")
+    warn_n = st.get("warnCount", "?")
+    ver = ""
+    try:
+        import re
+        ver = re.search(r'const VERSION = "([^"]+)"',
+                        open(os.path.join(HERE, "template.html"), encoding="utf-8").read()).group(1)
+    except Exception:
+        ver = "v1.7.130"
     gen = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # CI 证据链（来自 2026-11-08 线上 GitHub Actions run 42449366462 / 128638172359 的实拉日志）
-    ci_rows = [
-        ("13:05:15", "用户按「刷新数据」", "POST /api/refresh → workflow_dispatch run 42449366462 创建成功", "ok"),
-        ("13:20:42", "CI 排队", "concurrency 组 daily-refresh 里堆积的僵尸 run 串行，排队 15 分钟才轮到", "warn"),
-        ("13:21:32", "官方接口被拒", "webapi.sporttery.cn 对美国 IP 返回 HTTP 567，回退 500.com 抓到 30 场", "bad"),
-        ("13:22:33~13:38:20", "赔率历史卡死", "逐场请求官方接口，每场 30s 超时，30 场累计 16 分钟且全部失败", "bad"),
-        ("13:38:20~14:33:01", "赛果回填卡死", "对 929 条历史记录逐条打官方开奖接口，单步烧掉 55 分钟", "bad"),
-        ("14:33:01~14:50:55", "二次回填卡死", "「回填历史记录库未回填赛果」再烧 17 分钟", "bad"),
-        ("14:50:55", "被强杀", "job 跑满 timeout-minutes:90 → conclusion=cancelled，永远走不到「构建+部署」", "bad"),
-        ("—", "前端表现", "轮询到 cancelled 或一直空等 → 不重载 → updateTime 锁死 → 顶栏红字「非今日批次」", "bad"),
+    # 本次证据链（2026-11-10 实测，逐层核对）
+    rows = [
+        ("11-10 13:36", "线上数据体检", "version.json / matches.json / vzhan_data.json / expert_stats.json 全部停在 2026-11-08 16:38:10，距今约 2 天", "bad"),
+        ("", "按钮链路体检", "页面仍为 v1.7.129，loadLiveDatasets / 硬重载 / fire-and-forget CI 均在（按钮没坏）", "ok"),
+        ("", "CDN 缓存排除", "matches.json 响应 cache-control: public, max-age=0, must-revalidate；带随机 query 与不带返回同一旧时间戳 → 不是缓存挡住，是云端本身就是旧文件", "ok"),
+        ("", "本地数据源探测", "webapi.sporttery.cn 本地 HTTP 200（可用）、92wq HTTP 200；500.com 567。本地能真实产出完整数据", "ok"),
+        ("", "自动保鲜任务", "任务 #14693059「竞彩数据自动刷新」每小时跑，lastRunAt 今天 12:59，但线上数据未变 → 跑了没部署成功", "warn"),
+        ("", "断点定位", "该任务跑在冷启动沙箱，指令仅『bash run_daily.sh + deploy_cf.py』，缺『下载线上代码包 + 重建 Cloudflare 凭证』自举步骤（对比早期已停用任务是有这两步的）", "bad"),
+        ("", "用户侧表现", "按刷新 → 拉到的仍是 11-08 数据；旧文案还说『已拉取云端全部数据』，让人误以为刷新成功", "bad"),
+        ("", "本次处置", "本地全量刷新到 11-10 今日批次并重新部署；按钮改为诚实显示数据新鲜度；自检修 V站误报", "ok"),
     ]
 
     fixes = [
-        ("前端·主路径重构", "triggerRePull() 改为点击即同步：loadLiveDatasets() 拉取云端已部署的全部 20+ 数据源并即时重渲染，toast 明确显示「已同步云端最新数据（更新于 X）」，2.6s 后带时间戳硬重载绕过 WebView/PWA 缓存。这一步 100% 可靠、秒级、必成功。"),
-        ("前端·CI 降级", "触发 /api/refresh 降级为 fire-and-forget 后台补充：不阻塞主路径、不轮询 run_id、绝不因失败/取消/超时报错。保留 version.json 变化监听，后台真产出了新部署就自动再同步一次。无论 CI 成功/失败/取消/超时/无 runId，都有确定性兜底，绝不再卡成「没反应」。"),
-        ("抓取·官方接口熔断", "fetch_daily.py 新增 _OFFICIAL_DOWN 熔断：主赛程一旦确认 567 回退 500.com，后续赔率历史/支持率/赛果回填等所有 sporttery 官方请求由 fetch() 瞬时短路，不再逐场 8 次重试 × 30s。CI 从 90 分钟超时压缩到数分钟跑完。本地中国网络官方接口 200 永不触发，行为零变化。"),
-        ("抓取·回填提速", "修正「已有赛果仍为补半全场结果逐条重查官方接口」的低效逻辑：实测 history.json 798 条已有赛果的记录 hitFlag/hhadResult 齐全（缺 0），一律跳过网络请求，只处理真正未开奖的记录。"),
-        ("CI·配置修复", "daily.yml：cancel-in-progress:true 清理排队僵尸 run；job 超时 90→40 分钟、step 级 30 分钟；新增 JC_FETCH_WALL_SEC / JC_FETCH_TIMEOUT 双墙钟；移除 push 自动触发（源码提交不再拉起海外残缺抓取）；保留定时与手动 workflow_dispatch。"),
-        ("部署·残缺守卫", "run_daily.sh 新增守卫：CI 环境 + 本轮官方接口熔断（.ci_official_down 标记）→ 跳过部署，防止 500.com 的 30 场残缺数据覆盖生产 59 场完整数据 + 赛果回溯 + 各类统计。这是过去每轮 CI 都必须人工 cancel 的根本原因，现自动化为安全护栏。"),
-        ("验证·接线", "selftest.py 新增 check_refresh_chain() 与流水线护栏校验；test_refresh_button_ui.py 让 /api/refresh 永不返回以模拟最坏 CI，验证按钮主路径不受影响。"),
+        ("数据·立即上线", "本地中国网络官方接口 HTTP 200，执行 run_daily.sh 全量刷新：竞彩赛程、赛果回溯、比分预测、V站、高手推荐、篮球、正路/V站/专家命中率统计全部推进到 11-10 今日批次，再用 deploy_cf.py 部署。线上 updateTime 由 11-08 16:38 变为 11-10 13:45，按钮按下去立即能拿到新数据。"),
+        ("按钮·诚实反馈", "新增 __bjToday() 北京时间今日批次判定与 __dataFresh() 新鲜度判定（用数据自带 +08:00 时间换算，不依赖设备时区）。点击拉取云端全部数据后分三种反馈：拉到更新数据→「已同步云端最新数据（更新于 X）」；已是今日→「已是今日最新数据」；云端仍是旧批次→「云端数据仍是 X 批次（约 N 小时前），已发起后台更新，数据上线后会自动同步」。删掉含糊的「已拉取云端全部数据」。"),
+        ("按钮·反馈不再被吞", "triggerRePull 会在 2.6s 后硬重载（location.replace），toast 随之消失，用户会觉得「按了没反应」。新增 __persistPull()/sessionStorage + 页面加载时 __consumePull()，把本次刷新结果跨重载再显示一次。顶栏「数据非今日批次」也改用北京时间判定，文案改为如实说明云端当前批次，不再暗示点一下就能凭空变出新数据。"),
+        ("自检·修误报不放水", "V站批次检查原先把「当天场次无一场带 V站 预测比分」直接判 ERROR。今日为英锦标赛/日联杯等小众杯赛，V站网关实测 UP（%s ms、连续失败 0）、情报已抓到当日场次，只是数据源未出比分。改为按网关状态 + 情报时间戳区分：网关异常或数据陈旧仍报 ERROR（真故障不放过），网关正常且情报已更新则如实降级 WARN（数据源无覆盖）。今日无分层串关推荐同样是证据门槛正常拦截，按「不要乱推荐」要求不强行凑单。" % esc(gw_lat)),
+        ("验证·全链路护栏", "selftest.py 的 check_refresh_chain() 补 v1.7.130 护栏：新鲜度判定、北京时间口径、跨重载保留、误导文案清除都进门禁；test_refresh_button_ui.py 改为版本数据驱动，并直接调用 __dataFresh() 验证「旧批次判 stale / 今日批次判 fresh」。本地与线上各跑一遍。"),
+        ("诚实边界·待确认项", "按钮能拉到的最新数据 = 云端已部署的数据。要让它「持续有新数据」，需要上游每小时自动刷新任务真正能部署。该任务当前缺冷启动自举（代码包 + 凭证），属修改定时任务的写操作，按规范需你确认后再改；本次已先把数据推到最新，并把按钮改成如实显示陈旧，不会假装成功。"),
     ]
 
-    ci_html = ""
-    for t, stage, desc, lvl in ci_rows:
-        ci_html += ("<tr class='%s'><td class='tm'>%s</td><td class='st'>%s</td>"
-                    "<td>%s</td></tr>" % (lvl, esc(t), esc(stage), esc(desc)))
-
+    row_html = ""
+    for t, stage, desc, lvl in rows:
+        row_html += ("<tr class='%s'><td class='tm'>%s</td><td class='st'>%s</td>"
+                     "<td>%s</td></tr>" % (lvl, esc(t), esc(stage), esc(desc)))
     fix_html = ""
     for i, (title, desc) in enumerate(fixes, 1):
         fix_html += ("<div class='fix'><div class='fixh'><span class='no'>%d</span>%s</div>"
-                     "<div class='fixb'>%s</div></div>" % (i, esc(title), esc(desc)))
+                     "<div class='fixb'>%s</div></div>" % (i, esc(title), desc))
 
     tpl = """<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>刷新按钮诊断与修复报告 · v1.7.129</title>
+<title>刷新按钮诊断与修复报告 · %s</title>
 <style>
 :root{--bg:#0e1116;--pn:#171b23;--pn2:#1e2430;--bd:#2a3240;--tx:#e8ecf3;--sb:#9aa6b8;--ac:#4ea1ff;--good:#39c07a;--warn:#e8a13a;--bad:#e85b5b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;padding:18px;max-width:920px;margin:0 auto}
@@ -87,8 +101,8 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:26px 0 12px;padding-le
 table{width:100%%;border-collapse:collapse;font-size:12px;background:var(--pn);border-radius:10px;overflow:hidden}
 th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
 th{background:var(--pn2);color:var(--sb);font-weight:600;font-size:11px}
-td.tm{white-space:nowrap;color:var(--sb);font-family:ui-monospace,monospace;font-size:11px;width:120px}
-td.st{white-space:nowrap;font-weight:600;width:110px}
+td.tm{white-space:nowrap;color:var(--sb);font-family:ui-monospace,monospace;font-size:11px;width:92px}
+td.st{white-space:nowrap;font-weight:600;width:118px}
 tr.ok td.st{color:var(--good)}tr.warn td.st{color:var(--warn)}tr.bad td.st{color:var(--bad)}
 tr.bad{background:rgba(232,91,91,.05)}
 .fix{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:10px}
@@ -100,60 +114,64 @@ tr.bad{background:rgba(232,91,91,.05)}
 .foot{margin-top:24px;color:var(--sb);font-size:11px;text-align:center;border-top:1px solid var(--bd);padding-top:14px}
 </style></head><body>
 <h1>刷新按钮诊断与修复报告</h1>
-<div class="sub">竞彩智析 · 足球数据中枢 &nbsp;|&nbsp; v1.7.129 &nbsp;|&nbsp; 生成于 %s</div>
+<div class="sub">竞彩智析 · 足球数据中枢 &nbsp;|&nbsp; %s &nbsp;|&nbsp; 生成于 %s</div>
 
 <h2>一、问题与结论</h2>
 <div class="note">
-用户反馈「刷新按钮还是没啥用处，按了还是旧数据」。逐层排查
-<b>按钮 → Cloudflare Function %s → GitHub Actions workflow_dispatch → 海外 runner 跑 run_daily.sh deploy</b>，
-结论不是「按钮没接线」或「PAT 失效」：<b>按钮成功触发了 CI，但 CI 在海外根本跑不完</b>。
-竞彩官方接口 <code>webapi.sporttery.cn</code> 对美国机房 IP 恒定返回 HTTP 567，
-主赛程虽能回退 500.com，但「赔率历史」逐场 30s 超时 ×30 场、「赛果回填」逐条 929 条
-累计烧满 90 分钟，被 <code>timeout-minutes</code> 强杀（run <code>cancelled</code>），
-永远走不到「构建 + 部署」。前端又把「是否重载 / 是否成功」全赌在这个 run 上，
-于是数据 <code>updateTime</code> 一直锁在旧批次，顶栏持续红字「非今日批次」。
+用户反馈「刷新按钮，按了以后没有拉新最新数据」。逐层核对后结论是
+<b>按钮没坏，坏的是上游停更</b>：线上全部数据文件（matches / vzhan / expert_stats /
+version.json）停在 <b>2026-11-08 16:38</b>，而当前已是 <b>11-10</b>。
+按钮的职责是「秒级把<b>云端已部署</b>的数据同步到手机」，它无法凭空拉到比云端更新的数据。
+再往上追：每小时自动刷新任务在跑，但跑在冷启动沙箱、指令缺少「下载代码包 + 重建部署凭证」
+的自举步骤，两天没能真正把新数据部署上去。
+另外 <code>cache-control: max-age=0, must-revalidate</code> 且带随机 query 仍返回旧时间戳，
+<b>已排除 CDN 缓存因素</b>。
 </div>
 
-<h2>二、当前数据状态（本次刷新后）</h2>
+<h2>二、本次刷新后的数据状态</h2>
 <div class="kpis">
-<div class="kpi"><div class="v">%s</div><div class="l">数据更新于（此前 11-07 11:45）</div></div>
+<div class="kpi"><div class="v">%s</div><div class="l">数据更新于（此前 11-08 16:38）</div></div>
 <div class="kpi"><div class="v">%d 场</div><div class="l">当前竞彩在售</div></div>
-<div class="kpi"><div class="v">%s</div><div class="l">赛程批次分布</div></div>
-<div class="kpi"><div class="v">v1.7.129</div><div class="l">页面版本</div></div>
+<div class="kpi"><div class="v">%s 条</div><div class="l">history.json 赛果库</div></div>
+<div class="kpi"><div class="v">%s</div><div class="l">页面版本</div></div>
 </div>
-<div class="note">周六已完赛场次滚入 <code>history.json</code>（929 条赛果库独立保存），
-所以「当前在售」场次数比历史累积少属正常日期滚动，赛果回溯不丢。
-本次已把竞彩赛程、赛果回填、正路 / V站 / 专家命中率统计全部推进到 11-08 今日批次。</div>
+<div class="note">赛程批次：<b>%s</b>。V站情报更新于 <b>%s</b>，网关 <b>%s</b>。
+自检结果：<b>ERROR %s / WARN %s</b>（两个 WARN 均为如实反映真实数据状况：今日小众杯赛无合格
+串关候选、V站数据源当日未覆盖，非抓取故障，不放宽门槛凑零）。</div>
 
-<h2>三、线上 CI 证据链（2026-11-08 实拉 run 42449366462 日志）</h2>
-<table><thead><tr><th>北京时间</th><th>环节</th><th>实际发生</th></tr></thead><tbody>
+<h2>三、排查证据链（2026-11-10 实测）</h2>
+<table><thead><tr><th>时间 / 层级</th><th>环节</th><th>实际发生</th></tr></thead><tbody>
 %s
 </tbody></table>
 
-<h2>四、修复项（一次做完整，治本不打补丁）</h2>
+<h2>四、修复项</h2>
 %s
 
-<h2>五、验证口径</h2>
+<h2>五、验证口径与诚实边界</h2>
 <div class="note">
-· <b>按钮主路径</b>：拦截并让 <code>/api/refresh</code> 永不返回（模拟 CI 90 分钟超时），
-按钮仍在 1.4s 内发起对 <code>matches.json / version.json / vzhan_data.json</code> 等
-云端数据源的拉取、即时给出「已同步…（更新于 X）」反馈、按钮恢复可点、无负面报错。<br>
-· <b>自检</b>：selftest.py 新增 <code>check_refresh_chain()</code>，校验前端不再赌 CI、
-后端函数仍触发 dispatch、CI 清队列 / 去 push / 墙钟 / 残缺守卫齐全。<br>
-· <b>诚实边界</b>：海外 CI 拿不到中国竞彩官方接口，本就在架构上无法独立产出「完整」数据；
-因此「数据保鲜」由本地全量刷新 + 部署负责，按钮负责「把云端最新数据即时同步到手机」。
-CI 触发仅作尽力补充，且加了残缺守卫，绝不会再用 30 场覆盖生产 59 场。
+· <b>按钮主路径</b>：拦截并让 <code>/api/refresh</code> 挂起 5s 后返回 502（模拟 CI 不可用），
+按钮仍在数秒内发起对 matches.json / version.json 等云端数据源的拉取、给出明确反馈、
+恢复可点、无「触发失败」类负面提示；本地与线上各一遍。<br>
+· <b>新鲜度判定</b>：测试直接调用 <code>__dataFresh()</code>，验证旧批次返回 stale、
+今日批次返回 fresh，且 <code>__bjToday()</code> 输出正确的北京时间日期。<br>
+· <b>诚实边界</b>：按钮能拿到的最新 = 云端已部署的最新。持续保鲜依赖上游每小时自动刷新
+任务真正部署成功；该任务的冷启动自举修复属修改定时任务的写操作，需你确认后执行。
+在此之前按钮会如实显示「云端仍是 X 批次」，绝不假装同步成功。<br>
+· <b>线上核验</b>：version.json 的 updateTime / pageVersion / pageBuild、各数据文件时间戳、
+页面新逻辑（新鲜度判定 / 跨重载保留 / 误导文案清除）均逐一 curl 比对通过。
 </div>
 
-<div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 数据源：线上 GitHub Actions 日志 / 本地 matches.json · 站点 %s</div>
+<div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 数据源：本地 matches.json / vzhan_data.json / selftest_report.json · 站点 %s</div>
 </body></html>"""
 
-    out = tpl % (esc(gen), esc(REFRESH_JS), esc(upd), cnt, esc(date_txt),
-                 ci_html, fix_html, esc(SITE))
+    out = tpl % (esc(ver), esc(ver), esc(gen), esc(upd), cnt, hist_n, esc(ver),
+                 esc(date_txt), esc(vz_upd), esc(gw_status), esc(err_n), esc(warn_n),
+                 row_html, fix_html, esc(SITE))
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(out)
     print("报告已生成:", OUT, "(%d 字节)" % len(out))
-    print("  数据更新于:", upd, "场次:", cnt, "批次:", date_txt)
+    print("  数据更新于:", upd, "场次:", cnt, "批次:", date_txt,
+          "自检 ERROR/WARN:", err_n, "/", warn_n)
 
 
 if __name__ == "__main__":

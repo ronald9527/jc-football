@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-10 05:40:03",
+ "updatedAt": "2026-11-10 05:47:17",
  "source": "WhoScored Previews（官方人工预测比分）",
  "isolation": true,
  "note": "WhoScored 源站暂不可用，预测比分由 score_predict 模型兜底（football-data 稳定源，不受 Cloudflare 封锁影响）",
@@ -499,8 +499,8 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 37.8,
-    "exact": 9.2,
+    "dir": 37.7,
+    "exact": 9.1,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -674,8 +674,8 @@
    "predA": 1,
    "evaluated": false,
    "conf": {
-    "dir": 39.8,
-    "exact": 8.5,
+    "dir": 39.6,
+    "exact": 8.4,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 19,
@@ -2520,15 +2520,15 @@
    "predA": 2,
    "evaluated": false,
    "conf": {
-    "dir": 42.1,
-    "exact": 8.7,
+    "dir": 41.0,
+    "exact": 7.0,
     "dirLevel": "mid",
-    "exactLevel": "mid",
-    "leagueN": 20,
+    "exactLevel": "low",
+    "leagueN": 19,
     "teamN": 5,
-    "sample": 25,
+    "sample": 24,
     "outcome": "客胜",
-    "tip": "比分中等可信，比分 1:2 可作小注参考"
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
   },
   {
@@ -16029,8 +16029,8 @@
    "outcomeHit": true,
    "jcNum": "周日029",
    "preConf": {
-    "dir": 37.8,
-    "exact": 9.2,
+    "dir": 37.7,
+    "exact": 9.1,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 12,
@@ -16054,8 +16054,8 @@
    "outcomeHit": true,
    "jcNum": "周日027",
    "preConf": {
-    "dir": 39.8,
-    "exact": 8.5,
+    "dir": 39.6,
+    "exact": 8.4,
     "dirLevel": "low",
     "exactLevel": "mid",
     "leagueN": 19,
@@ -16063,6 +16063,31 @@
     "sample": 24,
     "outcome": "主胜",
     "tip": "比分中等可信，比分 2:1 可作小注参考"
+   }
+  },
+  {
+   "id": "1995461",
+   "date": "2026-11-08",
+   "league": "德甲",
+   "home": "FC Koln",
+   "away": "Bayer Leverkusen",
+   "predH": 1,
+   "predA": 2,
+   "actH": 1,
+   "actA": 2,
+   "exactHit": true,
+   "outcomeHit": true,
+   "jcNum": "周日016",
+   "preConf": {
+    "dir": 41.0,
+    "exact": 7.0,
+    "dirLevel": "mid",
+    "exactLevel": "low",
+    "leagueN": 19,
+    "teamN": 5,
+    "sample": 24,
+    "outcome": "客胜",
+    "tip": "方向中等可信，方向「客胜」可作小注参考"
    }
   },
   {
@@ -24319,9 +24344,9 @@
  ],
  "reliable": {
   "overall": {
-   "n": 435,
-   "exactHit": 9.0,
-   "outcomeHit": 43.2
+   "n": 436,
+   "exactHit": 9.2,
+   "outcomeHit": 43.3
   },
   "leagues": [
    {
@@ -24347,6 +24372,12 @@
     "n": 7,
     "exactHit": 14.3,
     "outcomeHit": 42.9
+   },
+   {
+    "league": "德甲",
+    "n": 21,
+    "exactHit": 14.3,
+    "outcomeHit": 38.1
    },
    {
     "league": "荷甲",
@@ -24377,12 +24408,6 @@
     "n": 28,
     "exactHit": 10.7,
     "outcomeHit": 21.4
-   },
-   {
-    "league": "德甲",
-    "n": 20,
-    "exactHit": 10.0,
-    "outcomeHit": 35.0
    },
    {
     "league": "Europa League",
@@ -24471,6 +24496,12 @@
     "outcomeHit": 66.7
    },
    {
+    "team": "FC Koln",
+    "n": 3,
+    "exactHit": 33.3,
+    "outcomeHit": 66.7
+   },
+   {
     "team": "Inter Miami CF",
     "n": 3,
     "exactHit": 33.3,
@@ -24541,17 +24572,11 @@
     "n": 3,
     "exactHit": 33.3,
     "outcomeHit": 33.3
-   },
-   {
-    "team": "DC United",
-    "n": 3,
-    "exactHit": 33.3,
-    "outcomeHit": 33.3
    }
   ],
   "baseline": {
-   "dir": 43.2,
-   "exact": 9.0
+   "dir": 43.3,
+   "exact": 9.2
   }
  }
 }

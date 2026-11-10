@@ -479,6 +479,28 @@ def main():
     # 带版本号文件名每次部署都是新 URL -> 新 CDN 对象，彻底绕过 Cloudflare 对 .apk
     # 的 HEAD 脏缓存（表现为 content-length=32，手机下载器据此判损坏打不开）。
     if os.path.exists(apk_src):
+        # v1.7.130：上线前校验 APK 内嵌页面版本与网页版本一致。
+        # 事故背景：部署发生在 APK 构建之前，回退逻辑静默把 v1.7.129 的旧壳
+        # 复制成 jc-football-v1.7.130.apk，用户下载到旧版本却看到新文件名。
+        # 这里显式告警（不阻断定时部署：沙箱可能不具备 APK 构建环境），
+        # 让错配立刻暴露在部署日志里，便于「先构建 APK 再部署」的顺序核查。
+        try:
+            import zipfile as _zip
+            with _zip.ZipFile(apk_src) as _z:
+                _inner = ""
+                if "assets/index.html" in _z.namelist():
+                    _inner = _z.read("assets/index.html").decode("utf-8", "ignore")
+            _m = re.search(r'const VERSION\s*=\s*"(v[\d.]+)"', _inner)
+            _apk_ver = _m.group(1) if _m else "未知"
+            if _apk_ver != page_version:
+                print("! [APK 版本错配] 网页=%s 但 APK 内嵌=%s（文件：%s）"
+                      % (page_version, _apk_ver, os.path.basename(apk_src)))
+                print("! 请先构建对应版本 APK（bash apk-build/build_apk.sh）再重新部署，"
+                      "否则手机下载到的是旧页面")
+            else:
+                print("  APK 版本校验通过：网页=%s / 内嵌=%s" % (page_version, _apk_ver))
+        except Exception as _e:
+            print("! APK 版本校验跳过：%s" % _e)
         shutil.copy(apk_src, os.path.join(dist, "jc-football.apk"))
         shutil.copy(apk_src,
                     os.path.join(dist, "jc-football-v%s.apk" % page_version.lstrip("v")))

@@ -9914,18 +9914,18 @@
   ]
  },
  "673": {
-  "ts": 1793126845.880092,
+  "ts": 1794289548.202842,
   "name": "SC Heerenveen",
   "matches": [
    {
     "id": 558222,
     "utc": "2026-08-09T14:45:00Z",
     "comp": "DED",
-    "home": false,
-    "oppId": 673,
-    "oppName": "SC Heerenveen",
-    "gf": 0,
-    "ga": 1,
+    "home": true,
+    "oppId": 666,
+    "oppName": "FC Twente '65",
+    "gf": 1,
+    "ga": 0,
     "hg": 1,
     "ag": 0,
     "status": "FINISHED"
@@ -9947,11 +9947,11 @@
     "id": 558235,
     "utc": "2026-08-22T19:00:00Z",
     "comp": "DED",
-    "home": false,
-    "oppId": 673,
-    "oppName": "SC Heerenveen",
-    "gf": 2,
-    "ga": 0,
+    "home": true,
+    "oppId": 684,
+    "oppName": "PEC Zwolle",
+    "gf": 0,
+    "ga": 2,
     "hg": 0,
     "ag": 2,
     "status": "FINISHED"
@@ -9973,11 +9973,11 @@
     "id": 558256,
     "utc": "2026-09-06T12:30:00Z",
     "comp": "DED",
-    "home": false,
-    "oppId": 673,
-    "oppName": "SC Heerenveen",
-    "gf": 3,
-    "ga": 2,
+    "home": true,
+    "oppId": 682,
+    "oppName": "AZ",
+    "gf": 2,
+    "ga": 3,
     "hg": 2,
     "ag": 3,
     "status": "FINISHED"
@@ -9986,9 +9986,9 @@
     "id": 558895,
     "utc": "2026-09-13T12:30:00Z",
     "comp": "DED",
-    "home": false,
-    "oppId": 673,
-    "oppName": "SC Heerenveen",
+    "home": true,
+    "oppId": 1912,
+    "oppName": "Telstar 1963",
     "gf": 0,
     "ga": 0,
     "hg": 0,
@@ -10025,11 +10025,11 @@
     "id": 558872,
     "utc": "2026-10-16T18:00:00Z",
     "comp": "DED",
-    "home": false,
-    "oppId": 673,
-    "oppName": "SC Heerenveen",
-    "gf": 0,
-    "ga": 4,
+    "home": true,
+    "oppId": 670,
+    "oppName": "SBV Excelsior",
+    "gf": 4,
+    "ga": 0,
     "hg": 4,
     "ag": 0,
     "status": "FINISHED"
@@ -10044,6 +10044,32 @@
     "gf": 3,
     "ga": 2,
     "hg": 2,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558852,
+    "utc": "2026-10-31T17:45:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 1915,
+    "oppName": "NEC",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558840,
+    "utc": "2026-11-08T11:15:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 675,
+    "oppName": "Feyenoord Rotterdam",
+    "gf": 5,
+    "ga": 3,
+    "hg": 5,
     "ag": 3,
     "status": "FINISHED"
    }
@@ -14265,7 +14291,7 @@
   ]
  },
  "1044": {
-  "ts": 1793103347.193625,
+  "ts": 1794289622.915871,
   "name": "AFC Bournemouth",
   "matches": [
    {
@@ -14370,6 +14396,32 @@
     "ga": 0,
     "hg": 0,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560624,
+    "utc": "2026-10-31T15:00:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 341,
+    "oppName": "Leeds United FC",
+    "gf": 2,
+    "ga": 0,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560637,
+    "utc": "2026-11-08T14:00:00Z",
+    "comp": "PL",
+    "home": false,
+    "oppId": 349,
+    "oppName": "Ipswich Town FC",
+    "gf": 2,
+    "ga": 1,
+    "hg": 1,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -15592,7 +15644,7 @@
   ]
  },
  "349": {
-  "ts": 1791514295.367673,
+  "ts": 1794289613.636667,
   "name": "Ipswich Town FC",
   "matches": [
    {
@@ -15658,6 +15710,71 @@
     "ga": 1,
     "hg": 1,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560599,
+    "utc": "2026-10-10T14:00:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 63,
+    "oppName": "Fulham FC",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560610,
+    "utc": "2026-10-17T14:00:00Z",
+    "comp": "PL",
+    "home": false,
+    "oppId": 65,
+    "oppName": "Manchester City FC",
+    "gf": 2,
+    "ga": 3,
+    "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560620,
+    "utc": "2026-10-23T19:00:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 351,
+    "oppName": "Nottingham Forest FC",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560629,
+    "utc": "2026-10-31T15:00:00Z",
+    "comp": "PL",
+    "home": false,
+    "oppId": 322,
+    "oppName": "Hull City AFC",
+    "gf": 2,
+    "ga": 2,
+    "hg": 2,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 560637,
+    "utc": "2026-11-08T14:00:00Z",
+    "comp": "PL",
+    "home": true,
+    "oppId": 1044,
+    "oppName": "AFC Bournemouth",
+    "gf": 1,
+    "ga": 2,
+    "hg": 1,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -18582,7 +18699,7 @@
   ]
  },
  "675": {
-  "ts": 1793097324.251722,
+  "ts": 1794289556.811072,
   "name": "Feyenoord Rotterdam",
   "matches": [
    {
@@ -18753,6 +18870,45 @@
     "hg": 1,
     "ag": 1,
     "status": "FINISHED"
+   },
+   {
+    "id": 558854,
+    "utc": "2026-10-31T15:30:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 1920,
+    "oppName": "Fortuna Sittard",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 575379,
+    "utc": "2026-11-03T20:00:00Z",
+    "comp": "CL",
+    "home": true,
+    "oppId": 108,
+    "oppName": "FC Internazionale Milano",
+    "gf": 0,
+    "ga": 3,
+    "hg": 0,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558840,
+    "utc": "2026-11-08T11:15:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 673,
+    "oppName": "SC Heerenveen",
+    "gf": 3,
+    "ga": 5,
+    "hg": 5,
+    "ag": 3,
+    "status": "FINISHED"
    }
   ]
  },
@@ -18854,7 +19010,7 @@
   ]
  },
  "5575": {
-  "ts": 1791514482.540495,
+  "ts": 1794289540.590706,
   "name": "CS Marítimo",
   "matches": [
    {
@@ -18946,6 +19102,45 @@
     "ga": 1,
     "hg": 1,
     "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 567323,
+    "utc": "2026-10-10T17:00:00Z",
+    "comp": "PPL",
+    "home": true,
+    "oppId": 503,
+    "oppName": "FC Porto",
+    "gf": 1,
+    "ga": 2,
+    "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 567329,
+    "utc": "2026-10-23T19:45:00Z",
+    "comp": "PPL",
+    "home": false,
+    "oppId": 5543,
+    "oppName": "Vitória SC",
+    "gf": 0,
+    "ga": 5,
+    "hg": 5,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 567340,
+    "utc": "2026-11-01T18:00:00Z",
+    "comp": "PPL",
+    "home": true,
+    "oppId": 5530,
+    "oppName": "CD Santa Clara",
+    "gf": 0,
+    "ga": 2,
+    "hg": 0,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -19197,7 +19392,7 @@
   ]
  },
  "666": {
-  "ts": 1791514505.495228,
+  "ts": 1794289597.025894,
   "name": "FC Twente '65",
   "matches": [
    {
@@ -19288,6 +19483,71 @@
     "gf": 3,
     "ga": 2,
     "hg": 3,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558877,
+    "utc": "2026-10-10T18:00:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 1920,
+    "oppName": "Fortuna Sittard",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558866,
+    "utc": "2026-10-18T18:00:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 676,
+    "oppName": "FC Utrecht",
+    "gf": 1,
+    "ga": 2,
+    "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558855,
+    "utc": "2026-10-25T19:00:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 682,
+    "oppName": "AZ",
+    "gf": 2,
+    "ga": 0,
+    "hg": 0,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558847,
+    "utc": "2026-11-01T13:30:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 670,
+    "oppName": "SBV Excelsior",
+    "gf": 9,
+    "ga": 0,
+    "hg": 0,
+    "ag": 9,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558839,
+    "utc": "2026-11-08T13:30:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 678,
+    "oppName": "AFC Ajax",
+    "gf": 2,
+    "ga": 2,
+    "hg": 2,
     "ag": 2,
     "status": "FINISHED"
    }
@@ -20161,7 +20421,7 @@
   ]
  },
  "113": {
-  "ts": 1793172883.088972,
+  "ts": 1794289564.516565,
   "name": "SSC Napoli",
   "matches": [
    {
@@ -20305,6 +20565,58 @@
     "ga": 3,
     "hg": 3,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558554,
+    "utc": "2026-10-28T19:45:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 5911,
+    "oppName": "AC Monza",
+    "gf": 4,
+    "ga": 1,
+    "hg": 1,
+    "ag": 4,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558547,
+    "utc": "2026-11-01T19:45:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 109,
+    "oppName": "Juventus FC",
+    "gf": 0,
+    "ga": 2,
+    "hg": 2,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 575392,
+    "utc": "2026-11-04T20:00:00Z",
+    "comp": "CL",
+    "home": false,
+    "oppId": 503,
+    "oppName": "FC Porto",
+    "gf": 1,
+    "ga": 4,
+    "hg": 4,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558533,
+    "utc": "2026-11-08T11:30:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 110,
+    "oppName": "SS Lazio",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -20640,7 +20952,7 @@
   ]
  },
  "678": {
-  "ts": 1793103413.374905,
+  "ts": 1794289606.24082,
   "name": "AFC Ajax",
   "matches": [
    {
@@ -20770,6 +21082,32 @@
     "gf": 2,
     "ga": 1,
     "hg": 1,
+    "ag": 2,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558851,
+    "utc": "2026-10-31T20:00:00Z",
+    "comp": "DED",
+    "home": true,
+    "oppId": 682,
+    "oppName": "AZ",
+    "gf": 1,
+    "ga": 0,
+    "hg": 1,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558839,
+    "utc": "2026-11-08T13:30:00Z",
+    "comp": "DED",
+    "home": false,
+    "oppId": 666,
+    "oppName": "FC Twente '65",
+    "gf": 2,
+    "ga": 2,
+    "hg": 2,
     "ag": 2,
     "status": "FINISHED"
    }
@@ -21009,7 +21347,7 @@
   ]
  },
  "582": {
-  "ts": 1793103388.67676,
+  "ts": 1794289533.246419,
   "name": "GD Estoril Praia",
   "matches": [
    {
@@ -21127,6 +21465,19 @@
     "ga": 3,
     "hg": 1,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 567338,
+    "utc": "2026-10-31T20:30:00Z",
+    "comp": "PPL",
+    "home": false,
+    "oppId": 503,
+    "oppName": "FC Porto",
+    "gf": 0,
+    "ga": 4,
+    "hg": 4,
+    "ag": 0,
     "status": "FINISHED"
    }
   ]
@@ -21922,7 +22273,7 @@
   ]
  },
  "285": {
-  "ts": 1791585581.447326,
+  "ts": 1794289581.767058,
   "name": "Elche CF",
   "matches": [
    {
@@ -22014,6 +22365,71 @@
     "ga": 1,
     "hg": 1,
     "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564703,
+    "utc": "2026-10-11T12:00:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 558,
+    "oppName": "RC Celta de Vigo",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564708,
+    "utc": "2026-10-17T14:15:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 94,
+    "oppName": "Villarreal CF",
+    "gf": 0,
+    "ga": 0,
+    "hg": 0,
+    "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564718,
+    "utc": "2026-10-24T12:00:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 87,
+    "oppName": "Rayo Vallecano de Madrid",
+    "gf": 3,
+    "ga": 0,
+    "hg": 0,
+    "ag": 3,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564728,
+    "utc": "2026-11-01T17:30:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 95,
+    "oppName": "Valencia CF",
+    "gf": 0,
+    "ga": 1,
+    "hg": 0,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564738,
+    "utc": "2026-11-08T13:00:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 90,
+    "oppName": "Real Betis Balompié",
+    "gf": 0,
+    "ga": 2,
+    "hg": 0,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
@@ -22970,7 +23386,7 @@
   ]
  },
  "110": {
-  "ts": 1793169126.704267,
+  "ts": 1794289573.782075,
   "name": "SS Lazio",
   "matches": [
    {
@@ -23088,6 +23504,32 @@
     "ga": 2,
     "hg": 2,
     "ag": 6,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558546,
+    "utc": "2026-11-01T14:00:00Z",
+    "comp": "SA",
+    "home": true,
+    "oppId": 104,
+    "oppName": "Cagliari Calcio",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 558533,
+    "utc": "2026-11-08T11:30:00Z",
+    "comp": "SA",
+    "home": false,
+    "oppId": 113,
+    "oppName": "SSC Napoli",
+    "gf": 1,
+    "ga": 1,
+    "hg": 1,
+    "ag": 1,
     "status": "FINISHED"
    }
   ]
@@ -25299,7 +25741,7 @@
   ]
  },
  "90": {
-  "ts": 1793103379.311773,
+  "ts": 1794289589.468381,
   "name": "Real Betis Balompié",
   "matches": [
    {
@@ -25469,6 +25911,45 @@
     "ga": 0,
     "hg": 0,
     "ag": 0,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564736,
+    "utc": "2026-10-31T17:30:00Z",
+    "comp": "PD",
+    "home": true,
+    "oppId": 84,
+    "oppName": "Málaga CF",
+    "gf": 2,
+    "ga": 1,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 575391,
+    "utc": "2026-11-04T20:00:00Z",
+    "comp": "CL",
+    "home": false,
+    "oppId": 4,
+    "oppName": "Borussia Dortmund",
+    "gf": 1,
+    "ga": 2,
+    "hg": 2,
+    "ag": 1,
+    "status": "FINISHED"
+   },
+   {
+    "id": 564738,
+    "utc": "2026-11-08T13:00:00Z",
+    "comp": "PD",
+    "home": false,
+    "oppId": 285,
+    "oppName": "Elche CF",
+    "gf": 2,
+    "ga": 0,
+    "hg": 0,
+    "ag": 2,
     "status": "FINISHED"
    }
   ]
