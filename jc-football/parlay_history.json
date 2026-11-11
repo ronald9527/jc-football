@@ -4133,8 +4133,8 @@
           "sameOddsHit": 16.9,
           "sameOddsN": 71,
           "fiveDim": 53.8,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "2:0",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -7096,8 +7096,8 @@
           "sameOddsHit": 53.6,
           "sameOddsN": 69,
           "fiveDim": 42.9,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:3",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -7275,8 +7275,8 @@
           "sameOddsHit": 53.6,
           "sameOddsN": 69,
           "fiveDim": 42.9,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:3",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -7478,8 +7478,8 @@
           "sameOddsHit": 56.0,
           "sameOddsN": 84,
           "fiveDim": 29.4,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:0",
+          "legHit": false,
           "hit": "miss"
         },
         {
@@ -7508,8 +7508,8 @@
           "sameOddsHit": 50.7,
           "sameOddsN": 67,
           "fiveDim": 41.3,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:3",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -10561,8 +10561,8 @@
           "sameOddsN": 43,
           "fiveDim": 71.2,
           "canon": 0.907,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "0:1",
+          "legHit": true,
           "hit": "hit"
         },
         {
@@ -10589,8 +10589,8 @@
           "sameOddsN": 131,
           "fiveDim": 41.9,
           "canon": 0.654,
-          "actualScore": "",
-          "legHit": null,
+          "actualScore": "1:1",
+          "legHit": false,
           "hit": "miss"
         }
       ],
@@ -12551,7 +12551,10 @@
           "canon": 0.57,
           "gripRank": 1,
           "batchDate": "2026-11-11",
-          "batchLabel": "周二"
+          "batchLabel": "周二",
+          "actualScore": "1:2",
+          "legHit": true,
+          "hit": "hit"
         },
         {
           "num": "周三001",
@@ -12728,7 +12731,10 @@
           "canon": 0.57,
           "gripRank": 1,
           "batchDate": "2026-11-11",
-          "batchLabel": "周二"
+          "batchLabel": "周二",
+          "actualScore": "1:2",
+          "legHit": true,
+          "hit": "hit"
         },
         {
           "num": "周三001",
@@ -12973,7 +12979,10 @@
           "canon": 0.57,
           "gripRank": 1,
           "batchDate": "2026-11-11",
-          "batchLabel": "周二"
+          "batchLabel": "周二",
+          "actualScore": "1:2",
+          "legHit": true,
+          "hit": "hit"
         },
         {
           "num": "周三001",
@@ -13250,5 +13259,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-11 12:09:47"
+  "updatedAt": "2026-11-11 22:53:37"
 }
