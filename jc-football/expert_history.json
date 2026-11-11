@@ -2405,8 +2405,8 @@
       "scorePred": "比分2比1、3比2",
       "directionEvidence": "不过球队上周经历了双重打击，先在圣马梅斯1:2输掉巴斯克德比，对手还靠一个有争议的点球得分，随后又在周四的欧联杯主场1:1被里昂逼平，一周双赛的体能消耗是现实问题，好在本场中前场有足够的人员可以轮换，主帅马塔拉佐也明确表示会做调整，此前欧联杯之后的三场联赛他们全部取胜，这个节奏他们是想延续的。",
       "scoreEvidence": "这场皇家社会主场优势明显，整体实力和状态都在对手之上，巴列卡诺客场五分之一的战斗力很难撑住全场，但主队防线本身也不牢靠，欧战疲劳叠加奥亚萨瓦尔存疑，看好皇家社会小胜。比分看好2:1、3:2，进球数看好3、5球。",
-      "hit": null,
-      "actualScore": null,
+      "hit": true,
+      "actualScore": "1:0",
       "isExpert": true,
       "expertStats": {
         "total": 5,
@@ -2420,7 +2420,8 @@
       },
       "otherExperts": [],
       "expertCount": 1,
-      "contentRebuilt": true
+      "contentRebuilt": true,
+      "result": "1:0"
     },
     {
       "num": "周日018",
@@ -2583,13 +2584,51 @@
       "result": "1:2"
     }
   ],
-  "2026-11-10": [],
+  "2026-11-10": [
+    {
+      "num": "周二001",
+      "league": "英锦标赛",
+      "home": "伯顿",
+      "away": "诺茨郡",
+      "kickoff": "2026-11-11 03:00",
+      "date": "2026-11-10",
+      "recommend": "主胜",
+      "recommendKey": "h",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "敬真",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-329662.htm",
+      "trackRecord": "周六足总杯首轮，伯顿在大雾中4-0击败低五个级别的拉什登钻石，周六还要客场对米尔顿凯恩斯。",
+      "reason": "方向：胜 比分：2-0/2-1",
+      "scorePred": "比分2比0、2比1",
+      "directionEvidence": "方向：胜",
+      "scoreEvidence": "比分：2-0/2-1",
+      "hit": false,
+      "actualScore": "0:3",
+      "isExpert": true,
+      "expertStats": {
+        "total": 4,
+        "judged": 3,
+        "hits": 1,
+        "miss": 2,
+        "hitRate": 33.3,
+        "recent10Rate": 33.3,
+        "streak": 0,
+        "isNew": false
+      },
+      "otherExperts": [],
+      "expertCount": 1,
+      "contentRebuilt": true,
+      "result": "0:3"
+    }
+  ],
   "2026-11-11": [
     {
       "num": "周三002",
       "league": "日联赛杯",
-      "home": "神户胜利",
-      "away": "町田泽维",
+      "home": "神户胜利船",
+      "away": "町田泽维亚",
       "kickoff": "2026-11-11 18:00",
       "date": "2026-11-11",
       "recommend": "主胜",
@@ -2614,6 +2653,42 @@
         "miss": 2,
         "hitRate": 60.0,
         "recent10Rate": 60.0,
+        "streak": 0,
+        "isNew": false
+      },
+      "otherExperts": [],
+      "expertCount": 1,
+      "contentRebuilt": true
+    },
+    {
+      "num": "周三006",
+      "league": "英锦标赛",
+      "home": "巴恩斯利",
+      "away": "奥德汉姆",
+      "kickoff": "2026-11-12 03:00",
+      "date": "2026-11-11",
+      "recommend": "让负",
+      "recommendKey": "ha",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "蒋娴",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-329756.htm",
+      "trackRecord": "",
+      "reason": "竞彩建议：让球负 比分建议：1比1/0比2",
+      "scorePred": "比分1比1、0比2",
+      "directionEvidence": "竞彩建议：让球负",
+      "scoreEvidence": "比分建议：1比1/0比2",
+      "hit": null,
+      "actualScore": null,
+      "isExpert": true,
+      "expertStats": {
+        "total": 6,
+        "judged": 4,
+        "hits": 1,
+        "miss": 3,
+        "hitRate": 25.0,
+        "recent10Rate": 25.0,
         "streak": 0,
         "isNew": false
       },

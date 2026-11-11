@@ -25,29 +25,29 @@ tr.bad{background:rgba(232,91,91,.05)}
 .foot{margin-top:24px;color:var(--sb);font-size:11px;text-align:center;border-top:1px solid var(--bd);padding-top:14px}
 </style></head><body>
 <h1>刷新按钮诊断与修复报告</h1>
-<div class="sub">竞彩智析 · 足球数据中枢 &nbsp;|&nbsp; v1.7.130 &nbsp;|&nbsp; 生成于 2026-11-10 14:40:47</div>
+<div class="sub">竞彩智析 · 足球数据中枢 &nbsp;|&nbsp; v1.7.130 &nbsp;|&nbsp; 生成于 2026-11-11 13:46:21</div>
 
 <h2>一、问题与结论</h2>
 <div class="note">
 用户反馈「刷新按钮，按了以后没有拉新最新数据」。逐层核对后结论是
 <b>按钮没坏，坏的是上游停更</b>：线上全部数据文件（matches / vzhan / expert_stats /
-version.json）停在 <b>2026-11-08 16:38</b>，而当前已是 <b>11-10</b>。
+version.json）停在 <b>2026-11-08 16:38</b>，而当时已是 <b>11-10</b>。
 按钮的职责是「秒级把<b>云端已部署</b>的数据同步到手机」，它无法凭空拉到比云端更新的数据。
 再往上追：每小时自动刷新任务在跑，但跑在冷启动沙箱、指令缺少「下载代码包 + 重建部署凭证」
 的自举步骤，两天没能真正把新数据部署上去。
 另外 <code>cache-control: max-age=0, must-revalidate</code> 且带随机 query 仍返回旧时间戳，
-<b>已排除 CDN 缓存因素</b>。
+<b>已排除 CDN 缓存因素</b>。该自动保鲜断点已于 11-11 经用户确认后根治（见第六节）。
 </div>
 
-<h2>二、本次刷新后的数据状态</h2>
+<h2>二、刷新后的数据状态</h2>
 <div class="kpis">
-<div class="kpi"><div class="v">2026-11-10 13:45:22</div><div class="l">数据更新于（此前 11-08 16:38）</div></div>
-<div class="kpi"><div class="v">8 场</div><div class="l">当前竞彩在售</div></div>
-<div class="kpi"><div class="v">937 条</div><div class="l">history.json 赛果库</div></div>
+<div class="kpi"><div class="v">2026-11-11 13:40:36</div><div class="l">数据更新于（问题起点 11-08 16:38）</div></div>
+<div class="kpi"><div class="v">12 场</div><div class="l">当前竞彩在售</div></div>
+<div class="kpi"><div class="v">943 条</div><div class="l">history.json 赛果库</div></div>
 <div class="kpi"><div class="v">v1.7.130</div><div class="l">页面版本</div></div>
 </div>
-<div class="note">赛程批次：<b>2026-11-10 2 场、2026-11-11 6 场</b>。V站情报更新于 <b>2026-11-10 13:47:43</b>，网关 <b>up</b>。
-自检结果：<b>ERROR 0 / WARN 2</b>（两个 WARN 均为如实反映真实数据状况：今日小众杯赛无合格
+<div class="note">赛程批次：<b>2026-11-11 6 场、2026-11-12 6 场</b>。V站情报更新于 <b>2026-11-11 13:41:07</b>，网关 <b>up</b>。
+自检结果：<b>ERROR 0 / WARN 2</b>（WARN 均为如实反映真实数据状况：今日小众杯赛无合格
 串关候选、V站数据源当日未覆盖，非抓取故障，不放宽门槛凑零）。</div>
 
 <h2>三、排查证据链（2026-11-10 实测）</h2>
@@ -56,7 +56,7 @@ version.json）停在 <b>2026-11-08 16:38</b>，而当前已是 <b>11-10</b>。
 </tbody></table>
 
 <h2>四、修复项</h2>
-<div class='fix'><div class='fixh'><span class='no'>1</span>数据·立即上线</div><div class='fixb'>本地中国网络官方接口 HTTP 200，执行 run_daily.sh 全量刷新：竞彩赛程、赛果回溯、比分预测、V站、高手推荐、篮球、正路/V站/专家命中率统计全部推进到 11-10 今日批次，再用 deploy_cf.py 部署。线上 updateTime 由 11-08 16:38 变为 11-10 13:45，按钮按下去立即能拿到新数据。</div></div><div class='fix'><div class='fixh'><span class='no'>2</span>按钮·诚实反馈</div><div class='fixb'>新增 __bjToday() 北京时间今日批次判定与 __dataFresh() 新鲜度判定（用数据自带 +08:00 时间换算，不依赖设备时区）。点击拉取云端全部数据后分三种反馈：拉到更新数据→「已同步云端最新数据（更新于 X）」；已是今日→「已是今日最新数据」；云端仍是旧批次→「云端数据仍是 X 批次（约 N 小时前），已发起后台更新，数据上线后会自动同步」。删掉含糊的「已拉取云端全部数据」。</div></div><div class='fix'><div class='fixh'><span class='no'>3</span>按钮·反馈不再被吞</div><div class='fixb'>triggerRePull 会在 2.6s 后硬重载（location.replace），toast 随之消失，用户会觉得「按了没反应」。新增 __persistPull()/sessionStorage + 页面加载时 __consumePull()，把本次刷新结果跨重载再显示一次。顶栏「数据非今日批次」也改用北京时间判定，文案改为如实说明云端当前批次，不再暗示点一下就能凭空变出新数据。</div></div><div class='fix'><div class='fixh'><span class='no'>4</span>自检·修误报不放水</div><div class='fixb'>V站批次检查原先把「当天场次无一场带 V站 预测比分」直接判 ERROR。今日为英锦标赛/日联杯等小众杯赛，V站网关实测 UP（61 ms、连续失败 0）、情报已抓到当日场次，只是数据源未出比分。改为按网关状态 + 情报时间戳区分：网关异常或数据陈旧仍报 ERROR（真故障不放过），网关正常且情报已更新则如实降级 WARN（数据源无覆盖）。今日无分层串关推荐同样是证据门槛正常拦截，按「不要乱推荐」要求不强行凑单。</div></div><div class='fix'><div class='fixh'><span class='no'>5</span>验证·全链路护栏</div><div class='fixb'>selftest.py 的 check_refresh_chain() 补 v1.7.130 护栏：新鲜度判定、北京时间口径、跨重载保留、误导文案清除都进门禁；test_refresh_button_ui.py 改为版本数据驱动，并直接调用 __dataFresh() 验证「旧批次判 stale / 今日批次判 fresh」。本地与线上各跑一遍。</div></div><div class='fix'><div class='fixh'><span class='no'>6</span>诚实边界·待确认项</div><div class='fixb'>按钮能拉到的最新数据 = 云端已部署的数据。要让它「持续有新数据」，需要上游每小时自动刷新任务真正能部署。该任务当前缺冷启动自举（代码包 + 凭证），属修改定时任务的写操作，按规范需你确认后再改；本次已先把数据推到最新，并把按钮改成如实显示陈旧，不会假装成功。</div></div>
+<div class='fix'><div class='fixh'><span class='no'>1</span>数据·立即上线</div><div class='fixb'>本地中国网络官方接口 HTTP 200，执行 run_daily.sh 全量刷新：竞彩赛程、赛果回溯、比分预测、V站、高手推荐、篮球、正路/V站/专家命中率统计全部推进到 11-10 今日批次，再用 deploy_cf.py 部署。线上 updateTime 由 11-08 16:38 变为 11-10 13:45，按钮按下去立即能拿到新数据。</div></div><div class='fix'><div class='fixh'><span class='no'>2</span>按钮·诚实反馈</div><div class='fixb'>新增 __bjToday() 北京时间今日批次判定与 __dataFresh() 新鲜度判定（用数据自带 +08:00 时间换算，不依赖设备时区）。点击拉取云端全部数据后分三种反馈：拉到更新数据→「已同步云端最新数据（更新于 X）」；已是今日→「已是今日最新数据」；云端仍是旧批次→「云端数据仍是 X 批次（约 N 小时前），已发起后台更新，数据上线后会自动同步」。删掉含糊的「已拉取云端全部数据」。</div></div><div class='fix'><div class='fixh'><span class='no'>3</span>按钮·反馈不再被吞</div><div class='fixb'>triggerRePull 会在 2.6s 后硬重载（location.replace），toast 随之消失，用户会觉得「按了没反应」。新增 __persistPull()/sessionStorage + 页面加载时 __consumePull()，把本次刷新结果跨重载再显示一次。顶栏「数据非今日批次」也改用北京时间判定，文案改为如实说明云端当前批次，不再暗示点一下就能凭空变出新数据。</div></div><div class='fix'><div class='fixh'><span class='no'>4</span>自检·修误报不放水</div><div class='fixb'>V站批次检查原先把「当天场次无一场带 V站 预测比分」直接判 ERROR。今日为英锦标赛/日联杯等小众杯赛，V站网关实测 UP（66 ms、连续失败 0）、情报已抓到当日场次，只是数据源未出比分。改为按网关状态 + 情报时间戳区分：网关异常或数据陈旧仍报 ERROR（真故障不放过），网关正常且情报已更新则如实降级 WARN（数据源无覆盖）。今日无分层串关推荐同样是证据门槛正常拦截，按「不要乱推荐」要求不强行凑单。</div></div><div class='fix'><div class='fixh'><span class='no'>5</span>验证·全链路护栏</div><div class='fixb'>selftest.py 的 check_refresh_chain() 补 v1.7.130 护栏：新鲜度判定、北京时间口径、跨重载保留、误导文案清除都进门禁；test_refresh_button_ui.py 改为版本数据驱动，并直接调用 __dataFresh() 验证「旧批次判 stale / 今日批次判 fresh」。本地与线上各跑一遍。</div></div><div class='fix'><div class='fixh'><span class='no'>6</span>自动保鲜·根治（已确认执行）</div><div class='fixb'>用户确认后，已编辑每小时自动刷新任务 #14693059 的执行指令（仅改 prompt，名称/频率/整点/状态/超时一律不动）：补齐冷启动自举 ① 下载线上 code-bundle.tar.gz 解压恢复代码 ② heredoc 重建 cf_config.json 凭证 ③ 用 curl 从 version.json 对齐 .last_deploy.ts 部署节流 ④ 改用 run_daily.sh deploy（自带自检/节流/线上校验/残缺守卫）并显式设 GITHUB_ACTIONS=1 让残缺守卫在沙箱生效 ⑤ curl 核对线上时间戳。详见第六节。</div></div>
 
 <h2>五、验证口径与诚实边界</h2>
 <div class="note">
@@ -65,11 +65,43 @@ version.json）停在 <b>2026-11-08 16:38</b>，而当前已是 <b>11-10</b>。
 恢复可点、无「触发失败」类负面提示；本地与线上各一遍。<br>
 · <b>新鲜度判定</b>：测试直接调用 <code>__dataFresh()</code>，验证旧批次返回 stale、
 今日批次返回 fresh，且 <code>__bjToday()</code> 输出正确的北京时间日期。<br>
-· <b>诚实边界</b>：按钮能拿到的最新 = 云端已部署的最新。持续保鲜依赖上游每小时自动刷新
-任务真正部署成功；该任务的冷启动自举修复属修改定时任务的写操作，需你确认后执行。
-在此之前按钮会如实显示「云端仍是 X 批次」，绝不假装同步成功。<br>
+· <b>诚实边界（已闭环）</b>：按钮能拿到的最新 = 云端已部署的最新。持续保鲜依赖上游每小时自动刷新
+任务真正部署成功；该任务的冷启动自举已于 11-11 经用户确认后修复完成（见第六节），
+此后云端数据应随每小时任务持续推进。按钮遇到数据陈旧仍会如实显示「云端仍是 X 批次」，绝不假装同步成功。<br>
 · <b>线上核验</b>：version.json 的 updateTime / pageVersion / pageBuild、各数据文件时间戳、
 页面新逻辑（新鲜度判定 / 跨重载保留 / 误导文案清除）均逐一 curl 比对通过。
+</div>
+
+<h2>六、自动保鲜根治（2026-11-11 确认后执行）</h2>
+<div class="note">
+用户于 <b>2026-11-11</b> 回复「确认」后，已编辑自动化定时任务
+<b>#14693059「竞彩数据自动刷新」</b>（interval，每小时整点 00 分，状态启用，超时 1800s）。
+<b>仅替换执行指令（prompt），名称 / 频率 / Cron / 状态 / 超时 / 时区全部保持不变</b>，
+回读校验 9 项全 PASS。新指令为冷启动自举 5 步：
+</div>
+<table><thead><tr><th>步骤</th><th>动作</th><th>为什么必须有</th></tr></thead><tbody>
+<tr class='ok'><td class='st'>1 恢复代码</td><td>curl 下载线上 <code>code-bundle.tar.gz</code> → <code>tar xzf</code> 覆盖 /workspace，再 cd 进入 jc-football</td><td>冷启动沙箱初始无代码，缺这步后面全部失败 —— 这正是两天没数据的真正断点</td></tr>
+<tr class='ok'><td class='st'>2 重建凭证</td><td>heredoc 静默写 <code>cf_config.json</code>（含 token / account_id / project），chmod 600，不打印内容</td><td>代码包按安全策略只含 .example，不含真实凭证；缺这步 deploy_cf.py 无法上线</td></tr>
+<tr class='ok'><td class='st'>3 对齐节流</td><td>curl 取线上 version.json 的 deployTime → 写本地 <code>.last_deploy.ts</code></td><td>冷启动每轮该文件归零会让 run_daily.sh 的部署节流失效 → 每小时无条件部署，烧穿 Cloudflare 免费层 500 次/月</td></tr>
+<tr class='ok'><td class='st'>4 刷新+部署</td><td><code>export TZ=Asia/Shanghai; export GITHUB_ACTIONS=1; bash run_daily.sh deploy</code></td><td>deploy 模式自带数据自检 / 节流 / verify_deploy 线上校验 / 残缺守卫；设 GITHUB_ACTIONS 让残缺守卫在沙箱生效，官方接口熔断时自动跳过部署，绝不把 500.com 残缺数据覆盖生产</td></tr>
+<tr class='ok'><td class='st'>5 线上核对</td><td>curl 比对线上 matches.json / version.json 的 updateTime 是否为本轮新批次</td><td>防止「部署脚本报成功但线上没生效」这类历史踩过的坑</td></tr>
+</tbody></table>
+<div class="note">
+· <b>冷启动演练实证</b>：在隔离临时目录从「空工作区」完整跑通第 1–3 步 —— 下载解包得 <b>223 个文件</b>，
+<code>run_daily.sh / deploy_cf.py / fetch_daily.py / selftest.py / verify_deploy.py / build_panel.py</code> 齐全、
+无真实凭证 → heredoc 重建后 deploy_cf.py 正确读到 token/account/project → <code>.last_deploy.ts</code> 正确落地并算出合理 GAP。
+全程<b>未执行 deploy、未触碰生产</b>。<br>
+· <b>演练抓到并修掉的隐藏坑</b>：第 3 步原用 Python <code>urllib</code> 读 version.json 被 Cloudflare 以
+<b>HTTP 403</b> 拒绝（默认 UA 被挡），会静默导致节流对齐失效、退回「每轮都部署」。已改为
+<b>curl 取 + python 解析</b>，实测返回 deployTime 并正确落地；urllib 加自定义 UA 亦可，二选一取更稳的 curl。<br>
+· <b>代码包版本核验</b>：线上 code-bundle 内 template.html 为 <b>v1.7.130</b>，与生产同版；
+223 文件含 cf_config.json.example 但不含 cf_config.json（安全策略正确）。<br>
+· <b>本次数据同步</b>：官方接口本地 HTTP 200，全量刷新到 <b>2026-11-11 13:40:36</b>（12 场在售，赛程 2026-11-11 6 场、2026-11-12 6 场），
+自检 <b>ERROR 0 / WARN 2</b>，已重新部署；页面版本不变（本次只更数据，无需升版 / 重建 APK）。<br>
+· <b>如何自行验证闭环</b>：任务下次整点运行后，看线上
+<code>https://jc-football-1eo.pages.dev/version.json</code> 的 updateTime 是否随时间推进；
+若连续两轮不动，检查任务运行日志是否命中「部署守卫拦截」（官方接口熔断时的预期保护），
+而非用残缺数据覆盖生产。
 </div>
 
 <div class="foot">报告由 gen_refresh_diagnosis.py 生成 · 数据源：本地 matches.json / vzhan_data.json / selftest_report.json · 站点 https://jc-football-1eo.pages.dev/</div>
