@@ -1285,6 +1285,64 @@ def check_expert_stats(data):
     print("  · 赛后回填与前端/流水线接线校验完成")
 
 
+def check_basketball_history_guard():
+    """篮球串关历史冷启动自愈护栏（2026-11-11）。
+
+    2026-11-11 事故：deploy_cf.py 的 persistent_data 把篮球串关历史排除出
+    code-bundle.tar.gz（设计上应靠 Pages 副本恢复），ensure_history.py 的
+    HIST_FILES 却没同步收录；自动任务冷启动时工作区无此文件，脚本从空库
+    重建为仅当日 3 组并覆盖线上，用户看到「篮球串关没有历史数据了」。
+    同时 fetch_basketball_parlay.py._purge_fake 用 date >= 11-02 的无限窗口，
+    把 11-06 之后每天真实推荐在下一轮一并删掉，历史永远无法按天累积。
+    """
+    cat = "篮球串关历史"
+    print("· 检查 13 篮球串关历史冷启动自愈护栏（2026-11-11）")
+    try:
+        eh = open(os.path.join(HERE, "ensure_history.py"), encoding="utf-8").read()
+    except Exception as e:
+        add("ERROR", cat, "ensure_history.py 不可读：%s" % e)
+        eh = ""
+    _tokens = (
+        ('"basketball_parlay_history.json"', "HIST_FILES 漏保护篮球串关历史"),
+        ('"basketball_ai_accuracy.json"', "HIST_FILES 漏保护篮球 AI 回溯库"),
+        ("UNION_RULES", "缺签名并集对账规则表"),
+        ("bk_parlay_union", "缺篮球串关并集对账函数"),
+        ("bk_accuracy_union", "缺 AI 回溯库并集对账函数"),
+    )
+    missing = [m for t, m in _tokens if t not in eh]
+    if missing:
+        for m in missing:
+            add("ERROR", cat, "ensure_history.py %s（冷启动将再次清空累积历史）" % m)
+    else:
+        print("  ensure_history.py 保护名单 + 三路签名并集：完整")
+
+    try:
+        fb = open(os.path.join(HERE, "fetch_basketball_parlay.py"),
+                  encoding="utf-8").read()
+    except Exception as e:
+        add("ERROR", cat, "fetch_basketball_parlay.py 不可读：%s" % e)
+        fb = ""
+    if "FAKE_TO" not in fb:
+        add("ERROR", cat, "_purge_fake 缺有限窗口上界（会持续删掉新日期真实推荐）")
+    elif 'if (r.get("date") or "") < FAKE_FROM]' in fb:
+        add("ERROR", cat, "_purge_fake 仍是无限窗口（历史永远只剩当天一组）")
+    else:
+        print("  fetch_basketball_parlay.py 停更期清洗为有限窗口：是")
+
+    pf = load("basketball_parlay_history.json", {})
+    recs = pf.get("records") if isinstance(pf, dict) else None
+    if isinstance(recs, list):
+        judged = sum(1 for r in recs if isinstance(r, dict)
+                     and r.get("result") in ("hit", "miss"))
+        if judged < 20:
+            add("ERROR", cat,
+                "已结算历史仅 %d 组（应 ≥21）——疑似冷启动从空库重建覆盖了 Pages 副本"
+                % judged)
+        else:
+            print("  已结算历史 %d 组 / 总 %d 组：完整（冷启动覆盖已防住）"
+                  % (judged, len(recs)))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1311,6 +1369,7 @@ def main():
     check_expert_content(data)
     check_expert_stats(data)
     check_refresh_chain()
+    check_basketball_history_guard()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>篮球串关历史丢失 · 诊断与修复报告</title>
+<style>
+  :root{--bg:#0e1520;--card:#16202e;--line:#26364a;--txt:#e6edf5;--sub:#9fb3c8;--ok:#3ddc97;--bad:#ff6b6b;--warn:#ffc860;--acc:#5aa9ff}
+  *{box-sizing:border-box}
+  body{margin:0;padding:24px;background:var(--bg);color:var(--txt);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 6px}
+  .meta{color:var(--sub);font-size:13px;margin-bottom:22px}
+  h2{font-size:18px;margin:28px 0 12px;padding-left:10px;border-left:3px solid var(--acc)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--sub);font-weight:600;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  code{background:#0b111a;padding:2px 6px;border-radius:4px;color:#8fd0ff;font-size:13px}
+  .ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--warn);font-weight:600}
+  .kpi{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+  .kpi div{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi b{display:block;font-size:22px;margin-bottom:2px}
+  .kpi span{color:var(--sub);font-size:12px}
+  ol{padding-left:22px}li{margin:6px 0}
+  .note{background:rgba(255,200,96,.08);border:1px solid rgba(255,200,96,.35);border-radius:8px;padding:12px 14px;margin:12px 0}
+  .foot{color:var(--sub);font-size:12px;margin-top:28px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>篮球串关为什么没有历史数据了</h1>
+<div class="meta">诊断与修复报告 · 2026-11-11 17:28（北京时间）· 线上版本 v1.7.130 · 站点 jc-football-1eo.pages.dev</div>
+
+<div class="kpi">
+  <div><b class="ok">24 组</b><span>线上篮球串关历史（修复后）</span></div>
+  <div><b class="ok">2 / 19 / 3</b><span>命中 / 未中 / 待开奖</span></div>
+  <div><b class="ok">269 条</b><span>篮球 AI 预测回溯库</span></div>
+  <div><b class="ok">ERROR 0</b><span>全量自检（WARN 3 属数据源未覆盖）</span></div>
+</div>
+
+<h2>一、现象</h2>
+<div class="card">
+<p>用户反馈「篮球串关没有历史数据了」。实测线上 <code>basketball_parlay_history.json</code> 只剩 <span class="bad">3 组</span>，且全是 11-11 当天的待开奖组合；10-26 至 11-01 的 21 组已结算历史全部消失。</p>
+<p>同时发现同一事故把 <code>basketball_ai_accuracy.json</code>（篮球 AI 预测回溯库）从本地 268 条冲成线上 <span class="bad">98 条</span>，命中率样本被削掉近三分之二。</p>
+</div>
+
+<h2>二、数据取证</h2>
+<div class="card"><table>
+<tr><th>来源</th><th>时间</th><th>组数</th><th>日期覆盖</th><th>结论</th></tr>
+<tr><td>线上 Pages（事故后）</td><td>16:14:08</td><td class="bad">3</td><td>仅 11-11</td><td>被冷启动空库覆盖</td></tr>
+<tr><td>本地工作区</td><td>13:42:06</td><td>24</td><td>10-26~11-01 + 11-11</td><td>正确、完整</td></tr>
+<tr><td>GitHub 快照</td><td>11-05 12:43</td><td>26</td><td>含 11-02 / 11-05</td><td>多出的 5 组是停更期假推荐</td></tr>
+<tr><td>自举包 <code>code-bundle.tar.gz</code></td><td>16:14</td><td>—</td><td>不含该文件</td><td>按设计应由 Pages 副本恢复</td></tr>
+<tr><td>线上 Pages（修复后）</td><td>17:28:06</td><td class="ok">24</td><td>10-26~11-01 + 11-11</td><td>2 中 / 19 错 / 3 待</td></tr>
+</table></div>
+
+<h2>三、根因（三层叠加）</h2>
+<div class="card"><ol>
+<li><b>自举保护名单漏项（直接原因）。</b><code>deploy_cf.py</code> 的 <code>persistent_data</code> 把 <code>basketball_parlay_history.json</code> 排除出 <code>code-bundle.tar.gz</code>（设计意图是「改由 Pages 云端副本恢复」），但 <code>ensure_history.py</code> 的 <code>HIST_FILES</code> 保护名单<b>没有同步收录它</b>。自动保鲜任务冷启动解包后工作区根本没有这个文件，对账也不会去 Pages 拉回，成了两不管。</li>
+<li><b>从空库重建并覆盖线上。</b>步骤 1.90b 的 <code>fetch_basketball_parlay.py</code> 以 <code>{"records":[]}</code> 起算，只写入当天 3 档 → <code>total=3</code>；16:14 部署把这份空历史推上 Pages，覆盖掉累积档案。</li>
+<li><b>无限窗口清洗（长期隐患）。</b><code>_purge_fake</code> 本意只清理 11-02~11-05 停更期假批次，代码却写成 <code>date &gt;= 2026-11-02</code> 的<b>无限窗口</b>：每轮都把 11-06 之后所有日期的真实推荐一并删掉，再重生成当天一组。结果历史永远只累积到 11-01，之后每天的记录次日就消失——用户看到的「没有历史」其实是持续性的。</li>
+</ol></div>
+
+<div class="note"><b>关于 11-02~11-05 的 5 组记录：</b>那几天官方接口海外返回 567，<code>basketball.json</code> 被冻结在 11-01，流水线却照常「生成今日推荐」，实际推的是 3 天前已打完的比赛。这些既不是真实推荐、结算后还会污染命中率，项目此前已刻意清除。<b>本次不恢复</b>，保持「数据真实、不乱推荐」的口径。</div>
+
+<h2>四、修复内容</h2>
+<div class="card"><table>
+<tr><th>#</th><th>文件</th><th>改动</th></tr>
+<tr><td>1</td><td><code>ensure_history.py</code></td><td><code>HIST_FILES</code> 补入篮球串关历史与 AI 回溯库；新增 <code>UNION_RULES</code> 三路签名并集对账（<code>bk_parlay_union</code> 按腿签名并集后按「日期+档位」收敛同日重复组；<code>bk_accuracy_union</code> 按 <code>(date,id)</code> 并集，已结算版本优先）；AI 回溯库补 <code>COUNT_FN</code>，避免按顶层键数误判。</td></tr>
+<tr><td>2</td><td><code>fetch_basketball_parlay.py</code></td><td>新增 <code>FAKE_TO = 2026-11-05</code>，<code>_purge_fake</code> 改为有限窗口清洗，清洗完不再干预新增的每日记录，历史可按天累积。</td></tr>
+<tr><td>3</td><td><code>selftest.py</code></td><td>新增「检查 13 篮球串关历史冷启动自愈护栏」：静态校验保护名单/并集函数/有限窗口，并断言已结算历史 ≥21 组；历史再被清空会立刻报 ERROR。</td></tr>
+<tr><td>4</td><td>数据恢复</td><td>以 21 组真实已结算历史 + 11-11 当天最新一组（16:14 版，同日同档位取 <code>savedAt</code> 更晚）重建为 24 组；AI 回溯库取本地 268 + 线上 1 条独有 = 269 条。</td></tr>
+</table></div>
+
+<h2>五、验证结果</h2>
+<div class="card"><table>
+<tr><th>验证项</th><th>结果</th></tr>
+<tr><td>6 项单元验证（并集 / 冷启动 / 双端分叉 / 同日收敛 / 有限窗口 / 假记录清理）</td><td class="ok">全部通过</td></tr>
+<tr><td>隔离空目录冷启动演练：只解包线上自举包 → 跑修复版对账</td><td class="ok">从 Pages 恢复 24 组 + 269 条；<code>_purge_fake</code> 删除 0 组</td></tr>
+<tr><td><code>selftest.py</code> 全量</td><td class="ok">ERROR 0 / WARN 3（WARN 均为当日数据源未覆盖小众杯赛等既有提示）</td></tr>
+<tr><td>新增护栏反向验证（模拟历史被清成 3 组）</td><td class="ok">准确报出 1 条 ERROR</td></tr>
+<tr><td><code>verify_deploy.py</code> 线上一致性</td><td class="ok">PASS（v1.7.130，篮球 AI 已赛 256/256，足球竞彩有预测 5/5）</td></tr>
+<tr><td>线上核验</td><td class="ok">24 组 / 8 个日期 / 21 组已结算；AI 回溯库 269 条；自举包内 3 个修复脚本与本地逐字节一致</td></tr>
+</table></div>
+
+<h2>六、一次并发覆盖（已处理）</h2>
+<div class="card">
+<p>17:08:11 首次部署修复版后，<b>17:00 那轮自动保鲜任务</b>在 17:08:28 用它启动时下载的旧自举包完成部署，把修复并发覆盖了一次。17:14:43 重新部署、17:28:06 完成最终部署，线上已确认是修复版。</p>
+<p>后续无需改动定时任务：下一轮任务会下载到<b>含修复脚本的新自举包</b>，<code>run_daily.sh</code> 步骤 0 的对账会自动从 Pages 拉回完整历史，步骤 1.90b 也不再误删新日期记录，形成自愈闭环。隔离目录演练已复现这条路径并通过。</p>
+</div>
+
+<div class="foot">核对入口：线上 <code>/basketball_parlay_history.json</code>、<code>/basketball_ai_accuracy.json</code>、<code>/version.json</code>、<code>/code-bundle.tar.gz</code>；本地 <code>/workspace/jc-football/</code>；GitHub 仓库 ronald9527/jc-football（提交带 <code>[skip ci]</code>，fast-forward）。</div>
+
+</div></body></html>

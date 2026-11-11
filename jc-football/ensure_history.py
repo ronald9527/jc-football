@@ -77,6 +77,13 @@ HIST_FILES = [
     "vzhan_gateway_status.json",    # V站网关探活状态（中国源）
     "expert_history.json",          # 92玩球专家战绩（中国源，按日期累积）
     "expert_stats.json",            # 专家统计（中国源，updatedAt）
+    # 2026-11-11 补漏：以下两个篮球累积档案被 deploy_cf.py 的 persistent_data
+    # 排除在 code-bundle.tar.gz 自举包之外（设计上「改由 Pages 副本恢复」），
+    # 但此前没进本保护名单，成了两不管——自动任务冷启动时工作区没有这两个
+    # 文件，也不会从 Pages 拉回，脚本从空库重建后就把线上累积历史覆盖掉
+    # （2026-11-11 16:14 事故：篮球串关历史 24 组被覆盖成仅当日 3 组）。
+    "basketball_parlay_history.json",  # 篮球串关历史（签名并集对账，防双端分叉）
+    "basketball_ai_accuracy.json",     # 篮球 AI 预测回溯库（history 为累积 list）
 ]
 
 # 各文件的真实记录数提取方式（默认 records_count 按 list/records-list 处理，
@@ -156,6 +163,14 @@ def _count_expert_stats(obj):
     return 0
 
 
+def _count_bk_ai_accuracy(obj):
+    """篮球 AI 预测回溯库：真实条数是 history（list）长度，非顶层键数。"""
+    if isinstance(obj, dict):
+        h = obj.get("history")
+        return len(h) if isinstance(h, list) else 0
+    return 0
+
+
 COUNT_FN = {
     "whoscored_history.json": _count_whoscored_history,
     "basketball_history.json": _count_basketball_history,
@@ -169,6 +184,7 @@ COUNT_FN = {
     "vzhan_data.json": _count_matches_list,
     "vzhan_history.json": _count_matches_list,   # matches 为 dict，len 取累积键数
     "expert_stats.json": _count_expert_stats,
+    "basketball_ai_accuracy.json": _count_bk_ai_accuracy,
 }
 
 # 时间戳优先判定的文件（v1.7.38 起）：条数非单调或语义为「快照」——在售赛程每天进出、
@@ -299,6 +315,73 @@ def parlay_union(local_d, remote_d):
     return merged, n_added
 
 
+def bk_parlay_union(local_d, remote_d):
+    """篮球串关历史对账（2026-11-11）：腿签名并集 + 当日同档位收敛。
+
+    篮球串关每天固定三档（稳健2串1/均衡3串1/精锐4串1），同一日同档位
+    多次刷新会生成腿不同的两组（2026-11-11 就有 13:42 与 16:14 两组）。
+    只按腿签名取并集会把旧组一并留下，页面出现同日 6 组重复；因此并集后
+    再按 (date, type) 只保留 savedAt 最新的一组，与 save_parlay_history
+    「同日同档位只留最新」的口径一致。
+    """
+    merged, n_added = parlay_union(local_d, remote_d)
+    if merged is None:
+        return None, 0
+    by_dt = {}
+    for r in merged:
+        k = (r.get("date", ""), r.get("type", ""))
+        if k not in by_dt or (r.get("savedAt") or "") > (by_dt[k].get("savedAt") or ""):
+            by_dt[k] = r
+    out = sorted(by_dt.values(),
+                 key=lambda r: (r.get("date") or "", r.get("savedAt") or ""))
+    l_recs = (local_d.get("records") or []) if isinstance(local_d, dict) else []
+    l_sigs = {_parlay_rec_sig(r) for r in l_recs}
+    return out, sum(1 for r in out if _parlay_rec_sig(r) not in l_sigs)
+
+
+def bk_accuracy_union(local_d, remote_d):
+    """篮球 AI 预测回溯库按 (date, id) 取并集（2026-11-11）。
+
+    该库是跨轮累积的赛果回溯档案，只增不减。若走通用 count_should_restore，
+    「线上时间戳更晚」会把本地更全的累积库整份覆盖（2026-11-11 16:14 事故：
+    线上冷启动重建只有 98 条，本地 268 条）。改为签名并集：任一端独有的
+    比赛记录都保留；同签名时优先留已结算（有 score）的版本。
+    """
+    if remote_d is None:
+        return None, 0
+    r_hist = (remote_d.get("history") or []) if isinstance(remote_d, dict) else []
+    if not isinstance(local_d, dict):
+        return list(r_hist), len(r_hist)
+    l_hist = local_d.get("history") or []
+
+    def sig(r):
+        return (r.get("date", ""), str(r.get("id") or r.get("num") or ""))
+
+    by = {}
+    for r in r_hist:
+        by[sig(r)] = r
+    for r in l_hist:
+        s = sig(r)
+        if s not in by:
+            by[s] = r
+        elif r.get("score") and not by[s].get("score"):
+            by[s] = r                       # 本地已结算版本更完整
+    out = sorted(by.values(),
+                 key=lambda r: (r.get("date") or "", str(r.get("id") or "")))
+    l_sigs = {sig(r) for r in l_hist}
+    return out, sum(1 for s in by if s not in l_sigs)
+
+
+# 走「签名并集对账」的文件 -> (纯函数, 记录字段名)。
+# 这些文件都是跨轮累积档案，通用「条数/时间戳整体覆盖」曾吞掉一端独有记录，
+# 必须按记录签名取并集；冷启动时本地缺失则由线上全量恢复。
+UNION_RULES = {
+    "parlay_history.json":           (parlay_union,     "records"),
+    "basketball_parlay_history.json": (bk_parlay_union, "records"),
+    "basketball_ai_accuracy.json":   (bk_accuracy_union, "history"),
+}
+
+
 TIMEOUT = 40
 
 
@@ -372,13 +455,17 @@ def main():
             r_upd = str(remote_d.get("updatedAt") or remote_d.get("updateTime")
                         or remote_d.get("fetched_at") or "")
 
-        # parlay_history.json 专用：签名并集对账（v1.7.41）。
-        # 条数+时间戳的整体覆盖吞过一端独有记录（2026-10-24 事故：本地独有
-        # 10-23 组 vs 线上独有 10-24 组，两边 69=69 条时本地组被当旧数据丢弃），
-        # 改为按 (date, legs签名) 取并集：任一方独有的记录都写回本地，
-        # 随下次部署推回 Pages——服务器保存全部历史，杜绝「又跑了」。
-        if name == "parlay_history.json":
-            merged, n_added = parlay_union(l_obj, remote_d)
+        # 累积档案专用：签名并集对账（v1.7.41 足球串关；2026-11-11 扩到篮球串关
+        # 与篮球 AI 回溯库）。条数+时间戳的整体覆盖吞过一端独有记录
+        # （2026-10-24 事故：本地独有 10-23 组 vs 线上独有 10-24 组，两边
+        # 69=69 条时本地组被当旧数据丢弃），且会把本地更全的累积库整份抹掉
+        # （2026-11-11 16:14 事故）。改为按记录签名取并集：任一方独有的记录
+        # 都写回本地，随下次部署推回 Pages——服务器保存全部历史，杜绝「又跑了」。
+        # 篮球串关额外按 (date, type) 收敛同日同档位，避免重复组。
+        rule = UNION_RULES.get(name)
+        if rule:
+            union_fn, rec_key = rule
+            merged, n_added = union_fn(l_obj, remote_d)
             if merged is None:
                 print("  %-26s 线上不可解析，保持本地" % name)
                 kept.append(name)
@@ -397,7 +484,7 @@ def main():
                     print("  %-26s 本地旧版本已留存为 %s" % (name, os.path.basename(bak)))
                 base = l_obj if isinstance(l_obj, dict) else remote_d
                 out = dict(base)
-                out["records"] = merged
+                out[rec_key] = merged
                 upd = max(str(l_upd or ""), str(r_upd or ""))
                 if upd:
                     out["updatedAt"] = upd

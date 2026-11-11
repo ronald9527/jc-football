@@ -34,6 +34,7 @@ PAYBACK = 0.886
 ALPHA_SHRINK = 0.60
 ENGINE_VERSION = "v1.7.119"
 FAKE_FROM = "2026-11-02"      # 篮球官方接口海外 567 停更起始日
+FAKE_TO   = "2026-11-05"      # 停更期结束日（2026-11-11：清洗必须是有限窗口）
 
 # (key, 档名, 腿数, 单腿下限, 总赔下限, 总赔上限, 最低信心,
 #  最低联合实证概率, 最低实证EV, mode, 单腿上限, 同指软惩罚线)
@@ -481,14 +482,17 @@ def check_basketball_parlay():
 
 # ----------------------------------------------------------------------------
 def _purge_fake(hist):
-    """清理 2026-11-02 起篮球停更期用 11-01 已结束比赛生成的假批次。
+    """只清理 2026-11-02~11-05 停更期的假批次（一次性历史清洗，幂等）。
 
-    那 4 天官方接口海外 567，basketball.json 冻结在 11-01，流水线每天照常
-    「生成今日推荐」，实际推的是 3 天前打完的比赛。这些记录既不是真实推荐，
-    结算后还会污染命中率，必须移除。幂等：只在首次执行时生效。
+    2026-11-11 修复：此前用 ``date >= FAKE_FROM`` 的无限窗口，本意是清掉停更期
+    5 组假记录，实际把 11-06 之后每天的真实推荐在下一轮一并删掉——篮球串关
+    历史永远只剩「10-26~11-01 真实历史 + 当天一组」，用户看到「没有历史数据」。
+    现改为有限窗口 FAKE_FROM..FAKE_TO，清洗完就不再干预新增的每日记录，
+    save_parlay_history 自身只替换当日 pending 旧组，历史得以按天累积。
     """
     records = hist.get("records") or []
-    keep = [r for r in records if (r.get("date") or "") < FAKE_FROM]
+    keep = [r for r in records
+            if not (FAKE_FROM <= (r.get("date") or "") <= FAKE_TO)]
     removed = len(records) - len(keep)
     if removed:
         hist["records"] = keep
