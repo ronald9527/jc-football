@@ -1076,9 +1076,11 @@
     "gapScore": 11,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 5:2",
+    "hit": true,
+    "hhadHit": true,
+    "resultDir": "主胜",
+    "actualScore": "5:2"
    },
    {
     "num": "周六023",
@@ -1094,9 +1096,11 @@
     "gapScore": 10,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 3:1",
+    "hit": false,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "3:1"
    },
    {
     "num": "周六002",
@@ -1112,9 +1116,11 @@
     "gapScore": 8,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "客胜 1:2",
+    "hit": false,
+    "hhadHit": false,
+    "resultDir": "客胜",
+    "actualScore": "1:2"
    },
    {
     "num": "周六005",
@@ -1130,10 +1136,97 @@
     "gapScore": 7,
     "topScorer": "",
     "isBrutal": false,
-    "result": "",
-    "hit": null,
-    "hhadHit": null
+    "result": "主胜 2:1",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "2:1"
    }
   ]
+ },
+ "2026-11-08": {
+  "date": "2026-11-08",
+  "generatedAt": "2026-11-08 16:38:10",
+  "count": 3,
+  "matches": [
+   {
+    "num": "周日019",
+    "home": "阿尔克马尔",
+    "away": "格罗宁根",
+    "strongTeam": "阿尔克马尔",
+    "weakTeam": "格罗宁根",
+    "recommendation": "主胜",
+    "recommendOdds": 1.33,
+    "hhadRecommendation": "让胜",
+    "goal": -1,
+    "gapLevel": "悬殊",
+    "gapScore": 10,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "主胜 4:3",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "4:3"
+   },
+   {
+    "num": "周日027",
+    "home": "霍芬海姆",
+    "away": "沙尔克04",
+    "strongTeam": "霍芬海姆",
+    "weakTeam": "沙尔克04",
+    "recommendation": "主胜",
+    "recommendOdds": 1.42,
+    "hhadRecommendation": "让胜",
+    "goal": -1,
+    "gapLevel": "悬殊",
+    "gapScore": 9,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "主胜 2:1",
+    "hit": true,
+    "hhadHit": false,
+    "resultDir": "主胜",
+    "actualScore": "2:1"
+   },
+   {
+    "num": "周日007",
+    "home": "埃尔切",
+    "away": "皇家贝蒂斯",
+    "strongTeam": "皇家贝蒂斯",
+    "weakTeam": "埃尔切",
+    "recommendation": "客胜",
+    "recommendOdds": 1.62,
+    "hhadRecommendation": "让负",
+    "goal": 1,
+    "gapLevel": "明显",
+    "gapScore": 8,
+    "topScorer": "",
+    "isBrutal": false,
+    "result": "客胜 0:2",
+    "hit": true,
+    "hhadHit": true,
+    "resultDir": "客胜",
+    "actualScore": "0:2"
+   }
+  ]
+ },
+ "2026-11-10": {
+  "date": "2026-11-10",
+  "generatedAt": "2026-11-10 13:45:22",
+  "count": 0,
+  "matches": []
+ },
+ "2026-11-11": {
+  "date": "2026-11-11",
+  "generatedAt": "2026-11-11 23:12:31",
+  "count": 0,
+  "matches": []
+ },
+ "2026-11-12": {
+  "date": "2026-11-12",
+  "generatedAt": "2026-11-12 18:49:34",
+  "count": 0,
+  "matches": []
  }
 }
