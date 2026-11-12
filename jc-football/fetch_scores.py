@@ -408,7 +408,7 @@ def _local_fallback(out_meta):
                 _hhmm = _t[:5]
         utc = (date + "T" + _hhmm + ":00") if _hhmm else (date + "T00:00:00")
         matches_out.append({
-            "id": m.get("id"), "competition": "", "league": m.get("league", ""),
+            "id": m.get("id"), "num": m.get("num"), "competition": "", "league": m.get("league", ""),
             "home": m.get("home"), "away": m.get("away"), "utcDate": utc,
             # 显式的竞彩销售日：日期回溯按它分组，不再依赖畸形 utcDate 前缀。
             "date": date,
@@ -497,9 +497,140 @@ def _local_fallback(out_meta):
                            "backtestDays": BACKFILL_DAYS, "newEval": 0},
               "accuracy": overall, "history": hist,
               "dateIndex": date_index, "dateList": date_list}
+    _merge_vzhan(result)          # v1.7.132：V站 比分作为一等字段写入数据源
     json.dump(result, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("本地兜底（无 FD Key）：基于 matches.json 生成比分预测 %d 场，已写入 %s"
           % (len(matches_out), OUT_PATH))
+    return True
+
+
+VZHAN_PATH = os.path.join(HERE, "vzhan_data.json")
+
+
+def _merge_vzhan(result):
+    """v1.7.132：把 V站·呼死狗 预测比分作为**一等字段**合并进 score_predict.json。
+
+    事故背景：比分预测 Tab 设计上「V站第一优先、模型兜底」，但旧实现只在前端
+    用 BUILT_VZHAN 按竞彩编号 + 队名翻译做跨数据集拼接，score_predict.json 自身
+    零 V站 字段（195 场 source 全是 local-odds）。一旦编号反查 / 翻译 / 日期容差
+    任一环节失配，或用户看「日期回溯」、用离线 APK，V站 信息就整体消失 —— 正是
+    用户反复反馈的「比分预测没有提取 V站 信息」。
+
+    根治：在数据源生成阶段就把 V站 预测写进每场比赛与 dateIndex 记录，前端优先
+    读本字段、原拼接逻辑退为兜底。V站 没给预测的场次一律不造、不编。
+    返回 (merged_matches, vz_total)。
+    """
+    try:
+        vzj = json.load(open(VZHAN_PATH, encoding="utf-8")) or {}
+    except Exception:
+        result["vzhanMerged"] = {"matched": 0, "vzTotal": 0, "reason": "vzhan_data.json 不可用"}
+        return 0, 0
+    vms = [v for v in (vzj.get("matches") or [])
+           if isinstance(v, dict) and v.get("hasPred") and v.get("predH") is not None]
+    if not vms:
+        result["vzhanMerged"] = {"matched": 0, "vzTotal": 0, "reason": "V站当日无预测比分",
+                                "vzUpdatedAt": vzj.get("updatedAt") or ""}
+        return 0, 0
+    by_num = {str(v["jcNum"]): v for v in vms if v.get("jcNum")}
+
+    def _nm(a, b):
+        if not a or not b:
+            return False
+        if a == b:
+            return True
+        # V站 队名常为简写（阿尔巴尼/斯洛文尼/哈萨克），用前缀互含匹配
+        return len(a) >= 2 and len(b) >= 2 and (a.startswith(b) or b.startswith(a))
+
+    def _pair(h, a, v):
+        return ((_nm(h, v.get("home")) and _nm(a, v.get("away"))) or
+                (_nm(h, v.get("away")) and _nm(a, v.get("home"))))
+
+    def _near(d1, d2):
+        if not d1 or not d2:
+            return True
+        try:
+            return abs((datetime.strptime(str(d1)[:10], "%Y-%m-%d") -
+                        datetime.strptime(str(d2)[:10], "%Y-%m-%d")).days) <= 2
+        except Exception:
+            return True
+
+    def _fields(v):
+        return {"vzHasPred": True,
+                "vzPredH": v.get("predH"), "vzPredA": v.get("predA"),
+                "vzLeague": v.get("league") or "", "vzKickoff": v.get("match_time") or "",
+                "vzHighConf": bool(v.get("highConf")), "vzConfWhy": v.get("confWhy") or "",
+                "vzJcNum": v.get("jcNum") or "", "vzSource": "V站/呼死狗"}
+
+    matched = 0
+    used = set()          # v1.7.132：一条 V站 记录只匹配一场，防队名前缀/日期容差造成重复
+    # ① 展示窗比赛：竞彩编号直配优先，队名+日期兜底
+    for m in (result.get("matches") or []):
+        _vk = lambda x: x.get("jcNum") or id(x)
+        v = by_num.get(str(m.get("num") or "")) if m.get("num") else None
+        if v is not None and _vk(v) in used:
+            v = None
+        if v is None:
+            _d = m.get("date") or (m.get("utcDate") or "")[:10]
+            for _v in vms:
+                if _vk(_v) in used:
+                    continue
+                if _near(_d, _v.get("date")) and _pair(m.get("home"), m.get("away"), _v):
+                    v = _v
+                    break
+        if v is not None:
+            used.add(_vk(v))
+            m.update(_fields(v))
+            matched += 1
+    # ② 日期回溯索引：按竞彩销售日 + 队名，回看历史也能看到当时 V站 比分
+    hist_hit = 0
+    for _d, _arr in (result.get("dateIndex") or {}).items():
+        for _x in _arr:
+            if _x.get("vzHasPred"):
+                continue
+            for _v in vms:
+                if _v.get("date") != _d:
+                    continue
+                if _pair(_x.get("home"), _x.get("away"), _v):
+                    _x.update(_fields(_v))
+                    hist_hit += 1
+                    break
+    result["vzhanMerged"] = {
+        "matched": matched, "histMatched": hist_hit, "vzTotal": len(vms),
+        "vzUpdatedAt": vzj.get("updatedAt") or "",
+        "policy": "数据源一等字段；前端优先读 vzPredH，BUILT_VZHAN 拼接退为兜底",
+    }
+    print("  V站 合并：展示窗 %d/%d 场、回溯索引 %d 场带上 V站 预测比分" %
+          (matched, len(vms), hist_hit), flush=True)
+    return matched, len(vms)
+
+
+_VZ_KEYS = ("vzHasPred", "vzPredH", "vzPredA", "vzLeague", "vzKickoff",
+            "vzHighConf", "vzConfWhy", "vzJcNum", "vzSource")
+
+
+def remerge_vzhan_only():
+    """v1.7.133：V站 抓取完成后，用最新 vzhan_data.json 重合并 V站 一等字段。
+
+    不重抓 football-data、不改任何预测 / 赛果 / 日期索引，只刷新 V站 字段与统计。
+    根因：流水线里 fetch_scores(步骤1.85) 在 fetch_vzhan(步骤1.886) 之前，合并
+    用的是上一轮 V站 数据；等 V站 重抓后场次数量变化（实测 5→4），自检拿新
+    vzhan_data 比对旧 vzhanMerged 会误判「重复匹配」。此处对齐到同一时刻。
+    """
+    try:
+        result = json.load(open(OUT_PATH, encoding="utf-8"))
+    except Exception as e:
+        print("V站 重合并跳过：score_predict.json 不可读：%s" % e)
+        return False
+    for m in (result.get("matches") or []):
+        for k in _VZ_KEYS:
+            m.pop(k, None)
+    for arr in (result.get("dateIndex") or {}).values():
+        for x in (arr or []):
+            for k in _VZ_KEYS:
+                x.pop(k, None)
+    a, b = _merge_vzhan(result)
+    json.dump(result, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("V站 重合并完成：展示窗 %d/%d 场（已对齐 V站 抓取后的最新数据）" % (a, b))
     return True
 
 
@@ -780,11 +911,20 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
                     continue
                 _pred = _poisson_grid(_lh, _la)
                 _ko = _m.get("kickoff") or _m.get("time") or ""
-                _utc = ("%sT%s:00" % (_date, _ko)) if _ko else (_date + "T00:00:00")
+                # v1.7.132：kickoff 常含完整日期（"2026-11-14 01:00"），旧写法
+                # "%sT%s:00" 会拼成 "2026-11-13T2026-11-14 01:00:00" 非法 ISO
+                # （自检检查 14 会报 ERROR）。与 _local_fallback 统一只取 HH:MM，
+                # 并显式写竞彩销售日 date，供 V站 合并按日期精确匹配。
+                _hh = ""
+                if _ko:
+                    _t = str(_ko).split()[-1]
+                    if len(_t) >= 5 and _t[2] == ":" and _t[:2].isdigit():
+                        _hh = _t[:5]
+                _utc = (_date + "T" + _hh + ":00") if _hh else (_date + "T00:00:00")
                 matches_out.append({
-                    "id": _m.get("id"), "competition": "", "league": _lg,
+                    "id": _m.get("id"), "num": _m.get("num"), "competition": "", "league": _lg,
                     "home": _jh, "away": _ja,
-                    "utcDate": _utc, "status": _m.get("status", ""),
+                    "utcDate": _utc, "date": _date, "status": _m.get("status", ""),
                     "predH": _pred["predH"], "predA": _pred["predA"],
                     "pHome": _pred["pHome"], "pDraw": _pred["pDraw"], "pAway": _pred["pAway"],
                     "predOutcome": _outcome_of(_pred["predH"], _pred["predA"]),
@@ -1177,6 +1317,7 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
         "dateIndex": date_index,
         "dateList": sorted(date_index.keys(), reverse=True),
     }
+    _merge_vzhan(result)          # v1.7.132：V站 比分作为一等字段写入数据源
     json.dump(result, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"比分预测：展示窗 {len(matches_out)} 场（足球数据 {len(matches_out)-_local_added} + 本地赔率补全 {_local_added}），"
           f"回溯新增 {new_eval} 场（累计 {n} 场）；"
@@ -1187,6 +1328,9 @@ def fetch_scores(no_fetch=False, keep_cache=False, max_teams=None):
 
 if __name__ == "__main__":
     import sys
+    if "--merge-vzhan-only" in sys.argv:
+        remerge_vzhan_only()
+        sys.exit(0)
     mt = None
     for i, a in enumerate(sys.argv):
         if a == "--max-teams" and i + 1 < len(sys.argv):

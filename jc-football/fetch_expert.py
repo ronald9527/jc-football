@@ -1997,6 +1997,12 @@ def main():
         # 双保险：剔除篮球/NBA 等非足球文章（避免历史旧数据残留）
         if is_non_football(a.get("league", ""), a.get("title", "")):
             continue
+        # v1.7.133：空壳文章不得入流。92玩球部分栏目（如「北单猎手」）会推
+        # 无专家署名、无可核对推荐方向的 AI 稿，自检「检查 11 高手推荐内容」
+        # 会因此报 ERROR。用户明确要求「认真检查好高手推荐的文章内容，不要出错」，
+        # 这类稿件既无署名也无正文段落，一律不进文章流与专家统计。
+        if not str(a.get("expert") or "").strip() or not (a.get("contentSegments") or []):
+            continue
         aid = a.get("id")
         if aid in seen_ids:
             continue

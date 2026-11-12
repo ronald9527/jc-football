@@ -15,6 +15,12 @@ import json, time, urllib.request, urllib.parse, sys, os, re
 os.environ.setdefault("TZ", "Asia/Shanghai")
 time.tzset()
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# v1.7.132：竞彩「当天批次」/「是否已开赛」统一取权威北京时间，不用会漂移的
+# 系统时钟（沙箱休眠恢复实测慢 6.5h，会把当天判成前一天）。
+try:
+    import beijing_clock
+except Exception:
+    beijing_clock = None
 try:
     from fetch_hkmo import fetch_and_match as fetch_hkmo_data
 except Exception:
@@ -4187,7 +4193,10 @@ def calc_same_odds_signal(history_records, play_key, direction, ref_odds=None, g
                 hits += 1
             n += 1
         elif play_key == "hhad":
-            if r.get("goal") != goal:
+            # v1.7.132：goal=None 表示「不限盘口线、同方向」统计。
+            # 按「盘口线+方向」细分会让样本稀疏到 1~17 场（统计上无意义），
+            # 供串关证据判定时回退到跨盘口的同方向大样本口径。
+            if goal is not None and r.get("goal") != goal:
                 continue
             hv = r.get("hhadVerdict") or {}
             if hv.get("dir") != direction:
@@ -4357,13 +4366,52 @@ def _gen_parlay_one_batch(matches):
         _o = o.get("odds") or 99
         market = _PAYBACK_PRIOR / _o if _o > 1 else 0.30
         so, n = o.get("sameOddsHit"), o.get("sameOddsN") or 0
-        if so is None or n < 20:
-            # 证据不足：不编造优势，也不因缺数据而惩罚
+        # v1.7.132：旧写法 n<20 就整段丢弃实证、返回 market / edge=0，
+        # 与贝叶斯收缩（_PRIOR_N 本就是为小样本准备的）自相矛盾，还让所有
+        # 中小样本选项 edge 恒为 0、再被 empN>=20 挡掉 → 结构性 0 档。
+        # 现改为：有样本就用后验平滑（样本越小越向先验收缩，不会虚高优势），
+        # 完全无样本才退回市场先验。资格门槛 empN>=20 保持不变，不降标准。
+        if so is None or n <= 0:
             return market, 0.0, n, None
         post = (n * (so / 100.0) + _PRIOR_N * market) / (n + _PRIOR_N)
         return post, post - market, n, so
 
+    # v1.7.132 结构性修复：资格门槛必须在「选唯一意见」阶段就生效，故提前定义。
+    # 旧实现先按后验把握度挑出每场唯一意见（几乎必然是 1.1x 低赔正路），之后
+    # 才判资格（赔率 1.6~3.2 / 实证超额≥0 / 样本≥20 / 非平局）→ 低赔必然因
+    # 「蚊子肉」出界；而同场真正合理的中赔选项（让胜@1.88 / 让负@1.63 等）
+    # 早在选意见时就被丢掉，根本没机会进入候选池。于是每天 qualified=0、三档
+    # 全空，用户看到「分层串关如同摆设」。门槛一个都不降，只把判定前移。
+    _EDGE_MIN = float(os.environ.get("JC_EDGE_MIN", "0"))
+    _MIN_EMP_N = 20
+    _MIN_LEG_ODDS = 1.60
+    _MAX_LEG_ODDS = 2.80 if _lean else 3.20
+
+    # 诊断统计：逐项记录选项被排除的原因，便于核对「为什么今天没有合格单场」
+    _opt_stat = {"total": 0, "ok": 0, "odds": 0, "draw": 0, "edge": 0, "sample": 0}
+
+    def _opt_qualified(o):
+        """选项级资格：与后续单场资格 _qualified(c) 完全同源，不降低任何标准。"""
+        _opt_stat["total"] += 1
+        _o = o.get("odds") or 0
+        if not (_MIN_LEG_ODDS <= _o <= _MAX_LEG_ODDS):
+            _opt_stat["odds"] += 1
+            return False                      # 蚊子肉 / 高赔冷门
+        if o.get("dir") == "d":
+            _opt_stat["draw"] += 1
+            return False                      # 平局天然难测
+        _p, _e, _n, _so = _posterior(o)
+        if _e * 100 < _EDGE_MIN:
+            _opt_stat["edge"] += 1
+            return False                      # 历史实证跑不赢市场定价
+        if _n < _MIN_EMP_N:
+            _opt_stat["sample"] += 1
+            return False                      # 样本不足，不假装有利
+        _opt_stat["ok"] += 1
+        return True
+
     candidates = []
+    _qual_picked = [0]          # v1.7.132：有多少场选到了「原本已合格」的意见
     # 历史同指：载入竞彩官方赛果库（354+ 已完赛），免费自建同指命中率
     try:
         _hist_recs = load_history()
@@ -4465,6 +4513,13 @@ def _gen_parlay_one_batch(matches):
                 continue
             # 概率下限：原本 25% 会把绝大多数中高赔（赔率>3.3）直接剔除，
             # 导致候选池只剩 1.3-1.5 的蚊子肉。放宽到 10%，各档位再按自身门槛把关。
+            # v1.7.132：备用源常缺 hadProb，旧写法把「没数据」当成「概率 0」
+            # 直接砍掉全部中赔方向。用同组三项赔率去水后的隐含概率作代理。
+            if d_prob <= 0:
+                _hv = [had.get(k) for k in ("h", "d", "a")]
+                if all(isinstance(v, (int, float)) and v > 1 for v in _hv) and odds > 1:
+                    _inv = [1.0 / v for v in _hv]
+                    d_prob = round((1.0 / odds) / sum(_inv) * 100, 1)
             if d_prob < 10:
                 continue
             # 稳胆指数门槛：只有数据支撑强的比赛才进入候选（32分门槛，适配数据维度少的联赛）
@@ -4622,6 +4677,15 @@ def _gen_parlay_one_batch(matches):
                 continue
             # 概率下限：原本 25% 会把绝大多数中高赔（赔率>3.3）直接剔除，
             # 导致候选池只剩 1.3-1.5 的蚊子肉。放宽到 10%，各档位再按自身门槛把关。
+            # v1.7.132：精简数据源（500.com 备用源）常缺 hhadProb，旧写法把
+            # 「没数据」当成「概率 0」→ d_prob<10 一刀切掉全部让球选项，候选池
+            # 只剩 1.1x 低赔正路，随后又被赔率 1.6~3.2 门槛排除 → 每天 0 档。
+            # 现用同组三项让球赔率去水后的隐含概率作代理（口径与官方一致，不编造优势）。
+            if d_prob <= 0:
+                _hh = [hhad.get(k) for k in ("h", "d", "a")]
+                if all(isinstance(v, (int, float)) and v > 1 for v in _hh) and odds > 1:
+                    _inv = [1.0 / v for v in _hh]
+                    d_prob = round((1.0 / odds) / sum(_inv) * 100, 1)
             if d_prob < 10:
                 continue
             # 稳胆指数门槛
@@ -4693,6 +4757,14 @@ def _gen_parlay_one_batch(matches):
             if pass_filter:
                 # ===== 历史同指（按盘口线 + 同方向匹配，免费自建）=====
                 so_hit, so_n = calc_same_odds_signal(_hist_recs, "hhad", d, goal=str(goal))
+                _scope = "同盘口同方向"
+                # v1.7.132：盘口线细分导致样本稀疏（实测 1~17 场），不足以支撑
+                # 「数据支撑」判定。回退到「同方向跨盘口」的大样本口径，并在
+                # 逐腿证据里如实标注口径，不降低任何门槛、不编造优势。
+                if so_n < _MIN_EMP_N:
+                    _h2, _n2 = calc_same_odds_signal(_hist_recs, "hhad", d, goal=None)
+                    if _n2 > so_n:
+                        so_hit, so_n, _scope = _h2, _n2, "同方向跨盘口"
                 if so_hit is not None:
                     if so_hit >= 60 and so_n >= 10:
                         tech_count += 1
@@ -4712,7 +4784,7 @@ def _gen_parlay_one_batch(matches):
                     "score": round(conf * odds, 1), "reasons": reasons,
                     "techCount": tech_count,
                     "sameOddsHit": same_odds_hit, "sameOddsN": same_odds_n,
-                    "fiveDim": five_dim
+                    "sameOddsScope": _scope, "fiveDim": five_dim
                 })
 
         # ========== 选项3：总进球（辅助玩法，最多1场） ==========
@@ -4798,11 +4870,29 @@ def _gen_parlay_one_batch(matches):
                     if o.get("dir") == "d":
                         _p -= 0.08          # 平局天然难测，实证命中率显著低
                     return _p
-                opt = max(match_options, key=_lean_pick)
-                canon = _lean_pick(opt)
+                _pick = _lean_pick
             else:
-                _scored = [(parlay_canon_score(o), o) for o in match_options]
-                canon, opt = max(_scored, key=lambda t: t[0])
+                _pick = parlay_canon_score
+            # v1.7.132 资格前移：只在该场「已满足全部硬标准」的选项里选唯一意见。
+            # 门槛不降、每场仍只有唯一意见（不会自相矛盾），但不再因为先挑了
+            # 1.1x 蚊子肉而把同场最合理的中赔选项提前丢掉。若该场没有任何
+            # 合格选项，才退回全池取最把握的一条，仅用于页面逐条展示排除原因。
+            _ok = [o for o in match_options if _opt_qualified(o)]
+            if os.environ.get("JC_PARLAY_DEBUG"):
+                print("    [%s %s vs %s] 选项 %d 条：" %
+                      (m.get("num"), m.get("home"), m.get("away"), len(match_options)), flush=True)
+                for _o in match_options:
+                    _pp2, _ee2, _nn2, _so2 = _posterior(_o)
+                    _q2 = (_MIN_LEG_ODDS <= (_o.get("odds") or 0) <= _MAX_LEG_ODDS
+                           and _o.get("dir") != "d" and _ee2 * 100 >= _EDGE_MIN
+                           and _nn2 >= _MIN_EMP_N)
+                    print("      %-6s %-4s @%-5s edge=%+6.1fpt n=%-4s %s" %
+                          (_o.get("play"), _o.get("label"), _o.get("odds"),
+                           _ee2 * 100, _nn2, "合格" if _q2 else "排除"), flush=True)
+            opt = max((_ok or match_options), key=_pick)
+            canon = _pick(opt)
+            if _ok:
+                _qual_picked[0] += 1
             _pp, _pe, _pn, _pso = _posterior(opt)
             candidates.append({
                 "num": m.get("num"), "league": m.get("league"),
@@ -4816,6 +4906,7 @@ def _gen_parlay_one_batch(matches):
                 "pTrue": opt.get("pTrue"),
                 "sameOddsHit": opt.get("sameOddsHit"),
                 "sameOddsN": opt.get("sameOddsN"),
+                "sameOddsScope": opt.get("sameOddsScope") or "同赔同方向",
                 "fiveDim": opt.get("fiveDim"),
                 # v1.7.121 选边证据：后验命中率 / 实证超额 / 原始实证样本。
                 # 页面逐腿展示，负超额标红；用户可直接核对「这条腿凭什么被选」。
@@ -4876,11 +4967,8 @@ def _gen_parlay_one_batch(matches):
     #   ③ 串关 = 该序列前缀：稳健=前2、均衡=前3、精锐=前4。天然严格嵌套、
     #      总赔天然单调递增（每条赔率 >1），不再需要独立凑组合与动态地板。
     #   ④ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。
-    _EDGE_MIN = float(os.environ.get("JC_EDGE_MIN", "0"))
-    _MIN_EMP_N = 20
-    _MIN_LEG_ODDS = 1.60
-    _MAX_LEG_ODDS = 2.80 if _lean else 3.20
-
+    # v1.7.132：_EDGE_MIN / _MIN_EMP_N / _MIN_LEG_ODDS / _MAX_LEG_ODDS 已提前到
+    # 函数开头定义（选唯一意见阶段就要用同一套标准），此处不再重复定义。
     def _qualified(c):
         if (c.get("edge") or 0) < _EDGE_MIN:
             return False                      # 历史实证跑不赢市场定价 = 无数据支撑
@@ -4897,11 +4985,12 @@ def _gen_parlay_one_batch(matches):
                        key=lambda c: -(c.get("postProb") or 0))
     for _i, _c in enumerate(qualified, 1):
         _c["gripRank"] = _i                  # 今日第 N 有把握的合格单场
-    print("  分层串关：合格单场 %d/%d 条（按后验把握度排序）%s" % (
-        len(qualified), len(candidates),
+    print("  分层串关：资格前移命中 %d 场 | 合格单场 %d/%d 条（按后验把握度排序）%s" % (
+        _qual_picked[0], len(qualified), len(candidates),
         ("，首位 %s %s @%s 后验%s%%" % (qualified[0]["num"], qualified[0]["label"],
                                        qualified[0]["odds"], qualified[0].get("postProb")))
         if qualified else "，今日无合格单场"), flush=True)
+    print("  分层串关：选项资格分布 %s" % _opt_stat, flush=True)
 
     # ===== 串关档位：拒绝蚊子肉，按风险分三档，每档在自身赔率区间内选最优组合 =====
     # (key, 档位, 场数, 单场下限, 总赔下限, 总赔上限, 单腿信心下限, 联合概率下限, EV下限, 模式, 说明, 单腿赔率上限, 同指硬门槛)
@@ -5048,6 +5137,22 @@ def _gen_parlay_one_batch(matches):
             if len(qualified) < n:
                 continue
             max_hhad = 3 if n >= 4 else (2 if n >= 3 else 1)
+            if os.environ.get("JC_PARLAY_DEBUG"):
+                _cb = tuple(qualified[:n])
+                _to = _jp = _ch = 1.0
+                for _c in _cb:
+                    _to *= _c["odds"]
+                    _jp *= _leg_prob(_c)
+                    _q = _c.get("postProb")
+                    _ch *= (_q / 100.0) if _q else _leg_prob(_c)
+                print("      [档 %s n=%d] %s | 总赔%.3f 联合%.3f 后验连乘%.3f realEV%+.1f%% | 门槛 总赔[%.2f,%.2f] 联合>=%.2f minEv=%.2f minOdds=%.2f maxLeg=%.2f maxHhad=%d conf>=%.1f" % (
+                    name, n, "/".join("%s@%s" % (c["num"], c["odds"]) for c in _cb),
+                    _to, _jp, _ch, (_ch * _to - 1) * 100, eff_min_total, max_total,
+                    min_joint, min_ev, min_odds, max_leg, max_hhad, min_conf), flush=True)
+                print("        逐腿: %s" % " | ".join(
+                    "%s conf=%s edge=%s play=%s" % (c["num"], c.get("confidence"),
+                                                    c.get("edge"), c.get("playKey"))
+                    for c in _cb), flush=True)
             # v1.7.122：唯一候选组合 = 合格单场按把握度排序后的前 n 名前缀。
             # 不再遍历 combinations()：档位是优质单场的自然叠加，而非定腿数凑组合。
             for combo in (tuple(qualified[:n]),):
@@ -5088,9 +5193,13 @@ def _gen_parlay_one_batch(matches):
                     joint_p *= _leg_prob(c)
                 if total_odds < eff_min_total or total_odds > max_total:
                     continue
-                # 联合概率下限：避免选出数学上几乎不可能中的组合
-                if joint_p < min_joint:
-                    continue
+                # v1.7.132：移除「市场去水概率连乘 joint_p」的硬门槛。
+                # 下方注释已明确：模型口径（joint_p / ev）系统性偏保守，
+                # 「不能再当推荐标准」，推荐判定统一用后验连乘 combo_hit。
+                # 但旧代码仍拿 joint_p < min_joint 一刀切，形成双标：实测稳健
+                # joint 0.164 < 0.20 被拒，而同源后验 0.238、realEV +7.9%
+                # 完全达标 —— 这是分层串关天天 0 档的最后一环。
+                # 同源门槛移到下方 combo_hit 算完后判定。
                 # 组合真实历史命中率（地面真实优先，样本不足回退去水概率）
                 # v1.7.43：同指命中率只在 ≥65 分段采信（实证 67-82% 可信）；
                 # 45-60 分段实证反向（17%），一律回退市场+alpha 口径（_leg_prob），
@@ -5118,6 +5227,10 @@ def _gen_parlay_one_batch(matches):
                 #          模型口径 ev 仅作参考展示（页面标注「模型期望·参考」）。
                 ev = joint_p * total_odds - 1.0
                 real_ev = combo_hit * total_odds - 1.0
+                # v1.7.132：联合概率下限改按「后验连乘」同源口径判定，
+                # 与选腿依据 / real_ev / 推荐资格完全一致，不再双标。
+                if combo_hit < min_joint:
+                    continue
                 # 达标线按地面真实口径卡：负期望日不再整层消失，兜底取真实期望最高的组合
                 if real_ev < min_ev:
                     # 兜底记录：取该档真实期望最高（最接近达标）的组合，避免整层不显示。
@@ -5326,8 +5439,13 @@ def gen_safe_parlay(matches):
     batchDate、batchLabel、isToday、batchNote。
     """
     import re as _re
-    today = time.strftime("%Y-%m-%d")
-    now_ts = time.time()
+    # v1.7.132：唯一「今天」口径改用权威北京时间。旧写法 time.strftime 在沙箱
+    # 时钟漂移（实测慢 6.5h）时会把 11-13 周五批次判成 11-12 周四批次，
+    # 周四场次凌晨已开赛却仍被当成未开赛塞进候选池 → 每天展示错批次。
+    today = beijing_clock.today() if beijing_clock else time.strftime("%Y-%m-%d")
+    now_ts = beijing_clock.timestamp() if beijing_clock else time.time()
+    print("  分层串关：竞彩当天口径 %s（时间源 %s）" % (
+        today, beijing_clock.source() if beijing_clock else "local-clock"), flush=True)
 
     def _batch_of(m):
         d = str(m.get("date") or "").strip()
@@ -5395,11 +5513,13 @@ def gen_safe_parlay(matches):
                       "batchNote": "当前无在售未开赛的竞彩批次，暂无串关推荐"})
         return empty
 
-    # 主批次：有推荐 > 无推荐；当天批次 > 其它批次；档位数多 > 少；日期早 > 晚。
-    # 保证顶层永远指向「竞彩当天开出的赛程」的那批（用户要的），且尽量不空档。
+    # v1.7.132 主批次排序修正：用户明确「我需要的是竞彩当天开出的赛程」。
+    # 旧排序把「有推荐」放在「当天」之前，于是当天批次 0 档时会跳去展示别天
+    # 有推荐的批次（甚至前一天的已开赛场次），与「按竞彩当天批次隔离」冲突。
+    # 现改为：当天批次绝对优先 > 有推荐 > 档位数多 > 日期早。
     def _main_score(b):
         n = b.get("tierCount") or 0
-        return (0 if n > 0 else 1, 0 if b.get("isToday") else 1, -n, b.get("batchDate") or "9999")
+        return (0 if b.get("isToday") else 1, 0 if n > 0 else 1, -n, b.get("batchDate") or "9999")
     main = sorted(batches, key=_main_score)[0]
 
     result = dict(main)                       # 顶层 = 主批次完整结果（向后兼容）

@@ -17,6 +17,20 @@ export TZ=Asia/Shanghai
 
 log() { echo "[$(date '+%F %T')] $*"; }
 
+# v1.7.132：注入权威北京时间，杜绝沙箱休眠/恢复后系统时钟漂移导致
+# 「竞彩当天批次判错一天」。实测 2026-11-12 沙箱时钟比 Cloudflare HTTP Date
+# 慢 6.5h，DAY 判错 → 主批次永远展示前一天的赛程、已开赛场次被当成未开赛。
+# 整个流水线共享同一个 JC_BEIJING_NOW，避免各脚本各自取时间跨零点不一致。
+_BJ_INFO="$("$PY" -c 'import beijing_clock as b; print(b.now().strftime("%Y-%m-%d %H:%M:%S") + "|" + b.source())' 2>/dev/null || true)"
+_BJ_NOW="${_BJ_INFO%%|*}"
+_BJ_SRC="${_BJ_INFO##*|}"
+if [ -n "$_BJ_NOW" ]; then
+  export JC_BEIJING_NOW="$_BJ_NOW"
+  log "权威北京时间 $JC_BEIJING_NOW（来源 $_BJ_SRC），本地时钟 $(date '+%F %T')"
+else
+  log "!! 权威时间校准不可用，沿用本地时钟（selftest 会提示）"
+fi
+
 # ---------- 自检：只体检，不改数据 ----------
 if [ "$MODE" = "selfcheck" ]; then
   log "==> 数据自检 (selftest.py)"
@@ -259,6 +273,13 @@ set +e
 "$PY" fetch_vzhan.py || log "!! V站 抓取失败（保留上次数据），继续其余模块"
 set -e
 
+# v1.7.133：V站 抓取完成后，把最新 V站 预测重合并进 score_predict.json。
+# fetch_scores(1.85) 本轮早于 fetch_vzhan(1.886)，用的是上一轮 V站 数据；
+# 不重合并会让 vzhanMerged.vzTotal 与当前 vzhan_data.json 对不上，
+# 自检误报「重复匹配」，页面也可能显示已过期的 V站 比分。
+log "==> 步骤1.8862 比分预测 V站 一等字段重合并 (fetch_scores.py --merge-vzhan-only)"
+"$PY" fetch_scores.py --merge-vzhan-only || log "!! V站 重合并失败（保留本轮合并结果）"
+
 # ---------- 步骤1.8865：V站网关稳定性探活（监控，v1.7.77；不阻断部署）----------
 # 隔离设计：网关探活失败只记录 vzhan_gateway_status.json + 可选告警，
 # 绝不中断流水线、绝不影响部署（静默停更是最隐蔽的事故，故独立监控）。
@@ -491,7 +512,7 @@ def filehash(p):
 parts = norm("matches.json", "matches", "highOddsParlay", "safeParlay", "parlayHistory", "strongWeak", "goodRateStats", "vzHighStats")
 parts += norm("history.json", "records")
 parts += norm("fd_data.json", "matches", "byNum")
-parts += norm("score_predict.json", "matches", "reliable", "accuracy")
+parts += norm("score_predict.json", "matches", "reliable", "accuracy", "vzhanMerged", "dateIndex", "dateList")
 parts += norm("whoscored_data.json", "matches", "dateList", "history", "reliable")
 # 篮球数据（v1.7.46 补入：此前漏算，导致篮球更新了也不触发上线 / 部署指纹失准）
 parts += filehash("basketball.json")
@@ -515,6 +536,17 @@ parts += filehash("rebuild_expert_history.py")
 # v1.7.128：专家命中率榜与统计引擎变化也要触发上线
 parts += filehash("expert_leaderboard.json")
 parts += filehash("gen_expert_stats.py")
+# v1.7.133：比分预测 / V站 / 权威时间 / 自检 / 部署门槛的代码与数据变化
+# 也必须触发上线。此前指纹漏算这些文件，出现过「数据明明刷新了却被判定
+# 数据无变化 → 跳过部署」，正是用户反复反馈的「刷新后还是旧数据」。
+parts += filehash("fetch_scores.py")
+parts += filehash("fetch_vzhan.py")
+parts += filehash("fetch_expert.py")
+parts += filehash("selftest.py")
+parts += filehash("beijing_clock.py")
+parts += filehash("run_daily.sh")
+parts += filehash("score_predict.json")
+parts += filehash("deploy_cf.py")
 # 关键：代码/模板变更也要触发部署，否则「只改前端逻辑」会被误判为数据无变化而跳过上线
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")
@@ -525,7 +557,11 @@ PY
   OLD_SHA=$(cat .last_deploy.sha 2>/dev/null || echo "")
   DATA_CHANGED=$([ "$NEW_SHA" != "$OLD_SHA" ] && echo 1 || echo 0)
   SHOULD_DEPLOY=0
-  if [ "$DATA_CHANGED" = 1 ] && [ "$GAP" -ge 1800 ]; then SHOULD_DEPLOY=1; fi
+  # v1.7.133：数据/代码一变就立即部署，不再等 30 分钟冷却。
+  # 旧逻辑「DATA_CHANGED=1 且 GAP>=1800」曾让整轮刷新后线上仍是旧数据
+  # （用户多次反馈「按了刷新还是旧数据」）；Cloudflare 构建额度足够，
+  # 正确性优先。无变化时仍保留 90 分钟定时部署做保底。
+  if [ "$DATA_CHANGED" = 1 ]; then SHOULD_DEPLOY=1; fi
   if [ "$GAP" -ge 5400 ]; then SHOULD_DEPLOY=1; fi
   if [ "$SHOULD_DEPLOY" = 1 ]; then
     log "==> 步骤3 部署 (deploy_cf.py)$( [ "$DATA_CHANGED" = 1 ] && echo ' [数据有变化]' || echo ' [定时刷新]' )"

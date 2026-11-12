@@ -1438,6 +1438,136 @@ def check_parlay_scorepred_refresh():
         pass
 
 
+def check_parlay_vzhan_guards():
+    """检查 15：分层串关「0 档空壳」/ 比分预测「没有 V站 信息」防回归护栏（2026-11-13）。
+
+    三处结构性根因（不是门槛问题，改回去就会立刻复发）：
+      ① 系统时钟漂移（沙箱休眠恢复实测慢 6.5h）→ 竞彩当天批次判成前一天，
+         已开赛场次被当成未开赛；主批次排序还把「有推荐」排在「当天」之前。
+      ② 每场先按后验把握度选唯一意见（必然 1.1x 低赔正路），之后才判资格，
+         同场真正合理的中赔选项在选意见时就被丢掉 → 每天 qualified=0。
+      ③ score_predict.json 自身零 V站 字段，只靠前端跨数据集按编号/翻译拼接，
+         任一环节失配、日期回溯、离线 APK 都会整体丢失 V站 信息。
+    """
+    cat = "串关/V站根治"
+    print("· 检查 15 分层串关 / V站 信息遗漏防回归（2026-11-13）")
+
+    # ① 权威时间源接线
+    try:
+        import beijing_clock
+        bj_today = beijing_clock.today()
+        bj_src = beijing_clock.source()
+    except Exception as e:
+        add("ERROR", cat, "beijing_clock 不可用：%s" % e)
+        bj_today, bj_src = "", "unavailable"
+    try:
+        rd = open(os.path.join(HERE, "run_daily.sh"), encoding="utf-8").read()
+        if "JC_BEIJING_NOW" not in rd:
+            add("ERROR", cat, "run_daily.sh 未注入权威北京时间（跨天批次会判错一天）")
+    except Exception as e:
+        add("ERROR", cat, "run_daily.sh 不可读：%s" % e)
+    try:
+        fd = open(os.path.join(HERE, "fetch_daily.py"), encoding="utf-8").read()
+    except Exception:
+        fd = ""
+    for tok, msg in (
+        ("beijing_clock.today()", "未用权威北京日期判竞彩当天批次"),
+        ("_opt_qualified(o)", "缺选项级资格前移（合格中赔单场会被 1.1x 蚊子肉挤掉）"),
+        ('0 if b.get("isToday") else 1', "主批次排序未把「竞彩当天」放在「有推荐」之前"),
+        ("goal=None", "让球历史样本未回退到跨盘口大样本口径（样本稀疏导致永不达标）"),
+        ("if combo_hit < min_joint", "联合概率硬门槛未统一到后验同源口径（双标挡光达标组合）"),
+        ("if d_prob <= 0", "隐含概率缺失时仍把「没数据」当成概率 0 一刀切"),
+        ("if so is None or n <= 0", "贝叶斯后验仍在 n<20 时丢弃全部实证"),
+    ):
+        if tok not in fd:
+            add("ERROR", cat, "fetch_daily.py " + msg)
+
+    # ② 批次 / 候选池数据自洽
+    mj = load("matches.json", {})
+    sp = (mj.get("safeParlay") or {}) if isinstance(mj, dict) else {}
+    batches = sp.get("batches") or []
+    if bj_today and batches:
+        main_b = next((b for b in batches if b.get("batchKey") == sp.get("activeBatch")), None)
+        if main_b is None:
+            add("ERROR", cat, "activeBatch 在 batches 中找不到对应批次")
+        elif main_b.get("batchDate") != bj_today:
+            add("ERROR", cat, "主批次 %s 与权威竞彩当天 %s 不一致（时钟漂移/批次判错）"
+                % (main_b.get("batchDate"), bj_today))
+        else:
+            print("  主批次 = 权威竞彩当天 %s（时间源 %s）" % (bj_today, bj_src))
+            # 有 ≥2 条合格单场却 0 档 → 组合生成链路再次断裂，而非客观证据不足
+            _q = main_b.get("qualifiedCount") or 0
+            _t = main_b.get("tierCount") or 0
+            if _q >= 2 and _t == 0:
+                add("ERROR", cat, "当天 %d 条合格单场却 0 档（组合生成链路再次断裂）" % _q)
+            else:
+                print("  当天合格单场 %d 条 / 达标 %d 档" % (_q, _t))
+        for b in batches:
+            mc = b.get("matchCount") or 0
+            cp = b.get("candidatePool") or []
+            qc = b.get("qualifiedCount") or 0
+            real_q = sum(1 for c in cp if isinstance(c, dict) and c.get("qualified"))
+            if mc >= 3 and not cp:
+                add("ERROR", cat, "批次 %s 有 %d 场却 0 条候选（候选池结构性遗漏）"
+                    % (b.get("batchLabel"), mc))
+            if real_q != qc:
+                add("ERROR", cat, "批次 %s qualifiedCount=%s 与候选逐条实算 %s 不一致"
+                    % (b.get("batchLabel"), qc, real_q))
+        print("  批次 %d 个，候选池 / 合格数逐批自洽" % len(batches))
+
+    # ③ V站 一等字段：源码 + 数据双向护栏
+    try:
+        fs = open(os.path.join(HERE, "fetch_scores.py"), encoding="utf-8").read()
+    except Exception:
+        fs = ""
+    for tok, msg in (
+        ("def _merge_vzhan(result)", "缺 V站 一等字段合并函数"),
+        ("_merge_vzhan(result)          #", "未在写盘前调用 V站 合并"),
+        ('"num": m.get("num")', "本地兜底未透传竞彩编号（V站 只能靠队名翻译猜测）"),
+        ("used = set()", "V站 合并缺去重（队名前缀/日期容差会重复匹配）"),
+        ('_utc = (_date + "T" + _hh + ":00")', "主路径本地补全未修非法 utcDate 二次拼日期"),
+    ):
+        if tok not in fs:
+            add("ERROR", cat, "fetch_scores.py " + msg)
+    try:
+        t = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    except Exception:
+        t = ""
+    for tok, msg in (
+        ("_recVz", "比分预测卡片未优先读数据源 V站 字段"),
+        ("m.vzHasPred", "排序/统计未纳数据源 V站 字段"),
+        ("r.vzHasPred && r.vzPredH!=null", "日期回溯未显示 V站 比分"),
+    ):
+        if tok not in t:
+            add("ERROR", cat, "template.html " + msg)
+
+    sc = load("score_predict.json", {})
+    vm = (sc.get("vzhanMerged") or {}) if isinstance(sc, dict) else {}
+    vz = load("vzhan_data.json", {})
+    vz_total = sum(1 for x in (vz.get("matches") or [])
+                   if isinstance(x, dict) and x.get("hasPred") and x.get("predH") is not None)
+    if not vm:
+        add("ERROR", cat, "score_predict.json 缺 vzhanMerged（V站 信息未进入数据源）")
+    else:
+        matched = vm.get("matched") or 0
+        real = sum(1 for m in (sc.get("matches") or [])
+                   if isinstance(m, dict) and m.get("vzHasPred") and m.get("vzPredH") is not None)
+        if vz_total and matched < vz_total:
+            add("ERROR", cat, "V站 合并 %d/%d 场未齐（比分预测会漏显示 V站 信息）"
+                % (matched, vz_total))
+        if vz_total and matched > vz_total:
+            add("ERROR", cat, "V站 合并重复匹配 %d > 当日有预测 %d（去重失效）"
+                % (matched, vz_total))
+        if real != matched:
+            add("ERROR", cat, "vzhanMerged.matched=%s 与 matches 实算 %s 不一致" % (matched, real))
+        hist_v = sum(1 for arr in (sc.get("dateIndex") or {}).values()
+                     for x in (arr or []) if isinstance(x, dict) and x.get("vzHasPred"))
+        if vz_total and not hist_v:
+            add("ERROR", cat, "dateIndex 无任何 V站 记录（日期回溯看不到 V站 比分）")
+        if vz_total and matched >= vz_total:
+            print("  V站 一等字段：展示窗 %d/%d、回溯 %d 条齐全" % (matched, vz_total, hist_v))
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1466,6 +1596,7 @@ def main():
     check_refresh_chain()
     check_basketball_history_guard()
     check_parlay_scorepred_refresh()
+    check_parlay_vzhan_guards()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

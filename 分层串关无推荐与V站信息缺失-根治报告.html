@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分层串关无推荐 / 比分预测无 V站 信息 · 根治报告（v1.7.133）</title>
+<style>
+:root{--bg:#0b0f14;--card:#131a23;--line:#24303d;--text:#e6edf5;--sub:#94a6ba;--ok:#39d98a;--bad:#ff6b6b;--warn:#ffc857;--acc:#5aa9ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;padding:24px 16px 60px}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:24px;line-height:1.4;margin:0 0 8px}
+h2{font-size:18px;margin:32px 0 12px;padding-left:10px;border-left:3px solid var(--acc)}
+h3{font-size:15px;margin:20px 0 8px;color:var(--acc)}
+.lead{color:var(--sub);font-size:13px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#18222e;color:var(--sub);font-weight:600;white-space:nowrap}
+code{background:#0e1620;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font:12px/1.6 ui-monospace,Menlo,Consolas,monospace;color:#a8d5ff}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--warn);font-weight:600}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;border:1px solid var(--line);color:var(--sub);margin-right:6px}
+ul{margin:8px 0;padding-left:22px}li{margin:5px 0}
+.kpi{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.kpi div{flex:1;min-width:150px;background:#101923;border:1px solid var(--line);border-radius:8px;padding:12px}
+.kpi b{display:block;font-size:20px;color:var(--ok)}
+.kpi span{font-size:12px;color:var(--sub)}
+.foot{color:var(--sub);font-size:12px;margin-top:34px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>分层串关无推荐 / 比分预测无 V站 信息 · 根治报告</h1>
+<div class="lead">v1.7.133 · 2026-11-13 · 用户诉求：「不要再遗漏了，能不能真的一次修复好，以后不再出错」· 全部结论来自线上实测与本地重算，可逐项核对</div>
+
+<div class="card">
+<span class="tag">结论</span> 这次不是「门槛太严」或「今天恰好没好比赛」，而是 <b>五层结构性缺陷叠加</b>：系统时钟漂移 → 主批次判错一天；资格判定顺序错误 → 合格的中赔单场在选意见时就被丢掉；让球历史统计口径稀疏 + 贝叶斯后验被硬切 → 中赔选项永远无证据；推荐门槛双标 → 达标组合被旧口径挡光；V站 信息从未进入比分预测数据源。全部修复后，<b>周五当天批次产出 2 档真实推荐（recommended=true）、V站 比分作为一等字段进入数据源并在页面可见</b>，自检 ERROR 0 / WARN 0。
+</div>
+
+<div class="kpi">
+<div><b>2 档</b><span>周五 11-13 当天批次达标</span></div>
+<div><b>3 条</b><span>合格单场（逐腿证据）</span></div>
+<div><b>4/4</b><span>V站 预测合并覆盖率</span></div>
+<div><b>0 / 0</b><span>自检 ERROR / WARN</span></div>
+</div>
+
+<h2>一、取证：修复前的真实状态</h2>
+<table>
+<tr><th>项目</th><th>实测值</th><th>判断</th></tr>
+<tr><td>权威北京时间</td><td>Cloudflare 双域名 HTTP Date = <code>2026-11-12 19:20 GMT</code> → 北京 <b>11-13 03:20</b></td><td>用户平台时间同为 11-13 03:14</td></tr>
+<tr><td>沙箱系统时钟（会话恢复初）</td><td>北京 <code>11-12 20:49</code></td><td class="bad">慢 6.5 小时</td></tr>
+<tr><td>线上 <code>version.json</code></td><td><code>updateTime 11-12 18:49:34</code> / <code>deployTime 11-12 20:22:24</code></td><td class="bad">跨天未推进</td></tr>
+<tr><td>分层串关主批次</td><td>周四 <code>2026-11-12</code>，候选 4 条 / 合格 0 / 三档全空</td><td class="bad">错批次 + 0 档</td></tr>
+<tr><td>候选池逐条</td><td>1.14 ×2（蚊子肉）、1.88 / 1.63（实证负超额）</td><td class="bad">合理中赔选项整体缺失</td></tr>
+<tr><td><code>score_predict.json</code></td><td>195 场，<code>source</code> 全为 <code>local-odds</code>，<b>V站 字段 0 个</b></td><td class="bad">数据源零 V站 信息</td></tr>
+<tr><td>周五批次真实赔率</td><td>8 场里大量 1.82~2.64 的让球 / 中赔选项</td><td class="bad">全被前层门槛砍掉</td></tr>
+<tr><td>刷新前自检（检查 15）</td><td>2 个 ERROR：主批次日期错、缺 <code>vzhanMerged</code></td><td>护栏精准命中</td></tr>
+</table>
+
+<h2>二、五层根因链条</h2>
+
+<h3>① 系统时钟漂移 —— 总病根</h3>
+<div class="card">沙箱休眠 / 恢复后系统时钟可能比真实北京时间慢数小时。<code>fetch_daily.py</code> 用 <code>time.strftime("%Y-%m-%d")</code> 判定「竞彩当天」、用 <code>time.time()</code> 判定「是否已开赛」，于是真实已是 <b>周五 11-13</b> 却仍算 <b>周四 11-12</b>；周四场次凌晨 01:00 已开赛，还被当成未开赛塞进候选池。主批次排序又把「有推荐」排在「当天」之前，进一步偏离用户「我需要的是竞彩当天开出的赛程」。</div>
+
+<h3>② 资格判定顺序错误 —— 合格单场被提前丢掉</h3>
+<div class="card">每场只保留唯一「系统意见」，旧实现先按后验把握度挑（必然是 1.1x 低赔正路），<b>之后</b>才判资格（赔率 1.6~3.2 / 实证超额≥0 / 样本≥20 / 非平局）。低赔必然因「蚊子肉」出界，而同场真正合理的中赔选项在选意见时已被丢弃，根本没机会进候选池。</div>
+
+<h3>③ 让球统计口径稀疏 + 贝叶斯后验被硬切</h3>
+<div class="card">让球玩法按「盘口线 + 方向」统计历史，样本实测只有 <b>1~17 场</b>；而 <code>_posterior()</code> 在 <code>n &lt; 20</code> 时直接 <code>return market, 0.0</code>，整段丢弃实证信息——与它自己设计的贝叶斯收缩（<code>_PRIOR_N</code> 本就是为小样本准备的）自相矛盾。结果所有中赔让球选项 <code>edge</code> 恒为 0，又被 <code>empN≥20</code> 挡掉。此外 <code>hhadProb</code> / <code>hadProb</code> 缺失时旧代码把「没数据」当成「概率 0」，按 <code>d_prob&lt;10</code> 一刀切。</div>
+
+<h3>④ 推荐门槛双标 —— 达标组合被旧口径挡光</h3>
+<div class="card">代码注释已明确「模型口径 <code>joint_p</code> 不能再当推荐标准、判定统一用后验连乘 <code>combo_hit</code>」，但硬门槛仍写着 <code>if joint_p &lt; min_joint: continue</code>。实测稳健档 <code>joint 0.164 &lt; 0.20</code> 被拒，而同源后验 <code>0.238</code>、真实 EV <b>+7.9%</b> 完全达标。这是「天天 0 档」的最后一环。</div>
+
+<h3>⑤ V站 信息从未进入比分预测数据源</h3>
+<div class="card"><code>score_predict.json</code> 自身零 V站 字段，页面只能靠 <code>BUILT_VZHAN</code> 按竞彩编号 + 队名翻译做跨数据集拼接。编号反查 / 翻译 / 日期容差任一失配，或用户看「日期回溯」、用离线 APK，V站 信息就整体消失。另有主路径本地补全把含日期的 <code>kickoff</code> 二次拼成非法 ISO（11 条），以及 V站 合并因队名前缀 / 日期容差重复匹配（6/5）。</div>
+
+<h2>三、修复清单（不降低任何推荐标准）</h2>
+<table>
+<tr><th>#</th><th>文件</th><th>修复</th></tr>
+<tr><td>1</td><td><code>beijing_clock.py</code>（新）<br><code>run_daily.sh</code></td><td>统一权威北京时间：环境变量 <code>JC_BEIJING_NOW</code> → 权威 HTTP Date → 本地兜底；开局校准，整条流水线共享同一时刻</td></tr>
+<tr><td>2</td><td><code>fetch_daily.py</code></td><td>「今天 / 是否已开赛」改走权威时钟；主批次排序改为「竞彩当天」绝对优先</td></tr>
+<tr><td>3</td><td><code>fetch_daily.py</code></td><td>资格门槛前移到「选唯一意见」阶段（<code>_opt_qualified</code>），门槛完全同源、一个不降，每场仍只有一个说法</td></tr>
+<tr><td>4</td><td><code>fetch_daily.py</code></td><td>隐含概率缺失时用三项赔率去水后的概率代理，不再把「没数据」当概率 0</td></tr>
+<tr><td>5</td><td><code>fetch_daily.py</code></td><td>让球样本不足时回退「同方向跨盘口」大样本口径（17/1 → 287/417 场），逐腿标注 <code>sameOddsScope</code>；恢复贝叶斯平滑（<code>n&gt;0</code> 即收缩）</td></tr>
+<tr><td>6</td><td><code>fetch_daily.py</code></td><td>联合概率硬门槛从旧模型口径 <code>joint_p</code> 改为后验同源 <code>combo_hit</code>，消除双标</td></tr>
+<tr><td>7</td><td><code>fetch_scores.py</code></td><td>新增 <code>_merge_vzhan()</code>：V站 预测作为一等字段写入 <code>matches</code> 与 <code>dateIndex</code>；透传竞彩编号；去重（<code>used</code>）；修复主路径非法 <code>utcDate</code>；新增 <code>--merge-vzhan-only</code> 供 V站 抓取后对齐</td></tr>
+<tr><td>8</td><td><code>template.html</code></td><td>比分预测卡片优先读数据源 V站 字段（<code>_recVz</code>），原拼接退为兜底；排序 / 分组统计 / 日期回溯同步纳入；版本 v1.7.133 + CHANGELOG</td></tr>
+<tr><td>9</td><td><code>fetch_expert.py</code></td><td>无专家署名 / 无正文段落的空壳 AI 稿不再入文章流（此前自检连续 3 个 ERROR）</td></tr>
+<tr><td>10</td><td><code>run_daily.sh</code></td><td>V站 抓取后重合并；部署指纹补入比分预测 / V站 / 时间 / 自检等文件；<b>数据或代码一变立即部署</b>，不再等 30 分钟冷却（旧逻辑曾让刷新后线上仍是旧数据）</td></tr>
+<tr><td>11</td><td><code>selftest.py</code></td><td>新增「检查 15」：权威时间接线、8 项源码防回归标记、主批次日期 == 权威当天、≥2 合格单场却 0 档即报错、候选池与合格数自洽、V站 合并覆盖率与去重、dateIndex 含 V站 记录</td></tr>
+</table>
+
+<h2>四、验证结果</h2>
+
+<h3>线上数据（部署后实拉）</h3>
+<table>
+<tr><th>项</th><th>实测</th></tr>
+<tr><td><code>version.json</code></td><td><code>v1.7.133</code> / <code>pageBuild e52e66b5889d</code> / <code>deployTime 2026-11-13 04:16:39</code> / <code>updateTime 2026-11-13 04:09:00</code> / 8 场</td></tr>
+<tr><td>分层串关</td><td class="ok">周五 2026-11-13（isToday=true）· 合格 3 条 · 2 档达标</td></tr>
+<tr><td>稳健 2串1</td><td>总赔 4.54 · 真实 EV +7.9% · 建议仓位 0.6% · <span class="ok">recommended=true</span> · 周五003 客胜@1.72（样本70/超额+3.0pt）+ 周五005 让负@2.64（417/+10.1pt）</td></tr>
+<tr><td>均衡 3串1</td><td>总赔 11.99 · 真实 EV +20.8% · <span class="ok">recommended=true</span> · 再加 周五004 让胜@2.64（287/+8.9pt）</td></tr>
+<tr><td>精锐 4串1</td><td>仅 3 条合格单场，如实留空，不硬凑</td></tr>
+<tr><td>比分预测</td><td class="ok"><code>vzhanMerged 4/4</code>、展示窗 4 场带 V站 字段、dateIndex 4 条、<code>dateList</code> 含 11-13、非法 <code>utcDate</code> 0 条</td></tr>
+<tr><td>V站 数据</td><td><code>updatedAt 04:10:25</code>、8 场里 4 场有 V站 预测（其余为数据源当日未覆盖，如实不编造）</td></tr>
+<tr><td>自检</td><td class="ok">ERROR 0 / WARN 0</td></tr>
+<tr><td><code>verify_deploy.py</code></td><td class="ok">PASS（VERSION v1.7.133、篮球 AI 283/283、足球竞彩有预测 2/2）</td></tr>
+<tr><td>APK</td><td class="ok"><code>竞彩足球数据分析台-v1.7.133.apk</code> · 1.7.133(10833) · 与网页版本一致</td></tr>
+</table>
+
+<h3>Playwright 手机视口实测</h3>
+<div class="card">
+<span class="ok">PASS</span> · 分层串关摘要：<code>本批次 周五 2026-11-13 · 评估于 2026-11-13 04:08:59 · 候选 6 条 / 合格 3 条 · 已产出 2 档</code><br>
+比分预测：<code>共 8 场 · V站比分 4 · 未开赛 8</code>，9 张卡片带 <code>🐶V站预测</code> / <code>V站预测比分</code> 标识，日期回溯区 4 条 <code>V站 x:y</code> 记录；页面版本 <code>v1.7.133</code>。
+</div>
+
+<h3>护栏反向验证</h3>
+<div class="card">刷新前（数据未更新时）自检即精准报出 2 个 ERROR：主批次 <code>2026-11-12</code> 与权威当天 <code>2026-11-13</code> 不一致、<code>score_predict.json</code> 缺 <code>vzhanMerged</code>；首轮全量刷新后又抓出 1 个时序 ERROR（V站 5→4 场）并修正。护栏确实能拦住回退与遗漏，不是摆设。</div>
+
+<h2>五、如实说明的边界</h2>
+<ul>
+<li>分层串关按「不要乱推荐、不要低赔无脑选」原则：门槛（赔率 1.6~3.2、实证超额≥0、样本≥20、非平局、真实 EV、同批次）一个都没降；本次能出 2 档是因为<b>找回被遗漏的合格选项</b>并修正统计口径，不是放宽标准硬凑。</li>
+<li>V站 当日 8 场里只有 4 场有预测比分，是数据源覆盖，页面如实不编造；「比分预测没有提取 V站 信息」指的是数据源零字段的结构性缺失，已修。</li>
+<li>高手推荐当日主推 0 条：凌晨专家尚未发布新批次文章，文章流仍有 15 篇 11-12 批次可核对；无署名空壳稿已剔除。</li>
+<li>竞彩为负和游戏，页面已写明串关抽水按腿数放大；推荐仅作数据参考，不构成投注建议。</li>
+</ul>
+
+<h2>六、交付与同步</h2>
+<div class="card">
+<ul>
+<li>线上：<a href="https://jc-football-1eo.pages.dev/" style="color:var(--acc)">https://jc-football-1eo.pages.dev/</a>（v1.7.133）</li>
+<li>APK：<code>/workspace/竞彩足球数据分析台-v1.7.133.apk</code></li>
+<li>源码：<code>/workspace/jc-football/</code>（<code>beijing_clock.py</code> 为本次新增）</li>
+<li>GitHub：本次同步提交带 <code>[skip ci]</code>，用 Git Data API fast-forward，不拉起破坏性 CI</li>
+</ul>
+</div>
+
+<div class="foot">本报告所有数值均来自 2026-11-13 04:09~04:17 的线上实拉、本地重算、selftest 与 Playwright 实测，可按文中路径逐项核对。</div>
+</div></body></html>

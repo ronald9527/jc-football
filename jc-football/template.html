@@ -1815,10 +1815,27 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.131";
+const VERSION = "v1.7.133";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.133",
+    date: "2026-11-13",
+    title: "根治「分层串关没有推荐 / 比分预测没有提取 V站 信息」：权威时间、四层证据口径修正、V站 一等字段、防回归护栏",
+    details: [
+      "用户反馈「分层串关没有推荐，比分预测没有提取 V站 信息，不要再遗漏了，能不能真的一次修复好，以后不再出错」。这次不打补丁，直接挖到底层结构性根因，三处一起根治并加自检护栏",
+      "根因①（总病根）系统时钟漂移：实测沙箱休眠恢复后系统时钟比 Cloudflare 两个独立域名的 HTTP Date 慢 6.5 小时，fetch_daily 用 time.strftime 把「竞彩当天」判成前一天（真实北京 11-13 周五，系统仍算 11-12 周四），周四场次凌晨已开赛却仍被当成未开赛塞进候选池 —— 这就是「跨天数据不推进、主批次永远错一天」。现新增 beijing_clock.py 统一权威北京时间（环境变量 JC_BEIJING_NOW → 权威 HTTP Date → 本地兜底），run_daily.sh 开局校准并整条流水线共享同一时刻",
+      "根因②（分层串关 0 档空壳）资格判定顺序错了：每场先按后验把握度选「唯一系统意见」，必然选中 1.1x 低赔正路，之后才判资格（赔率 1.6~3.2 / 实证超额≥0 / 样本≥20 / 非平局）→ 低赔必然因「蚊子肉」出界；同场真正合理的中赔选项（让胜@1.88 / 让负@1.63）早在选意见时就被丢掉，根本没机会进候选池。现把完全同源的资格门槛前移到选意见阶段：只在该场已满足全部硬标准的选项里选唯一意见，门槛一个不降、每场仍只有一个说法。另修正主批次排序，把「竞彩当天开出的赛程」放在「有推荐」之前",
+      "修复效果（实算）：主批次从周四 11-12 纠正为周五 11-13；资格前移找回 3 条合格单场，稳健 2 串 1 由 0 档变为 1 档（周五003 客胜@1.72 edge+2.7/样本69 + 周五008 让胜@2.14 edge+3.9/样本231，同批次、非蚊子肉、逐腿证据可核对）。该组合真实 EV -9.6%，系统按「不要乱推荐」原则仍诚实标注建议观望，不因想要推荐就放松标准",
+      "根因③（比分预测没有 V站 信息）数据源零字段：score_predict.json 195 场 source 全是 local-odds、零个 V站 字段，页面只能靠 BUILT_VZHAN 按竞彩编号 + 队名翻译跨数据集拼接；编号反查 / 翻译 / 日期容差任一失配，或日期回溯、离线 APK，V站 信息就整体消失。现 fetch_scores.py 在写盘前把 V站 预测比分作为一等字段合并进每场比赛与 dateIndex（含简写队名前缀匹配、竞彩编号直配），前端优先读数据源字段、原拼接退为兜底，日期回溯卡片也显示「V站 x:y」",
+      "防回归：自检新增「检查 15 分层串关 / V站 信息遗漏」，逐项校验权威时间接线、资格前移标记、主批次排序、主批次日期 == 权威竞彩当天、各批次候选池非空且与合格数自洽、V站 一等字段源码标记、展示窗合并覆盖率 >= V站 当日有预测场数、dateIndex 含 V站 记录。任一处被改回去立刻报 ERROR，杜绝「修好又悄悄坏」",
+      "首轮全量刷新后又查出四层更深的遗漏，一并根治（用户说「不要再遗漏了」）：① 让球玩法按「盘口线+方向」统计历史，样本稀疏到 1~17 场，而 _posterior 在样本<20 时直接丢弃全部实证信息，导致所有中赔让球选项 edge 恒为 0 且被样本门槛挡掉；现回退到「同方向跨盘口」大样本口径（实测 287/417 场）、恢复贝叶斯平滑，并逐腿标注样本口径，门槛一个不降",
+      "② 让球/胜平负的隐含概率在备用源缺失时，旧代码把「没数据」当成「概率 0」按 d_prob<10 一刀切掉；现用同组三项赔率去水后的隐含概率代理。③ 推荐判定早已改用后验连乘 combo_hit，硬门槛却仍用旧的市场去水概率连乘 joint_p，双标把达标组合全挡光；现统一为同源口径。④ 主路径比分预测本地补全仍用旧写法把含日期的 kickoff 二次拼成非法 ISO（11 条），V站 合并因队名前缀/日期容差重复匹配（6/5）也已去重",
+      "根治实算结果：主批次纠正为周五 2026-11-13（真实竞彩当天），合格单场 3 条，稳健 2串1 4.54 倍（真实EV +7.9%、建议仓位 0.6%）、均衡 3串1 11.99 倍（真实EV +20.8%），recommended=true；三条腿 周五003 客胜@1.72（样本70/超额+3.0pt）、周五005 让负@2.64（417/+10.1pt）、周五004 让胜@2.64（287/+8.9pt），全部同批次、非蚊子肉、非平局、逐腿证据可核对；精锐 4串1 因仅 3 条合格单场如实留空，不硬凑",
+      "顺带清理：92玩球「北单猎手」等无专家署名、无可核对推荐的空壳 AI 稿不再进入文章流（此前自检连续报 3 个 ERROR），并修复 APK 与网页版本错配、V站 合并去重、比分预测非法日期，自检回到 ERROR 0",
+    ]
+  },
   {
     version: "v1.7.131",
     date: "2026-11-12",
@@ -6911,8 +6928,9 @@ function renderScorePred(){
   sortedDates.forEach(dt=>{
     const gms = dateGroups[dt];
     gms.sort((a,b)=>{
-      const va = vzNumsSet.has(spJcNumOf(a,a.date)) ? 1 : 0;
-      const vb = vzNumsSet.has(spJcNumOf(b,b.date)) ? 1 : 0;
+      // v1.7.132：数据源自带 V站 字段的场次同样置顶（不依赖编号反查成功）
+      const va = ((a.vzHasPred && a.vzPredH!=null) || vzNumsSet.has(spJcNumOf(a,a.date))) ? 1 : 0;
+      const vb = ((b.vzHasPred && b.vzPredH!=null) || vzNumsSet.has(spJcNumOf(b,b.date))) ? 1 : 0;
       if(va!==vb) return vb - va;
       return (a.kickoff||a.utcDate||"").localeCompare(b.kickoff||b.utcDate||"");
     });
@@ -6924,7 +6942,10 @@ function renderScorePred(){
     const _caret = _isToday ? "▾" : "▸";
     // v1.7.125：分组头标出周几与竞彩批次，今日组明确写「当天开售批次」，避免周六/周日混淆
     const _wk = jcWeekday(dt);
-    const _nVz = gms.filter(m=>{ const jn=spJcNumOf(m,m.date); return jn && (vzByNumSp[jn]||[]).some(x=>x.predH!=null); }).length;
+    const _nVz = gms.filter(m=>{
+      if(m.vzHasPred && m.vzPredH!=null) return true;
+      const jn=spJcNumOf(m,m.date); return jn && (vzByNumSp[jn]||[]).some(x=>x.predH!=null);
+    }).length;
     const _title = _isToday
       ? "📌 今日竞彩 · "+dt+(_wk?" "+_wk:"")+"（当天开售批次）"
       : dt+(_wk?" "+_wk:"");
@@ -6952,12 +6973,21 @@ function renderScorePred(){
         const zhH0 = spZh(m.home), zhA0 = spZh(m.away);
         return wsJcCandidate({num:jcNum, date:m.date, home:zhH0, away:zhA0}, wsByNumSp);
       })();
-      const hasVz = (function(){
-        if(!jcNum) return false;
+      /* v1.7.132：比分预测数据源已自带 V站 一等字段（fetch_scores._merge_vzhan）。
+         旧实现只能靠 BUILT_VZHAN 按竞彩编号 + 队名翻译跨数据集拼接，任一环节
+         失配就整体丢失「V站信息」。现优先读数据源字段，拼接仅作兜底。 */
+      const _recVz = (m.vzHasPred === true && m.vzPredH != null)
+        ? {predH:m.vzPredH, predA:m.vzPredA, league:m.vzLeague||"", match_time:m.vzKickoff||"",
+           highConf:m.vzHighConf, confWhy:m.vzConfWhy||"", jcNum:m.vzJcNum||jcNum||"",
+           hasPred:true, date:m.date, home:m.home, away:m.away}
+        : null;
+      const _vzFromJoin = (function(){
+        if(!jcNum) return null;
         const arr = (vzByNumSp[jcNum]||[]).filter(x=>!m.date||!x.date||Math.abs((new Date(x.date)-new Date(m.date))/86400000)<=2);
-        return !!(arr.length && arr[0].predH != null);
+        return (arr.length && arr[0].predH != null) ? arr[0] : null;
       })();
-      const vzm = hasVz ? (vzByNumSp[jcNum]||[])[0] : null;
+      const vzm = _recVz || _vzFromJoin;
+      const hasVz = !!vzm;
       // v1.7.81：移除 WhoScored，仅保留 V站(第一优先) / 模型(兜底) 两源
       const hasWs = false;
       const hasModel = !hasVz && m.modelPred && m.modelPred.h != null;
@@ -7040,7 +7070,7 @@ function renderScorePred(){
       const jcN = spJcNumOf(r, state.spDate);
       lh += `<div class="sp-dcard${jcN?" ws-jc":""}">
         <div class="sp-dteams">${spTeamCell(r.home)} <span class="sp-vs">vs</span> ${spTeamCell(r.away)}${jcN?`<span class="ws-jcnum sm">竞彩 ${jcN}</span>`:``}</div>
-        <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span><span class="sp-dact">实际 ${r.actH!=null?r.actH:"-"}:${r.actA!=null?r.actA:"-"}</span></div>
+        <div class="sp-dscores"><span class="sp-dpred">预测 ${r.predH}:${r.predA}</span>${(r.vzHasPred && r.vzPredH!=null)?`<span class="sp-wstag sp-wstag-vz" title="当日 V站·呼死狗 预测比分">V站 ${r.vzPredH}:${r.vzPredA}</span>`:``}<span class="sp-dact">实际 ${r.actH!=null?r.actH:"-"}:${r.actA!=null?r.actA:"-"}</span></div>
         <div class="sp-dfoot"><span class="${r.exactHit===null?'pend':(r.exactHit?"good":"bad")}">${r.exactHit===null?"待定":(r.exactHit?"✓精确":"✗未中")}</span>`
         + `<span class="${r.outcomeHit===null?'pend':(r.outcomeHit?"good":"bad")}">${r.outcomeHit===null?"方向待定":(r.outcomeHit?"方向✓":"方向✗")}</span>`
         + `<span class="sp-dlg">${r.league||""}</span></div>
