@@ -1815,10 +1815,23 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.130";
+const VERSION = "v1.7.131";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.131",
+    date: "2026-11-12",
+    title: "修复「分层串关 / 比分预测一直不更新」：刷新链路同步、比分预测日期索引逐日推进、命中率热更新",
+    details: [
+      "用户反馈「分层串关，比分预测一直不更新」。实测两个 Tab 的数据其实每轮都在刷新，但页面看不到——是刷新链路与数据索引两类缺陷叠加，让用户误以为模块停摆",
+      "分层串关根因：点「刷新数据」走 loadLiveDatasets()，它只把云端新的 matches.json 换进 BUILT_DATA，却没同步 state.safeParlay；而分层串关渲染读的正是 state.safeParlay（页面载入时的深拷贝快照）。结果刷新按钮拉到了新数据，串关区仍停在旧批次/旧结论。已补齐 safeParlay / highOddsParlay 同步，并在批次滚动时重置选中批次",
+      "分层串关 0 档时此前整行摘要空白，看不到本批次与评估时间，也像「没更新」。现无论有无档位都如实显示批次、评估时间、候选/合格单场数；0 档时明确写出「按不硬凑留空」及逐条排除原因（今日 4 条候选：2 条 1.14 低赔蚊子肉、2 条实证未跑赢定价，均不合格，按用户「不要乱推荐」要求留空）",
+      "比分预测根因：无 football-data Key 时走本地竞彩赔率兜底，此前只重写 13 场今日/次日预测，dateIndex / dateList 直接沿用上一轮文件 —— 「日期回溯」永远停在最后一次跑主路径的 11-11，今日/次日一条都进不去。现把展示窗内场次增量并入 dateIndex（保留已回填赛果、只刷待定场次、历史日期不动），dateList 按索引重建，日期按钮随当天推进",
+      "顺带修正：① 本地兜底把含日期的 kickoff 二次拼成非法 utcDate（如 2026-11-12T2026-11-13 01:00:00），现统一取 HH:MM 并显式写竞彩销售日；② A/B 三源命中率此前是构建期常量，刷新不更新，现新增轻量 ab_stats.json 云端副本随刷新热更新；③ parlay_history.json 顶层统计此前与 records 不同步（文件 78/15/63 对应实算 85/17/68），导致页面「15/78 命中」与「85 组」自相矛盾，现按 records 重算并对齐",
+      "防回归：自检新增「检查 14 分层串关 / 比分预测刷新链路」，逐项校验前端同步标记、兜底日期索引合并、dateIndex 含当天批次、utcDate 合法性、统计字段自洽；任一项回退立刻报 ERROR。已做反向演练验证护栏能即时抓到回退",
+    ]
+  },
   {
     version: "v1.7.130",
     date: "2026-11-10",
@@ -3357,7 +3370,9 @@ let BUILT_ODDS_BSD = __ODDS_BSD_PLACEHOLDER__;
 let BUILT_BSD = __BSD_PLACEHOLDER__;
 let BUILT_FD = __FD_PLACEHOLDER__;
 let BUILT_SCOREPRED = __SCORE_PREDICT_PLACEHOLDER__;
-const AB_STATS = __AB_STATS_PLACEHOLDER__;
+/* 2026-11-12：由 const 改 let —— 「刷新数据」会从云端 ab_stats.json 热更新，
+   此前是构建期常量，A/B 三源命中率区刷新后永远停在打包那一刻。 */
+let AB_STATS = __AB_STATS_PLACEHOLDER__;
 let BUILT_WHOSCORED = __WHOSCORED_PLACEHOLDER__;
 let BUILT_VZHAN = __VZHAN_PLACEHOLDER__;
 let BUILT_VZGW = __VZGW_PLACEHOLDER__;
@@ -5891,11 +5906,22 @@ function renderHighOdds(){
   }
 
   // ===== 高倍串关已移除，只保留稳胆串关 =====
-  if(summary && sp && (sp.parlay2 || sp.parlay3 || sp.parlay4)){
+  // 2026-11-12：此前仅在「有档位」时写摘要，0 档时整行空白，用户看不到
+  // 本批次与评估时间，误以为分层串关「一直不更新」。改为无论有无档位都
+  // 如实显示批次、候选/合格单场数与服务端评估时间；0 档时补一句留空结论。
+  if(summary && sp){
     spCand = sp.candidateCount || 0;
     const genAt = sp.generatedAt || "";
     const legNote = sp.legNote || "";
-    summary.innerHTML = `候选 <b style="color:var(--good)">${spCand}</b> 个 · 生成时间 ${genAt} · <span style="color:var(--sub)">${legNote}</span>`;
+    const _has = [sp.parlay2, sp.parlay3, sp.parlay4].filter(Boolean).length;
+    const _batch = (sp.batchLabel ? sp.batchLabel + " " : "") + (sp.batchDate || "");
+    const _q = sp.qualifiedCount;
+    const _nowTag = genAt ? `<b style="color:var(--text)">${genAt}</b>` : `—`;
+    summary.innerHTML = `本批次 <b style="color:var(--text)">${_batch||"当日"}</b> · 评估于 ${_nowTag}`
+      + ` · 候选 <b style="color:var(--good)">${spCand}</b> 条 / 合格 <b style="color:var(--text)">${_q==null?"—":_q}</b> 条`
+      + (_has ? ` · <span style="color:var(--good)">已产出 ${_has} 档</span>`
+              : ` · <span style="color:var(--warn)">今日 0 档达标，按「不硬凑」留空（下方列明逐条排除原因）</span>`)
+      + (legNote ? ` · <span style="color:var(--sub)">${legNote}</span>` : "");
   }
 
   if(list) list.innerHTML = html;
@@ -8347,7 +8373,7 @@ async function loadLiveDatasets(showTip){
   const get = (f)=> fetch(f+"?"+bust, {cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null);
   try{
     const [vz, vzgw, vzh, ws, ex, exh, exs, bk, bkh, bka, bkp, bks, bkaa,
-           sp, hist, core, hkmoh, swh, fd, ph, hfh] = await Promise.all([
+           sp, hist, core, hkmoh, swh, fd, ph, hfh, abstat] = await Promise.all([
       get("vzhan_data.json"), get("vzhan_gateway_status.json"), get("vzhan_history.json"),
       get("whoscored_data.json"), get("expert_recommendations.json"), get("expert_history.json"),
       get("expert_stats.json"), get("basketball.json"), get("basketball_history.json"),
@@ -8357,8 +8383,12 @@ async function loadLiveDatasets(showTip){
       // 比分预测 / 赛果回溯 / 命中统计的唯一数据源，漏了它「刷新」就不算全面。
       get("score_predict.json"), get("history.json"), get("matches.json"),
       get("hkmo_history.json"), get("strongweak_history.json"), get("fd_data.json"),
-      get("parlay_history.json"), get("half_full_history.json")
+      get("parlay_history.json"), get("half_full_history.json"),
+      // 2026-11-12：A/B 三源命中率独立副本（约 2KB），让比分预测的命中率区
+      // 随刷新一起更新，不再是构建期死值。
+      get("ab_stats.json")
     ]);
+    if(abstat && abstat.stats && typeof AB_STATS !== "undefined") AB_STATS = abstat.stats;
     if(vz) BUILT_VZHAN = vz;
     if(vzgw) BUILT_VZGW = vzgw;
     if(vzh) BUILT_VZHAN_HISTORY = vzh;
@@ -8399,6 +8429,17 @@ async function loadLiveDatasets(showTip){
           if(core.halfFullHistory) state.halfFullHistory = JSON.parse(JSON.stringify(core.halfFullHistory));
           if(core.strongWeak) state.strongWeak = JSON.parse(JSON.stringify(core.strongWeak));
           if(core.strongWeakHistory) state.strongWeakHistory = JSON.parse(JSON.stringify(core.strongWeakHistory));
+          // 2026-11-12：分层串关渲染读的是 state.safeParlay（页面载入时从 BUILT_DATA
+          // 深拷贝的快照），此前只换 BUILT_DATA 不换 state，导致点「刷新数据」后
+          // 云端已拉到最新 matches.json，分层串关仍停在页面内嵌的旧批次/旧结论，
+          // 用户看到的正是「一直不更新」。这里与 refreshRealtimeData 对齐补齐同步。
+          if(core.safeParlay){
+            state.safeParlay = JSON.parse(JSON.stringify(core.safeParlay));
+            // 云端批次已滚动时，旧选中的批次 key 不再存在 → 清空让它回落到 activeBatch
+            const _bl = (state.safeParlay.batches||[]).map(b=>b.batchKey);
+            if(state.parlayBatch && _bl.length && _bl.indexOf(state.parlayBatch)<0) state.parlayBatch = "";
+          }
+          if(core.highOddsParlay) state.highOddsParlay = JSON.parse(JSON.stringify(core.highOddsParlay));
         }
       }
       if(hkmoh){ BUILT_HKMOH = hkmoh; if(state) state.hkmoHistory = JSON.parse(JSON.stringify(hkmoh.records||[])); }

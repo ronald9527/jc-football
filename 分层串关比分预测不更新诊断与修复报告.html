@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分层串关 / 比分预测「一直不更新」诊断与修复报告</title>
+<style>
+  :root{--bg:#0f1419;--panel:#171e26;--panel2:#1c2530;--line:#2a3542;--text:#e6edf3;--sub:#9aa8b6;--weak:#6b7a89;--good:#52c41a;--warn:#ffc107;--bad:#ff4d4f;--accent:#4a9eff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75;font-size:14px}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:23px;margin:0 0 6px;color:#fff}
+  .sub{color:var(--sub);font-size:13px;margin-bottom:24px}
+  h2{font-size:17px;margin:34px 0 12px;padding-left:11px;border-left:3px solid var(--accent);color:#fff}
+  h3{font-size:14.5px;margin:20px 0 8px;color:var(--accent)}
+  p{margin:8px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:15px 18px;margin:12px 0}
+  .good{border-left:3px solid var(--good)}
+  .warn{border-left:3px solid var(--warn)}
+  .bad{border-left:3px solid var(--bad)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:#fff;font-weight:600;white-space:nowrap}
+  td code,.mono,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#8fd3ff}
+  .tag{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap}
+  .t-ok{background:rgba(82,196,26,.16);color:#7ede3f}
+  .t-bug{background:rgba(255,77,79,.16);color:#ff7b7d}
+  .t-info{background:rgba(74,158,255,.16);color:#79b8ff}
+  .t-warn{background:rgba(255,193,7,.16);color:#ffd35c}
+  ul{margin:8px 0;padding-left:22px}
+  li{margin:5px 0}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:4px 14px;font-size:13px}
+  .kv dt{color:var(--sub)}
+  .kv dd{margin:0;color:var(--text)}
+  .before{color:var(--bad)}
+  .after{color:var(--good)}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--weak);font-size:12px}
+  .hl{background:rgba(255,193,7,.09);padding:1px 4px;border-radius:3px;color:#ffd97a}
+  .chain{background:#0b0f14;border:1px solid var(--line);border-radius:7px;padding:12px 16px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b8c6d4;white-space:pre-wrap;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>分层串关 / 比分预测「一直不更新」诊断与修复报告</h1>
+  <div class="sub">2026-11-12 · 页面版本 v1.7.130 → <b style="color:var(--good)">v1.7.131</b> · 线上部署 20:22:24 · 数据批次 11-12（18:49:34）</div>
+
+  <div class="card good">
+    <b>一句话结论</b>：两个 Tab 的数据其实每轮都在刷新，但<span class="hl">刷新链路只换了文件、没换页面状态</span>，加上<span class="hl">比分预测的日期回溯索引沿用旧文件</span>，导致用户看到的内容长期静止。共定位 6 处缺陷，全部修复并上线；刷新按钮现在能把两个 Tab 一起拉回最新，日期按钮已推进到 11-13 / 11-12。
+  </div>
+
+  <h2>一、复现与取证</h2>
+  <p>用浏览器打开线上页面，绕过登录遮罩后逐项读取全局状态，并注入「11-08 旧快照」模拟用户停留在旧批次页面：</p>
+  <table>
+    <tr><th>观察点</th><th>修复前实测</th><th>判定</th></tr>
+    <tr><td>分层串关角标</td><td class="mono">0</td><td><span class="tag t-bug">0 档（真实结论，但无说明）</span></td></tr>
+    <tr><td>分层串关历史最新日期</td><td class="mono">2026-11-08</td><td><span class="tag t-info">连续 4 天无新推荐</span></td></tr>
+    <tr><td>点「刷新数据」后 <code>state.safeParlay</code></td><td class="before">仍是注入的 11-08 旧快照</td><td><span class="tag t-bug">真 BUG</span></td></tr>
+    <tr><td>同一时刻 <code>BUILT_DATA.safeParlay</code></td><td class="after">已更新到 11-12 18:49:34</td><td><span class="tag t-info">文件更新了、状态没跟上</span></td></tr>
+    <tr><td>比分预测 <code>dateIndex</code> 最新键</td><td class="before">2026-11-11</td><td><span class="tag t-bug">真 BUG</span></td></tr>
+    <tr><td>比分预测 <code>matches</code> 里的 11-12/11-13</td><td class="after">已有 13 场</td><td><span class="tag t-info">预测有、回溯没有</span></td></tr>
+    <tr><td>比分预测 <code>utcDate</code></td><td class="before mono">2026-11-12T2026-11-13 01:00:00</td><td><span class="tag t-bug">非法 ISO</span></td></tr>
+    <tr><td>串关历史统计</td><td class="before mono">total=78 / 15中 / 63错，但列表 85 组（17中/68错）</td><td><span class="tag t-bug">数字自相矛盾</span></td></tr>
+  </table>
+
+  <h2>二、根因链条</h2>
+  <div class="chain">点「刷新数据」
+   └─ loadLiveDatasets() 并发拉取 21 个云端 JSON
+       ├─ matches.json → <b>BUILT_DATA = core</b>  ✅ 文件换成最新
+       │   └─ <b>❌ 没同步 state.safeParlay</b>（分层串关渲染读的正是 state）
+       │        → 分层串关永远停在页面载入时的深拷贝快照
+       ├─ score_predict.json → BUILT_SCOREPRED = sp  ✅
+       │   └─ 但该文件由 fetch_scores.py「本地兜底」生成：
+       │        只重写 matches，<b>❌ dateIndex / dateList 沿用上一轮文件</b>
+       │        → 「历史回溯」永远停在最后一次跑 FD 主路径的 11-11
+       └─ <b>❌ AB_STATS 是 const 构建期常量</b>，且 ab_compare.json 未上云
+            → A/B 三源命中率区刷新后不更新
+
+附带：0 档时 highOddsSummary 整行空白 → 看不到本批次与评估时间，
+      用户无法判断「今天到底算没算」，进一步加重「没更新」的观感。</div>
+
+  <h3>为什么分层串关连续 4 天 0 档不是故障</h3>
+  <div class="card warn">
+    11-12 批次 4 条候选全不合格：<b>2 条 1.14 超低赔「蚊子肉」</b>（周四004 黑山 / 周四005 英格兰）、<b>2 条实证未跑赢定价</b>（周四001 让胜超额 −0.7pt、周四003 让负 −8.5pt）。按既定「先有合格单场、才组合」「不硬凑、不低赔无脑选」原则，三档如实留空。<b>这是证据门槛正常工作，不是没更新</b> —— 因此本次没有放宽任何门槛，改为把「已评估 / 为什么 0 档」明确显示出来。
+  </div>
+
+  <h2>三、修复清单</h2>
+  <table>
+    <tr><th>#</th><th>文件</th><th>缺陷</th><th>修复</th></tr>
+    <tr><td>1</td><td><code>template.html</code></td><td>刷新主路径只换 BUILT_DATA，漏同步 <code>state.safeParlay</code> / <code>highOddsParlay</code></td><td>补齐深拷贝同步；批次滚动时清空失效的 <code>parlayBatch</code> 让它回落到 activeBatch</td></tr>
+    <tr><td>2</td><td><code>template.html</code></td><td>0 档时摘要整行空白</td><td>无论有无档位都显示「本批次 / 评估时间 / 候选·合格数」；0 档写明留空结论与排除原因</td></tr>
+    <tr><td>3</td><td><code>fetch_scores.py</code></td><td>本地兜底沿用旧 <code>dateIndex</code>，当日/次日预测进不了日期回溯</td><td>展示窗内场次按竞彩销售日增量并入（保留已回填赛果、只刷待定场次、历史日期不动），<code>dateList</code> 按索引重建</td></tr>
+    <tr><td>4</td><td><code>fetch_scores.py</code></td><td><code>utcDate</code> 把含日期的 kickoff 二次拼成非法 ISO</td><td>只取 HH:MM，并显式写 <code>date</code>=竞彩销售日，与前端 <code>[:10]</code> 口径一致</td></tr>
+    <tr><td>5</td><td><code>deploy_cf.py</code> + <code>template.html</code></td><td><code>AB_STATS</code> 是 const 构建期常量，<code>ab_compare.json</code>（730KB）未上云</td><td>部署时导出约 2KB 的 <code>ab_stats.json</code>；<code>const</code>→<code>let</code>，刷新时热更新</td></tr>
+    <tr><td>6</td><td><code>fetch_daily.py</code> + <code>parlay_history.json</code></td><td>回查只写 <code>result</code>，顶层 total/hit/miss 留在旧值</td><td>按 records 重算并写回，与注入 matches.json 的返回值同源；当前文件旧值 78/15/63 已对齐为 <b>85/17/68</b></td></tr>
+    <tr><td>护栏</td><td><code>selftest.py</code></td><td>无防回归检查</td><td>新增「检查 14」：前端同步标记 / 兜底索引合并 / dateIndex 含当天 / utcDate 合法 / 统计自洽，任一回退即 ERROR</td></tr>
+  </table>
+
+  <h2>四、验证结果</h2>
+  <table>
+    <tr><th>验证项</th><th>结果</th></tr>
+    <tr><td>本地兜底日期索引（隔离副本）</td><td><span class="tag t-ok">PASS</span> 11-11 → 11-13；11-12 五场 / 11-13 八场；历史 81 天不破坏；连跑两次幂等；已有赛果不被覆盖；utcDate 非法条数归零</td></tr>
+    <tr><td>自检 selftest.py</td><td><span class="tag t-ok">ERROR 0 / WARN 1</span>（WARN 为「今日无串关推荐」，即证据门槛正常拦截）</td></tr>
+    <tr><td>护栏反向演练</td><td><span class="tag t-ok">PASS</span> 删同步标记 / 抽掉当天索引 / 改错统计字段，三类回退均被即时捕获</td></tr>
+    <tr><td>浏览器：注入 11-08 旧快照 → 调刷新主路径</td><td><span class="tag t-ok">PASS</span> <code>state.safeParlay</code> 回到 11-12 18:49:34；dateList 顶部 11-13；AB 样本 0 → 1287</td></tr>
+    <tr><td>浏览器：点真实刷新按钮（含 2.6s 硬重载）</td><td><span class="tag t-ok">PASS</span> 重载后 v1.7.131，状态与索引均为最新</td></tr>
+    <tr><td>浏览器：分层串关 Tab 摘要</td><td><span class="tag t-ok">PASS</span> 「本批次 周四 2026-11-12 · 评估于 18:49:34 · 候选 4 / 合格 0 · 今日 0 档达标，按不硬凑留空」</td></tr>
+    <tr><td>浏览器：比分预测日期按钮</td><td><span class="tag t-ok">PASS</span> 11-13 / 11-12 / 11-11 / 11-10 …（此前最新只到 11-11）</td></tr>
+    <tr><td>verify_deploy.py</td><td><span class="tag t-ok">PASS</span> VERSION v1.7.131，篮球AI已赛 281/281，足球有预测 5/5</td></tr>
+    <tr><td>线上自举包</td><td><span class="tag t-ok">5 个脚本逐字节一致</span>；模板指纹一致，下一轮不会二次升版</td></tr>
+    <tr><td>冷启动演练</td><td><span class="tag t-ok">PASS</span> ab_compare.json 随包、ab_stats.json 部署时重建且有容错不阻断</td></tr>
+    <tr><td>APK</td><td><span class="tag t-ok">v1.7.131 / 10831</span>，内嵌页含全部修复标记，版本校验通过</td></tr>
+  </table>
+
+  <h2>五、上线与同步</h2>
+  <dl class="kv">
+    <dt>线上版本</dt><dd>v1.7.131（v1.7.130 → 131，改了前端必须升版促成 App 整页同步）</dd>
+    <dt>部署时间</dt><dd>2026-11-12 20:22:24 · DEPLOY_OK</dd>
+    <dt>数据批次</dt><dd>2026-11-12 18:49:34（14 场竞彩）</dd>
+    <dt>比分预测</dt><dd>updatedAt 20:09:05，dateIndex 含 11-12 / 11-13，非法 utcDate 0 条</dd>
+    <dt>串关历史</dt><dd>85 组 / 17 中 / 68 错 / 0 待，统计字段与列表一致</dd>
+    <dt>APK</dt><dd>竞彩足球数据分析台-v1.7.131.apk（versionCode 10831）</dd>
+    <dt>GitHub</dt><dd>fast-forward + [skip ci]，仅提交本次改动文件</dd>
+  </dl>
+
+  <div class="card warn">
+    <b>下一轮自动任务</b>：整点自动保鲜任务会下载含全部修复的新自举包，<code>fetch_scores.py</code> 会继续把 dateIndex 按当天前推，<code>deploy_cf.py</code> 会重建 ab_stats.json，<code>selftest.py</code> 的检查 14 会盯住各标记不被回退。任务名称 / 频率 / 状态 / 超时一律未改动。
+  </div>
+
+  <div class="foot">
+    取证方式：线上页面浏览器实测（Playwright 读取全局状态 + 注入旧快照）、git 与数据文件时间戳比对、隔离副本函数级验证、自检反向演练、Cloudflare Pages 部署包逐字节比对。<br>
+    本报告为可核对留存，所有结论均来自实测数据与代码，未对推荐门槛做任何放宽。
+  </div>
+</div>
+</body>
+</html>

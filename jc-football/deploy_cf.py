@@ -368,6 +368,21 @@ def main():
         if os.path.exists(src):
             shutil.copy(src, os.path.join(dist, data_file))
 
+    # 2026-11-12：A/B 三源命中率（模型/WhoScored/V站）此前只经 index.html 的
+    # AB_STATS 常量注入，刷新按钮拉不到独立副本 → 命中率区永远停在构建那一刻。
+    # ab_compare.json 含 1720 条配对明细（约 730KB），不宜整包上云；这里只导出
+    # 前端渲染真正需要的 stats（约 2KB），供 loadLiveDatasets 运行时热更新。
+    _ab_src = os.path.join(BASE, "ab_compare.json")
+    if os.path.exists(_ab_src):
+        try:
+            _ab = json.load(open(_ab_src, encoding="utf-8")) or {}
+            _stats = _ab.get("stats") or {}
+            _out = {"updatedAt": _ab.get("updatedAt", ""), "stats": _stats}
+            json.dump(_out, open(os.path.join(dist, "ab_stats.json"), "w", encoding="utf-8"),
+                      ensure_ascii=False)
+        except Exception as _e:
+            print("  ! ab_stats.json 生成跳过：%s" % _e)
+
     # ---- 自举代码包：让冷启动定时任务无需 git 即可拿到最新代码 ----
     # 定时任务沙箱无法访问 GitHub（网络受限），但能访问 Cloudflare Pages（部署要走 CF API）。
     # 因此把整套可重建代码打包上传；定时任务运行时从 Pages 下载即可自我更新，

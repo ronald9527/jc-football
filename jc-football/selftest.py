@@ -1343,6 +1343,101 @@ def check_basketball_history_guard():
                   % (judged, len(recs)))
 
 
+def check_parlay_scorepred_refresh():
+    """分层串关 / 比分预测「一直不更新」防回归护栏（2026-11-12）。
+
+    用户反馈两个 Tab 长期静止，根因不是没跑流水线，而是：
+    ① loadLiveDatasets 只换 BUILT_DATA、不换 state.safeParlay，分层串关
+       渲染读的却是 state（载入时快照）→ 刷新后永远是旧批次；
+    ② fetch_scores.py 本地兜底只重写 matches，dateIndex/dateList 沿用旧
+       文件 → 比分预测「日期回溯」永远停在最后一次 FD 主路径那天；
+    ③ utcDate 把含日期的 kickoff 二次拼接成非法 ISO；
+    ④ AB_STATS 是构建期 const，命中率区刷新后不更新；
+    ⑤ 分层串关 0 档时摘要整行空白，用户看不到本批次与评估时间；
+    ⑥ parlay_history.json 顶层统计字段与 records 不同步（数字自相矛盾）。
+    """
+    cat = "串关/比分刷新"
+    print("· 检查 14 分层串关 / 比分预测刷新链路（2026-11-12）")
+    try:
+        t = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
+    except Exception as e:
+        add("ERROR", cat, "template.html 不可读：%s" % e)
+        t = ""
+    _t = (
+        ('if(core.safeParlay){', "刷新主路径未同步 state.safeParlay（分层串关将停在旧快照）"),
+        ('if(core.highOddsParlay)', "刷新主路径未同步 state.highOddsParlay"),
+        ('get("ab_stats.json")', "刷新未拉取 A/B 命中率独立副本"),
+        ('let AB_STATS =', "AB_STATS 仍是 const（命中率区刷新不更新）"),
+        ('本批次 <b style="color:var(--text)">', "0 档时缺本批次/评估时间摘要"),
+    )
+    miss = [m for tok, m in _t if tok not in t]
+    for m in miss:
+        add("ERROR", cat, "template.html " + m)
+    if not miss:
+        print("  前端：safeParlay 同步 / AB 热更新 / 0 档状态条 齐全")
+
+    try:
+        fs = open(os.path.join(HERE, "fetch_scores.py"), encoding="utf-8").read()
+    except Exception as e:
+        add("ERROR", cat, "fetch_scores.py 不可读：%s" % e)
+        fs = ""
+    _f = (
+        ("本地兜底 dateIndex 增量合并异常跳过", "本地兜底未把当日预测并入 dateIndex"),
+        ("date_list = sorted(date_index.keys(), reverse=True)", "dateList 未按索引重建"),
+        ('"date": date,', "缺显式竞彩销售日字段"),
+    )
+    miss2 = [m for tok, m in _f if tok not in fs]
+    for m in miss2:
+        add("ERROR", cat, "fetch_scores.py " + m)
+    if not miss2:
+        print("  fetch_scores.py 兜底日期索引增量合并：在位")
+
+    # 数据：dateList 必须含竞彩当天批次（否则历史回溯又会被认为「没更新」）
+    sp = load("score_predict.json", {})
+    if isinstance(sp, dict):
+        dl = sp.get("dateList") or []
+        di = sp.get("dateIndex") or {}
+        mj = load("matches.json", {})
+        bd = ((mj.get("safeParlay") or {}).get("batchDate")) if isinstance(mj, dict) else ""
+        if not bd:
+            today = (datetime.datetime.now(datetime.timezone.utc) +
+                     datetime.timedelta(hours=8)).strftime("%Y-%m-%d")
+            bd = today
+        if bd not in di:
+            add("ERROR", cat, "dateIndex 缺竞彩当天批次 %s（比分预测日期回溯将停在旧日期）" % bd)
+        elif bd not in dl:
+            add("ERROR", cat, "dateList 缺竞彩当天批次 %s" % bd)
+        else:
+            print("  比分预测日期回溯含当天批次 %s：是" % bd)
+        # utcDate 合法性：不得再出现 "...TYYYY-MM-DD ..." 的二次日期畸形串
+        bad = [m.get("utcDate") for m in (sp.get("matches") or [])
+               if isinstance(m, dict) and isinstance(m.get("utcDate"), str)
+               and len(m["utcDate"]) > 11 and m["utcDate"][11:12].isdigit()
+               and re.search(r"T\d{4}-\d{2}-\d{2}", m["utcDate"])]
+        if bad:
+            add("ERROR", cat, "仍有 %d 条非法 utcDate（kickoff 二次拼日期）" % len(bad))
+
+    # parlay_history 顶层统计必须与 records 自洽
+    ph = load("parlay_history.json", {})
+    if isinstance(ph, dict) and isinstance(ph.get("records"), list):
+        rs = ph["records"]
+        hit = sum(1 for r in rs if isinstance(r, dict) and r.get("result") == "hit")
+        miss = sum(1 for r in rs if isinstance(r, dict) and r.get("result") == "miss")
+        pend = sum(1 for r in rs if isinstance(r, dict) and r.get("result") == "pending")
+        for k, v in (("total", len(rs)), ("hit", hit), ("miss", miss), ("pending", pend)):
+            if ph.get(k) != v:
+                add("ERROR", cat, "parlay_history.json %s=%s 与 records 实算 %s 不一致"
+                    % (k, ph.get(k), v))
+        else:
+            pass
+    try:
+        dc = open(os.path.join(HERE, "deploy_cf.py"), encoding="utf-8").read()
+        if 'ab_stats.json' not in dc:
+            add("ERROR", cat, "deploy_cf.py 未生成 ab_stats.json 云端副本")
+    except Exception:
+        pass
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1370,6 +1465,7 @@ def main():
     check_expert_stats(data)
     check_refresh_chain()
     check_basketball_history_guard()
+    check_parlay_scorepred_refresh()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

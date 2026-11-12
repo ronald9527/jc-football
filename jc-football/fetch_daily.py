@@ -5594,6 +5594,24 @@ def check_parlay_history():
     recent_miss = sum(1 for r in recent if r.get("result") == "miss")
     recent_rate = round(recent_hit / (recent_hit + recent_miss) * 100, 1) if (recent_hit + recent_miss) > 0 else 0
 
+    # 2026-11-12：顶层统计字段同步写回。此前只把 result 写回 records，
+    # total/hit/miss/pending/hitRate 一直留在旧值（曾出现文件 78/15/63、
+    # 实际 records 85 条 17中68错），页面由此显示「15/78 命中」却列出
+    # 「85 组」，前后矛盾。按本轮重算结果对齐，且与注入 matches.json 的
+    # 返回值同源，保证独立文件 / 内嵌 / 页面三处一致。仅在有差异时写盘，
+    # 避免每轮无谓 IO 与时间戳抖动。
+    _stat = {"total": total, "hit": hit, "miss": miss, "pending": pending,
+             "hitRate": hit_rate, "recent7Rate": recent_rate}
+    if any(parlay_data.get(k) != v for k, v in _stat.items()):
+        parlay_data.update(_stat)
+        try:
+            json.dump(parlay_data, open(parlay_file, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+            print(f"  串关历史统计已对齐：{total} 组（中{hit}/错{miss}/待{pending}）"
+                  f"，命中率 {hit_rate}%", flush=True)
+        except Exception as e:
+            print(f"  串关历史统计写回失败: {e}", flush=True)
+
     return {
         "total": total, "hit": hit, "miss": miss, "pending": pending,
         "hitRate": hit_rate, "recent7Rate": recent_rate,

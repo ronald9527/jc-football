@@ -396,10 +396,22 @@ def _local_fallback(out_meta):
             continue
         pred = _poisson_grid(lh, la)
         ko = m.get("kickoff") or m.get("time") or ""
-        utc = ("%sT%s:00" % (date, ko)) if ko else (date + "T00:00:00")
+        # 2026-11-12：kickoff 常已含完整日期（"2026-11-13 01:00"），旧写法
+        # "%sT%s:00" % (date, ko) 会拼成 "2026-11-12T2026-11-13 01:00:00" 这种
+        # 非法 ISO（Date.parse 失败、日期归属错乱）。统一只取 HH:MM 时间部分，
+        # 日期沿用竞彩销售日 date，与 dateIndex / 前端 [:10] 口径保持一致。
+        _hhmm = ""
+        if ko:
+            _parts = str(ko).split()
+            _t = _parts[-1] if _parts else ""
+            if len(_t) >= 5 and _t[2] == ":" and _t[:2].isdigit():
+                _hhmm = _t[:5]
+        utc = (date + "T" + _hhmm + ":00") if _hhmm else (date + "T00:00:00")
         matches_out.append({
             "id": m.get("id"), "competition": "", "league": m.get("league", ""),
             "home": m.get("home"), "away": m.get("away"), "utcDate": utc,
+            # 显式的竞彩销售日：日期回溯按它分组，不再依赖畸形 utcDate 前缀。
+            "date": date,
             "status": m.get("status", ""),
             "predH": pred["predH"], "predA": pred["predA"],
             "pHome": pred["pHome"], "pDraw": pred["pDraw"], "pAway": pred["pAway"],
@@ -419,6 +431,54 @@ def _local_fallback(out_meta):
         date_list = prev.get("dateList") or []
     except Exception:
         prev = {}
+
+    # 2026-11-12：本地兜底此前直接沿用上一轮 dateIndex / dateList，导致
+    # 「历史回溯」区永远停在最后一次跑过 FD 主路径的日期，当日 / 次日新预测
+    # 一条都进不去——用户看到的正是「比分预测一直不更新」。
+    # 现在把本轮展示窗（近2天~未来2天）的竞彩预测按竞彩销售日增量并入
+    # dateIndex：保留已回填的赛果与命中判定，只刷新 / 补齐待定场次；
+    # 历史日期完全不动，dateList 按索引键重建，保证日期按钮跟着当天推进。
+    try:
+        date_index = dict(date_index or {})
+        _win = {}
+        for _m in matches_out:
+            _d = _m.get("date") or (_m.get("utcDate") or "")[:10]
+            if _d:
+                _win.setdefault(_d, []).append(_m)
+        for _d, _ms in _win.items():
+            _arr = date_index.get(_d)
+            if not isinstance(_arr, list):
+                _arr = []
+            _idx = {}
+            for _x in _arr:
+                if isinstance(_x, dict) and _x.get("home") and _x.get("away"):
+                    _idx.setdefault((_x["home"], _x["away"]), _x)
+                    _idx.setdefault((_x["away"], _x["home"]), _x)
+            for _m in _ms:
+                _h, _a = _m.get("home"), _m.get("away")
+                _old = _idx.get((_h, _a)) or _idx.get((_a, _h))
+                if _old is not None:
+                    # 已有实际赛果 → 尊重赛后回溯结果，绝不覆盖命中判定
+                    if isinstance(_old.get("actH"), int):
+                        continue
+                    _old.update({"id": _m.get("id"), "league": _m.get("league"),
+                                 "predH": _m.get("predH"), "predA": _m.get("predA"),
+                                 "predOutcome": _m.get("predOutcome")})
+                else:
+                    _rec = {"id": _m.get("id"), "league": _m.get("league"),
+                            "home": _h, "away": _a,
+                            "predH": _m.get("predH"), "predA": _m.get("predA"),
+                            "predOutcome": _m.get("predOutcome"),
+                            "actH": None, "actA": None, "actOutcome": None,
+                            "exactHit": None, "outcomeHit": None, "mae": None}
+                    _arr.append(_rec)
+                    _idx[(_h, _a)] = _rec
+                    _idx[(_a, _h)] = _rec
+            date_index[_d] = _arr
+        date_list = sorted(date_index.keys(), reverse=True)
+    except Exception as _e:
+        print("本地兜底 dateIndex 增量合并异常跳过：%s" % _e)
+
     hist = prev_hist[:1500]
     n = len(hist)
     overall = {"n": n}
