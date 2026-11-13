@@ -1,10 +1,10 @@
 {
- "updatedAt": "2026-11-12 23:45:19",
+ "updatedAt": "2026-11-13 10:12:33",
  "source": "football-data.org",
  "enabled": true,
- "dateFrom": "2026-11-11",
- "dateTo": "2026-11-18",
- "total": 2,
+ "dateFrom": "2026-11-12",
+ "dateTo": "2026-11-19",
+ "total": 6,
  "matched": 0,
  "matches": [
   {
@@ -26,6 +26,58 @@
    "home": "Chapecoense AF",
    "away": "CR Vasco da Gama",
    "utcDate": "2026-11-14T23:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "BSA",
+   "league": "巴甲",
+   "home": "Coritiba FBC",
+   "away": "Santos FC",
+   "utcDate": "2026-11-18T22:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "BSA",
+   "league": "巴甲",
+   "home": "Clube do Remo",
+   "away": "Chapecoense AF",
+   "utcDate": "2026-11-18T23:00:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "BSA",
+   "league": "巴甲",
+   "home": "CR Flamengo",
+   "away": "CA Paranaense",
+   "utcDate": "2026-11-18T23:30:00Z",
+   "status": "TIMED",
+   "score": {
+    "home": null,
+    "away": null
+   },
+   "winner": null
+  },
+  {
+   "competition": "BSA",
+   "league": "巴甲",
+   "home": "Cruzeiro EC",
+   "away": "SE Palmeiras",
+   "utcDate": "2026-11-18T23:30:00Z",
    "status": "TIMED",
    "score": {
     "home": null,

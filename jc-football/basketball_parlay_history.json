@@ -3859,7 +3859,10 @@
      "sameOddsHit": null,
      "sameOddsN": 4,
      "pTrue": 70.6,
-     "canon": 35.704
+     "canon": 35.704,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042721",
@@ -3879,13 +3882,16 @@
      "sameOddsHit": 10.0,
      "sameOddsN": 10,
      "pTrue": 70.0,
-     "canon": 34.548
+     "canon": 34.548,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     }
    ],
    "recommended": true,
    "ev": 0.367,
    "realEv": 0.367,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.119",
    "savedAt": "2026-11-12 18:50:45",
    "snapshot": {
@@ -3943,7 +3949,8 @@
     "empirical": true,
     "recommended": true,
     "score": 55.3
-   }
+   },
+   "checkedAt": "2026-11-13 10:21:08"
   },
   {
    "date": "2026-11-12",
@@ -3970,7 +3977,10 @@
      "sameOddsHit": null,
      "sameOddsN": 4,
      "pTrue": 70.6,
-     "canon": 35.704
+     "canon": 35.704,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042721",
@@ -3990,7 +4000,10 @@
      "sameOddsHit": 10.0,
      "sameOddsN": 10,
      "pTrue": 70.0,
-     "canon": 34.548
+     "canon": 34.548,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042722",
@@ -4010,13 +4023,16 @@
      "sameOddsHit": 0.0,
      "sameOddsN": 6,
      "pTrue": 61.5,
-     "canon": 23.649
+     "canon": 23.649,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     }
    ],
    "recommended": true,
    "ev": 0.5151,
    "realEv": 0.5151,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.119",
    "savedAt": "2026-11-12 18:50:45",
    "snapshot": {
@@ -4094,7 +4110,8 @@
     "empirical": true,
     "recommended": true,
     "score": 38.495
-   }
+   },
+   "checkedAt": "2026-11-13 10:21:08"
   },
   {
    "date": "2026-11-12",
@@ -4121,7 +4138,10 @@
      "sameOddsHit": null,
      "sameOddsN": 4,
      "pTrue": 70.6,
-     "canon": 35.704
+     "canon": 35.704,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042720",
@@ -4141,7 +4161,10 @@
      "sameOddsHit": null,
      "sameOddsN": 1,
      "pTrue": 69.7,
-     "canon": 37.096
+     "canon": 37.096,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042721",
@@ -4161,7 +4184,10 @@
      "sameOddsHit": 10.0,
      "sameOddsN": 10,
      "pTrue": 70.0,
-     "canon": 34.548
+     "canon": 34.548,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     },
     {
      "id": "2042722",
@@ -4181,13 +4207,16 @@
      "sameOddsHit": 0.0,
      "sameOddsN": 6,
      "pTrue": 61.5,
-     "canon": 23.649
+     "canon": 23.649,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "72:101"
     }
    ],
    "recommended": true,
    "ev": 0.6427,
    "realEv": 0.6427,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.119",
    "savedAt": "2026-11-12 18:50:45",
    "snapshot": {
@@ -4285,7 +4314,8 @@
     "empirical": true,
     "recommended": true,
     "score": 28.088
-   }
+   },
+   "checkedAt": "2026-11-13 10:21:08"
   },
   {
    "date": "2026-11-13",
@@ -4401,9 +4431,9 @@
  ],
  "total": 28,
  "hit": 2,
- "miss": 22,
- "pending": 4,
- "updatedAt": "2026-11-13 08:04:14",
- "hitRate": 8.3,
- "recent7Rate": 6.7
+ "miss": 25,
+ "pending": 1,
+ "updatedAt": "2026-11-13 10:21:08",
+ "hitRate": 7.4,
+ "recent7Rate": 5.6
 }
