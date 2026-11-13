@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-13 19:57:34",
+ "updatedAt": "2026-11-13 20:59:11",
  "source": "football-data.org + 独立 Poisson 模型",
  "isolation": true,
  "note": "独立数据源：football-data.org 赛程/赛果 + 自建透明 Poisson 比分模型；与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。足球数据未覆盖的联赛（亚冠/德国杯/瑞超等）用竞彩赔率隐含 Poisson 兜底，保证每天全部竞彩比赛都有自建比分预测。",
@@ -128,8 +128,8 @@
    "vzPredA": 0,
    "vzLeague": "欧国联",
    "vzKickoff": "2026-11-14 03:45:00",
-   "vzHighConf": true,
-   "vzConfWhy": "V站·模型 方向共识",
+   "vzHighConf": false,
+   "vzConfWhy": "V站·模型 方向分歧",
    "vzJcNum": "周五004",
    "vzSource": "V站/呼死狗"
   },
@@ -158,8 +158,8 @@
    "vzPredA": 2,
    "vzLeague": "欧国联",
    "vzKickoff": "2026-11-14 03:45:00",
-   "vzHighConf": true,
-   "vzConfWhy": "V站·模型 方向共识",
+   "vzHighConf": false,
+   "vzConfWhy": "V站·模型 方向分歧",
    "vzJcNum": "周五005",
    "vzSource": "V站/呼死狗"
   },
@@ -230,8 +230,8 @@
    "vzPredA": 2,
    "vzLeague": "欧国联",
    "vzKickoff": "2026-11-14 03:45:00",
-   "vzHighConf": true,
-   "vzConfWhy": "V站·模型 方向共识",
+   "vzHighConf": false,
+   "vzConfWhy": "V站·模型 方向分歧",
    "vzJcNum": "周五008",
    "vzSource": "V站/呼死狗"
   },
@@ -260,8 +260,8 @@
    "vzPredA": 1,
    "vzLeague": "欧国联",
    "vzKickoff": "2026-11-14 03:45:00",
-   "vzHighConf": true,
-   "vzConfWhy": "V站·模型 方向共识",
+   "vzHighConf": false,
+   "vzConfWhy": "V站·模型 方向分歧",
    "vzJcNum": "周五009",
    "vzSource": "V站/呼死狗"
   },
@@ -40146,8 +40146,8 @@
     "vzPredA": 0,
     "vzLeague": "欧国联",
     "vzKickoff": "2026-11-14 03:45:00",
-    "vzHighConf": true,
-    "vzConfWhy": "V站·模型 方向共识",
+    "vzHighConf": false,
+    "vzConfWhy": "V站·模型 方向分歧",
     "vzJcNum": "周五004",
     "vzSource": "V站/呼死狗"
    },
@@ -40170,8 +40170,8 @@
     "vzPredA": 2,
     "vzLeague": "欧国联",
     "vzKickoff": "2026-11-14 03:45:00",
-    "vzHighConf": true,
-    "vzConfWhy": "V站·模型 方向共识",
+    "vzHighConf": false,
+    "vzConfWhy": "V站·模型 方向分歧",
     "vzJcNum": "周五005",
     "vzSource": "V站/呼死狗"
    },
@@ -40224,8 +40224,8 @@
     "vzPredA": 2,
     "vzLeague": "欧国联",
     "vzKickoff": "2026-11-14 03:45:00",
-    "vzHighConf": true,
-    "vzConfWhy": "V站·模型 方向共识",
+    "vzHighConf": false,
+    "vzConfWhy": "V站·模型 方向分歧",
     "vzJcNum": "周五008",
     "vzSource": "V站/呼死狗"
    },
@@ -40248,8 +40248,8 @@
     "vzPredA": 1,
     "vzLeague": "欧国联",
     "vzKickoff": "2026-11-14 03:45:00",
-    "vzHighConf": true,
-    "vzConfWhy": "V站·模型 方向共识",
+    "vzHighConf": false,
+    "vzConfWhy": "V站·模型 方向分歧",
     "vzJcNum": "周五009",
     "vzSource": "V站/呼死狗"
    },
@@ -42384,7 +42384,7 @@
   "matched": 4,
   "histMatched": 4,
   "vzTotal": 4,
-  "vzUpdatedAt": "2026-11-13 19:59:13",
+  "vzUpdatedAt": "2026-11-13 21:00:42",
   "policy": "数据源一等字段；前端优先读 vzPredH，BUILT_VZHAN 拼接退为兜底"
  }
 }

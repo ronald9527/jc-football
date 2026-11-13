@@ -1,5 +1,5 @@
 {
- "updateTime": "2026-11-13 19:54:19",
+ "updateTime": "2026-11-13 20:55:40",
  "count": 22,
  "matches": [
   {
@@ -18,9 +18,9 @@
    "arn": 53,
    "status": "",
    "had": {
-    "h": 2.03,
-    "d": 4.2,
-    "a": 2.45
+    "h": 1.95,
+    "d": 4.3,
+    "a": 2.55
    },
    "hhad": {
     "h": null,
@@ -34,9 +34,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 43.3,
-    "d": 20.9,
-    "a": 35.8
+    "h": 45.1,
+    "d": 20.4,
+    "a": 34.5
    },
    "hadSup": {
     "h": null,
@@ -57,7 +57,7 @@
    "eValue": null,
    "eKey": null,
    "absValue": null,
-   "returnRate": 87.8,
+   "returnRate": 87.9,
    "verdict": null,
    "hits": [],
    "score": {
@@ -66,13 +66,13 @@
     "stars": 0,
     "kelly": {
      "h": 0.879,
-     "d": 0.878,
-     "a": 0.877
+     "d": 0.877,
+     "a": 0.88
     },
     "kellyDiff": {
-     "h": 0.1,
-     "d": 0.0,
-     "a": -0.1
+     "h": 0.0,
+     "d": -0.2,
+     "a": 0.1
     },
     "mov": {
      "h": null,
@@ -89,19 +89,7 @@
    "hadOpen": null,
    "hhadOpen": null,
    "hhadVerdict": null,
-   "asianVerdict": {
-    "t": "good",
-    "txt": "推荐上盘（—，综合评分2.5）",
-    "dir": "h",
-    "stars": 4,
-    "score": 2.5,
-    "asianLine": "—",
-    "asianOpen": "—",
-    "asianChange": "none",
-    "reasons": [
-     "核心方向一致+2.0"
-    ]
-   },
+   "asianVerdict": null,
    "scoreRec": {
     "predicted": "2:1",
     "alternatives": [
@@ -109,14 +97,14 @@
      "1:1",
      "1:2"
     ],
-    "confidence": 65,
+    "confidence": 67,
     "expHome": 2.1,
     "expAway": 1.2,
     "totalGoals": 2.5,
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球2.1·客队预期进球1.2",
-     "热门方向主胜概率43.3%",
+     "热门方向主胜概率45.1%",
      "竞彩让球3球调整"
     ]
    },
@@ -163,33 +151,9 @@
     }
    },
    "h2h": null,
-   "hkmo": {
-    "fid": "1495231",
-    "hk": null,
-    "mo": null,
-    "both_drop": false,
-    "common_drop_dirs": [],
-    "home": "新加坡",
-    "away": "巴拉圭",
-    "league": "国际赛",
-    "num": "周五001",
-    "kickoff": "2026-11-13 20:00",
-    "asian": {
-     "open": "—",
-     "open_num": null,
-     "current": "—",
-     "current_num": null,
-     "change": "none",
-     "diff": 0
-    },
-    "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
-    "result": "",
-    "hitFlag": "",
-    "hhadHit": "",
-    "asianHit": "",
-    "hhadResult": "",
-    "pickDir": null
+   "modelPred": {
+    "h": 2,
+    "a": 1
    }
   },
   {
@@ -385,7 +349,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -591,7 +555,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -600,7 +564,7 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 0,
+    "h": 1,
     "a": 1
    }
   },
@@ -625,9 +589,9 @@
     "a": 16.0
    },
    "hhad": {
-    "h": 2.38,
+    "h": 2.33,
     "d": 3.3,
-    "a": 2.4,
+    "a": 2.46,
     "goal": "-2"
    },
    "ttg": {},
@@ -646,9 +610,9 @@
     "a": null
    },
    "hhadProb": {
-    "h": 36.9,
+    "h": 37.7,
     "d": 26.6,
-    "a": 36.6
+    "a": 35.7
    },
    "hhadSup": {
     "h": null,
@@ -797,7 +761,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -806,8 +770,8 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -826,14 +790,14 @@
    "arn": 3,
    "status": "",
    "had": {
-    "h": 10.5,
-    "d": 6.0,
-    "a": 1.14
+    "h": 11.5,
+    "d": 6.25,
+    "a": 1.12
    },
    "hhad": {
-    "h": 2.12,
-    "d": 3.73,
-    "a": 2.5,
+    "h": 2.18,
+    "d": 3.78,
+    "a": 2.4,
     "goal": "+2"
    },
    "ttg": {},
@@ -842,9 +806,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 8.4,
-    "d": 14.6,
-    "a": 77.0
+    "h": 7.6,
+    "d": 14.0,
+    "a": 78.3
    },
    "hadSup": {
     "h": null,
@@ -852,9 +816,9 @@
     "a": null
    },
    "hhadProb": {
-    "h": 41.4,
-    "d": 23.5,
-    "a": 35.1
+    "h": 40.2,
+    "d": 23.2,
+    "a": 36.6
    },
    "hhadSup": {
     "h": null,
@@ -869,7 +833,7 @@
    "eValue": null,
    "eKey": null,
    "absValue": null,
-   "returnRate": 87.8,
+   "returnRate": 87.7,
    "verdict": null,
    "hits": [],
    "score": {
@@ -877,12 +841,12 @@
     "score": 0.0,
     "stars": 0,
     "kelly": {
-     "h": 0.882,
-     "d": 0.876,
-     "a": 0.878
+     "h": 0.874,
+     "d": 0.875,
+     "a": 0.877
     },
     "kellyDiff": {
-     "h": 0.4,
+     "h": -0.3,
      "d": -0.2,
      "a": 0.0
     },
@@ -936,7 +900,7 @@
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球1.8·客队预期进球1.2",
-     "热门方向客胜概率77.0%",
+     "热门方向客胜概率78.3%",
      "竞彩让球2球调整"
     ]
    },
@@ -1003,7 +967,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1012,8 +976,8 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 0,
-    "a": 2
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -1032,14 +996,14 @@
    "arn": 2,
    "status": "",
    "had": {
-    "h": 2.28,
-    "d": 2.76,
-    "a": 2.95
+    "h": 2.44,
+    "d": 2.62,
+    "a": 2.88
    },
    "hhad": {
-    "h": 5.5,
-    "d": 3.8,
-    "a": 1.44,
+    "h": 6.05,
+    "d": 4.0,
+    "a": 1.38,
     "goal": "-1"
    },
    "ttg": {},
@@ -1048,9 +1012,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 38.5,
-    "d": 31.8,
-    "a": 29.7
+    "h": 36.0,
+    "d": 33.5,
+    "a": 30.5
    },
    "hadSup": {
     "h": null,
@@ -1058,9 +1022,9 @@
     "a": null
    },
    "hhadProb": {
-    "h": 16.0,
-    "d": 23.1,
-    "a": 60.9
+    "h": 14.5,
+    "d": 21.9,
+    "a": 63.6
    },
    "hhadSup": {
     "h": null,
@@ -1075,7 +1039,7 @@
    "eValue": null,
    "eKey": null,
    "absValue": null,
-   "returnRate": 87.7,
+   "returnRate": 87.8,
    "verdict": null,
    "hits": [],
    "score": {
@@ -1085,12 +1049,12 @@
     "kelly": {
      "h": 0.878,
      "d": 0.878,
-     "a": 0.876
+     "a": 0.878
     },
     "kellyDiff": {
-     "h": 0.1,
-     "d": 0.1,
-     "a": -0.1
+     "h": 0.0,
+     "d": 0.0,
+     "a": 0.0
     },
     "mov": {
      "h": null,
@@ -1135,14 +1099,14 @@
      "0:2",
      "0:3"
     ],
-    "confidence": 63,
+    "confidence": 61,
     "expHome": 1.2,
     "expAway": 1.5,
     "totalGoals": 2.5,
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球1.2·客队预期进球1.5",
-     "热门方向主胜概率38.5%",
+     "热门方向主胜概率36.0%",
      "竞彩让球-1球调整"
     ]
    },
@@ -1209,7 +1173,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1219,7 +1183,7 @@
    },
    "modelPred": {
     "h": 1,
-    "a": 0
+    "a": 1
    }
   },
   {
@@ -1415,7 +1379,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1424,8 +1388,8 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -1444,14 +1408,14 @@
    "arn": 1,
    "status": "",
    "had": {
-    "h": 6.0,
-    "d": 3.6,
-    "a": 1.44
+    "h": 6.3,
+    "d": 3.62,
+    "a": 1.42
    },
    "hhad": {
-    "h": 2.28,
-    "d": 2.94,
-    "a": 2.77,
+    "h": 2.33,
+    "d": 2.83,
+    "a": 2.8,
     "goal": "+1"
    },
    "ttg": {},
@@ -1460,9 +1424,9 @@
    "aaProb": null,
    "_src": "500.com",
    "hadProb": {
-    "h": 14.6,
-    "d": 24.4,
-    "a": 61.0
+    "h": 13.9,
+    "d": 24.2,
+    "a": 61.8
    },
    "hadSup": {
     "h": null,
@@ -1470,9 +1434,9 @@
     "a": null
    },
    "hhadProb": {
-    "h": 38.5,
-    "d": 29.8,
-    "a": 31.7
+    "h": 37.7,
+    "d": 31.0,
+    "a": 31.3
    },
    "hhadSup": {
     "h": null,
@@ -1496,12 +1460,12 @@
     "stars": 0,
     "kelly": {
      "h": 0.876,
-     "d": 0.878,
+     "d": 0.876,
      "a": 0.878
     },
     "kellyDiff": {
      "h": -0.2,
-     "d": 0.0,
+     "d": -0.2,
      "a": 0.0
     },
     "mov": {
@@ -1547,14 +1511,14 @@
      "1:1",
      "1:2"
     ],
-    "confidence": 76,
+    "confidence": 77,
     "expHome": 1.5,
     "expAway": 1.2,
     "totalGoals": 2.5,
     "reasons": [
      "预期总进球2.5球",
      "主队预期进球1.5·客队预期进球1.2",
-     "热门方向客胜概率61.0%",
+     "热门方向客胜概率61.8%",
      "竞彩让球1球调整"
     ]
    },
@@ -1621,7 +1585,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1630,7 +1594,7 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 0,
+    "h": 1,
     "a": 1
    }
   },
@@ -1656,8 +1620,8 @@
    },
    "hhad": {
     "h": 2.36,
-    "d": 3.14,
-    "a": 2.52,
+    "d": 3.09,
+    "a": 2.55,
     "goal": "-1"
    },
    "ttg": {},
@@ -1677,8 +1641,8 @@
    },
    "hhadProb": {
     "h": 37.2,
-    "d": 28.0,
-    "a": 34.8
+    "d": 28.4,
+    "a": 34.4
    },
    "hhadSup": {
     "h": null,
@@ -1827,7 +1791,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -1836,8 +1800,8 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -2070,7 +2034,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -2080,7 +2044,7 @@
    },
    "modelPred": {
     "h": 1,
-    "a": 0
+    "a": 1
    }
   },
   {
@@ -2313,7 +2277,7 @@
      "diff": 0
     },
     "date": "2026-11-13",
-    "fetched_at": "2026-11-13 19:54:18",
+    "fetched_at": "2026-11-13 20:55:40",
     "result": "",
     "hitFlag": "",
     "hhadHit": "",
@@ -2322,8 +2286,8 @@
     "pickDir": null
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -2792,7 +2756,7 @@
     }
    },
    "modelPred": {
-    "h": 2,
+    "h": 1,
     "a": 1
    }
   },
@@ -2990,8 +2954,8 @@
     }
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -3386,7 +3350,7 @@
     }
    },
    "modelPred": {
-    "h": 2,
+    "h": 1,
     "a": 1
    }
   },
@@ -3621,8 +3585,8 @@
     }
    },
    "modelPred": {
-    "h": 2,
-    "a": 0
+    "h": 1,
+    "a": 1
    }
   },
   {
@@ -4023,7 +3987,7 @@
     }
    },
    "modelPred": {
-    "h": 2,
+    "h": 1,
     "a": 1
    }
   },
@@ -4636,251 +4600,371 @@
  ],
  "highOddsParlay": null,
  "safeParlay": {
-  "generatedAt": "2026-11-13 04:08:59",
-  "candidateCount": 0,
-  "strategy": "分层串关（今日已锁定，不再变动）",
+  "generatedAt": "2026-11-13 20:55:40",
+  "candidateCount": 11,
+  "qualifiedCount": 2,
+  "tierNotes": [
+   "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+   "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+  ],
+  "candidatePool": [
+   {
+    "num": "周五007",
+    "home": "斯洛伐克",
+    "away": "法罗群岛",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.2,
+    "confidence": 81.8,
+    "sameOddsHit": 77.4,
+    "sameOddsN": 84,
+    "edge": 2.1,
+    "postProb": 75.9,
+    "empN": 84,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五011",
+    "home": "哥伦比亚",
+    "away": "智利",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.23,
+    "confidence": 81.1,
+    "sameOddsHit": 76.2,
+    "sameOddsN": 101,
+    "edge": 2.6,
+    "postProb": 74.6,
+    "empN": 101,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五009",
+    "home": "荷兰",
+    "away": "希腊",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.36,
+    "confidence": 78.1,
+    "sameOddsHit": 70.9,
+    "sameOddsN": 141,
+    "edge": 4.0,
+    "postProb": 69.2,
+    "empN": 141,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五010",
+    "home": "阿根廷",
+    "away": "乌拉圭",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.37,
+    "confidence": 77.7,
+    "sameOddsHit": 70.1,
+    "sameOddsN": 147,
+    "edge": 3.9,
+    "postProb": 68.5,
+    "empN": 147,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周六002",
+    "home": "大宫松鼠RB",
+    "away": "山形山神",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 1.51,
+    "confidence": 74.6,
+    "sameOddsHit": 64.4,
+    "sameOddsN": 160,
+    "edge": 4.2,
+    "postProb": 62.8,
+    "empN": 160,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周六001",
+    "home": "湘南海洋",
+    "away": "横滨FC",
+    "play": "胜平负",
+    "label": "客胜",
+    "odds": 1.8,
+    "confidence": 69.7,
+    "sameOddsHit": 58.7,
+    "sameOddsN": 63,
+    "edge": 4.9,
+    "postProb": 54.1,
+    "empN": 63,
+    "qualified": true,
+    "gripRank": 1,
+    "excludeReasons": [],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五006",
+    "home": "卢森堡",
+    "away": "爱沙尼亚",
+    "play": "胜平负",
+    "label": "主胜",
+    "odds": 2.44,
+    "confidence": 61.4,
+    "sameOddsHit": 41.3,
+    "sameOddsN": 63,
+    "edge": 2.6,
+    "postProb": 38.9,
+    "empN": 63,
+    "qualified": true,
+    "gripRank": 2,
+    "excludeReasons": [],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五002",
+    "home": "摩尔多瓦",
+    "away": "哈萨克",
+    "play": "胜平负",
+    "label": "平局",
+    "odds": 2.88,
+    "confidence": 56.6,
+    "sameOddsHit": 40.4,
+    "sameOddsN": 52,
+    "edge": 4.5,
+    "postProb": 35.2,
+    "empN": 52,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "蚊子肉/冷门赔率",
+     "平局"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五008",
+    "home": "斯洛文尼",
+    "away": "瑞士",
+    "play": "胜平负",
+    "label": "平局",
+    "odds": 3.62,
+    "confidence": 52.0,
+    "sameOddsHit": 23.7,
+    "sameOddsN": 186,
+    "edge": -0.6,
+    "postProb": 23.9,
+    "empN": 186,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "实证未跑赢定价",
+     "蚊子肉/冷门赔率",
+     "平局"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周五003",
+    "home": "保加利亚",
+    "away": "冰岛",
+    "play": "胜平负",
+    "label": "平局",
+    "odds": 3.85,
+    "confidence": 52.0,
+    "sameOddsHit": 18.2,
+    "sameOddsN": 154,
+    "edge": -3.5,
+    "postProb": 19.5,
+    "empN": 154,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "实证未跑赢定价",
+     "蚊子肉/冷门赔率",
+     "平局"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   },
+   {
+    "num": "周六005",
+    "home": "布雷达",
+    "away": "埃门",
+    "play": "胜平负",
+    "label": "客胜",
+    "odds": 5.0,
+    "confidence": 52.0,
+    "sameOddsHit": 5.0,
+    "sameOddsN": 20,
+    "edge": -3.2,
+    "postProb": 14.5,
+    "empN": 20,
+    "qualified": false,
+    "gripRank": null,
+    "excludeReasons": [
+     "实证未跑赢定价",
+     "蚊子肉/冷门赔率"
+    ],
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五"
+   }
+  ],
+  "poolNotes": [
+   "单场资格：11 条候选中 2 条合格（实证超额≥0pt、样本≥20场、赔率1.6~2.8、非平局），按后验命中率排序后取前缀成档",
+   "排除明细（各类可重叠）：负超额（实证跑不赢定价） 3 条、蚊子肉/冷门赔率 9 条、平局（天然难测） 3 条",
+   "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+   "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+  ],
+  "strategy": "v1.7.122 选串关原则：先有单场，才有组合。① 单场资格用统一绝对标准（不因档位变化）——数据支撑：历史同方向实证命中率经贝叶斯收缩后的超额 ≥0pt 且样本 ≥20 场（样本不足不编造优势）；合理：赔率 1.60~3.20（拒绝低赔蚊子肉与高赔冷门）、非平局；最有把握：按后验命中率降序，后验已含市场先验+历史实证，不是赔率的单调变换（杜绝「看到低赔就无脑选」）。② 串关 = 合格单场序列的前缀：稳健=前2、均衡=前3、精锐=前4，严格嵌套、总赔随腿数单调递增；不再定腿数凑组合、不再按档位放宽门槛。③ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。④ 推荐资格仍为硬条件：真实 EV 达标且全组无负超额腿，否则一律标「观望」。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿「为什么够格、排第几有把握」可逐条核对 【v1.7.123 批次隔离】按竞彩销售批次（编号前缀=赛程日期）分组，每批独立筛选合格单场并前缀成档，任一组合的腿必须同批次，绝不把周五与周六的场次串在一起；页面默认展示竞彩当天开出的赛程批次，可切换查看其它在售批次。",
   "parlay2": {
    "type": "2串1",
    "tier": "稳健",
    "tierDesc": "2串1 · 稳胆哲学：由今日第 1~2 有把握的合格单场组成（历史实证跑赢定价、样本≥20场、赔率≥1.60 拒绝蚊子肉）",
    "legs": [
     {
-     "num": "周五003",
-     "league": "欧国联",
-     "home": "保加利亚",
-     "away": "冰岛",
-     "kickoff": "2026-11-14 03:45",
+     "num": "周六001",
+     "league": "日乙",
+     "home": "湘南海洋",
+     "away": "横滨FC",
+     "kickoff": "2026-11-14 13:00",
      "play": "胜平负",
      "playKey": "spf",
      "dir": "a",
      "label": "客胜",
-     "odds": 1.72,
-     "confidence": 67.3,
-     "stableIndex": 62.5,
-     "score": 115.8,
+     "odds": 1.8,
+     "confidence": 69.7,
+     "stableIndex": 62.1,
+     "score": 125.4,
      "reasons": [
-      "市场概率51%",
-      "反指0★(推主胜)"
+      "市场概率49%",
+      "正路3★",
+      "被低估49%",
+      "客队状态50%"
      ],
-     "techCount": 2,
-     "pTrue": 47.02,
-     "sameOddsHit": 57.1,
-     "sameOddsN": 70,
+     "techCount": 3,
+     "pTrue": 53.54,
+     "sameOddsHit": 58.7,
+     "sameOddsN": 63,
      "sameOddsScope": "同赔同方向",
-     "fiveDim": 55.9,
-     "postProb": 54.5,
-     "edge": 3.0,
-     "empHit": 57.1,
-     "empN": 70,
-     "canon": 0.633,
+     "fiveDim": 57.4,
+     "postProb": 54.1,
+     "edge": 4.9,
+     "empHit": 58.7,
+     "empN": 63,
+     "canon": 0.541,
      "gripRank": 1,
-     "batchDate": "2026-11-13",
+     "batchDate": "2026-11-14",
      "batchLabel": "周五"
     },
     {
-     "num": "周五005",
+     "num": "周五006",
      "league": "欧国联",
-     "home": "塞尔维亚",
-     "away": "德国",
+     "home": "卢森堡",
+     "away": "爱沙尼亚",
      "kickoff": "2026-11-14 03:45",
-     "play": "让球+2",
-     "playKey": "hhad",
-     "dir": "a",
-     "label": "让负",
-     "odds": 2.64,
-     "confidence": 55,
-     "stableIndex": 71.2,
-     "score": 145.2,
+     "play": "胜平负",
+     "playKey": "spf",
+     "dir": "h",
+     "label": "主胜",
+     "odds": 2.44,
+     "confidence": 61.4,
+     "stableIndex": 42.7,
+     "score": 134.2,
      "reasons": [
-      "让球概率33%",
-      "盘口+2",
-      "与核心方向一致"
+      "市场概率36%",
+      "泊松验证30%",
+      "被低估36%",
+      "主队状态100%"
      ],
-     "techCount": 1,
-     "pTrue": null,
-     "sameOddsHit": 45.1,
-     "sameOddsN": 417,
-     "sameOddsScope": "同方向跨盘口",
-     "fiveDim": 37.2,
-     "postProb": 43.6,
-     "edge": 10.1,
-     "empHit": 45.1,
-     "empN": 417,
-     "canon": 0.486,
+     "techCount": 3,
+     "pTrue": 36.0,
+     "sameOddsHit": 41.3,
+     "sameOddsN": 63,
+     "sameOddsScope": "同赔同方向",
+     "fiveDim": 41.8,
+     "postProb": 38.9,
+     "edge": 2.6,
+     "empHit": 41.3,
+     "empN": 63,
+     "canon": 0.389,
      "gripRank": 2,
-     "batchDate": "2026-11-13",
+     "batchDate": "2026-11-14",
      "batchLabel": "周五"
     }
    ],
-   "totalOdds": 4.54,
+   "totalOdds": 4.39,
    "oddsGate": 0.01,
-   "avgConfidence": 61.1,
-   "minOdds": 1.72,
-   "maxOdds": 2.64,
+   "avgConfidence": 65.5,
+   "minOdds": 1.8,
+   "maxOdds": 2.44,
    "playTypes": [
-    "让球+2",
     "胜平负"
    ],
-   "isMixed": true,
-   "jointProb": 16.4,
-   "realHit": 23.8,
-   "ev": -25.6,
-   "realEv": 7.9,
-   "beHit": 22.0,
-   "suggestStake": 0.6,
+   "isMixed": false,
+   "jointProb": 18.7,
+   "realHit": 21.0,
+   "ev": -17.8,
+   "realEv": -7.6,
+   "beHit": 22.8,
+   "suggestStake": 0.0,
    "rake": 21.5,
-   "evNote": "达标：历史同信心档实证命中率 24%，贴近盈亏平衡线（需 22%），可小注参与",
+   "evNote": "轻度负期望：历史同信心档实证命中率 21%，低于平衡线（需 23%），建议观望",
    "negEdgeLegs": 0,
-   "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-   "recommended": true,
-   "batchDate": "2026-11-13",
-   "batchLabel": "周五",
-   "locked": true,
-   "savedAt": "2026-11-13 04:08:59"
+   "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 63 场）",
+   "recommended": false,
+   "batchDate": "2026-11-14",
+   "batchLabel": "周五"
   },
-  "parlay3": {
-   "type": "3串1",
-   "tier": "均衡",
-   "tierDesc": "3串1 · 递进哲学：稳健 2 场 + 今日第 3 有把握的合格单场，严格包含稳健档全部腿",
-   "legs": [
-    {
-     "num": "周五003",
-     "league": "欧国联",
-     "home": "保加利亚",
-     "away": "冰岛",
-     "kickoff": "2026-11-14 03:45",
-     "play": "胜平负",
-     "playKey": "spf",
-     "dir": "a",
-     "label": "客胜",
-     "odds": 1.72,
-     "confidence": 67.3,
-     "stableIndex": 62.5,
-     "score": 115.8,
-     "reasons": [
-      "市场概率51%",
-      "反指0★(推主胜)"
-     ],
-     "techCount": 2,
-     "pTrue": 47.02,
-     "sameOddsHit": 57.1,
-     "sameOddsN": 70,
-     "sameOddsScope": "同赔同方向",
-     "fiveDim": 55.9,
-     "postProb": 54.5,
-     "edge": 3.0,
-     "empHit": 57.1,
-     "empN": 70,
-     "canon": 0.633,
-     "gripRank": 1,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五"
-    },
-    {
-     "num": "周五005",
-     "league": "欧国联",
-     "home": "塞尔维亚",
-     "away": "德国",
-     "kickoff": "2026-11-14 03:45",
-     "play": "让球+2",
-     "playKey": "hhad",
-     "dir": "a",
-     "label": "让负",
-     "odds": 2.64,
-     "confidence": 55,
-     "stableIndex": 71.2,
-     "score": 145.2,
-     "reasons": [
-      "让球概率33%",
-      "盘口+2",
-      "与核心方向一致"
-     ],
-     "techCount": 1,
-     "pTrue": null,
-     "sameOddsHit": 45.1,
-     "sameOddsN": 417,
-     "sameOddsScope": "同方向跨盘口",
-     "fiveDim": 37.2,
-     "postProb": 43.6,
-     "edge": 10.1,
-     "empHit": 45.1,
-     "empN": 417,
-     "canon": 0.486,
-     "gripRank": 2,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五"
-    },
-    {
-     "num": "周五004",
-     "league": "欧国联",
-     "home": "苏格兰",
-     "away": "北马其顿",
-     "kickoff": "2026-11-14 03:45",
-     "play": "让球-2",
-     "playKey": "hhad",
-     "dir": "h",
-     "label": "让胜",
-     "odds": 2.64,
-     "confidence": 55,
-     "stableIndex": 58.0,
-     "score": 145.2,
-     "reasons": [
-      "让球概率33%",
-      "盘口-2",
-      "与核心方向一致"
-     ],
-     "techCount": 1,
-     "pTrue": null,
-     "sameOddsHit": 44.3,
-     "sameOddsN": 287,
-     "sameOddsScope": "同方向跨盘口",
-     "fiveDim": 24.0,
-     "postProb": 42.4,
-     "edge": 8.9,
-     "empHit": 44.3,
-     "empN": 287,
-     "canon": 0.423,
-     "gripRank": 3,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五"
-    }
-   ],
-   "totalOdds": 11.99,
-   "oddsGate": 4.55,
-   "avgConfidence": 59.1,
-   "minOdds": 1.72,
-   "maxOdds": 2.64,
-   "playTypes": [
-    "让球+2",
-    "胜平负",
-    "让球-2"
-   ],
-   "isMixed": true,
-   "jointProb": 5.5,
-   "realHit": 10.1,
-   "ev": -34.1,
-   "realEv": 20.8,
-   "beHit": 8.3,
-   "suggestStake": 0.5,
-   "rake": 30.4,
-   "evNote": "正期望：历史同信心档实证命中率 10%，高于盈亏平衡线（需 8%），长期为正回报，值得下手",
-   "negEdgeLegs": 0,
-   "edgeNote": "证据核查：3/3 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-   "recommended": true,
-   "batchDate": "2026-11-13",
-   "batchLabel": "周五",
-   "locked": true,
-   "savedAt": "2026-11-13 04:08:59"
-  },
+  "parlay3": null,
   "parlay4": null,
-  "locked": true,
+  "legNote": "串关抽水按场数放大：单场抽水11.4%，2串1约21.6%、3串1约30.6%、4串1约38.5%——串得越多，抽水越狠",
+  "batchKey": "2026-11-14",
+  "batchDate": "2026-11-14",
+  "batchLabel": "周五",
+  "isToday": false,
+  "matchCount": 13,
+  "tierCount": 1,
   "batches": [
    {
-    "generatedAt": "2026-11-13 08:02:17",
-    "candidateCount": 6,
-    "qualifiedCount": 3,
+    "generatedAt": "2026-11-13 20:55:40",
+    "candidateCount": 11,
+    "qualifiedCount": 2,
     "tierNotes": [
-     "精锐4串1 留空：今日合格单场仅 3 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+     "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+     "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
     ],
     "candidatePool": [
      {
@@ -4889,97 +4973,40 @@
       "away": "法罗群岛",
       "play": "胜平负",
       "label": "主胜",
-      "odds": 1.21,
-      "confidence": 76.6,
-      "sameOddsHit": 76.9,
-      "sameOddsN": 91,
-      "edge": 2.2,
-      "postProb": 75.4,
-      "empN": 91,
-      "qualified": false,
-      "gripRank": null,
-      "excludeReasons": [
-       "蚊子肉/冷门赔率"
-      ],
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     },
-     {
-      "num": "周五008",
-      "home": "斯洛文尼亚",
-      "away": "瑞士",
-      "play": "胜平负",
-      "label": "客胜",
-      "odds": 1.5,
-      "confidence": 70.1,
-      "sameOddsHit": 62.9,
-      "sameOddsN": 70,
+      "odds": 1.2,
+      "confidence": 81.8,
+      "sameOddsHit": 77.4,
+      "sameOddsN": 84,
       "edge": 2.1,
-      "postProb": 61.1,
-      "empN": 70,
+      "postProb": 75.9,
+      "empN": 84,
       "qualified": false,
       "gripRank": null,
       "excludeReasons": [
        "蚊子肉/冷门赔率"
       ],
-      "batchDate": "2026-11-13",
+      "batchDate": "2026-11-14",
       "batchLabel": "周五"
      },
      {
-      "num": "周五003",
-      "home": "保加利亚",
-      "away": "冰岛",
+      "num": "周五011",
+      "home": "哥伦比亚",
+      "away": "智利",
       "play": "胜平负",
-      "label": "客胜",
-      "odds": 1.72,
-      "confidence": 67.3,
-      "sameOddsHit": 57.1,
-      "sameOddsN": 70,
-      "edge": 3.0,
-      "postProb": 54.5,
-      "empN": 70,
-      "qualified": true,
-      "gripRank": 1,
-      "excludeReasons": [],
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     },
-     {
-      "num": "周五005",
-      "home": "塞尔维亚",
-      "away": "德国",
-      "play": "让球+2",
-      "label": "让负",
-      "odds": 2.64,
-      "confidence": 55,
-      "sameOddsHit": 45.0,
-      "sameOddsN": 418,
-      "edge": 10.0,
-      "postProb": 43.6,
-      "empN": 418,
-      "qualified": true,
-      "gripRank": 2,
-      "excludeReasons": [],
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     },
-     {
-      "num": "周五004",
-      "home": "苏格兰",
-      "away": "北马其顿",
-      "play": "让球-2",
-      "label": "让胜",
-      "odds": 2.64,
-      "confidence": 55,
-      "sameOddsHit": 44.1,
-      "sameOddsN": 288,
-      "edge": 8.7,
-      "postProb": 42.3,
-      "empN": 288,
-      "qualified": true,
-      "gripRank": 3,
-      "excludeReasons": [],
-      "batchDate": "2026-11-13",
+      "label": "主胜",
+      "odds": 1.23,
+      "confidence": 81.1,
+      "sameOddsHit": 76.2,
+      "sameOddsN": 101,
+      "edge": 2.6,
+      "postProb": 74.6,
+      "empN": 101,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-14",
       "batchLabel": "周五"
      },
      {
@@ -4987,14 +5014,137 @@
       "home": "荷兰",
       "away": "希腊",
       "play": "胜平负",
+      "label": "主胜",
+      "odds": 1.36,
+      "confidence": 78.1,
+      "sameOddsHit": 70.9,
+      "sameOddsN": 141,
+      "edge": 4.0,
+      "postProb": 69.2,
+      "empN": 141,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周五010",
+      "home": "阿根廷",
+      "away": "乌拉圭",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 1.37,
+      "confidence": 77.7,
+      "sameOddsHit": 70.1,
+      "sameOddsN": 147,
+      "edge": 3.9,
+      "postProb": 68.5,
+      "empN": 147,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周六002",
+      "home": "大宫松鼠RB",
+      "away": "山形山神",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 1.51,
+      "confidence": 74.6,
+      "sameOddsHit": 64.4,
+      "sameOddsN": 160,
+      "edge": 4.2,
+      "postProb": 62.8,
+      "empN": 160,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周六001",
+      "home": "湘南海洋",
+      "away": "横滨FC",
+      "play": "胜平负",
+      "label": "客胜",
+      "odds": 1.8,
+      "confidence": 69.7,
+      "sameOddsHit": 58.7,
+      "sameOddsN": 63,
+      "edge": 4.9,
+      "postProb": 54.1,
+      "empN": 63,
+      "qualified": true,
+      "gripRank": 1,
+      "excludeReasons": [],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周五006",
+      "home": "卢森堡",
+      "away": "爱沙尼亚",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 2.44,
+      "confidence": 61.4,
+      "sameOddsHit": 41.3,
+      "sameOddsN": 63,
+      "edge": 2.6,
+      "postProb": 38.9,
+      "empN": 63,
+      "qualified": true,
+      "gripRank": 2,
+      "excludeReasons": [],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周五002",
+      "home": "摩尔多瓦",
+      "away": "哈萨克",
+      "play": "胜平负",
       "label": "平局",
-      "odds": 4.25,
-      "confidence": 52.5,
-      "sameOddsHit": 16.4,
-      "sameOddsN": 55,
-      "edge": -2.1,
-      "postProb": 18.7,
-      "empN": 55,
+      "odds": 2.88,
+      "confidence": 56.6,
+      "sameOddsHit": 40.4,
+      "sameOddsN": 52,
+      "edge": 4.5,
+      "postProb": 35.2,
+      "empN": 52,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率",
+       "平局"
+      ],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周五008",
+      "home": "斯洛文尼",
+      "away": "瑞士",
+      "play": "胜平负",
+      "label": "平局",
+      "odds": 3.62,
+      "confidence": 52.0,
+      "sameOddsHit": 23.7,
+      "sameOddsN": 186,
+      "edge": -0.6,
+      "postProb": 23.9,
+      "empN": 186,
       "qualified": false,
       "gripRank": null,
       "excludeReasons": [
@@ -5002,14 +5152,60 @@
        "蚊子肉/冷门赔率",
        "平局"
       ],
-      "batchDate": "2026-11-13",
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周五003",
+      "home": "保加利亚",
+      "away": "冰岛",
+      "play": "胜平负",
+      "label": "平局",
+      "odds": 3.85,
+      "confidence": 52.0,
+      "sameOddsHit": 18.2,
+      "sameOddsN": 154,
+      "edge": -3.5,
+      "postProb": 19.5,
+      "empN": 154,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "实证未跑赢定价",
+       "蚊子肉/冷门赔率",
+       "平局"
+      ],
+      "batchDate": "2026-11-14",
+      "batchLabel": "周五"
+     },
+     {
+      "num": "周六005",
+      "home": "布雷达",
+      "away": "埃门",
+      "play": "胜平负",
+      "label": "客胜",
+      "odds": 5.0,
+      "confidence": 52.0,
+      "sameOddsHit": 5.0,
+      "sameOddsN": 20,
+      "edge": -3.2,
+      "postProb": 14.5,
+      "empN": 20,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "实证未跑赢定价",
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-14",
       "batchLabel": "周五"
      }
     ],
     "poolNotes": [
-     "单场资格：6 条候选中 3 条合格（实证超额≥0pt、样本≥20场、赔率1.6~3.2、非平局），按后验命中率排序后取前缀成档",
-     "排除明细（各类可重叠）：负超额（实证跑不赢定价） 1 条、蚊子肉/冷门赔率 3 条、平局（天然难测） 1 条",
-     "精锐4串1 留空：今日合格单场仅 3 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+     "单场资格：11 条候选中 2 条合格（实证超额≥0pt、样本≥20场、赔率1.6~2.8、非平局），按后验命中率排序后取前缀成档",
+     "排除明细（各类可重叠）：负超额（实证跑不赢定价） 3 条、蚊子肉/冷门赔率 9 条、平局（天然难测） 3 条",
+     "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+     "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
     ],
     "strategy": "v1.7.122 选串关原则：先有单场，才有组合。① 单场资格用统一绝对标准（不因档位变化）——数据支撑：历史同方向实证命中率经贝叶斯收缩后的超额 ≥0pt 且样本 ≥20 场（样本不足不编造优势）；合理：赔率 1.60~3.20（拒绝低赔蚊子肉与高赔冷门）、非平局；最有把握：按后验命中率降序，后验已含市场先验+历史实证，不是赔率的单调变换（杜绝「看到低赔就无脑选」）。② 串关 = 合格单场序列的前缀：稳健=前2、均衡=前3、精锐=前4，严格嵌套、总赔随腿数单调递增；不再定腿数凑组合、不再按档位放宽门槛。③ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。④ 推荐资格仍为硬条件：真实 EV 达标且全组无负超额腿，否则一律标「观望」。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿「为什么够格、排第几有把握」可逐条核对",
     "parlay2": {
@@ -5018,256 +5214,411 @@
      "tierDesc": "2串1 · 稳胆哲学：由今日第 1~2 有把握的合格单场组成（历史实证跑赢定价、样本≥20场、赔率≥1.60 拒绝蚊子肉）",
      "legs": [
       {
-       "num": "周五003",
-       "league": "欧国联",
-       "home": "保加利亚",
-       "away": "冰岛",
-       "kickoff": "2026-11-14 03:45",
+       "num": "周六001",
+       "league": "日乙",
+       "home": "湘南海洋",
+       "away": "横滨FC",
+       "kickoff": "2026-11-14 13:00",
        "play": "胜平负",
        "playKey": "spf",
        "dir": "a",
        "label": "客胜",
-       "odds": 1.72,
-       "confidence": 67.3,
-       "stableIndex": 62.5,
-       "score": 115.8,
+       "odds": 1.8,
+       "confidence": 69.7,
+       "stableIndex": 62.1,
+       "score": 125.4,
        "reasons": [
-        "市场概率51%",
-        "反指0★(推主胜)"
+        "市场概率49%",
+        "正路3★",
+        "被低估49%",
+        "客队状态50%"
        ],
-       "techCount": 2,
-       "pTrue": 47.02,
-       "sameOddsHit": 57.1,
-       "sameOddsN": 70,
+       "techCount": 3,
+       "pTrue": 53.54,
+       "sameOddsHit": 58.7,
+       "sameOddsN": 63,
        "sameOddsScope": "同赔同方向",
-       "fiveDim": 55.9,
-       "postProb": 54.5,
-       "edge": 3.0,
-       "empHit": 57.1,
-       "empN": 70,
-       "canon": 0.633,
+       "fiveDim": 57.4,
+       "postProb": 54.1,
+       "edge": 4.9,
+       "empHit": 58.7,
+       "empN": 63,
+       "canon": 0.541,
        "gripRank": 1,
-       "batchDate": "2026-11-13",
+       "batchDate": "2026-11-14",
        "batchLabel": "周五"
       },
       {
-       "num": "周五005",
+       "num": "周五006",
        "league": "欧国联",
-       "home": "塞尔维亚",
-       "away": "德国",
+       "home": "卢森堡",
+       "away": "爱沙尼亚",
        "kickoff": "2026-11-14 03:45",
-       "play": "让球+2",
-       "playKey": "hhad",
-       "dir": "a",
-       "label": "让负",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 71.2,
-       "score": 145.2,
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 2.44,
+       "confidence": 61.4,
+       "stableIndex": 42.7,
+       "score": 134.2,
        "reasons": [
-        "让球概率33%",
-        "盘口+2",
-        "与核心方向一致"
+        "市场概率36%",
+        "泊松验证30%",
+        "被低估36%",
+        "主队状态100%"
        ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 45.1,
-       "sameOddsN": 417,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 37.2,
-       "postProb": 43.6,
-       "edge": 10.1,
-       "empHit": 45.1,
-       "empN": 417,
-       "canon": 0.486,
+       "techCount": 3,
+       "pTrue": 36.0,
+       "sameOddsHit": 41.3,
+       "sameOddsN": 63,
+       "sameOddsScope": "同赔同方向",
+       "fiveDim": 41.8,
+       "postProb": 38.9,
+       "edge": 2.6,
+       "empHit": 41.3,
+       "empN": 63,
+       "canon": 0.389,
        "gripRank": 2,
-       "batchDate": "2026-11-13",
+       "batchDate": "2026-11-14",
        "batchLabel": "周五"
       }
      ],
-     "totalOdds": 4.54,
+     "totalOdds": 4.39,
      "oddsGate": 0.01,
-     "avgConfidence": 61.1,
-     "minOdds": 1.72,
-     "maxOdds": 2.64,
+     "avgConfidence": 65.5,
+     "minOdds": 1.8,
+     "maxOdds": 2.44,
      "playTypes": [
-      "让球+2",
       "胜平负"
      ],
-     "isMixed": true,
-     "jointProb": 16.4,
-     "realHit": 23.8,
-     "ev": -25.6,
-     "realEv": 7.9,
-     "beHit": 22.0,
-     "suggestStake": 0.6,
+     "isMixed": false,
+     "jointProb": 18.7,
+     "realHit": 21.0,
+     "ev": -17.8,
+     "realEv": -7.6,
+     "beHit": 22.8,
+     "suggestStake": 0.0,
      "rake": 21.5,
-     "evNote": "达标：历史同信心档实证命中率 24%，贴近盈亏平衡线（需 22%），可小注参与",
+     "evNote": "轻度负期望：历史同信心档实证命中率 21%，低于平衡线（需 23%），建议观望",
      "negEdgeLegs": 0,
-     "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-     "recommended": true,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五",
-     "locked": true,
-     "savedAt": "2026-11-13 04:08:59"
+     "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 63 场）",
+     "recommended": false,
+     "batchDate": "2026-11-14",
+     "batchLabel": "周五"
     },
-    "parlay3": {
-     "type": "3串1",
-     "tier": "均衡",
-     "tierDesc": "3串1 · 递进哲学：稳健 2 场 + 今日第 3 有把握的合格单场，严格包含稳健档全部腿",
+    "parlay3": null,
+    "parlay4": null,
+    "legNote": "串关抽水按场数放大：单场抽水11.4%，2串1约21.6%、3串1约30.6%、4串1约38.5%——串得越多，抽水越狠",
+    "batchKey": "2026-11-14",
+    "batchDate": "2026-11-14",
+    "batchLabel": "周五",
+    "isToday": false,
+    "matchCount": 13,
+    "tierCount": 1
+   },
+   {
+    "generatedAt": "2026-11-13 20:55:40",
+    "candidateCount": 8,
+    "qualifiedCount": 2,
+    "tierNotes": [
+     "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+     "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+    ],
+    "candidatePool": [
+     {
+      "num": "周六010",
+      "home": "阿尔梅勒",
+      "away": "海尔蒙特",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 1.31,
+      "confidence": 78.4,
+      "sameOddsHit": 70.9,
+      "sameOddsN": 127,
+      "edge": 2.2,
+      "postProb": 69.9,
+      "empN": 127,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周日002",
+      "home": "鹿岛鹿角",
+      "away": "横滨水手",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 1.68,
+      "confidence": 69.6,
+      "sameOddsHit": 54.4,
+      "sameOddsN": 136,
+      "edge": 1.2,
+      "postProb": 53.9,
+      "empN": 136,
+      "qualified": true,
+      "gripRank": 1,
+      "excludeReasons": [],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周日003",
+      "home": "大阪樱花",
+      "away": "浦和红钻",
+      "play": "胜平负",
+      "label": "客胜",
+      "odds": 2.25,
+      "confidence": 61.9,
+      "sameOddsHit": 40.0,
+      "sameOddsN": 80,
+      "edge": 0.4,
+      "postProb": 39.7,
+      "empN": 80,
+      "qualified": true,
+      "gripRank": 2,
+      "excludeReasons": [],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周日001",
+      "home": "町田泽维",
+      "away": "神户胜利",
+      "play": "胜平负",
+      "label": "主胜",
+      "odds": 2.32,
+      "confidence": 60.9,
+      "sameOddsHit": 37.8,
+      "sameOddsN": 82,
+      "edge": -0.2,
+      "postProb": 38.0,
+      "empN": 82,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "实证未跑赢定价"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周日005",
+      "home": "马斯特里",
+      "away": "维迪斯",
+      "play": "胜平负",
+      "label": "平局",
+      "odds": 3.45,
+      "confidence": 53.2,
+      "sameOddsHit": 30.0,
+      "sameOddsN": 220,
+      "edge": 3.4,
+      "postProb": 29.1,
+      "empN": 220,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率",
+       "平局"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周六009",
+      "home": "瓦尔韦克",
+      "away": "登博思",
+      "play": "胜平负",
+      "label": "客胜",
+      "odds": 3.4,
+      "confidence": 55.2,
+      "sameOddsHit": 29.3,
+      "sameOddsN": 58,
+      "edge": 1.6,
+      "postProb": 27.7,
+      "empN": 58,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周日004",
+      "home": "柏太阳神",
+      "away": "川崎前锋",
+      "play": "胜平负",
+      "label": "客胜",
+      "odds": 2.9,
+      "confidence": 54.1,
+      "sameOddsHit": 21.2,
+      "sameOddsN": 66,
+      "edge": -4.9,
+      "postProb": 25.7,
+      "empN": 66,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "实证未跑赢定价",
+       "蚊子肉/冷门赔率"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     },
+     {
+      "num": "周六008",
+      "home": "罗达JC",
+      "away": "福伦丹",
+      "play": "胜平负",
+      "label": "平局",
+      "odds": 3.7,
+      "confidence": 52.0,
+      "sameOddsHit": 19.3,
+      "sameOddsN": 176,
+      "edge": -3.5,
+      "postProb": 20.5,
+      "empN": 176,
+      "qualified": false,
+      "gripRank": null,
+      "excludeReasons": [
+       "实证未跑赢定价",
+       "蚊子肉/冷门赔率",
+       "平局"
+      ],
+      "batchDate": "2026-11-15",
+      "batchLabel": "周六"
+     }
+    ],
+    "poolNotes": [
+     "单场资格：8 条候选中 2 条合格（实证超额≥0pt、样本≥20场、赔率1.6~2.8、非平局），按后验命中率排序后取前缀成档",
+     "排除明细（各类可重叠）：负超额（实证跑不赢定价） 3 条、蚊子肉/冷门赔率 5 条、平局（天然难测） 2 条",
+     "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+     "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+    ],
+    "strategy": "v1.7.122 选串关原则：先有单场，才有组合。① 单场资格用统一绝对标准（不因档位变化）——数据支撑：历史同方向实证命中率经贝叶斯收缩后的超额 ≥0pt 且样本 ≥20 场（样本不足不编造优势）；合理：赔率 1.60~3.20（拒绝低赔蚊子肉与高赔冷门）、非平局；最有把握：按后验命中率降序，后验已含市场先验+历史实证，不是赔率的单调变换（杜绝「看到低赔就无脑选」）。② 串关 = 合格单场序列的前缀：稳健=前2、均衡=前3、精锐=前4，严格嵌套、总赔随腿数单调递增；不再定腿数凑组合、不再按档位放宽门槛。③ 合格单场不足 N 条，第 N 档如实留空并写明原因，绝不降门槛/换腿硬凑。④ 推荐资格仍为硬条件：真实 EV 达标且全组无负超额腿，否则一律标「观望」。诚实口径：竞彩单场抽水 11.4%、串关按腿数复合放大，长期是负和游戏——不承诺盈利，只承诺每条腿「为什么够格、排第几有把握」可逐条核对",
+    "parlay2": {
+     "type": "2串1",
+     "tier": "稳健",
+     "tierDesc": "2串1 · 稳胆哲学：由今日第 1~2 有把握的合格单场组成（历史实证跑赢定价、样本≥20场、赔率≥1.60 拒绝蚊子肉）",
      "legs": [
       {
-       "num": "周五003",
-       "league": "欧国联",
-       "home": "保加利亚",
-       "away": "冰岛",
-       "kickoff": "2026-11-14 03:45",
+       "num": "周日002",
+       "league": "日联赛杯",
+       "home": "鹿岛鹿角",
+       "away": "横滨水手",
+       "kickoff": "2026-11-15 14:00",
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 1.68,
+       "confidence": 69.6,
+       "stableIndex": 48.1,
+       "score": 92.4,
+       "reasons": [
+        "市场概率52%",
+        "被低估52%",
+        "主队状态67%"
+       ],
+       "techCount": 2,
+       "pTrue": 52.2,
+       "sameOddsHit": 54.4,
+       "sameOddsN": 136,
+       "sameOddsScope": "同赔同方向",
+       "fiveDim": 48.5,
+       "postProb": 53.9,
+       "edge": 1.2,
+       "empHit": 54.4,
+       "empN": 136,
+       "canon": 0.539,
+       "gripRank": 1,
+       "batchDate": "2026-11-15",
+       "batchLabel": "周六"
+      },
+      {
+       "num": "周日003",
+       "league": "日联赛杯",
+       "home": "大阪樱花",
+       "away": "浦和红钻",
+       "kickoff": "2026-11-15 14:00",
        "play": "胜平负",
        "playKey": "spf",
        "dir": "a",
        "label": "客胜",
-       "odds": 1.72,
-       "confidence": 67.3,
-       "stableIndex": 62.5,
-       "score": 115.8,
+       "odds": 2.25,
+       "confidence": 61.9,
+       "stableIndex": 39.2,
+       "score": 123.8,
        "reasons": [
-        "市场概率51%",
-        "反指0★(推主胜)"
+        "市场概率39%",
+        "泊松参考30%",
+        "被低估39%",
+        "客队状态67%"
        ],
        "techCount": 2,
-       "pTrue": 47.02,
-       "sameOddsHit": 57.1,
-       "sameOddsN": 70,
+       "pTrue": 39.0,
+       "sameOddsHit": 40.0,
+       "sameOddsN": 80,
        "sameOddsScope": "同赔同方向",
-       "fiveDim": 55.9,
-       "postProb": 54.5,
-       "edge": 3.0,
-       "empHit": 57.1,
-       "empN": 70,
-       "canon": 0.633,
-       "gripRank": 1,
-       "batchDate": "2026-11-13",
-       "batchLabel": "周五"
-      },
-      {
-       "num": "周五005",
-       "league": "欧国联",
-       "home": "塞尔维亚",
-       "away": "德国",
-       "kickoff": "2026-11-14 03:45",
-       "play": "让球+2",
-       "playKey": "hhad",
-       "dir": "a",
-       "label": "让负",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 71.2,
-       "score": 145.2,
-       "reasons": [
-        "让球概率33%",
-        "盘口+2",
-        "与核心方向一致"
-       ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 45.1,
-       "sameOddsN": 417,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 37.2,
-       "postProb": 43.6,
-       "edge": 10.1,
-       "empHit": 45.1,
-       "empN": 417,
-       "canon": 0.486,
+       "fiveDim": 34.2,
+       "postProb": 39.7,
+       "edge": 0.4,
+       "empHit": 40.0,
+       "empN": 80,
+       "canon": 0.397,
        "gripRank": 2,
-       "batchDate": "2026-11-13",
-       "batchLabel": "周五"
-      },
-      {
-       "num": "周五004",
-       "league": "欧国联",
-       "home": "苏格兰",
-       "away": "北马其顿",
-       "kickoff": "2026-11-14 03:45",
-       "play": "让球-2",
-       "playKey": "hhad",
-       "dir": "h",
-       "label": "让胜",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 58.0,
-       "score": 145.2,
-       "reasons": [
-        "让球概率33%",
-        "盘口-2",
-        "与核心方向一致"
-       ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 44.3,
-       "sameOddsN": 287,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 24.0,
-       "postProb": 42.4,
-       "edge": 8.9,
-       "empHit": 44.3,
-       "empN": 287,
-       "canon": 0.423,
-       "gripRank": 3,
-       "batchDate": "2026-11-13",
-       "batchLabel": "周五"
+       "batchDate": "2026-11-15",
+       "batchLabel": "周六"
       }
      ],
-     "totalOdds": 11.99,
-     "oddsGate": 4.55,
-     "avgConfidence": 59.1,
-     "minOdds": 1.72,
-     "maxOdds": 2.64,
+     "totalOdds": 3.78,
+     "oddsGate": 0.01,
+     "avgConfidence": 65.8,
+     "minOdds": 1.68,
+     "maxOdds": 2.25,
      "playTypes": [
-      "让球+2",
-      "胜平负",
-      "让球-2"
+      "胜平负"
      ],
-     "isMixed": true,
-     "jointProb": 5.5,
-     "realHit": 10.1,
-     "ev": -34.1,
-     "realEv": 20.8,
-     "beHit": 8.3,
-     "suggestStake": 0.5,
-     "rake": 30.4,
-     "evNote": "正期望：历史同信心档实证命中率 10%，高于盈亏平衡线（需 8%），长期为正回报，值得下手",
+     "isMixed": false,
+     "jointProb": 20.5,
+     "realHit": 21.4,
+     "ev": -22.4,
+     "realEv": -19.1,
+     "beHit": 26.5,
+     "suggestStake": 0.0,
+     "rake": 21.5,
+     "evNote": "明显负期望：历史同信心档实证命中率仅 21%（需 26%），不建议下注",
      "negEdgeLegs": 0,
-     "edgeNote": "证据核查：3/3 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-     "recommended": true,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五",
-     "locked": true,
-     "savedAt": "2026-11-13 04:08:59"
+     "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 80 场）",
+     "recommended": false,
+     "batchDate": "2026-11-15",
+     "batchLabel": "周六"
     },
+    "parlay3": null,
     "parlay4": null,
     "legNote": "串关抽水按场数放大：单场抽水11.4%，2串1约21.6%、3串1约30.6%、4串1约38.5%——串得越多，抽水越狠",
-    "batchKey": "2026-11-13",
-    "batchDate": "2026-11-13",
-    "batchLabel": "周五",
-    "isToday": true,
+    "batchKey": "2026-11-15",
+    "batchDate": "2026-11-15",
+    "batchLabel": "周六",
+    "isToday": false,
     "matchCount": 8,
-    "tierCount": 2
+    "tierCount": 1
    }
   ],
-  "activeBatch": "2026-11-13",
-  "batchDate": "2026-11-13",
-  "batchLabel": "周五",
-  "isToday": true,
-  "batchNote": "本批次为竞彩当天开出的赛程（周五 2026-11-13），组合内所有场次同批次；其它在售批次可用上方切换查看，各自独立成档。",
-  "matchCount": 8,
-  "tierCount": 2
+  "activeBatch": "2026-11-14",
+  "batchNote": "竞彩当天批次（2026-11-13）已无在售未开赛场次或暂无达标组合，当前展示最近在售批次（周五 2026-11-14）；各批次组合完全独立，绝不跨批次串关。"
  },
  "parlayHistory": {
-  "total": 87,
+  "total": 86,
   "hit": 17,
   "miss": 68,
-  "pending": 2,
+  "pending": 1,
   "hitRate": 20.0,
   "recent7Rate": 28.6,
   "records": [
@@ -17782,433 +18133,440 @@
    {
     "date": "2026-11-13",
     "type": "稳健2串1",
-    "totalOdds": 4.54,
-    "avgConfidence": 61.1,
+    "totalOdds": 4.39,
+    "avgConfidence": 65.5,
     "legs": [
      {
-      "num": "周五003",
-      "league": "欧国联",
-      "home": "保加利亚",
-      "away": "冰岛",
-      "kickoff": "2026-11-14 03:45",
+      "num": "周六001",
+      "league": "日乙",
+      "home": "湘南海洋",
+      "away": "横滨FC",
+      "kickoff": "2026-11-14 13:00",
       "play": "胜平负",
       "playKey": "spf",
       "dir": "a",
       "label": "客胜",
-      "odds": 1.72,
-      "confidence": 67.3,
-      "stableIndex": 62.5,
-      "score": 115.8,
+      "odds": 1.8,
+      "confidence": 69.7,
+      "stableIndex": 62.1,
+      "score": 125.4,
       "reasons": [
-       "市场概率51%",
-       "反指0★(推主胜)"
+       "市场概率49%",
+       "正路3★",
+       "被低估49%",
+       "客队状态50%"
       ],
-      "techCount": 2,
-      "pTrue": 47.02,
-      "sameOddsHit": 57.1,
-      "sameOddsN": 70,
+      "techCount": 3,
+      "pTrue": 53.54,
+      "sameOddsHit": 58.7,
+      "sameOddsN": 63,
       "sameOddsScope": "同赔同方向",
-      "fiveDim": 55.9,
-      "postProb": 54.5,
-      "edge": 3.0,
-      "empHit": 57.1,
-      "empN": 70,
-      "canon": 0.633,
+      "fiveDim": 57.4,
+      "postProb": 54.1,
+      "edge": 4.9,
+      "empHit": 58.7,
+      "empN": 63,
+      "canon": 0.541,
       "gripRank": 1,
-      "batchDate": "2026-11-13",
+      "batchDate": "2026-11-14",
       "batchLabel": "周五"
      },
      {
-      "num": "周五005",
+      "num": "周五006",
       "league": "欧国联",
-      "home": "塞尔维亚",
-      "away": "德国",
+      "home": "卢森堡",
+      "away": "爱沙尼亚",
       "kickoff": "2026-11-14 03:45",
-      "play": "让球+2",
-      "playKey": "hhad",
-      "dir": "a",
-      "label": "让负",
-      "odds": 2.64,
-      "confidence": 55,
-      "stableIndex": 71.2,
-      "score": 145.2,
+      "play": "胜平负",
+      "playKey": "spf",
+      "dir": "h",
+      "label": "主胜",
+      "odds": 2.44,
+      "confidence": 61.4,
+      "stableIndex": 42.7,
+      "score": 134.2,
       "reasons": [
-       "让球概率33%",
-       "盘口+2",
-       "与核心方向一致"
+       "市场概率36%",
+       "泊松验证30%",
+       "被低估36%",
+       "主队状态100%"
       ],
-      "techCount": 1,
-      "pTrue": null,
-      "sameOddsHit": 45.1,
-      "sameOddsN": 417,
-      "sameOddsScope": "同方向跨盘口",
-      "fiveDim": 37.2,
-      "postProb": 43.6,
-      "edge": 10.1,
-      "empHit": 45.1,
-      "empN": 417,
-      "canon": 0.486,
+      "techCount": 3,
+      "pTrue": 36.0,
+      "sameOddsHit": 41.3,
+      "sameOddsN": 63,
+      "sameOddsScope": "同赔同方向",
+      "fiveDim": 41.8,
+      "postProb": 38.9,
+      "edge": 2.6,
+      "empHit": 41.3,
+      "empN": 63,
+      "canon": 0.389,
       "gripRank": 2,
-      "batchDate": "2026-11-13",
+      "batchDate": "2026-11-14",
       "batchLabel": "周五"
      }
     ],
-    "recommended": true,
-    "ev": -25.6,
-    "realEv": 7.9,
+    "recommended": false,
+    "ev": -17.8,
+    "realEv": -7.6,
     "result": "pending",
-    "savedAt": "2026-11-13 04:08:59",
-    "engineVer": "v1.7.133",
+    "savedAt": "2026-11-13 20:55:40",
+    "engineVer": "v1.7.136",
     "snapshot": {
      "type": "2串1",
      "tier": "稳健",
      "tierDesc": "2串1 · 稳胆哲学：由今日第 1~2 有把握的合格单场组成（历史实证跑赢定价、样本≥20场、赔率≥1.60 拒绝蚊子肉）",
      "legs": [
       {
-       "num": "周五003",
-       "league": "欧国联",
-       "home": "保加利亚",
-       "away": "冰岛",
-       "kickoff": "2026-11-14 03:45",
+       "num": "周六001",
+       "league": "日乙",
+       "home": "湘南海洋",
+       "away": "横滨FC",
+       "kickoff": "2026-11-14 13:00",
        "play": "胜平负",
        "playKey": "spf",
        "dir": "a",
        "label": "客胜",
-       "odds": 1.72,
-       "confidence": 67.3,
-       "stableIndex": 62.5,
-       "score": 115.8,
+       "odds": 1.8,
+       "confidence": 69.7,
+       "stableIndex": 62.1,
+       "score": 125.4,
        "reasons": [
-        "市场概率51%",
-        "反指0★(推主胜)"
+        "市场概率49%",
+        "正路3★",
+        "被低估49%",
+        "客队状态50%"
        ],
-       "techCount": 2,
-       "pTrue": 47.02,
-       "sameOddsHit": 57.1,
-       "sameOddsN": 70,
+       "techCount": 3,
+       "pTrue": 53.54,
+       "sameOddsHit": 58.7,
+       "sameOddsN": 63,
        "sameOddsScope": "同赔同方向",
-       "fiveDim": 55.9,
-       "postProb": 54.5,
-       "edge": 3.0,
-       "empHit": 57.1,
-       "empN": 70,
-       "canon": 0.633,
+       "fiveDim": 57.4,
+       "postProb": 54.1,
+       "edge": 4.9,
+       "empHit": 58.7,
+       "empN": 63,
+       "canon": 0.541,
        "gripRank": 1,
-       "batchDate": "2026-11-13",
+       "batchDate": "2026-11-14",
        "batchLabel": "周五"
       },
       {
-       "num": "周五005",
+       "num": "周五006",
        "league": "欧国联",
-       "home": "塞尔维亚",
-       "away": "德国",
+       "home": "卢森堡",
+       "away": "爱沙尼亚",
        "kickoff": "2026-11-14 03:45",
-       "play": "让球+2",
-       "playKey": "hhad",
-       "dir": "a",
-       "label": "让负",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 71.2,
-       "score": 145.2,
+       "play": "胜平负",
+       "playKey": "spf",
+       "dir": "h",
+       "label": "主胜",
+       "odds": 2.44,
+       "confidence": 61.4,
+       "stableIndex": 42.7,
+       "score": 134.2,
        "reasons": [
-        "让球概率33%",
-        "盘口+2",
-        "与核心方向一致"
+        "市场概率36%",
+        "泊松验证30%",
+        "被低估36%",
+        "主队状态100%"
        ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 45.1,
-       "sameOddsN": 417,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 37.2,
-       "postProb": 43.6,
-       "edge": 10.1,
-       "empHit": 45.1,
-       "empN": 417,
-       "canon": 0.486,
+       "techCount": 3,
+       "pTrue": 36.0,
+       "sameOddsHit": 41.3,
+       "sameOddsN": 63,
+       "sameOddsScope": "同赔同方向",
+       "fiveDim": 41.8,
+       "postProb": 38.9,
+       "edge": 2.6,
+       "empHit": 41.3,
+       "empN": 63,
+       "canon": 0.389,
        "gripRank": 2,
-       "batchDate": "2026-11-13",
+       "batchDate": "2026-11-14",
        "batchLabel": "周五"
       }
      ],
-     "totalOdds": 4.54,
+     "totalOdds": 4.39,
      "oddsGate": 0.01,
-     "avgConfidence": 61.1,
-     "minOdds": 1.72,
-     "maxOdds": 2.64,
+     "avgConfidence": 65.5,
+     "minOdds": 1.8,
+     "maxOdds": 2.44,
      "playTypes": [
-      "让球+2",
       "胜平负"
      ],
-     "isMixed": true,
-     "jointProb": 16.4,
-     "realHit": 23.8,
-     "ev": -25.6,
-     "realEv": 7.9,
-     "beHit": 22.0,
-     "suggestStake": 0.6,
+     "isMixed": false,
+     "jointProb": 18.7,
+     "realHit": 21.0,
+     "ev": -17.8,
+     "realEv": -7.6,
+     "beHit": 22.8,
+     "suggestStake": 0.0,
      "rake": 21.5,
-     "evNote": "达标：历史同信心档实证命中率 24%，贴近盈亏平衡线（需 22%），可小注参与",
+     "evNote": "轻度负期望：历史同信心档实证命中率 21%，低于平衡线（需 23%），建议观望",
      "negEdgeLegs": 0,
-     "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-     "recommended": true,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五"
-    }
-   },
-   {
-    "date": "2026-11-13",
-    "type": "均衡3串1",
-    "totalOdds": 11.99,
-    "avgConfidence": 59.1,
-    "legs": [
-     {
-      "num": "周五003",
-      "league": "欧国联",
-      "home": "保加利亚",
-      "away": "冰岛",
-      "kickoff": "2026-11-14 03:45",
-      "play": "胜平负",
-      "playKey": "spf",
-      "dir": "a",
-      "label": "客胜",
-      "odds": 1.72,
-      "confidence": 67.3,
-      "stableIndex": 62.5,
-      "score": 115.8,
-      "reasons": [
-       "市场概率51%",
-       "反指0★(推主胜)"
-      ],
-      "techCount": 2,
-      "pTrue": 47.02,
-      "sameOddsHit": 57.1,
-      "sameOddsN": 70,
-      "sameOddsScope": "同赔同方向",
-      "fiveDim": 55.9,
-      "postProb": 54.5,
-      "edge": 3.0,
-      "empHit": 57.1,
-      "empN": 70,
-      "canon": 0.633,
-      "gripRank": 1,
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     },
-     {
-      "num": "周五005",
-      "league": "欧国联",
-      "home": "塞尔维亚",
-      "away": "德国",
-      "kickoff": "2026-11-14 03:45",
-      "play": "让球+2",
-      "playKey": "hhad",
-      "dir": "a",
-      "label": "让负",
-      "odds": 2.64,
-      "confidence": 55,
-      "stableIndex": 71.2,
-      "score": 145.2,
-      "reasons": [
-       "让球概率33%",
-       "盘口+2",
-       "与核心方向一致"
-      ],
-      "techCount": 1,
-      "pTrue": null,
-      "sameOddsHit": 45.1,
-      "sameOddsN": 417,
-      "sameOddsScope": "同方向跨盘口",
-      "fiveDim": 37.2,
-      "postProb": 43.6,
-      "edge": 10.1,
-      "empHit": 45.1,
-      "empN": 417,
-      "canon": 0.486,
-      "gripRank": 2,
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     },
-     {
-      "num": "周五004",
-      "league": "欧国联",
-      "home": "苏格兰",
-      "away": "北马其顿",
-      "kickoff": "2026-11-14 03:45",
-      "play": "让球-2",
-      "playKey": "hhad",
-      "dir": "h",
-      "label": "让胜",
-      "odds": 2.64,
-      "confidence": 55,
-      "stableIndex": 58.0,
-      "score": 145.2,
-      "reasons": [
-       "让球概率33%",
-       "盘口-2",
-       "与核心方向一致"
-      ],
-      "techCount": 1,
-      "pTrue": null,
-      "sameOddsHit": 44.3,
-      "sameOddsN": 287,
-      "sameOddsScope": "同方向跨盘口",
-      "fiveDim": 24.0,
-      "postProb": 42.4,
-      "edge": 8.9,
-      "empHit": 44.3,
-      "empN": 287,
-      "canon": 0.423,
-      "gripRank": 3,
-      "batchDate": "2026-11-13",
-      "batchLabel": "周五"
-     }
-    ],
-    "recommended": true,
-    "ev": -34.1,
-    "realEv": 20.8,
-    "result": "pending",
-    "savedAt": "2026-11-13 04:08:59",
-    "engineVer": "v1.7.133",
-    "snapshot": {
-     "type": "3串1",
-     "tier": "均衡",
-     "tierDesc": "3串1 · 递进哲学：稳健 2 场 + 今日第 3 有把握的合格单场，严格包含稳健档全部腿",
-     "legs": [
+     "edgeNote": "证据核查：2/2 条腿历史实证命中率均不差于市场定价（最短样本 63 场）",
+     "recommended": false,
+     "batchDate": "2026-11-14",
+     "batchLabel": "周五",
+     "candidateCount": 11,
+     "qualifiedCount": 2,
+     "candidatePool": [
+      {
+       "num": "周五007",
+       "home": "斯洛伐克",
+       "away": "法罗群岛",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 1.2,
+       "confidence": 81.8,
+       "sameOddsHit": 77.4,
+       "sameOddsN": 84,
+       "edge": 2.1,
+       "postProb": 75.9,
+       "empN": 84,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五011",
+       "home": "哥伦比亚",
+       "away": "智利",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 1.23,
+       "confidence": 81.1,
+       "sameOddsHit": 76.2,
+       "sameOddsN": 101,
+       "edge": 2.6,
+       "postProb": 74.6,
+       "empN": 101,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五009",
+       "home": "荷兰",
+       "away": "希腊",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 1.36,
+       "confidence": 78.1,
+       "sameOddsHit": 70.9,
+       "sameOddsN": 141,
+       "edge": 4.0,
+       "postProb": 69.2,
+       "empN": 141,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五010",
+       "home": "阿根廷",
+       "away": "乌拉圭",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 1.37,
+       "confidence": 77.7,
+       "sameOddsHit": 70.1,
+       "sameOddsN": 147,
+       "edge": 3.9,
+       "postProb": 68.5,
+       "empN": 147,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周六002",
+       "home": "大宫松鼠RB",
+       "away": "山形山神",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 1.51,
+       "confidence": 74.6,
+       "sameOddsHit": 64.4,
+       "sameOddsN": 160,
+       "edge": 4.2,
+       "postProb": 62.8,
+       "empN": 160,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周六001",
+       "home": "湘南海洋",
+       "away": "横滨FC",
+       "play": "胜平负",
+       "label": "客胜",
+       "odds": 1.8,
+       "confidence": 69.7,
+       "sameOddsHit": 58.7,
+       "sameOddsN": 63,
+       "edge": 4.9,
+       "postProb": 54.1,
+       "empN": 63,
+       "qualified": true,
+       "gripRank": 1,
+       "excludeReasons": [],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五006",
+       "home": "卢森堡",
+       "away": "爱沙尼亚",
+       "play": "胜平负",
+       "label": "主胜",
+       "odds": 2.44,
+       "confidence": 61.4,
+       "sameOddsHit": 41.3,
+       "sameOddsN": 63,
+       "edge": 2.6,
+       "postProb": 38.9,
+       "empN": 63,
+       "qualified": true,
+       "gripRank": 2,
+       "excludeReasons": [],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五002",
+       "home": "摩尔多瓦",
+       "away": "哈萨克",
+       "play": "胜平负",
+       "label": "平局",
+       "odds": 2.88,
+       "confidence": 56.6,
+       "sameOddsHit": 40.4,
+       "sameOddsN": 52,
+       "edge": 4.5,
+       "postProb": 35.2,
+       "empN": 52,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "蚊子肉/冷门赔率",
+        "平局"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周五008",
+       "home": "斯洛文尼",
+       "away": "瑞士",
+       "play": "胜平负",
+       "label": "平局",
+       "odds": 3.62,
+       "confidence": 52.0,
+       "sameOddsHit": 23.7,
+       "sameOddsN": 186,
+       "edge": -0.6,
+       "postProb": 23.9,
+       "empN": 186,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "实证未跑赢定价",
+        "蚊子肉/冷门赔率",
+        "平局"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
       {
        "num": "周五003",
-       "league": "欧国联",
        "home": "保加利亚",
        "away": "冰岛",
-       "kickoff": "2026-11-14 03:45",
        "play": "胜平负",
-       "playKey": "spf",
-       "dir": "a",
+       "label": "平局",
+       "odds": 3.85,
+       "confidence": 52.0,
+       "sameOddsHit": 18.2,
+       "sameOddsN": 154,
+       "edge": -3.5,
+       "postProb": 19.5,
+       "empN": 154,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "实证未跑赢定价",
+        "蚊子肉/冷门赔率",
+        "平局"
+       ],
+       "batchDate": "2026-11-14",
+       "batchLabel": "周五"
+      },
+      {
+       "num": "周六005",
+       "home": "布雷达",
+       "away": "埃门",
+       "play": "胜平负",
        "label": "客胜",
-       "odds": 1.72,
-       "confidence": 67.3,
-       "stableIndex": 62.5,
-       "score": 115.8,
-       "reasons": [
-        "市场概率51%",
-        "反指0★(推主胜)"
+       "odds": 5.0,
+       "confidence": 52.0,
+       "sameOddsHit": 5.0,
+       "sameOddsN": 20,
+       "edge": -3.2,
+       "postProb": 14.5,
+       "empN": 20,
+       "qualified": false,
+       "gripRank": null,
+       "excludeReasons": [
+        "实证未跑赢定价",
+        "蚊子肉/冷门赔率"
        ],
-       "techCount": 2,
-       "pTrue": 47.02,
-       "sameOddsHit": 57.1,
-       "sameOddsN": 70,
-       "sameOddsScope": "同赔同方向",
-       "fiveDim": 55.9,
-       "postProb": 54.5,
-       "edge": 3.0,
-       "empHit": 57.1,
-       "empN": 70,
-       "canon": 0.633,
-       "gripRank": 1,
-       "batchDate": "2026-11-13",
-       "batchLabel": "周五"
-      },
-      {
-       "num": "周五005",
-       "league": "欧国联",
-       "home": "塞尔维亚",
-       "away": "德国",
-       "kickoff": "2026-11-14 03:45",
-       "play": "让球+2",
-       "playKey": "hhad",
-       "dir": "a",
-       "label": "让负",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 71.2,
-       "score": 145.2,
-       "reasons": [
-        "让球概率33%",
-        "盘口+2",
-        "与核心方向一致"
-       ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 45.1,
-       "sameOddsN": 417,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 37.2,
-       "postProb": 43.6,
-       "edge": 10.1,
-       "empHit": 45.1,
-       "empN": 417,
-       "canon": 0.486,
-       "gripRank": 2,
-       "batchDate": "2026-11-13",
-       "batchLabel": "周五"
-      },
-      {
-       "num": "周五004",
-       "league": "欧国联",
-       "home": "苏格兰",
-       "away": "北马其顿",
-       "kickoff": "2026-11-14 03:45",
-       "play": "让球-2",
-       "playKey": "hhad",
-       "dir": "h",
-       "label": "让胜",
-       "odds": 2.64,
-       "confidence": 55,
-       "stableIndex": 58.0,
-       "score": 145.2,
-       "reasons": [
-        "让球概率33%",
-        "盘口-2",
-        "与核心方向一致"
-       ],
-       "techCount": 1,
-       "pTrue": null,
-       "sameOddsHit": 44.3,
-       "sameOddsN": 287,
-       "sameOddsScope": "同方向跨盘口",
-       "fiveDim": 24.0,
-       "postProb": 42.4,
-       "edge": 8.9,
-       "empHit": 44.3,
-       "empN": 287,
-       "canon": 0.423,
-       "gripRank": 3,
-       "batchDate": "2026-11-13",
+       "batchDate": "2026-11-14",
        "batchLabel": "周五"
       }
      ],
-     "totalOdds": 11.99,
-     "oddsGate": 4.55,
-     "avgConfidence": 59.1,
-     "minOdds": 1.72,
-     "maxOdds": 2.64,
-     "playTypes": [
-      "让球+2",
-      "胜平负",
-      "让球-2"
+     "poolNotes": [
+      "单场资格：11 条候选中 2 条合格（实证超额≥0pt、样本≥20场、赔率1.6~2.8、非平局），按后验命中率排序后取前缀成档",
+      "排除明细（各类可重叠）：负超额（实证跑不赢定价） 3 条、蚊子肉/冷门赔率 9 条、平局（天然难测） 3 条",
+      "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+      "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
      ],
-     "isMixed": true,
-     "jointProb": 5.5,
-     "realHit": 10.1,
-     "ev": -34.1,
-     "realEv": 20.8,
-     "beHit": 8.3,
-     "suggestStake": 0.5,
-     "rake": 30.4,
-     "evNote": "正期望：历史同信心档实证命中率 10%，高于盈亏平衡线（需 8%），长期为正回报，值得下手",
-     "negEdgeLegs": 0,
-     "edgeNote": "证据核查：3/3 条腿历史实证命中率均不差于市场定价（最短样本 70 场）",
-     "recommended": true,
-     "batchDate": "2026-11-13",
-     "batchLabel": "周五"
+     "tierNotes": [
+      "均衡3串1 留空：今日合格单场仅 2 场，不足 3 场；按「先有最有把握的单场才组合」不降门槛、不硬凑",
+      "精锐4串1 留空：今日合格单场仅 2 场，不足 4 场；按「先有最有把握的单场才组合」不降门槛、不硬凑"
+     ],
+     "matchCount": 13,
+     "generatedAt": "2026-11-13 20:55:40"
     }
    }
   ]
  },
  "strongWeak": {
-  "generatedAt": "2026-11-13 19:54:18",
-  "searchDate": "2026-11-13 19:54",
+  "generatedAt": "2026-11-13 20:55:40",
+  "searchDate": "2026-11-13 20:55",
   "count": 0,
   "matches": []
  },
@@ -19445,62 +19803,16 @@
   },
   "2026-11-13": {
    "date": "2026-11-13",
-   "generatedAt": "2026-11-13 19:54:18",
+   "generatedAt": "2026-11-13 20:55:40",
    "count": 0,
    "matches": []
   }
  },
  "halfFull": {
-  "generatedAt": "2026-11-13 19:54:18",
+  "generatedAt": "2026-11-13 20:55:40",
   "searchDate": "2026-11-13",
-  "count": 1,
-  "matches": [
-   {
-    "num": "周五001",
-    "home": "新加坡",
-    "away": "巴拉圭",
-    "league": "国际赛",
-    "kickoff": "2026-11-13 20:00",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 31.9,
-    "recommend2": "负负",
-    "recommend2Key": "aa",
-    "confidence2": 18.8,
-    "probDist": {
-     "胜胜": 31.9,
-     "负负": 18.8,
-     "平胜": 12.3,
-     "平平": 9.5,
-     "平负": 8.0,
-     "胜平": 7.9,
-     "负平": 4.8,
-     "胜负": 3.9,
-     "负胜": 2.9
-    },
-    "fullProb": {
-     "h": 43.3,
-     "d": 20.9,
-     "a": 35.8
-    },
-    "halfProb": {
-     "h": 43.7,
-     "d": 29.8,
-     "a": 26.5
-    },
-    "expGoals": {
-     "homeHalf": 0.95,
-     "awayHalf": 0.54,
-     "homeFull": 2.1,
-     "awayFull": 1.2
-    },
-    "reasons": [
-     "全场胜负接近（主43%/平21%/客36%）",
-     "半场平局概率30%，上半场可能胶着"
-    ],
-    "dataQuality": 100
-   }
-  ]
+  "count": 0,
+  "matches": []
  },
  "halfFullHistory": {
   "2026-10-09": {
@@ -30492,54 +30804,24 @@
   },
   "2026-11-13": {
    "date": "2026-11-13",
-   "generatedAt": "2026-11-13 19:54:18",
-   "count": 1,
-   "matches": [
-    {
-     "num": "周五001",
-     "home": "新加坡",
-     "away": "巴拉圭",
-     "league": "国际赛",
-     "kickoff": "2026-11-13 20:00",
-     "recommend": "胜胜",
-     "recommendKey": "hh",
-     "confidence": 31.9,
-     "recommend2": "负负",
-     "confidence2": 18.8,
-     "probDist": {
-      "胜胜": 31.9,
-      "负负": 18.8,
-      "平胜": 12.3,
-      "平平": 9.5,
-      "平负": 8.0,
-      "胜平": 7.9,
-      "负平": 4.8,
-      "胜负": 3.9,
-      "负胜": 2.9
-     },
-     "actualHalfFull": "?h",
-     "hit": null,
-     "fullScore": {
-      "home": 4,
-      "away": 1
-     }
-    }
-   ]
+   "generatedAt": "2026-11-13 20:55:40",
+   "count": 0,
+   "matches": []
   }
  },
  "goodRateStats": {
   "version": "v1.7.124",
-  "generatedAt": "2026-11-13 20:03:41",
+  "generatedAt": "2026-11-13 21:05:16",
   "scope": "竞彩足球 · 正路(good)判定 · 胜平负方向",
   "today": {
-   "batchDate": "2026-11-13",
+   "batchDate": "2026-11-14",
    "batchLabel": "周五",
    "batchPrefix": "周五",
-   "isToday": true,
-   "totalMatches": 1,
-   "goodCount": 0,
+   "isToday": false,
+   "totalMatches": 13,
+   "goodCount": 4,
    "settledCount": 0,
-   "pendingCount": 0,
+   "pendingCount": 4,
    "batchesAvailable": [
     {
      "date": "2026-11-13",
@@ -30557,7 +30839,80 @@
      "count": 8
     }
    ],
-   "picks": []
+   "picks": [
+    {
+     "id": "1504275",
+     "num": "周五010",
+     "league": "国际赛",
+     "home": "阿根廷",
+     "away": "乌拉圭",
+     "kickoff": "2026-11-14 07:00",
+     "dir": "h",
+     "dirName": "主胜",
+     "odds": 1.37,
+     "prob": 64.1,
+     "stars": 3,
+     "status": "-",
+     "settled": false,
+     "hit": null,
+     "score": null,
+     "note": "未开奖，不计入正确率"
+    },
+    {
+     "id": "1495237",
+     "num": "周五011",
+     "league": "国际赛",
+     "home": "哥伦比亚",
+     "away": "智利",
+     "kickoff": "2026-11-14 08:00",
+     "dir": "h",
+     "dirName": "主胜",
+     "odds": 1.23,
+     "prob": 71.4,
+     "stars": 3,
+     "status": "-",
+     "settled": false,
+     "hit": null,
+     "score": null,
+     "note": "未开奖，不计入正确率"
+    },
+    {
+     "id": "1419236",
+     "num": "周六001",
+     "league": "日乙",
+     "home": "湘南海洋",
+     "away": "横滨FC",
+     "kickoff": "2026-11-14 13:00",
+     "dir": "a",
+     "dirName": "客胜",
+     "odds": 1.8,
+     "prob": 48.7,
+     "stars": 3,
+     "status": "-",
+     "settled": false,
+     "hit": null,
+     "score": null,
+     "note": "未开奖，不计入正确率"
+    },
+    {
+     "id": "1419319",
+     "num": "周六002",
+     "league": "日乙",
+     "home": "大宫松鼠RB",
+     "away": "山形山神",
+     "kickoff": "2026-11-14 13:00",
+     "dir": "h",
+     "dirName": "主胜",
+     "odds": 1.51,
+     "prob": 58.2,
+     "stars": 3,
+     "status": "-",
+     "settled": false,
+     "hit": null,
+     "score": null,
+     "note": "未开奖，不计入正确率"
+    }
+   ]
   },
   "overall": {
    "n": 137,
@@ -32548,14 +32903,14 @@
    "盈亏平衡命中率 = 1/推荐方向赔率 的均值，含庄家抽水，是「按赔率下注不亏钱」必须跨过的线；它高于去水隐含概率。",
    "ROI = 每场 1 单位均注，命中收 (赔率−1)、未中亏 1；只用有完整赔率的 123 场计算。",
    "正确率高于「去水隐含」只说明方向判断略优于市场共识，不代表赚钱；能否盈利必须看是否跑赢「盈亏平衡线」与 ROI。",
-   "今日赛程严格按竞彩批次隔离：只统计 2026-11-13（周五）当天开出的 1 场，绝不混入周六/周日批次。",
-   "今日 0 场正路推荐中已开奖 0 场、未开奖 0 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
+   "今日赛程严格按竞彩批次隔离：只统计 2026-11-14（周五）当天开出的 13 场，绝不混入周六/周日批次。",
+   "今日 4 场正路推荐中已开奖 0 场、未开奖 4 场；未开奖场次不计入正确率，赛后自动回填纳入统计。",
    "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
   ]
  },
  "vzHighStats": {
   "version": "v1.7.126",
-  "generatedAt": "2026-11-13 20:03:41",
+  "generatedAt": "2026-11-13 21:05:17",
   "scope": "V站·呼死狗 🔥高信心预测 · 比分精确命中 / 胜平负方向命中",
   "source": {
    "predictions": "vzhan_data.json（V站 report/info 赛前预测比分）",
@@ -32564,21 +32919,21 @@
    "archive": "vzhan_history.json（赛前固化 highConf + 赛果归档）"
   },
   "today": {
-   "batchDate": "2026-11-13",
+   "batchDate": "2026-11-14",
    "batchLabel": "周五",
    "batchPrefix": "周五",
-   "isToday": true,
-   "totalMatches": 1,
-   "vzPredCount": 4,
-   "highCount": 4,
+   "isToday": false,
+   "totalMatches": 13,
+   "vzPredCount": 0,
+   "highCount": 0,
    "settledCount": 0,
-   "pendingCount": 4,
+   "pendingCount": 0,
    "batchesAvailable": [
     {
      "date": "2026-11-13",
      "label": "周五",
      "count": 1,
-     "highCount": 4
+     "highCount": 0
     },
     {
      "date": "2026-11-14",
@@ -32593,96 +32948,7 @@
      "highCount": 0
     }
    ],
-   "picks": [
-    {
-     "num": "周五004",
-     "league": "欧国联",
-     "home": "苏格兰",
-     "away": "北马其顿",
-     "kickoff": "2026-11-14 03:45:00",
-     "predH": 2,
-     "predA": 0,
-     "predScore": "2:0",
-     "dir": "H",
-     "dirName": "主胜",
-     "modelPred": [
-      2,
-      0
-     ],
-     "confWhy": "V站·模型 方向共识",
-     "settled": false,
-     "score": null,
-     "exactHit": null,
-     "dirHit": null,
-     "note": "未开奖 · 不计入正确率"
-    },
-    {
-     "num": "周五005",
-     "league": "欧国联",
-     "home": "塞尔维亚",
-     "away": "德国",
-     "kickoff": "2026-11-14 03:45:00",
-     "predH": 1,
-     "predA": 2,
-     "predScore": "1:2",
-     "dir": "A",
-     "dirName": "客胜",
-     "modelPred": [
-      0,
-      2
-     ],
-     "confWhy": "V站·模型 方向共识",
-     "settled": false,
-     "score": null,
-     "exactHit": null,
-     "dirHit": null,
-     "note": "未开奖 · 不计入正确率"
-    },
-    {
-     "num": "周五008",
-     "league": "欧国联",
-     "home": "斯洛文尼",
-     "away": "瑞士",
-     "kickoff": "2026-11-14 03:45:00",
-     "predH": 0,
-     "predA": 2,
-     "predScore": "0:2",
-     "dir": "A",
-     "dirName": "客胜",
-     "modelPred": [
-      0,
-      1
-     ],
-     "confWhy": "V站·模型 方向共识",
-     "settled": false,
-     "score": null,
-     "exactHit": null,
-     "dirHit": null,
-     "note": "未开奖 · 不计入正确率"
-    },
-    {
-     "num": "周五009",
-     "league": "欧国联",
-     "home": "荷兰",
-     "away": "希腊",
-     "kickoff": "2026-11-14 03:45:00",
-     "predH": 2,
-     "predA": 1,
-     "predScore": "2:1",
-     "dir": "H",
-     "dirName": "主胜",
-     "modelPred": [
-      2,
-      0
-     ],
-     "confWhy": "V站·模型 方向共识",
-     "settled": false,
-     "score": null,
-     "exactHit": null,
-     "dirHit": null,
-     "note": "未开奖 · 不计入正确率"
-    }
-   ]
+   "picks": []
   },
   "overall": {
    "n": 90,
@@ -32827,7 +33093,7 @@
   "excluded": {
    "unknownConf": 46,
    "pending": 4,
-   "noResult": 18
+   "noResult": 17
   },
   "conclusion": "V站 🔥高信心（V站·模型 方向共识）历史 22 场：预测比分精确命中 3 场（13.64%，Wilson 95%CI 4.75%~33.34%），方向命中 14 场（63.64%，Wilson 95%CI 42.95%~80.27%）。独立随机基线：比分 8.74%、方向 34.55%；高信心相对基线的比分超额 +4.90pt、方向超额 +29.09pt（二项精确单侧 p=0.3013 / 0.0051，至少一项达到统计显著）。与普通组（n=22，比分 13.64%、方向 40.91%）相比，方向差 +22.73pt（Fisher 双侧 p=0.2271，差异不显著）。可判定高信心口径的场次仅 44 场，样本有限、置信区间宽，方向表现显著优于随机基线；另有 46 场因赛前无模型快照无法判定，已单列不参与对比。结论：仅作回溯描述，不构成稳定优势证明，不构成投注建议。",
   "byGroup": [
@@ -33559,7 +33825,7 @@
    "独立随机基线 = 该组预测方向（比分）分布 × 全量实际方向（比分）分布之积求和，代表「预测与赛果完全独立」时的期望命中率；另列朴素 1/3 仅作参照，不作为判定标准。",
    "显著性：小样本采用二项精确单侧检验（vs 基线）与 Fisher 精确检验 / 两比例 z 检验（组间），并给出 Wilson 95% 置信区间；p<0.05 才称显著，样本不足时如实标注。",
    "本统计不含赔率、返奖率与 ROI：命中率高于基线只说明方向判断可能优于随机，不代表可盈利；竞彩抽水决定长期期望为负。",
-   "今日清单严格按竞彩当天开售批次 2026-11-13（周五）隔离，只列当天 1 场里的高信心预测；未开奖 4 场不计入任何命中率，赛后自动回填纳入统计。",
+   "今日清单严格按竞彩当天开售批次 2026-11-14（周五）隔离，只列当天 13 场里的高信心预测；未开奖 0 场不计入任何命中率，赛后自动回填纳入统计。",
    "归档档案由 fetch_vzhan.py 每日增量累积、backfill_vzhan_history.py 一次性全量回溯重建，随部署上云跨轮保留；统计每次刷新重算。",
    "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
   ]
