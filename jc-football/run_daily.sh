@@ -551,6 +551,9 @@ parts += filehash("deploy_cf.py")
 parts += filehash("template.html")
 parts += filehash("fetch_daily.py")
 parts += filehash("build_panel.py")
+# v1.7.134：自动保鲜驾驶舱改了必须触发部署，否则新的自愈逻辑上不了
+# 自举包，定时任务会一直跑旧版闭环（等于「不提醒就什么都不做」）。
+parts += filehash("auto_pilot.py")
 print(hashlib.sha256(parts).hexdigest())
 PY
 )

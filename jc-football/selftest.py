@@ -1568,6 +1568,74 @@ def check_parlay_vzhan_guards():
             print("  V站 一等字段：展示窗 %d/%d、回溯 %d 条齐全" % (matched, vz_total, hist_v))
 
 
+def check_auto_pilot_guard():
+    """检查 16：自动保鲜自治闭环防回归护栏（2026-11-13，v1.7.134）。
+
+    用户要求「往后不要让我再提醒了，自动的落实这些东西，不要踢一脚做一步，
+    不提醒就什么都不做」。真实事故：每小时自动保鲜任务 status=0 被停用，
+    lastRunAt 停在 11-12 16:59，14h40m 一次都没跑，无人察觉。
+    三层冗余（WorkBuddy 任务 / GitHub Actions / 页面心跳）与 auto_pilot.py
+    闭环任一处被改回去或丢失，必须立刻报 ERROR，杜绝「修好又悄悄停摆」。
+    """
+    cat = "自动保鲜闭环"
+    print("· 检查 16 自动保鲜自治闭环防回归（2026-11-13）")
+
+    def read(fn):
+        try:
+            return open(os.path.join(HERE, fn), encoding="utf-8").read()
+        except Exception:
+            return ""
+
+    ap = read("auto_pilot.py")
+    if not ap:
+        add("ERROR", cat, "auto_pilot.py 缺失（定时任务会退回旧版「跑一遍+汇报」）")
+    else:
+        for tok, msg in (
+            ("def patrol(live)", "缺线上 12 项健康巡检"),
+            ("def heal_l1(", "缺 L1 定点自愈"),
+            ("GITHUB_ACTIONS=1 bash run_daily.sh deploy", "缺每轮必跑的全量刷新"),
+            ("python3 selftest.py", "缺自检护栏接入"),
+            ("线上复验", "缺线上复验（会假装成功）"),
+            ("auto_pilot_status.json", "缺状态留痕"),
+            ("beijing_clock", "未接权威北京时间"),
+        ):
+            if tok not in ap:
+                add("ERROR", cat, "auto_pilot.py " + msg)
+
+    dc = read("deploy_cf.py")
+    for tok, msg in (
+        ("lastPatrolAt", "version.json 未注入巡检心跳（用户看不到系统在自动跑）"),
+        ("auto_pilot_status.json", "巡检状态未随部署上云"),
+    ):
+        if tok not in dc:
+            add("ERROR", cat, "deploy_cf.py " + msg)
+
+    if 'filehash("auto_pilot.py")' not in read("run_daily.sh"):
+        add("ERROR", cat, "run_daily.sh 部署指纹漏算 auto_pilot.py（改了闭环上不了自举包）")
+
+    tpl = read("template.html")
+    for tok, msg in (
+        ("__autoFresh", "缺页面自动保鲜心跳（第三层兜底）"),
+        ("jcAutoFreshLast", "心跳缺 60 分钟节流（会刷爆 CI）"),
+        ("今日推荐已锁定", "锁定态仍会显示「候选 0 / 合格 0」误导"),
+    ):
+        if tok not in tpl:
+            add("ERROR", cat, "template.html " + msg)
+
+    if '"candidateCount", "qualifiedCount", "candidatePool"' not in read("fetch_daily.py"):
+        add("ERROR", cat, "fetch_daily.py 生成快照未留存候选/合格统计（锁定回放会显示 0）")
+
+    try:
+        st = json.load(open(os.path.join(HERE, "auto_pilot_status.json"), encoding="utf-8"))
+        if not st.get("checkedAt"):
+            add("ERROR", cat, "auto_pilot_status.json 缺 checkedAt（无法证明自动巡检跑过）")
+        else:
+            print("  最近自动巡检：%s / health=%s / ERROR=%s" % (
+                st.get("checkedAt"), st.get("health"), st.get("errorCount")))
+    except Exception as e:
+        add("WARN", cat, "auto_pilot_status.json 不可读：%s（首次部署前正常）" % e)
+
+
 def main():
     strict = "--strict" in sys.argv
     print("=" * 60)
@@ -1597,6 +1665,7 @@ def main():
     check_basketball_history_guard()
     check_parlay_scorepred_refresh()
     check_parlay_vzhan_guards()
+    check_auto_pilot_guard()
 
     errs = [i for i in issues if i["level"] == "ERROR"]
     warns = [i for i in issues if i["level"] == "WARN"]

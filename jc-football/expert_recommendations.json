@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13 04:10:50",
+  "updatedAt": "2026-11-13 08:04:07",
   "batchDate": "2026-11-12",
   "sourceNote": "数据来源：92玩球(92wq.com)易红单平台真实专家推荐，已核查专家历史战绩；当前展示批次 2026-11-12（凌晨专家未发今日文章时回退最近一批）",
   "articles": [
@@ -2839,15 +2839,15 @@
     "92玩球编辑部": {
       "expert": "92玩球编辑部",
       "total": 2,
-      "judged": 0,
-      "hits": 0,
+      "judged": 2,
+      "hits": 2,
       "miss": 0,
-      "pending": 2,
-      "hitRate": 0,
-      "recent10Rate": 0,
-      "streak": 0,
-      "score": 0,
-      "streakBonus": 0,
+      "pending": 0,
+      "hitRate": 100.0,
+      "recent10Rate": 100.0,
+      "streak": 2,
+      "score": 24,
+      "streakBonus": 4,
       "isNew": true,
       "recent": [
         {
@@ -2855,22 +2855,22 @@
           "home": "阿尔巴尼亚",
           "away": "芬兰",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:0"
         },
         {
           "date": "2026-11-11",
           "home": "黑山",
           "away": "拉脱维亚",
           "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
+          "hit": true,
+          "actualScore": "2:1"
         }
       ],
-      "ciLow": 0.0,
-      "ciHigh": 0.0,
-      "sampleTier": "无战绩",
-      "tierLabel": "暂无往绩"
+      "ciLow": 34.2,
+      "ciHigh": 100.0,
+      "sampleTier": "不足",
+      "tierLabel": "样本不足"
     }
   },
   "leaderboard": [
@@ -3867,6 +3867,42 @@
       "rank": 18
     },
     {
+      "expert": "92玩球编辑部",
+      "total": 2,
+      "judged": 2,
+      "hits": 2,
+      "miss": 0,
+      "pending": 0,
+      "hitRate": 100.0,
+      "recent10Rate": 100.0,
+      "streak": 2,
+      "score": 24,
+      "isNew": true,
+      "sampleTier": "不足",
+      "tierLabel": "样本不足",
+      "ciLow": 34.2,
+      "ciHigh": 100.0,
+      "recent": [
+        {
+          "date": "2026-11-11",
+          "home": "阿尔巴尼亚",
+          "away": "芬兰",
+          "recommend": "主胜",
+          "hit": true,
+          "actualScore": "2:0"
+        },
+        {
+          "date": "2026-11-11",
+          "home": "黑山",
+          "away": "拉脱维亚",
+          "recommend": "主胜",
+          "hit": true,
+          "actualScore": "2:1"
+        }
+      ],
+      "rank": 19
+    },
+    {
       "expert": "阿莲",
       "total": 2,
       "judged": 2,
@@ -3900,7 +3936,7 @@
           "actualScore": "1:0"
         }
       ],
-      "rank": 19
+      "rank": 20
     },
     {
       "expert": "一航",
@@ -3928,7 +3964,7 @@
           "actualScore": "3:1"
         }
       ],
-      "rank": 20
+      "rank": 21
     },
     {
       "expert": "王超",
@@ -3956,7 +3992,7 @@
           "actualScore": "4:2"
         }
       ],
-      "rank": 21
+      "rank": 22
     },
     {
       "expert": "随风解球",
@@ -3992,7 +4028,7 @@
           "actualScore": "0:1"
         }
       ],
-      "rank": 22
+      "rank": 23
     },
     {
       "expert": "彭雷",
@@ -4020,7 +4056,7 @@
           "actualScore": "1:0"
         }
       ],
-      "rank": 23
+      "rank": 24
     },
     {
       "expert": "范德彪",
@@ -4048,7 +4084,7 @@
           "actualScore": "1:0"
         }
       ],
-      "rank": 24
+      "rank": 25
     },
     {
       "expert": "谢泽畅",
@@ -4076,59 +4112,23 @@
           "actualScore": "1:1"
         }
       ],
-      "rank": 25
-    },
-    {
-      "expert": "92玩球编辑部",
-      "total": 2,
-      "judged": 0,
-      "hits": 0,
-      "miss": 0,
-      "pending": 2,
-      "hitRate": 0,
-      "recent10Rate": 0,
-      "streak": 0,
-      "score": 0,
-      "isNew": true,
-      "sampleTier": "无战绩",
-      "tierLabel": "暂无往绩",
-      "ciLow": 0.0,
-      "ciHigh": 0.0,
-      "recent": [
-        {
-          "date": "2026-11-11",
-          "home": "阿尔巴尼亚",
-          "away": "芬兰",
-          "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
-        },
-        {
-          "date": "2026-11-11",
-          "home": "黑山",
-          "away": "拉脱维亚",
-          "recommend": "主胜",
-          "hit": null,
-          "actualScore": null
-        }
-      ],
       "rank": 26
     }
   ],
   "leaderboardMeta": {
-    "generatedAt": "2026-11-13 04:10:57",
+    "generatedAt": "2026-11-13 08:04:15",
     "source": "expert_history.json + matches.json + history.json 官方赛果",
     "historyRecords": 97,
-    "judgedRecords": 85,
-    "hits": 30,
-    "pendingRecords": 12,
+    "judgedRecords": 87,
+    "hits": 32,
+    "pendingRecords": 10,
     "newlySettled": 0,
-    "pendingBefore": 12,
-    "pendingAfter": 12,
+    "pendingBefore": 10,
+    "pendingAfter": 10,
     "experts": 26,
     "scope": "已结算场次才计入命中率；未开奖/无官方赛果/方向无法判定一律保持待结算",
     "rankRule": "已判定≥3场进主榜按命中率降序（再按Wilson下限、已判定场次）；1-2场样本不足者整体沉底，避免1战1中100%霸榜",
     "ciNote": "Wilson 95% 置信区间只反映样本不确定性；命中率高不等于可盈利，本统计不含赔率与 ROI"
   },
-  "leaderboardUpdatedAt": "2026-11-13 04:10:57"
+  "leaderboardUpdatedAt": "2026-11-13 08:04:15"
 }

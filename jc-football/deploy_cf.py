@@ -294,6 +294,17 @@ def main():
     # 经模板哈希自动升版防护：改了 template 忘手升 VERSION 时自动补升，并算 pageBuild 指纹
     html, page_version, page_build = template_autobump(html)
 
+    # v1.7.134：自动保鲜驾驶舱的巡检结论随「每一次」部署上云。
+    # 用户不需要开口问，打开 /version.json 就能看到最近一次自动巡检时间、
+    # 健康状态、ERROR 数；/auto_pilot_status.json 有逐项明细。
+    # 注意 dist 下面会被 rmtree，所以状态源读 BASE 根目录，重建后再写副本。
+    _pilot = {}
+    try:
+        _pilot = json.load(open(os.path.join(BASE, "auto_pilot_status.json"),
+                                encoding="utf-8")) or {}
+    except Exception:
+        pass
+
     dist = os.path.join(BASE, "dist")
     if os.path.exists(dist):
         shutil.rmtree(dist)
@@ -305,8 +316,15 @@ def main():
         f.write(html)
     meta = {"updateTime": upd, "deployTime": deploy_time, "count": count,
             "pageVersion": page_version, "pageBuild": page_build}
+    if _pilot:
+        meta["lastPatrolAt"] = _pilot.get("checkedAt", "")
+        meta["patrolHealth"] = _pilot.get("health", "")
+        meta["patrolErrorCount"] = _pilot.get("errorCount", 0)
     with open(os.path.join(dist, "version.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False)
+    if _pilot:
+        with open(os.path.join(dist, "auto_pilot_status.json"), "w", encoding="utf-8") as f:
+            json.dump(_pilot, f, ensure_ascii=False, indent=1)
     # 部署数据文件，供页面端动态 fetch 实时刷新
     for data_file in ["matches.json", "hkmo_cache.json", "odds_bsd_cache.json",
                       "odds_bsd.json", "fd_data.json",
@@ -393,7 +411,8 @@ def main():
         os.remove(bundle)
     exclude_dirs = {".git", "dist", "__pycache__", ".wrangler", "apk-build",
                     "node_modules"}
-    exclude_ext = (".bak", ".tar.gz", ".idsig", ".apk", ".pyc")
+    # v1.7.134：auto_pilot.log 是运行时日志，逐轮追加会无限膨胀，不进自举包
+    exclude_ext = (".bak", ".tar.gz", ".idsig", ".apk", ".pyc", ".log")
     # 安全红线：自举包上传到公开 Pages，任何人可下载。
     # 含凭据的配置文件（cf_config.json 等）与 .last_ 指纹文件绝不进包，
     # 否则 Cloudflare token 直接泄露（2026-10-15 事故：漏排除 cf_config.json，

@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-13 04:09:10",
+ "updatedAt": "2026-11-13 08:02:25",
  "source": "football-data.org + 独立 Poisson 模型",
  "isolation": true,
  "note": "独立数据源：football-data.org 赛程/赛果 + 自建透明 Poisson 比分模型；与竞彩核心数据/模型零耦合。WhoScored 因 Cloudflare 防护无法直接抓取，本 Tab 以独立免费源替代，仅作比分参考，不参与任何竞彩推荐。足球数据未覆盖的联赛（亚冠/德国杯/瑞超等）用竞彩赔率隐含 Poisson 兜底，保证每天全部竞彩比赛都有自建比分预测。",
@@ -251,17 +251,20 @@
    "home": "阿尔巴尼亚",
    "away": "芬兰",
    "utcDate": "2026-11-12T03:45:00",
-   "status": "",
+   "status": "FINISHED",
    "predH": 1,
    "predA": 2,
    "pHome": 30.4,
    "pDraw": 25.5,
    "pAway": 44.1,
    "predOutcome": "A",
-   "actH": null,
-   "actA": null,
-   "evaluated": false,
-   "source": "local-odds"
+   "actH": 2,
+   "actA": 0,
+   "evaluated": true,
+   "source": "local-odds",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
   },
   {
    "id": "2042695",
@@ -270,17 +273,20 @@
    "home": "黑山",
    "away": "拉脱维亚",
    "utcDate": "2026-11-12T03:45:00",
-   "status": "",
+   "status": "FINISHED",
    "predH": 2,
    "predA": 2,
    "pHome": 32.3,
    "pDraw": 22.8,
    "pAway": 44.9,
    "predOutcome": "D",
-   "actH": null,
-   "actA": null,
-   "evaluated": false,
-   "source": "local-odds"
+   "actH": 2,
+   "actA": 1,
+   "evaluated": true,
+   "source": "local-odds",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
   },
   {
    "id": "2042696",
@@ -289,17 +295,20 @@
    "home": "英格兰",
    "away": "克罗地亚",
    "utcDate": "2026-11-12T03:45:00",
-   "status": "",
+   "status": "FINISHED",
    "predH": 2,
    "predA": 2,
    "pHome": 28.6,
    "pDraw": 19.9,
    "pAway": 51.4,
    "predOutcome": "D",
-   "actH": null,
-   "actA": null,
-   "evaluated": false,
-   "source": "local-odds"
+   "actH": 2,
+   "actA": 1,
+   "evaluated": true,
+   "source": "local-odds",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
   },
   {
    "id": "2042697",
@@ -308,17 +317,20 @@
    "home": "捷克",
    "away": "西班牙",
    "utcDate": "2026-11-12T03:45:00",
-   "status": "",
+   "status": "FINISHED",
    "predH": 1,
    "predA": 1,
    "pHome": 48.7,
    "pDraw": 25.5,
    "pAway": 25.9,
    "predOutcome": "D",
-   "actH": null,
-   "actA": null,
-   "evaluated": false,
-   "source": "local-odds"
+   "actH": 0,
+   "actA": 2,
+   "evaluated": true,
+   "source": "local-odds",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
   },
   {
    "id": "2042692",
@@ -4960,9 +4972,9 @@
  ],
  "reliable": {
   "overall": {
-   "n": 1333,
+   "n": 1337,
    "exactHit": 7.6,
-   "outcomeHit": 38.5,
+   "outcomeHit": 38.4,
    "mae": 1.18
   },
   "leagues": [
@@ -5125,9 +5137,9 @@
   ]
  },
  "accuracy": {
-  "n": 1333,
+  "n": 1337,
   "exactHit": 7.6,
-  "outcomeHit": 38.5,
+  "outcomeHit": 38.4,
   "mae": 1.18
  },
  "history": [
@@ -5162,6 +5174,70 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
+  },
+  {
+   "id": "2042694",
+   "league": "欧国联",
+   "home": "阿尔巴尼亚",
+   "away": "芬兰",
+   "date": "2026-11-12",
+   "predH": 1,
+   "predA": 2,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "A",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.5
+  },
+  {
+   "id": "2042695",
+   "league": "欧国联",
+   "home": "黑山",
+   "away": "拉脱维亚",
+   "date": "2026-11-12",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
+   "id": "2042696",
+   "league": "欧国联",
+   "home": "英格兰",
+   "away": "克罗地亚",
+   "date": "2026-11-12",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
+   "id": "2042697",
+   "league": "欧国联",
+   "home": "捷克",
+   "away": "西班牙",
+   "date": "2026-11-12",
+   "predH": 1,
+   "predA": 1,
+   "actH": 0,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
   },
   {
    "id": "2042689",
@@ -26499,13 +26575,13 @@
     "away": "芬兰",
     "predH": 1,
     "predA": 2,
-    "actH": null,
-    "actA": null,
+    "actH": 2,
+    "actA": 0,
     "predOutcome": "A",
-    "actOutcome": null,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "actOutcome": "H",
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.5
    },
    {
     "id": "2042695",
@@ -26514,13 +26590,13 @@
     "away": "拉脱维亚",
     "predH": 2,
     "predA": 2,
-    "actH": null,
-    "actA": null,
+    "actH": 2,
+    "actA": 1,
     "predOutcome": "D",
-    "actOutcome": null,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "actOutcome": "H",
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
    {
     "id": "2042696",
@@ -26529,13 +26605,13 @@
     "away": "克罗地亚",
     "predH": 2,
     "predA": 2,
-    "actH": null,
-    "actA": null,
+    "actH": 2,
+    "actA": 1,
     "predOutcome": "D",
-    "actOutcome": null,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "actOutcome": "H",
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
    {
     "id": "2042697",
@@ -26544,13 +26620,13 @@
     "away": "西班牙",
     "predH": 1,
     "predA": 1,
-    "actH": null,
-    "actA": null,
+    "actH": 0,
+    "actA": 2,
     "predOutcome": "D",
-    "actOutcome": null,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "actOutcome": "A",
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.0
    }
   ],
   "2026-11-11": [
@@ -41573,7 +41649,7 @@
   "matched": 4,
   "histMatched": 4,
   "vzTotal": 4,
-  "vzUpdatedAt": "2026-11-13 04:10:25",
+  "vzUpdatedAt": "2026-11-13 08:03:40",
   "policy": "数据源一等字段；前端优先读 vzPredH，BUILT_VZHAN 拼接退为兜底"
  }
 }

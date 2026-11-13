@@ -1815,10 +1815,24 @@ const nowStr = () => {
 const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
 const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.133";
+const VERSION = "v1.7.134";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.134",
+    date: "2026-11-13",
+    title: "「不要再提醒」：自动化从「跑一遍+汇报」升级为自治闭环，并恢复被停用的保鲜任务",
+    details: [
+      "用户反馈「往后不要让我再提醒了，自动的落实这些东西，不要踢一脚做一步，不提醒就什么都不做」。排查发现真正的根因不是数据没变化，而是每小时的自动保鲜任务 status=0（停用），lastRunAt 停在 11-12 16:59，14 小时 40 分一次都没跑 —— 用户不提醒，系统就真的什么都没做。现已恢复为启用（status=1），名称/频率/超时/重试一律不动",
+      "新增 auto_pilot.py 自动保鲜驾驶舱：把「自己巡检 → 自己发现问题 → 自己分级修复 → 自己上线 → 自己留痕」全部固化成确定性代码，定时任务每轮只需调用一个入口，不再依赖每轮重新理解一段自然语言指令。每轮固定执行：权威北京时间校准 → 线上 12 项健康巡检 → L1 定点自愈 → 全量刷新+部署 → selftest 护栏（检查 12/13/14/15）→ 强制上线 → 线上复验 → 写状态文件",
+      "12 项巡检覆盖历史上所有踩过的坑：主批次是否等于权威竞彩当天、分层串关是否出现「≥2 合格却 0 档」死锁、V站 一等字段合并覆盖率、日期索引含当天、非法 utcDate、串关历史统计自洽、篮球历史是否缩水、ab_stats 云端可用、空壳专家文章、数据新鲜度、线上/源码版本一致、串关逐腿证据完整。任一项失败明确记 ERROR 并继续修复，不静默跳过",
+      "三层冗余，任何一层停摆其余仍会动：① WorkBuddy 自动任务每小时整点跑自治闭环（已恢复启用）；② GitHub Actions 每天 6 个整点定时刷新；③ 页面新增自动保鲜心跳 —— 打开 App 12 秒后若发现数据跨天或超 2 小时未更新，静默触发一次云端流水线，新部署出现后自动同步视图。localStorage 节流 60 分钟防刷爆 CI，不硬重载、不弹打扰提示、不假装成功",
+      "留痕上云：每轮巡检结论写入 auto_pilot_status.json 并随部署发布到 /auto_pilot_status.json，同时把 lastPatrolAt / patrolHealth / patrolErrorCount 注入 version.json。用户不用开口问，打开链接就能看到系统最近一次确实自动巡检过、健康状态如何",
+      "顺带根治一个每轮刷新都会触发的显示退化：当天推荐「已锁定」后重跑，旧逻辑把 candidateCount 写死 0、qualifiedCount 整个丢失，页面显示「候选 0 / 合格 — · 已产出 2 档」自相矛盾，看着又像分层串关坏了。现生成时把候选/合格统计存进快照供锁定回放恢复；旧记录无快照时前端如实显示「今日推荐已锁定，不再变动」，绝不显示 0 误导，也绝不编造数字",
+      "边界：数据无变化时如实标记 NO_CHANGE，绝不伪造 updateTime；连续自愈仍不健康会标 BLOCKED 并逐条列出未修复项；推荐门槛（赔率 1.6~3.2、实证超额≥0、样本≥20、非平局、真实 EV、同批次）一个都没放宽",
+    ]
+  },
   {
     version: "v1.7.133",
     date: "2026-11-13",
@@ -5723,7 +5737,7 @@ function renderHighOdds(){
           <span style="color:var(--weak)">${_root.batchNote||""}</span>
         </div>
         <div style="display:flex;gap:7px;flex-wrap:wrap;">${_chips}</div>
-        <div style="margin-top:7px;font-size:10.5px;color:var(--weak)">当前批次：<b style="color:var(--text)">${sp.batchLabel||"当日"} ${sp.batchDate||""}</b>，在售未开赛 ${sp.matchCount||0} 场，候选 ${sp.candidateCount||0} 条，合格单场 ${sp.qualifiedCount||0} 条</div>
+        <div style="margin-top:7px;font-size:10.5px;color:var(--weak)">当前批次：<b style="color:var(--text)">${sp.batchLabel||"当日"} ${sp.batchDate||""}</b>，在售未开赛 ${sp.matchCount||0} 场${(sp.locked && sp.qualifiedCount==null) ? '，<b style="color:var(--warn)">今日推荐已锁定（生成时统计未留存，不再变动，逐腿证据见下方）</b>' : `，候选 ${sp.candidateCount||0} 条，合格单场 ${sp.qualifiedCount||0} 条`}</div>
       </div>`;
     }
     // v1.7.121 今日证据总判定：把「为什么不给推荐」讲成可逐条核对的结论，
@@ -5934,8 +5948,14 @@ function renderHighOdds(){
     const _batch = (sp.batchLabel ? sp.batchLabel + " " : "") + (sp.batchDate || "");
     const _q = sp.qualifiedCount;
     const _nowTag = genAt ? `<b style="color:var(--text)">${genAt}</b>` : `—`;
+    // v1.7.134：当天推荐锁定后每轮自动刷新，旧逻辑把候选写死 0 / 合格丢失，
+    // 页面显示「候选 0 / 合格 — · 已产出 2 档」自相矛盾，看着又像模块坏了。
+    // 锁定且未留存统计时如实说「已锁定」，绝不显示 0 误导，也绝不编造数字。
+    const _stat = (sp.locked && _q==null && !spCand)
+      ? ` · <span style="color:var(--warn)">今日推荐已锁定（生成于 ${genAt?genAt.slice(5,16):"今日"}），不再变动</span>`
+      : ` · 候选 <b style="color:var(--good)">${spCand}</b> 条 / 合格 <b style="color:var(--text)">${_q==null?"—":_q}</b> 条`;
     summary.innerHTML = `本批次 <b style="color:var(--text)">${_batch||"当日"}</b> · 评估于 ${_nowTag}`
-      + ` · 候选 <b style="color:var(--good)">${spCand}</b> 条 / 合格 <b style="color:var(--text)">${_q==null?"—":_q}</b> 条`
+      + _stat
       + (_has ? ` · <span style="color:var(--good)">已产出 ${_has} 档</span>`
               : ` · <span style="color:var(--warn)">今日 0 档达标，按「不硬凑」留空（下方列明逐条排除原因）</span>`)
       + (legNote ? ` · <span style="color:var(--sub)">${legNote}</span>` : "");
@@ -8642,6 +8662,44 @@ setInterval(()=>checkNewVersion(false), 300000);
 setTimeout(()=>refreshRealtimeData(false), 5000);
 /* v1.7.130：硬重载后把上一次「刷新数据」的结果再显示一次，避免 toast 被重载吞掉 */
 setTimeout(__consumePull, 900);
+
+/* v1.7.134 自动保鲜心跳（第三层兜底：不提醒、不点按钮也会自己动）
+   自动保鲜任务每小时跑 + GitHub Actions 每天 6 次跑，但两者都曾因任务被
+   停用 / 沙箱冷启动而整体停摆（2026-11-12 16:59 后停了 14 小时无人察觉）。
+   页面自己再兜一层：打开 App 12 秒后检查线上数据是否跨天或超过 2 小时
+   没更新，若陈旧就静默触发一次云端流水线；新部署出现后自动同步视图。
+   localStorage 节流 60 分钟防刷爆 CI；不硬重载、不弹打扰提示、不假装成功。 */
+function __autoFresh(){
+  try{
+    if(!window.fetch) return;
+    const KEY="jcAutoFreshLast";
+    let last=0; try{ last=parseInt(localStorage.getItem(KEY)||"0",10)||0; }catch(e){}
+    const now=Date.now();
+    if(now-last < 60*60*1000) return;                    // 60 分钟节流
+    const upd=(state.meta&&state.meta.updateTime)||"";
+    const f=__dataFresh(upd);
+    if(!(f.level==="stale" || f.hours>2 || !upd)) return; // 数据够新，不打扰云端
+    try{ localStorage.setItem(KEY,String(now)); }catch(e){}
+    fetch("/api/refresh",{method:"POST",cache:"no-store"}).catch(()=>{});
+    // 新部署出现后自动同步（最多监听 8 分钟，全程不阻塞交互、不硬重载）
+    const t0=Date.now(), base=upd;
+    const poll=()=>{
+      if(Date.now()-t0>8*60*1000) return;
+      fetch("/version.json?_t="+Date.now(),{cache:"no-store"})
+        .then(r=>r.json()).then(v=>{
+          const u=(v&&v.updateTime)||"";
+          if(u&&u!==base){
+            loadLiveDatasets(false).then(()=>{
+              jcToast("已自动同步最新数据（"+u.slice(5,16)+"）",3500);
+            }).catch(()=>{});
+          }else{ setTimeout(poll,20000); }
+        }).catch(()=>{ setTimeout(poll,20000); });
+    };
+    setTimeout(poll,20000);
+  }catch(e){}
+}
+setTimeout(__autoFresh,12000);
+setInterval(__autoFresh,120000);
 /* 页面加载 8 秒后比对版本：若云端数据比本页更新超过 10 分钟，说明本页被缓存，强制刷新 */
 setTimeout(()=>{
   if(!window.fetch) return;

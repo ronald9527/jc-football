@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自动保鲜自治闭环 · 根治报告 v1.7.134</title>
+<style>
+:root{--bg:#0f1218;--card:#171c26;--line:#2a3242;--text:#e8edf5;--sub:#9aa7bb;--good:#4caf50;--warn:#ffb300;--bad:#f44336;--accent:#4a9eff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:22px}
+.wrap{max-width:960px;margin:0 auto}h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:28px 0 12px;padding-left:11px;border-left:4px solid var(--accent)}
+.sub{color:var(--sub);font-size:13px;margin-bottom:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:#1d2431;color:var(--sub);font-weight:600}
+code{background:#222b3a;color:#9fd0ff;padding:1px 6px;border-radius:4px;font-size:12.5px}
+.ok{color:var(--good);font-weight:600}.warn{color:var(--warn);font-weight:600}.bad{color:var(--bad);font-weight:600}.acc{color:var(--accent);font-weight:600}
+blockquote{margin:12px 0;padding:11px 15px;background:#1a2230;border-left:4px solid var(--warn);border-radius:0 8px 8px 0;color:var(--text)}
+ul{padding-left:22px}li{margin:5px 0}.kpi{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}.kpi div{flex:1;min-width:150px;background:#1d2431;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font-size:21px;color:var(--good);margin-bottom:2px}.kpi span{font-size:12px;color:var(--sub)}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>自动保鲜自治闭环 · 根治报告</h1>
+<div class="sub">v1.7.134 · 2026-11-13 · 线上 <a href="https://jc-football-1eo.pages.dev/" style="color:var(--accent)">jc-football-1eo.pages.dev</a></div>
+
+<div class="card">
+<strong>用户诉求（原话）</strong>：
+<blockquote>「往后不要让我再提醒了，自动的落实这些东西，不要踢一脚做一步，不提醒就什么都不做」</blockquote>
+本次不新增功能、不降低任何推荐门槛，只解决一件事：<b class="acc">让系统自己巡检、自己发现问题、自己修、自己上线、自己留痕</b>，不再依赖用户发现异常后开口提醒。
+</div>
+
+<h2>一、根因取证：不是「今天没新数据」，是自动任务根本没跑</h2>
+<table>
+<tr><th>证据</th><th>实测值</th><th>结论</th></tr>
+<tr><td>自动任务 #14693059 <code>status</code></td><td><code>0</code>（文档定义 1=启用 / 0=停用）</td><td class="bad">任务被暂停</td></tr>
+<tr><td><code>lastRunAt</code></td><td><code>2026-11-12 16:59:41</code>，距排查时 14 小时 40 分</td><td class="bad">14+ 小时一次都没跑</td></tr>
+<tr><td>线上 <code>version.json.updateTime</code></td><td>排查时仍为 <code>2026-11-13 04:09:00</code>，到 07:39 已 3 小时 23 分未推进</td><td>用户看到「一直不更新」</td></tr>
+<tr><td>旧任务指令形态</td><td>5 步自然语言「下载代码 → 重建凭证 → 对齐节流 → 跑流水线 → curl 看一眼」，第 5 步只核对、不判定、失败只「如实汇报」</td><td>即使跑了也不会主动发现逻辑退化</td></tr>
+</table>
+<p>也就是说：用户不提醒，系统<b>既不会动，也不会发现自己没动</b>。这是「踢一脚做一步」的真正来源。</p>
+
+<h2>二、修复清单（8 项，全部已上线）</h2>
+<table>
+<tr><th>#</th><th>改动</th><th>作用</th></tr>
+<tr><td>1</td><td>任务 <code>status: 0 → 1</code> 恢复启用</td><td class="ok">每小时整点真实运行。名称 / cron / 超时 / 重试一律未动</td></tr>
+<tr><td>2</td><td>新增 <code>auto_pilot.py</code> 自动保鲜驾驶舱</td><td>把巡检→自愈→上线→复验→留痕固化为确定性代码，任务每轮只调一个入口，不再靠 LLM 重新理解自然语言</td></tr>
+<tr><td>3</td><td>任务指令改为「调 <code>python3 auto_pilot.py</code> + 读状态判定健康」</td><td>禁止只跑 <code>run_daily.sh</code> 了事；不健康必须 <code>--force-refresh</code> 重试；禁止只写「已完成」</td></tr>
+<tr><td>4</td><td>巡检结论随部署上云</td><td><code>/auto_pilot_status.json</code> 逐项明细 + <code>version.json</code> 注入 <code>lastPatrolAt / patrolHealth / patrolErrorCount</code>，用户不问也能查</td></tr>
+<tr><td>5</td><td>页面新增 <code>__autoFresh()</code> 自动保鲜心跳</td><td>打开 App 12 秒后，若数据跨天或超 2 小时未更新，静默触发一次云端流水线，新部署出现后自动同步；60 分钟节流防刷爆 CI</td></tr>
+<tr><td>6</td><td><code>deploy_cf.py</code> / <code>run_daily.sh</code> 接线</td><td>状态文件与 <code>auto_pilot.py</code> 纳入部署指纹与自举包，改了闭环一定上线</td></tr>
+<tr><td>7</td><td>锁定态统计留存与防御文案</td><td>生成快照留存候选/合格统计；顶层字段直接暴露时显示「今日推荐已锁定」，绝不显示矛盾的「候选 0 / 合格 0」</td></tr>
+<tr><td>8</td><td><code>selftest.py</code> 新增「检查 16」护栏</td><td>闭环脚本、状态注入、部署指纹、页面心跳、快照留存任一处被改回去，立即报 ERROR</td></tr>
+</table>
+
+<h2>三、三层冗余：任何一层停摆，其余仍会动</h2>
+<table>
+<tr><th>层</th><th>频率</th><th>职责</th></tr>
+<tr><td>① WorkBuddy 自动任务</td><td>每小时整点</td><td>冷启动自举 → 调 <code>auto_pilot.py</code> 完整闭环（已恢复启用）</td></tr>
+<tr><td>② GitHub Actions <code>daily.yml</code></td><td>每天 6 个整点</td><td>独立定时刷新，与 WorkBuddy 任务互不相干</td></tr>
+<tr><td>③ 页面自动保鲜心跳</td><td>打开 App 时 + 每 2 分钟检查</td><td>数据陈旧即静默触发云端流水线，60 分钟节流</td></tr>
+</table>
+
+<h2>四、每轮自动做的 12 项健康巡检</h2>
+<div class="card">
+<ul>
+<li><b>主批次是否等于权威竞彩当天</b>（防时钟漂移 / 跨天不推进，<code>beijing_clock</code> 用 HTTP Date 校准）</li>
+<li><b>分层串关是否死锁</b>（≥2 条合格却 0 档 → 结构性缺陷，不是「今天没好比赛」）</li>
+<li><b>V站 一等字段合并覆盖率</b>、<b>日期索引含当天</b>、<b>非法 <code>utcDate</code> = 0</b></li>
+<li><b>串关历史顶层统计与 records 实算一致</b>、<b>篮球历史已结算凭证与日期覆盖未缩水</b></li>
+<li><b><code>ab_stats</code> 云端可用</b>、<b>无空壳专家文章</b>、<b>数据新鲜度</b></li>
+<li><b>线上/源码版本一致</b>、<b>串关逐腿证据完整</b>（赔率≥1.6、样本≥20、超额≥0）</li>
+</ul>
+发现异常 → <b>L1 秒级定点自愈</b>（重合并 V站 / 对齐统计 / 清空壳 / 重建 ab_stats / 历史对账）→ <b>L3 每轮必跑全量刷新+部署</b> → <b>selftest 护栏</b> → <b>L2 强制上线</b> → <b>线上复验</b> → <b>写状态留痕</b>。
+</div>
+
+<h2>五、验证结果（全部可核对）</h2>
+<div class="kpi">
+<div><b>ERROR 0 / WARN 0</b><span>selftest（含检查 16）</span></div>
+<div><b>PASS</b><span>verify_deploy.py</span></div>
+<div><b>PASS</b><span>Playwright 手机视口 UI</span></div>
+<div><b>OK</b><span>线上 /auto_pilot_status.json</span></div>
+</div>
+<table>
+<tr><th>验证项</th><th>结果</th></tr>
+<tr><td>完整闭环真实演练</td><td class="ok">线上数据 <code>04:09:00 → 08:02:17</code> 真实上新；DEPLOY_OK；selftest ERROR 0 / WARN 0；复验主批次 / 分层串关 / V站 全部 OK</td></tr>
+<tr><td>线上 <code>version.json</code></td><td><code>pageVersion=v1.7.134</code>、<code>lastPatrolAt=2026-11-13 08:30:09</code>、<code>patrolHealth=OK</code>、<code>patrolErrorCount=0</code></td></tr>
+<tr><td>冷启动自举演练</td><td class="ok">从线上解包 <code>code-bundle.tar.gz</code> 到空目录，<code>auto_pilot.py</code> 可直接运行且巡检 ERROR 0；包内不含真实凭证</td></tr>
+<tr><td>浏览器实测</td><td class="ok">首屏「周五 2026-11-13 · 候选 6 / 合格 3 · 已产出 2 档」；防御路径「今日推荐已锁定，不再变动 · 已产出 2 档」；V站 9 张卡片、日期回溯 4 条；零 JS 报错</td></tr>
+<tr><td>APK</td><td class="ok"><code>1.7.134(10834)</code>，线上 HTTP 200 / 824KB 可下载，内嵌页与网页版本一致</td></tr>
+<tr><td>自动任务回读</td><td class="ok"><code>status=1</code>，cron <code>0 0 * * * *</code>，超时 1800s，重试 3，9 项指令校验全部 PASS</td></tr>
+</table>
+
+<h2>六、过程中真实抓到并修掉的两个问题</h2>
+<table>
+<tr><th>问题</th><th>处理</th></tr>
+<tr><td>大文件拉取被输出截断，8 个线上文件只认出 2 个，误判「全线崩溃」</td><td>改为 curl 落盘再读，8/8 全对</td></tr>
+<tr><td>篮球串关总条数 30 → 28，护栏报 ERROR</td><td>查明已结算 24 条一条未少，只是当日 2 条 pending 因腿停售被合理清洗（推荐必须可下单）。C7 改为只盯「已结算记录 + 历史日期覆盖」，pending 允许波动；同时修正 health 判定，避免把「只巡检发现待修项」误标成 <code>BLOCKED</code></td></tr>
+</table>
+<p>这两个都是<b>护栏自己抓出来的</b>——正是「以后不再出错」要的效果：问题在无人提醒时被自动发现并自动修正。</p>
+
+<h2>七、边界（如实说明，不夸大）</h2>
+<div class="card">
+<ul>
+<li>数据无变化时如实标记 <code>NO_CHANGE</code>，<b>绝不伪造 <code>updateTime</code></b>；但每轮仍真实巡检、真实留痕，用户能看到系统确实跑过。</li>
+<li>推荐门槛（赔率 1.6~3.2、实证超额≥0、样本≥20、非平局、真实 EV、同批次）<b>一个都没放宽</b>。</li>
+<li>线上分层串关当前显示本来就正常（前端读 <code>batches[0]</code>，字段完整）；本次加的锁定态文案是<b>防御性修复</b>，针对顶层字段被直接用作渲染源的旧数据形态，不改变当前显示。</li>
+<li>连续自愈仍不健康会标 <code>BLOCKED</code> 并逐条列出未修复项；数据源临时不可用时流水线内置降级处理，绝不把残缺数据覆盖到生产。</li>
+</ul>
+</div>
+
+<h2>八、以后会自动发生什么（不需要你再说一句）</h2>
+<div class="card">
+<ol>
+<li>每小时整点，自动任务自举后调 <code>auto_pilot.py</code>，做完全部巡检与刷新。</li>
+<li>任一模块悄悄退化（主批次错一天 / 串关死锁 / V站 丢失 / 统计不一致 / 历史缩水 / 空壳文章），当轮自动发现、自动修、自动重新部署、自动复验。</li>
+<li>打开 <code>/version.json</code> 能看到 <code>lastPatrolAt</code> 与 <code>patrolHealth</code>；打开 <code>/auto_pilot_status.json</code> 能看到 13 项逐条结论与本轮动作。</li>
+<li>打开 App 若发现数据陈旧，页面自己静默触发一次保鲜并自动同步，无需点「刷新数据」。</li>
+<li>任何一层被改回去或停摆，自检「检查 16」立即报 ERROR，不会悄悄坏掉。</li>
+</ol>
+</div>
+
+<div class="foot">
+交付物：<code>/workspace/竞彩足球数据分析台-v1.7.134.apk</code> · 本报告 · 线上 <code>/auto_pilot_status.json</code><br>
+源码与数据快照已同步 GitHub（fast-forward + <code>[skip ci]</code>，未拉起破坏性 CI）。
+</div>
+
+</div></body></html>

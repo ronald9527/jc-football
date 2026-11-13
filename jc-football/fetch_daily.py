@@ -5895,12 +5895,23 @@ def load_locked_parlay(today_matches=None):
 
     # 回放来源只可能是 pending 记录（rebuild 已保证）；取其中最早发布的一条作 generatedAt
     _pend_all = [r for r in today_records if r.get("result") == "pending"]
+    # v1.7.134：从生成时的 snapshot 恢复候选/合格统计，锁定回放不再显示 0。
+    # 旧记录（无这些字段）保持缺失，由前端按「已锁定」诚实文案处理，绝不编造数字。
+    _meta = {}
+    for _r in _pend_all:
+        _s = _r.get("snapshot") or {}
+        for _k in ("candidateCount", "qualifiedCount", "candidatePool",
+                   "poolNotes", "tierNotes", "matchCount",
+                   "batchDate", "batchLabel", "generatedAt"):
+            if _k in _s and _k not in _meta:
+                _meta[_k] = _s[_k]
     safe_parlay = {
         "generatedAt": (_pend_all[0].get("savedAt", "") if _pend_all else ""),
-        "candidateCount": 0,
+        "candidateCount": _meta.get("candidateCount", 0),
         "strategy": "分层串关（今日已锁定，不再变动）",
         "parlay2": safe_p2, "parlay3": safe_p3,
-        "parlay4": safe_p4, "locked": True
+        "parlay4": safe_p4, "locked": True,
+        **{k: v for k, v in _meta.items() if k not in ("generatedAt", "candidateCount")},
     } if (safe_p2 or safe_p3 or safe_p4) else None
 
     # 高倍串关已按用户要求永久移除，不再返回
@@ -5958,7 +5969,18 @@ def save_parlay_history(safe_parlay, high_parlay):
             # 完整快照：把发布时该档的全部字段原样留存（EV/建议仓位/档位说明/
             # 命中率/抽水等）。锁定回放时按快照还原，用户翻看历史看到的
             # 必须和当初发布的卡片一模一样，不能是残缺重建。
-            "snapshot": {k: v for k, v in p.items()},
+            # v1.7.134：额外带上生成时的顶层候选/合格统计。此前锁定回放把
+            # candidateCount 写死成 0、qualifiedCount 整个丢失，于是「今日
+            # 推荐已锁定」后每轮自动刷新，页面都显示「候选 0 / 合格 0 ·
+            # 已产出 2 档」，看着又像分层串关坏了（用户会再来提醒一次）。
+            "snapshot": {
+                **{k: v for k, v in p.items()},
+                **{k: (safe_parlay or {}).get(k)
+                   for k in ("candidateCount", "qualifiedCount", "candidatePool",
+                             "poolNotes", "tierNotes", "matchCount",
+                             "batchDate", "batchLabel", "generatedAt")
+                   if (safe_parlay or {}).get(k) is not None},
+            },
         })
 
     data["updatedAt"] = time.strftime("%Y-%m-%d %H:%M:%S")
