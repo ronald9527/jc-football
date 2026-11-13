@@ -1,6 +1,6 @@
 {
- "checkedAt": "2026-11-13 08:30:09",
- "beijingNow": "2026-11-13 08:30:09",
+ "checkedAt": "2026-11-13 12:40:07",
+ "beijingNow": "2026-11-13 12:40:07",
  "clockSource": "HTTP Date(jc-football-1eo.pages.dev)",
  "health": "OK",
  "errorCount": 0,
@@ -29,7 +29,7 @@
   {
    "name": "比分预测日期含当天",
    "level": "OK",
-   "detail": "dateList[:3]=['2026-11-13', '2026-11-12', '2026-11-11']"
+   "detail": "dateList[:3]=['2026-11-15', '2026-11-14', '2026-11-13']"
   },
   {
    "name": "utcDate 格式合法",
@@ -39,17 +39,17 @@
   {
    "name": "串关历史统计自洽",
    "level": "OK",
-   "detail": "顶层 total=87 / records实算=87"
+   "detail": "顶层 total=85 / records实算=85"
   },
   {
    "name": "篮球串关历史未缩水",
    "level": "OK",
-   "detail": "已结算 24/基线 24，日期 10 个，丢失日期 无（pending 随停售清洗可波动）"
+   "detail": "已结算 27/基线 24，日期 10 个，丢失日期 无（pending 随停售清洗可波动）"
   },
   {
    "name": "ab_stats 云端可用",
    "level": "OK",
-   "detail": "stats keys=13 updatedAt=2026-11-13 08:04:08"
+   "detail": "stats keys=13 updatedAt=2026-11-13 11:53:51"
   },
   {
    "name": "无空壳专家文章",
@@ -59,30 +59,35 @@
   {
    "name": "线上数据新鲜度",
    "level": "OK",
-   "detail": "updateTime=2026-11-13 08:02:17，距今 27 分钟（阈值 90）"
+   "detail": "updateTime=2026-11-13 11:51:40，距今 48 分钟（阈值 90）"
   },
   {
    "name": "线上/源码版本一致",
    "level": "OK",
-   "detail": "线上 v1.7.134 / 源码 v1.7.134"
+   "detail": "线上 v1.7.136 / 源码 v1.7.136"
   },
   {
    "name": "串关逐腿证据完整",
    "level": "OK",
    "detail": "违规腿 无"
+  },
+  {
+   "name": "云端刷新通道就绪",
+   "level": "OK",
+   "detail": "probe ok=True / ghPatConfigured=True"
   }
  ],
  "actions": [],
  "l1Touched": [],
  "version": {
-  "updateTime": "2026-11-13 08:02:17",
-  "deployTime": "2026-11-13 08:20:07",
-  "count": 8,
-  "pageVersion": "v1.7.134",
-  "pageBuild": "1625770eb1f0",
-  "lastPatrolAt": "2026-11-13 08:20:06",
-  "patrolHealth": "BLOCKED",
-  "patrolErrorCount": 1
+  "updateTime": "2026-11-13 11:51:40",
+  "deployTime": "2026-11-13 12:20:15",
+  "count": 22,
+  "pageVersion": "v1.7.136",
+  "pageBuild": "be98633325b8",
+  "lastPatrolAt": "2026-11-13 08:30:09",
+  "patrolHealth": "OK",
+  "patrolErrorCount": 0
  },
  "site": "https://jc-football-1eo.pages.dev",
  "note": "数据无变化时如实标记 NO_CHANGE，不伪造 updateTime；每轮仍真实巡检与刷新"

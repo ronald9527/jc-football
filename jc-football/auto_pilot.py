@@ -125,7 +125,7 @@ def save_local(name, data):
 
 # ---------------------------------------------------------------- 巡检
 def patrol(live):
-    """用户视角 12 项健康巡检，返回 (健康?, 权威日期, 权威时刻, 时间源)。"""
+    """用户视角 13 项健康巡检，返回 (健康?, 权威日期, 权威时刻, 时间源)。"""
     import beijing_clock
     bj = beijing_clock.now()
     bj_today = bj.strftime("%Y-%m-%d")
@@ -261,6 +261,25 @@ def patrol(live):
                 bad_legs.append("%s:%s" % (key, lg.get("num")))
     chk("串关逐腿证据完整", bool(m) and not bad_legs,
         "违规腿 %s" % (bad_legs[:4] or "无"))
+
+    # C13 云端刷新通道（v1.7.136）：本轮根因正是 GH_PAT 失效后长期无人察觉，
+    # 「刷新数据」按钮 POST 恒 401 却被前端 .catch(()=>{}) 吞掉、假报成功。
+    # 纳入每小时巡检，凭证再失效会立刻留痕 ERROR，不再等用户来提醒。
+    # 只做无参 / ?health=1 探测（该分支绝不触发 CI），不产生任何额外任务。
+    _hpath = "/tmp/ap_refresh_health.json"
+    run("curl -sS -m 20 -A '%s' -H 'Cache-Control: no-cache' "
+        "'%s/api/refresh?health=1&cb=%s' -o %s"
+        % (UA, SITE, int(datetime.datetime.now().timestamp()), _hpath), timeout=30)
+    _h = None
+    try:
+        _h = json.load(open(_hpath, encoding="utf-8"))
+    except Exception:
+        pass
+    chk("云端刷新通道就绪",
+        bool(_h) and _h.get("ok") is True and _h.get("ghPatConfigured") is True,
+        "probe ok=%s / ghPatConfigured=%s" % (
+            (_h or {}).get("ok"), (_h or {}).get("ghPatConfigured")),
+        level="ERROR")
 
     return bj, bj_today, src, v, {"shell": shell, "ph_real": real,
                                   "bk_settled": bk_settled, "v": v}
