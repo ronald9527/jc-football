@@ -326,7 +326,11 @@ def main():
         with open(os.path.join(dist, "auto_pilot_status.json"), "w", encoding="utf-8") as f:
             json.dump(_pilot, f, ensure_ascii=False, indent=1)
     # 部署数据文件，供页面端动态 fetch 实时刷新
-    for data_file in ["matches.json", "hkmo_cache.json", "odds_bsd_cache.json",
+    # v1.7.135 无用数据清理：移除 odds_bsd_cache.json（约 3.8MB）——它只是
+    # fetch_odds_bsd.py 的离线抓取缓存，前端从不 fetch、ensure_history 也不从
+    # Pages 恢复它，每轮跟着上传纯属浪费部署体积。其余文件都是页面刷新链路
+    # 或冷启动恢复真正会用到的，逐一保留。
+    for data_file in ["matches.json", "hkmo_cache.json",
                       "odds_bsd.json", "fd_data.json",
                       # WhoScored 人工预测 / 专家推荐快照（v1.7.39）：此前只经
                       # index.html 的 BUILT_WHOSCORED / BUILT_EXPERT 注入，

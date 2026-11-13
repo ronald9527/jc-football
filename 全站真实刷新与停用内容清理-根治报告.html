@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全站真实刷新与停用内容清理 · 根治报告 v1.7.136</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--card2:#1c2430;--bd:#2a3441;--tx:#e6edf3;--sub:#9aa8b8;--good:#3fb950;--bad:#f85149;--warn:#d29922;--acc:#58a6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:18px;max-width:1000px;margin:0 auto}
+h1{font-size:23px;line-height:1.4;margin:0 0 6px}
+h2{font-size:18px;margin:30px 0 12px;padding-left:11px;border-left:4px solid var(--acc)}
+h3{font-size:15px;margin:20px 0 8px;color:var(--acc)}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin:12px 0}
+.hero{background:linear-gradient(135deg,#12243a,#161b22);border:1px solid #2c4a6b}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.b{display:inline-block;font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--card2);color:var(--sub)}
+.b.ok{color:var(--good);border-color:#265c34;background:#10281a}
+.b.warn{color:var(--warn);border-color:#6b5316;background:#2a2210}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+th,td{border:1px solid var(--bd);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--sub);font-weight:600;white-space:nowrap}
+td code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px;color:#a5d6ff}
+.quote{border-left:3px solid var(--warn);background:#251f12;padding:10px 14px;margin:12px 0;color:#e8d5a8;border-radius:0 8px 8px 0}
+.ok-t{color:var(--good)}.bad-t{color:var(--bad)}.warn-t{color:var(--warn)}
+ul{margin:8px 0;padding-left:22px}li{margin:5px 0}
+.small{font-size:12.5px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.kpi{background:var(--card2);border:1px solid var(--bd);border-radius:9px;padding:12px 14px}
+.kpi b{display:block;font-size:21px;color:var(--good)}
+.kpi span{font-size:12px;color:var(--sub)}
+pre{background:#0b0f14;border:1px solid var(--bd);border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;color:#b8c7d9;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="card hero">
+  <h1>「刷新数据」升级为全站真实刷新 + 停用/无用内容清理</h1>
+  <p class="small">竞彩足球 / 篮球数据分析台 · 根治报告 · 2026-11-13 · 线上 <span class="mono">v1.7.136</span> / <span class="mono">pageBuild=be98633325b8</span></p>
+  <div class="badges">
+    <span class="b ok">自检 ERROR 0 / WARN 0</span>
+    <span class="b ok">Playwright 8 组场景全通过</span>
+    <span class="b ok">云端 POST 真实触发 run</span>
+    <span class="b ok">9 个 Tab 全量重渲染</span>
+    <span class="b ok">APK 1.7.136(10836) 对齐</span>
+    <span class="b">GH_PAT 已修复</span>
+  </div>
+</div>
+
+<h2>一、用户诉求</h2>
+<div class="quote">「为了安全起见，把那个拉新数据按钮更新一下，只要我按了就全站 tab 内容更新，需要数据的拉新数据，需要预测的就预测，需要提取的就提取，要真实做到。然后再将那些没用的停用的数据，内容清理掉，不要影响我的观看视觉」</div>
+<p>承接此前反复出现的问题：<b>「刷新按钮按了还是旧数据」</b>、<b>「不要假装成功」</b>、<b>「往后不要让我再提醒了」</b>。本轮目标是把按钮从「点一下弹个成功提示」改成<b>真实可核对的闭环</b>，并把页面上停用/空占位内容清干净。</p>
+
+<h2>二、结论速览</h2>
+<div class="grid">
+  <div class="kpi"><b>9</b><span>个 Tab（8 足球 + 竞彩篮球）全量重渲染，另含篮球 6 个子页</span></div>
+  <div class="kpi"><b>0</b><span>渲染异常 / JS 错误 / 自检 ERROR</span></div>
+  <div class="kpi"><b>5</b><span>个此前漏拉的统计类数据源补齐</span></div>
+  <div class="kpi"><b>3.8 MB</b><span>无用缓存从部署包移除</span></div>
+</div>
+
+<table>
+<tr><th>项目</th><th>改造前</th><th>改造后（已上线）</th></tr>
+<tr><td>云端刷新</td><td class="bad-t"><code>fetch(...).catch(()=>{})</code> 吞掉 401/502，仍弹「已重新加载本页数据」</td><td class="ok-t">健康探测 → 真实 POST 读回执 → 轮询本次 run 结论与新部署 → 每一步如实反馈</td></tr>
+<tr><td>全站更新</td><td class="bad-t">只 <code>render()</code> 当前 Tab + 比分预测；角标只在进入该 Tab 时赋值</td><td class="ok-t"><code>renderAllTabs()</code> 逐个渲染 9 Tab + 篮球 6 子页；<code>refreshAllBadges()</code> 统一实算全部角标</td></tr>
+<tr><td>刷新范围</td><td class="bad-t">漏拉正路正确率 / V站高信心 / 专家榜 / WhoScored 近期·历史；还请求云端不部署的 <code>ab_compare.json</code>（必然 404）</td><td class="ok-t">补齐 5 个统计源；移除 404 大请求与已下线半全场死档</td></tr>
+<tr><td>回执</td><td class="bad-t">无凭证、无 runId、无部署证据，无法核对</td><td class="ok-t"><code>window.__lastCloudRefresh</code> 记录 probed / ghPat / dispatched / runId / conclusion / newDeploy / error / syncedTabs</td></tr>
+<tr><td>视觉</td><td class="bad-t">停用档位说明、8 张「暂无专家推荐」空卡、旧双源名称、北单过时说明</td><td class="ok-t">全部清理；真实状态提示（观望、样本积累中）一律保留</td></tr>
+</table>
+
+<h2>三、取证：按钮真实链路与全站 Tab 数据源</h2>
+<p>先摸清现状再动手，避免打补丁：</p>
+<ul>
+<li><b>线上凭证失效</b>：<code>POST /api/refresh</code> 实测返回 <code>HTTP 502 / 触发工作流失败 HTTP 401 / Bad credentials</code>。旧前端对 POST 错误 <code>.catch(()=>{})</code> 静默吞掉，仍弹成功文案 —— 这就是用户反复指出的「假成功」。已用有效 token 修复 Cloudflare Pages 的 <code>GH_PAT</code> secret。</li>
+<li><b>只更新当前 Tab</b>：旧 <code>triggerRePull()</code> 调用 <code>loadLiveDatasets(false)</code> 后仅 <code>render()</code> 当前视图 + <code>renderScorePred()</code>；各 Tab 角标又由各自 render 函数赋值。实测停在「强弱对战」时，分层串关 / 高手推荐角标显示 0，看着像全站没更新。</li>
+<li><b>数据源遗漏</b>：<code>good_rate_stats.json</code> / <code>vz_high_stats.json</code> / <code>expert_leaderboard.json</code> / <code>whoscored_recent.json</code> / <code>whoscored_history.json</code> 五个统计源从未被刷新拉取；另有 <code>ab_compare.json</code>（约 730KB，云端只导出 <code>ab_stats.json</code>）的必然 404 请求。</li>
+<li><b>部署守卫存在</b>：<code>run_daily.sh</code> 的 <code>.ci_official_down</code> 守卫会在海外 CI 官方接口残缺时跳过部署。按钮真实触发 CI 不会用坏数据覆盖生产。</li>
+</ul>
+
+<h3>全站 Tab 与渲染函数对照</h3>
+<table>
+<tr><th>Tab</th><th>渲染函数</th><th>刷新后实测内容长度</th></tr>
+<tr><td>今日赛程</td><td class="mono">renderStats / renderFocus / renderFilters / renderGoodRate / renderVzHighStats / renderCards / renderTable</td><td>18,312 字符</td></tr>
+<tr><td>历史战绩</td><td class="mono">renderHistory</td><td>144,446 字符</td></tr>
+<tr><td>强弱对战</td><td class="mono">renderStrongWeak</td><td>896 字符</td></tr>
+<tr><td>港澳赔率</td><td class="mono">renderHKMO</td><td>6,359 字符</td></tr>
+<tr><td>分层串关</td><td class="mono">renderHighOdds</td><td>15,642 字符</td></tr>
+<tr><td>高手推荐</td><td class="mono">renderExpert</td><td>1,626 字符</td></tr>
+<tr><td>官方赛果</td><td class="mono">renderFD</td><td>419 字符</td></tr>
+<tr><td>比分预测</td><td class="mono">renderScorePred</td><td>12,124 字符</td></tr>
+<tr><td>竞彩篮球</td><td class="mono">renderBasketball × 6 子页（sched/hist/ai/parlay/stats/acc）</td><td>3,602 字符</td></tr>
+</table>
+<p class="small">角标统一实算结果：今日 22 / 历史 965 / 强弱 2 / 港澳 22 / 分层串关 2 / 高手 15 / 官方赛果 6 / 比分预测 276 / 篮球 67，<b>无一为 0</b>。</p>
+
+<h2>四、改造内容</h2>
+
+<h3>1. 全站真实刷新状态机（<code>triggerRePull()</code> 重写）</h3>
+<pre>① 全站同步：loadLiveDatasets() 拉云端 25+ 数据源 → renderAllTabs() 就地重渲染
+             → 返回 receipt（覆盖模块数 / 失败项），明确弹「已全站同步 N 个模块」
+② 通道探测：GET /api/refresh?health=1  （该分支绝不触发 CI；未就绪即如实收尾）
+③ 真实触发：POST /api/refresh，读取 ok / runId / error，不再吞错
+④ 真实轮询：GET /api/refresh?run_id=... 拿 conclusion + 比对 version.json 的 deployTime
+             → 新部署出现 → 再全站同步一次 → 「云端全量刷新完成」
+             → 运行失败 / 取消 / 超时 / 无新部署 → 分别如实说明
+⑤ 全程按钮阶段文案 + 诚实回执；失败不假装成功，成功必有证据</pre>
+<p><b>关键边界（必须讲清楚）</b>：抓取 / 预测 / 提取 / 赛果回溯 / 结算全部在<b>云端流水线（GitHub Actions）</b>执行，浏览器做不到；浏览器真实做到的是「秒级同步云端全部产物 + 全站重渲染」与「真实发起云端全量流水线并核对结果」。报告不混淆这两件事。</p>
+<p>另去掉无条件 <code>setTimeout(__hardReload, 2600)</code>：它会打断轮询状态机并让页面闪一下，而就地全站重渲染已满足「全站 tab 内容更新」。仅当云端 <code>pageVersion</code> 与本页不同时提示重开获取新版页面代码。</p>
+
+<h3>2. 浏览器实测发现并补修的竞态</h3>
+<p>首轮 Playwright 实测暴露一个真问题：主路径要拉 25+ 个 JSON，云端通道却可能几百毫秒就返回失败，<code>① 已全站同步</code> 的<b>延迟 toast 会覆盖</b>最终的「发起失败」回执，用户只看得到「正在发起刷新」——又变成不诚实。已加 <code>finalShown</code> 优先级：最终回执一旦落地，任何延迟的阶段提示都不再覆盖。同时把回执模块数从 8 补准为 <b>9</b>（此前漏计竞彩篮球）。</p>
+
+<h3>3. 清理停用 / 无用内容</h3>
+<table>
+<tr><th>类别</th><th>清理项</th><th>处置</th></tr>
+<tr><td>停用说明</td><td>分层串关历史区「搏击 / 狂击已永久下线」说明块</td><td class="ok-t">删除（历史赛果记录本身保留）</td></tr>
+<tr><td>空占位卡</td><td>高手推荐为每场生成的「暂无专家推荐」空卡（实测 8 张重复）</td><td class="ok-t">只渲染真有推荐的场次，末尾用一条汇总说明带过，信息不丢</td></tr>
+<tr><td>旧名称</td><td>「🥊 模型 vs WhoScored 命中率对比」「双源同场回测」</td><td class="ok-t">改为真实三源：模型 / WhoScored / V站</td></tr>
+<tr><td>过时说明</td><td>页脚与关于弹层里的北单数据源、北单历史、2/3/4/5串1、16:00锁定、每30分钟更新</td><td class="ok-t">改为当前真实的分层三档、证据准入、当日锁定、自动保鲜</td></tr>
+<tr><td>死档</td><td><code>half_full_history.json</code>（228KB 已下线半全场）</td><td class="ok-t">前端不再拉取</td></tr>
+<tr><td>无用缓存</td><td><code>odds_bsd_cache.json</code>（约 3.8MB，前端不拉、冷启动也不恢复）</td><td class="ok-t">从部署清单移除，减小每轮上传体积</td></tr>
+<tr><td>无效请求</td><td><code>ab_compare.json</code>（云端不部署，必然 404）</td><td class="ok-t">移除，命中率热更新由 <code>ab_stats.json</code> 负责</td></tr>
+</table>
+<p class="small"><b>刻意保留</b>：今日赛程「暂无规则命中，保持观望」、统计「样本积累中 n/20」这类是真实状态提示，删了反而让用户不知道为什么没数据，不属于「停用 / 无用」。</p>
+
+<h3>4. 护栏与留痕</h3>
+<ul>
+<li><code>selftest.py</code> 检查 12 整体重写：旧断言把「吞错」和「无条件硬重载」当成必须存在，已替换为真实链路必备特征 + 禁止旧假成功特征；新增<b>检查 17</b> 覆盖 9 个渲染调用、篮球 6 子页、全角标、刷新回执、视觉清理、部署清单、版本一致。</li>
+<li>刷新状态写入 <code>window.__lastCloudRefresh</code>；自动保鲜心跳同样改为真实读取云端回执并记 <code>__autoFreshLastResult</code>，不再静默吞错。</li>
+<li><code>functions/api/refresh.js</code> 新增无参 / <code>?health=1</code> 健康探测分支，明确返回 <code>ghPatConfigured</code>，且不触发 CI。</li>
+</ul>
+
+<h2>五、验证证据</h2>
+<table>
+<tr><th>验证项</th><th>结果</th></tr>
+<tr><td>全量流水线 <code>bash run_daily.sh deploy</code></td><td class="ok-t">数据刷新到 11-13 11:51 批次，22 场 / 历史 965 条 / 比分预测 234 场；<code>verify_deploy PASS</code></td></tr>
+<tr><td><code>selftest.py</code>（含检查 12 / 17）</td><td class="ok-t">ERROR 0 / WARN 0；分层串关 2 档达标、V站 一等字段 4/4、篮球串关历史 30 组完整</td></tr>
+<tr><td>JS 语法 / Python 编译</td><td class="ok-t"><code>node --check</code> 通过；<code>py_compile</code> 通过</td></tr>
+<tr><td>线上 GET <code>/api/refresh?health=1</code></td><td class="ok-t">HTTP 200 <code>{ok:true, probed:true, ghPatConfigured:true}</code></td></tr>
+<tr><td>线上真实 POST <code>/api/refresh</code></td><td class="ok-t">HTTP 200 <code>{ok:true, runId:43363057238}</code> —— 真的启动了 workflow_dispatch</td></tr>
+<tr><td>线上 GET <code>?run_id=...</code></td><td class="ok-t">HTTP 200 <code>{ok:true, status:"in_progress"}</code></td></tr>
+<tr><td>Playwright 真实点击</td><td class="ok-t">9 Tab 内容全部非空、8 角标全部非 0、<code>failed=[]</code>、<code>jsErrors=[]</code>、噪音全清；真实 POST <code>dispatched=true, runId=43364008172</code></td></tr>
+<tr><td>Playwright mock 成功闭环</td><td class="ok-t">「✅ 云端全量刷新完成，全站 9 个模块已同步」，<code>newDeploy=true</code> 且二次全站同步</td></tr>
+<tr><td>Playwright mock 发起失败 / 通道未配置</td><td class="ok-t">分别如实报「③ 云端全量刷新发起失败：…」「② 云端刷新通道不可用（…）」；按钮恢复；<b>无假成功文案</b></td></tr>
+<tr><td>APK 内嵌页校验</td><td class="ok-t">11 项全通过：v1.7.136、renderAllTabs、refreshAllBadges、健康探测、run 轮询、无吞错、停用说明/空卡/北单说明已清、三源名称</td></tr>
+<tr><td>部署守卫反向验证</td><td class="ok-t">测试触发的 CI 在海外 <code>completed failure</code>，线上 <code>deployTime</code> 与 <code>pageBuild</code> 未被残缺数据覆盖</td></tr>
+</table>
+
+<h2>六、交付资产（全部可核对）</h2>
+<table>
+<tr><th>资产</th><th>值</th></tr>
+<tr><td>线上页面 / 版本</td><td class="mono">https://jc-football-1eo.pages.dev/ · v1.7.136 · pageBuild=be98633325b8</td></tr>
+<tr><td>线上 version.json</td><td class="mono">deployTime=2026-11-13 12:20:15 · updateTime=2026-11-13 11:51:40 · patrolHealth=OK</td></tr>
+<tr><td>APK</td><td class="mono">竞彩足球数据分析台-v1.7.136.apk · versionName=1.7.136 · versionCode=10836</td></tr>
+<tr><td>源码</td><td class="mono">template.html / index.html / functions/api/refresh.js / deploy_cf.py / selftest.py</td></tr>
+<tr><td>数据</td><td class="mono">matches.json / score_predict.json / history.json / basketball*.json / expert*.json / vzhan*.json / 各统计副本</td></tr>
+<tr><td>自检</td><td class="mono">selftest_report.json（ERROR 0 / WARN 0）；检查 12 + 检查 17 护栏</td></tr>
+</table>
+
+<h2>七、边界说明</h2>
+<ul>
+<li>浏览器<b>不能</b>凭空抓到比云端更新的数据；按钮的职责是「把云端已部署的全部产物秒级同步到手机」+「真实发起云端全量流水线并核对结果」。若上游停更，按钮会如实说明「本次未产出新部署」，不会伪造时间。</li>
+<li>云端 CI 在海外对中国竞彩官方接口常被拦（本轮实测 <code>completed failure</code>），<code>.ci_official_down</code> 守卫会跳过部署保护生产；本地全量流水线与自动保鲜任务才是数据推进的主路径。</li>
+<li>推荐门槛一个都没放宽：赔率 1.60~3.20、实证超额≥0、样本≥20、非平局、真实 EV、同竞彩批次；「今日无推荐」是宁缺毋滥的正常结果。</li>
+<li>版本 <code>v1.7.136</code> 由部署脚本按模板哈希自动升版产生，随后已把网页、CHANGELOG、自检断言、AndroidManifest、APK 全部对齐到同一版本，并同步模板指纹，避免再次误升。</li>
+</ul>
+
+<p class="small" style="margin-top:26px;border-top:1px solid var(--bd);padding-top:12px">本报告由本轮真实执行结果生成，所有数字均来自实跑输出、线上接口回执与浏览器实测，未做推测。</p>
+</body>
+</html>

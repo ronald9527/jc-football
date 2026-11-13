@@ -1,6 +1,6 @@
 {
  "version": "v1.7.126",
- "generatedAt": "2026-11-12 18:50:46",
+ "generatedAt": "2026-11-13 11:53:57",
  "scope": "V站·呼死狗 🔥高信心预测 · 比分精确命中 / 胜平负方向命中",
  "source": {
   "predictions": "vzhan_data.json（V站 report/info 赛前预测比分）",
@@ -9,39 +9,111 @@
   "archive": "vzhan_history.json（赛前固化 highConf + 赛果归档）"
  },
  "today": {
-  "batchDate": "2026-11-12",
-  "batchLabel": "周四",
-  "batchPrefix": "周四",
+  "batchDate": "2026-11-13",
+  "batchLabel": "周五",
+  "batchPrefix": "周五",
   "isToday": true,
-  "totalMatches": 6,
-  "vzPredCount": 1,
-  "highCount": 1,
+  "totalMatches": 11,
+  "vzPredCount": 4,
+  "highCount": 4,
   "settledCount": 0,
-  "pendingCount": 1,
+  "pendingCount": 4,
   "batchesAvailable": [
-   {
-    "date": "2026-11-12",
-    "label": "周四",
-    "count": 6,
-    "highCount": 1
-   },
    {
     "date": "2026-11-13",
     "label": "周五",
-    "count": 8,
+    "count": 11,
     "highCount": 4
+   },
+   {
+    "date": "2026-11-14",
+    "label": "周六",
+    "count": 6,
+    "highCount": 0
+   },
+   {
+    "date": "2026-11-15",
+    "label": "周日",
+    "count": 5,
+    "highCount": 0
    }
   ],
   "picks": [
    {
-    "num": "周四005",
+    "num": "周五004",
     "league": "欧国联",
-    "home": "英格兰",
-    "away": "克罗地亚",
-    "kickoff": "2026-11-13 03:45:00",
-    "predH": 3,
+    "home": "苏格兰",
+    "away": "北马其顿",
+    "kickoff": "2026-11-14 03:45:00",
+    "predH": 2,
     "predA": 0,
-    "predScore": "3:0",
+    "predScore": "2:0",
+    "dir": "H",
+    "dirName": "主胜",
+    "modelPred": [
+     2,
+     0
+    ],
+    "confWhy": "V站·模型 方向共识",
+    "settled": false,
+    "score": null,
+    "exactHit": null,
+    "dirHit": null,
+    "note": "未开奖 · 不计入正确率"
+   },
+   {
+    "num": "周五005",
+    "league": "欧国联",
+    "home": "塞尔维亚",
+    "away": "德国",
+    "kickoff": "2026-11-14 03:45:00",
+    "predH": 1,
+    "predA": 2,
+    "predScore": "1:2",
+    "dir": "A",
+    "dirName": "客胜",
+    "modelPred": [
+     0,
+     2
+    ],
+    "confWhy": "V站·模型 方向共识",
+    "settled": false,
+    "score": null,
+    "exactHit": null,
+    "dirHit": null,
+    "note": "未开奖 · 不计入正确率"
+   },
+   {
+    "num": "周五008",
+    "league": "欧国联",
+    "home": "斯洛文尼",
+    "away": "瑞士",
+    "kickoff": "2026-11-14 03:45:00",
+    "predH": 0,
+    "predA": 2,
+    "predScore": "0:2",
+    "dir": "A",
+    "dirName": "客胜",
+    "modelPred": [
+     0,
+     1
+    ],
+    "confWhy": "V站·模型 方向共识",
+    "settled": false,
+    "score": null,
+    "exactHit": null,
+    "dirHit": null,
+    "note": "未开奖 · 不计入正确率"
+   },
+   {
+    "num": "周五009",
+    "league": "欧国联",
+    "home": "荷兰",
+    "away": "希腊",
+    "kickoff": "2026-11-14 03:45:00",
+    "predH": 2,
+    "predA": 1,
+    "predScore": "2:1",
     "dir": "H",
     "dirName": "主胜",
     "modelPred": [
@@ -199,8 +271,8 @@
  },
  "excluded": {
   "unknownConf": 46,
-  "pending": 5,
-  "noResult": 9
+  "pending": 4,
+  "noResult": 18
  },
  "conclusion": "V站 🔥高信心（V站·模型 方向共识）历史 22 场：预测比分精确命中 3 场（13.64%，Wilson 95%CI 4.75%~33.34%），方向命中 14 场（63.64%，Wilson 95%CI 42.95%~80.27%）。独立随机基线：比分 8.74%、方向 34.55%；高信心相对基线的比分超额 +4.90pt、方向超额 +29.09pt（二项精确单侧 p=0.3013 / 0.0051，至少一项达到统计显著）。与普通组（n=22，比分 13.64%、方向 40.91%）相比，方向差 +22.73pt（Fisher 双侧 p=0.2271，差异不显著）。可判定高信心口径的场次仅 44 场，样本有限、置信区间宽，方向表现显著优于随机基线；另有 46 场因赛前无模型快照无法判定，已单列不参与对比。结论：仅作回溯描述，不构成稳定优势证明，不构成投注建议。",
  "byGroup": [
@@ -932,7 +1004,7 @@
   "独立随机基线 = 该组预测方向（比分）分布 × 全量实际方向（比分）分布之积求和，代表「预测与赛果完全独立」时的期望命中率；另列朴素 1/3 仅作参照，不作为判定标准。",
   "显著性：小样本采用二项精确单侧检验（vs 基线）与 Fisher 精确检验 / 两比例 z 检验（组间），并给出 Wilson 95% 置信区间；p<0.05 才称显著，样本不足时如实标注。",
   "本统计不含赔率、返奖率与 ROI：命中率高于基线只说明方向判断可能优于随机，不代表可盈利；竞彩抽水决定长期期望为负。",
-  "今日清单严格按竞彩当天开售批次 2026-11-12（周四）隔离，只列当天 6 场里的高信心预测；未开奖 1 场不计入任何命中率，赛后自动回填纳入统计。",
+  "今日清单严格按竞彩当天开售批次 2026-11-13（周五）隔离，只列当天 11 场里的高信心预测；未开奖 4 场不计入任何命中率，赛后自动回填纳入统计。",
   "归档档案由 fetch_vzhan.py 每日增量累积、backfill_vzhan_history.py 一次性全量回溯重建，随部署上云跨轮保留；统计每次刷新重算。",
   "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
  ]

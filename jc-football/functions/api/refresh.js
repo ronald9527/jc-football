@@ -103,7 +103,16 @@ export async function onRequestGet({ env, request }) {
   const token = env.GH_PAT;
   const url = new URL(request.url);
   const runId = url.searchParams.get("run_id");
-  if (!runId) return json({ ok: false, error: "缺少 run_id" }, 400);
+  // v1.7.135：无参 / ?health=1 → 只做「通道健康探测」，绝不触发 CI。
+  // 前端按钮据此在发起前就能真实判断云端刷新是否可用，不再 fire-and-forget 假装成功。
+  if (!runId) {
+    return json({
+      ok: true, service: "refresh", probed: true,
+      ghPatConfigured: !!token,
+      workflow: WF, repo: REPO,
+      message: token ? "云端全量刷新通道就绪（未发起任何任务）" : "云端未配置 GH_PAT，无法发起刷新",
+    });
+  }
   try {
     const resp = await fetch(
       `https://api.github.com/repos/${REPO}/actions/runs/${runId}`,
