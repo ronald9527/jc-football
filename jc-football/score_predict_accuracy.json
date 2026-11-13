@@ -4001,6 +4001,22 @@
    "mae": 1.5
   },
   {
+   "id": 555072,
+   "league": "巴甲",
+   "home": "RB Bragantino",
+   "away": "RB Bragantino",
+   "date": "2026-11-02",
+   "predH": 1,
+   "predA": 1,
+   "actH": 2,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 558849,
    "league": "荷甲",
    "home": "PEC Zwolle",
@@ -19009,6 +19025,22 @@
    "mae": 1.0
   },
   {
+   "id": 557130,
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "date": "2026-05-29",
+   "predH": 0,
+   "predA": 0,
+   "actH": 4,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 2.0
+  },
+  {
    "id": 557142,
    "league": "CLI",
    "home": "SC Corinthians Paulista",
@@ -19713,6 +19745,22 @@
    "mae": 1.0
   },
   {
+   "id": 557124,
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "date": "2026-04-29",
+   "predH": 0,
+   "predA": 0,
+   "actH": 1,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 554867,
    "league": "巴甲",
    "home": "Grêmio FBPA",
@@ -20047,6 +20095,22 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 1.0
+  },
+  {
+   "id": 557122,
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "date": "2026-04-15",
+   "predH": 1,
+   "predA": 1,
+   "actH": 1,
+   "actA": 2,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
   },
   {
    "id": 554842,
@@ -21185,6 +21249,22 @@
    "mae": 2.0
   },
   {
+   "id": 556741,
+   "league": "CLI",
+   "home": "Botafogo FR",
+   "away": "Botafogo FR",
+   "date": "2026-03-11",
+   "predH": 1,
+   "predA": 1,
+   "actH": 0,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "A",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
+  },
+  {
    "id": 554776,
    "league": "巴甲",
    "home": "Grêmio FBPA",
@@ -21231,6 +21311,22 @@
    "exactHit": false,
    "outcomeHit": true,
    "mae": 1.5
+  },
+  {
+   "id": 553221,
+   "league": "CLI",
+   "home": "Botafogo FR",
+   "away": "Botafogo FR",
+   "date": "2026-02-26",
+   "predH": 1,
+   "predA": 1,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
   },
   {
    "id": 554778,
@@ -21297,6 +21393,6 @@
    "mae": 0.5
   }
  ],
- "updatedAt": "2026-11-13 12:06:38",
+ "updatedAt": "2026-11-13 19:55:44",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }

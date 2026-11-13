@@ -1,23 +1,23 @@
 {
  "sample": {
   "total": 104,
-  "scored": 87,
+  "scored": 91,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
   "美职篮": {
-   "n": 50,
-   "home_win_rate": 50.0,
-   "hdc_home_hit_rate": 50.0,
-   "hilo_over_rate": 42.0,
-   "avg_total": 226.2
+   "n": 53,
+   "home_win_rate": 49.1,
+   "hdc_home_hit_rate": 49.1,
+   "hilo_over_rate": 41.5,
+   "avg_total": 226.8
   },
   "澳大利亚篮球联赛": {
-   "n": 8,
-   "home_win_rate": 37.5,
-   "hdc_home_hit_rate": 37.5,
-   "hilo_over_rate": 62.5,
-   "avg_total": 195.0
+   "n": 9,
+   "home_win_rate": 33.3,
+   "hdc_home_hit_rate": 33.3,
+   "hilo_over_rate": 55.6,
+   "avg_total": 193.8
   },
   "欧篮联": {
    "n": 11,
@@ -42,18 +42,18 @@
   }
  },
  "hdc_overall": {
-  "h": 36,
-  "a": 51,
+  "h": 37,
+  "a": 54,
   "d": 0,
-  "home_hit_rate": 41.4
+  "home_hit_rate": 40.7
  },
  "hilo_overall": {
-  "over": 42,
-  "under": 45,
-  "over_rate": 48.3
+  "over": 43,
+  "under": 48,
+  "over_rate": 47.3
  },
  "wnm_dist": {
-  "l1": 10,
+  "l1": 11,
   "l2": 10,
   "l3": 8,
   "l4": 3,
@@ -61,29 +61,29 @@
   "l6": 4
  },
  "home_advantage": {
-  "home_win_rate": 43.7
+  "home_win_rate": 42.9
  },
  "roi": {
   "hdc": {
-   "bet": 87,
-   "profit": 13.4,
-   "roi": 15.4
+   "bet": 91,
+   "profit": 15.2,
+   "roi": 16.7
   },
   "hilo": {
-   "bet": 87,
-   "profit": -15.6,
-   "roi": -17.9
+   "bet": 91,
+   "profit": -17.9,
+   "roi": -19.7
   },
   "mnl": {
-   "bet": 86,
-   "profit": -19.0,
-   "roi": -22.1
+   "bet": 90,
+   "profit": -23.0,
+   "roi": -25.6
   },
   "wnm": {
-   "bet": 38,
-   "profit": 22.8,
-   "roi": 60.0
+   "bet": 39,
+   "profit": 21.8,
+   "roi": 55.9
   }
  },
- "updatedAt": "2026-11-13 11:53:56"
+ "updatedAt": "2026-11-13 20:03:39"
 }
