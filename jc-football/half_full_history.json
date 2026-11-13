@@ -10988,8 +10988,38 @@
  },
  "2026-11-13": {
   "date": "2026-11-13",
-  "generatedAt": "2026-11-13 10:12:12",
-  "count": 0,
-  "matches": []
+  "generatedAt": "2026-11-13 12:06:21",
+  "count": 1,
+  "matches": [
+   {
+    "num": "周五001",
+    "home": "新加坡",
+    "away": "巴拉圭",
+    "league": "国际赛",
+    "kickoff": "2026-11-13 20:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 31.9,
+    "recommend2": "负负",
+    "confidence2": 18.8,
+    "probDist": {
+     "胜胜": 31.9,
+     "负负": 18.8,
+     "平胜": 12.3,
+     "平平": 9.5,
+     "平负": 8.0,
+     "胜平": 7.9,
+     "负平": 4.8,
+     "胜负": 3.9,
+     "负胜": 2.9
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 4,
+     "away": 1
+    }
+   }
+  ]
  }
 }
