@@ -4321,8 +4321,8 @@
    "date": "2026-11-13",
    "type": "稳健2串1",
    "tier": "bk2",
-   "totalOdds": 2.69,
-   "avgConfidence": 62.3,
+   "totalOdds": 2.8,
+   "avgConfidence": 61.6,
    "legs": [
     {
      "id": "2042744",
@@ -4336,13 +4336,13 @@
      "label": "让分主胜",
      "playDesc": "让分(+4.5)",
      "goalLine": "+4.5",
-     "odds": 1.58,
+     "odds": 1.65,
      "kickoff": "2026-11-14 09:00",
-     "confidence": 62.6,
+     "confidence": 61.2,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 62.6,
-     "canon": 6.421
+     "pTrue": 61.2,
+     "canon": 8.408
     },
     {
      "id": "2042746",
@@ -4366,11 +4366,11 @@
     }
    ],
    "recommended": false,
-   "ev": -0.1327,
-   "realEv": -0.1327,
+   "ev": -0.1059,
+   "realEv": -0.1059,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-13 21:05:16",
+   "savedAt": "2026-11-13 23:12:48",
    "snapshot": {
     "type": "稳健2串1",
     "tier": "bk2",
@@ -4389,12 +4389,12 @@
       "label": "让分主胜",
       "playDesc": "让分(+4.5)",
       "goalLine": "+4.5",
-      "odds": 1.58,
-      "confidence": 62.6,
+      "odds": 1.65,
+      "confidence": 61.2,
       "sameOddsHit": null,
       "sameOddsN": 4,
-      "pTrue": 62.6,
-      "canon": 6.421
+      "pTrue": 61.2,
+      "canon": 8.408
      },
      {
       "id": "2042746",
@@ -4417,24 +4417,44 @@
       "canon": 24.619
      }
     ],
-    "totalOdds": 2.69,
-    "avgConfidence": 62.3,
-    "jointProb": 0.3229,
-    "realHit": 0.3229,
-    "ev": -0.1327,
-    "realEv": -0.1327,
+    "totalOdds": 2.8,
+    "avgConfidence": 61.6,
+    "jointProb": 0.3188,
+    "realHit": 0.3188,
+    "ev": -0.1059,
+    "realEv": -0.1059,
     "empirical": true,
     "recommended": false,
-    "score": 30.695
+    "score": 30.604
    }
   },
   {
    "date": "2026-11-13",
    "type": "均衡3串1",
    "tier": "bk3",
-   "totalOdds": 4.57,
-   "avgConfidence": 58.9,
+   "totalOdds": 4.77,
+   "avgConfidence": 58.4,
    "legs": [
+    {
+     "id": "2042742",
+     "num": "周五306",
+     "league": "美职篮",
+     "home": "魔术",
+     "away": "雄鹿",
+     "play": "hilo",
+     "playKey": "hilo",
+     "dir": "l",
+     "label": "小分",
+     "playDesc": "总分线(222.5)",
+     "goalLine": "222.5",
+     "odds": 1.7,
+     "kickoff": "2026-11-14 08:00",
+     "confidence": 51.9,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 51.9,
+     "canon": 4.307
+    },
     {
      "id": "2042744",
      "num": "周五308",
@@ -4447,13 +4467,13 @@
      "label": "让分主胜",
      "playDesc": "让分(+4.5)",
      "goalLine": "+4.5",
-     "odds": 1.58,
+     "odds": 1.65,
      "kickoff": "2026-11-14 09:00",
-     "confidence": 62.6,
+     "confidence": 61.2,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 62.6,
-     "canon": 6.421
+     "pTrue": 61.2,
+     "canon": 8.408
     },
     {
      "id": "2042746",
@@ -4474,39 +4494,39 @@
      "sameOddsN": 0,
      "pTrue": 62.0,
      "canon": 24.619
-    },
-    {
-     "id": "2042750",
-     "num": "周五314",
-     "league": "美职篮",
-     "home": "快船",
-     "away": "雷霆",
-     "play": "hilo",
-     "playKey": "hilo",
-     "dir": "h",
-     "label": "大分",
-     "playDesc": "总分线(223.5)",
-     "goalLine": "223.5",
-     "odds": 1.7,
-     "kickoff": "2026-11-14 11:30",
-     "confidence": 52.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 52.0,
-     "canon": 4.508
     }
    ],
    "recommended": false,
-   "ev": -0.2399,
-   "realEv": -0.2399,
+   "ev": -0.2164,
+   "realEv": -0.2164,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-13 21:05:16",
+   "savedAt": "2026-11-13 23:12:48",
    "snapshot": {
     "type": "均衡3串1",
     "tier": "bk3",
     "tierDesc": "均衡3串1",
     "legs": [
+     {
+      "id": "2042742",
+      "num": "周五306",
+      "league": "美职篮",
+      "home": "魔术",
+      "away": "雄鹿",
+      "kickoff": "2026-11-14 08:00",
+      "play": "hilo",
+      "playKey": "hilo",
+      "dir": "l",
+      "label": "小分",
+      "playDesc": "总分线(222.5)",
+      "goalLine": "222.5",
+      "odds": 1.7,
+      "confidence": 51.9,
+      "sameOddsHit": null,
+      "sameOddsN": 3,
+      "pTrue": 51.9,
+      "canon": 4.307
+     },
      {
       "id": "2042744",
       "num": "周五308",
@@ -4520,12 +4540,12 @@
       "label": "让分主胜",
       "playDesc": "让分(+4.5)",
       "goalLine": "+4.5",
-      "odds": 1.58,
-      "confidence": 62.6,
+      "odds": 1.65,
+      "confidence": 61.2,
       "sameOddsHit": null,
       "sameOddsN": 4,
-      "pTrue": 62.6,
-      "canon": 6.421
+      "pTrue": 61.2,
+      "canon": 8.408
      },
      {
       "id": "2042746",
@@ -4546,45 +4566,25 @@
       "sameOddsN": 0,
       "pTrue": 62.0,
       "canon": 24.619
-     },
-     {
-      "id": "2042750",
-      "num": "周五314",
-      "league": "美职篮",
-      "home": "快船",
-      "away": "雷霆",
-      "kickoff": "2026-11-14 11:30",
-      "play": "hilo",
-      "playKey": "hilo",
-      "dir": "h",
-      "label": "大分",
-      "playDesc": "总分线(223.5)",
-      "goalLine": "223.5",
-      "odds": 1.7,
-      "confidence": 52.0,
-      "sameOddsHit": null,
-      "sameOddsN": 2,
-      "pTrue": 52.0,
-      "canon": 4.508
      }
     ],
-    "totalOdds": 4.57,
-    "avgConfidence": 58.9,
-    "jointProb": 0.1665,
-    "realHit": 0.1665,
-    "ev": -0.2399,
-    "realEv": -0.2399,
+    "totalOdds": 4.77,
+    "avgConfidence": 58.4,
+    "jointProb": 0.1643,
+    "realHit": 0.1643,
+    "ev": -0.2164,
+    "realEv": -0.2164,
     "empirical": true,
     "recommended": false,
-    "score": 13.766
+    "score": 13.836
    }
   },
   {
    "date": "2026-11-13",
    "type": "精锐4串1",
    "tier": "bk4",
-   "totalOdds": 7.76,
-   "avgConfidence": 57.8,
+   "totalOdds": 8.11,
+   "avgConfidence": 57.5,
    "legs": [
     {
      "id": "2042742",
@@ -4638,13 +4638,13 @@
      "label": "让分主胜",
      "playDesc": "让分(+4.5)",
      "goalLine": "+4.5",
-     "odds": 1.58,
+     "odds": 1.65,
      "kickoff": "2026-11-14 09:00",
-     "confidence": 62.6,
+     "confidence": 61.2,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 62.6,
-     "canon": 6.421
+     "pTrue": 61.2,
+     "canon": 8.408
     },
     {
      "id": "2042746",
@@ -4668,11 +4668,11 @@
     }
    ],
    "recommended": false,
-   "ev": -0.3339,
-   "realEv": -0.3339,
+   "ev": -0.3132,
+   "realEv": -0.3132,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-13 21:05:16",
+   "savedAt": "2026-11-13 23:12:48",
    "snapshot": {
     "type": "精锐4串1",
     "tier": "bk4",
@@ -4731,12 +4731,12 @@
       "label": "让分主胜",
       "playDesc": "让分(+4.5)",
       "goalLine": "+4.5",
-      "odds": 1.58,
-      "confidence": 62.6,
+      "odds": 1.65,
+      "confidence": 61.2,
       "sameOddsHit": null,
       "sameOddsN": 4,
-      "pTrue": 62.6,
-      "canon": 6.421
+      "pTrue": 61.2,
+      "canon": 8.408
      },
      {
       "id": "2042746",
@@ -4759,15 +4759,15 @@
       "canon": 24.619
      }
     ],
-    "totalOdds": 7.76,
-    "avgConfidence": 57.8,
-    "jointProb": 0.0858,
-    "realHit": 0.0858,
-    "ev": -0.3339,
-    "realEv": -0.3339,
+    "totalOdds": 8.11,
+    "avgConfidence": 57.5,
+    "jointProb": 0.0847,
+    "realHit": 0.0847,
+    "ev": -0.3132,
+    "realEv": -0.3132,
     "empirical": true,
     "recommended": false,
-    "score": 4.575
+    "score": 4.713
    }
   }
  ],
@@ -4775,7 +4775,7 @@
  "hit": 2,
  "miss": 25,
  "pending": 3,
- "updatedAt": "2026-11-13 21:05:16",
+ "updatedAt": "2026-11-13 23:12:48",
  "hitRate": 7.4,
  "recent7Rate": 5.6
 }
