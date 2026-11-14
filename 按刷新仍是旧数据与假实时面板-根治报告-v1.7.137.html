@@ -141,7 +141,9 @@ a{color:var(--acc)}
 <tr><td>云端通道 <code>/api/refresh?health=1</code></td><td class="ok-t"><code>ok:true, probed:true, ghPatConfigured:true</code></td></tr>
 <tr><td>Playwright 浏览器端到端</td><td class="ok-t">报告卡渲染、按钮真实同步 9 模块、角标刷新、诚实 toast、刷新后报告卡重算；<code>jsErrors: []</code>，<code>POST /api/refresh</code> 调用 <b>0</b> 次</td></tr>
 <tr><td>APK</td><td class="ok-t"><code>1.7.137(10837)</code>，内嵌页 11 项校验通过，与网页版本一致</td></tr>
-<tr><td>自动保鲜任务</td><td class="ok-t"><code>14693059</code> <code>status=1</code>，每小时整点，闭环入口 <code>auto_pilot.py</code></td></tr>
+<tr><td>自动保鲜任务</td><td class="ok-t"><code>14693059</code> <code>status=1</code>，每小时整点，闭环入口 <code>auto_pilot.py</code>；任务内凭证与本地同源且 <code>status=active</code></td></tr>
+<tr><td>线上 / 本地逐字节一致</td><td class="ok-t">首页 <code>index.html</code>、<code>version.json</code>、<code>auto_pilot_status.json</code>、<code>code-bundle.tar.gz</code> 四份全部 sha256 相同</td></tr>
+<tr><td>冷启动自举包</td><td class="ok-t">线上 <code>code-bundle.tar.gz</code> 内 <code>template.html</code> 为 <code>v1.7.137</code>，含 <code>renderDataReport</code> 与 <code>__rePullBusy</code> 声明 —— 下个整点自动任务不会回退到旧代码</td></tr>
 </table>
 
 <h2>九、交付清单</h2>
