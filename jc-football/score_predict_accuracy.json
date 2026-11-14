@@ -21567,8 +21567,40 @@
    "exactHit": false,
    "outcomeHit": false,
    "mae": 0.5
+  },
+  {
+   "id": "2042751",
+   "league": "日乙",
+   "home": "湘南海洋",
+   "away": "横滨FC",
+   "date": "2026-11-14",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 0,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 1.0
+  },
+  {
+   "id": "2042752",
+   "league": "日乙",
+   "home": "大宫松鼠RB",
+   "away": "山形山神",
+   "date": "2026-11-14",
+   "predH": 2,
+   "predA": 2,
+   "actH": 2,
+   "actA": 1,
+   "predOutcome": "D",
+   "actOutcome": "H",
+   "exactHit": false,
+   "outcomeHit": false,
+   "mae": 0.5
   }
  ],
- "updatedAt": "2026-11-14 17:22:03",
+ "updatedAt": "2026-11-14 21:58:20",
  "mergedNote": "2026-10-22 从 10-20 部署页面 BUILT_SCOREPRED 合并恢复 48 条（沙箱丢失补救）"
 }
