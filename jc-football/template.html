@@ -863,20 +863,27 @@ td .mini{display:flex;align-items:center;gap:5px;justify-content:flex-end}
 .copyrow{display:flex;gap:8px;align-items:center;background:var(--panel3);border:1px solid var(--line2);
   border-radius:8px;padding:8px 10px}
 .copyrow code{flex:1;min-width:0;font-size:11px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ============ 更新倒计时横幅 ============ */
-.upd-banner{
-  max-width:1500px;margin:8px auto 0;padding:8px 14px;font-size:11.5px;color:var(--sub);
-  background:var(--panel2);border:1px solid var(--line);border-radius:8px;
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+/* ============ v1.7.137 数据报告卡（取代已取消的「实时/倒计时」假面板） ============ */
+.report-card{
+  max-width:1500px;margin:8px auto 0;padding:11px 14px;font-size:11.5px;color:var(--sub);
+  background:var(--card2);border:1px solid var(--line);border-radius:10px;
 }
-.upd-banner .ub-live{color:var(--good);font-weight:700}
-.upd-banner .ub-cd{color:var(--warn);font-weight:700}
-.upd-banner .ub-done{color:var(--accent);font-weight:700}
-.upd-banner .ub-btn{
-  margin-left:auto;font-size:11px;padding:3px 10px;border-radius:6px;cursor:pointer;
-  background:rgba(82,196,26,.15);color:var(--good);border:1px solid rgba(82,196,26,.4);
-}
-.upd-banner .ub-btn.off{background:rgba(234,102,104,.12);color:var(--bad);border:1px solid rgba(234,102,104,.4)}
+.rp-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.rp-title{font-size:12.5px;font-weight:700;color:var(--text)}
+.rp-badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+.rp-badge.ok{color:var(--good);background:var(--good-bg)}
+.rp-badge.warn{color:var(--warn);background:rgba(250,173,20,.12)}
+.rp-badge.bad{color:var(--bad);background:var(--bad-bg)}
+.rp-sub{font-size:10.5px;color:var(--weak);margin-left:auto}
+.rp-sec{margin-top:9px}
+.rp-sec-t{font-size:10.5px;font-weight:700;color:var(--sub);letter-spacing:.3px;margin-bottom:6px;
+  border-left:3px solid var(--accent);padding-left:7px}
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:7px}
+.rp-item{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:7px 9px}
+.rp-label{font-size:10px;color:var(--weak);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rp-val{font-size:14px;font-weight:700;color:var(--text);margin-top:2px;line-height:1.25}
+.rp-val small{font-size:10px;font-weight:500;color:var(--sub)}
+.rp-foot{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);font-size:10.5px;color:var(--weak);line-height:1.65}
 /* ============ 页脚 ============ */
 footer{border-top:1px solid var(--line);background:var(--panel2);padding:16px}
 footer .ft{max-width:1500px;margin:0 auto;font-size:11.5px;color:var(--weak);line-height:1.7}
@@ -1406,7 +1413,9 @@ footer b{color:var(--sub)}
     </div>
     <div class="upd" id="updTime"></div>
   </div>
-  <div class="upd-banner" id="updBanner"></div>
+  <!-- v1.7.137：原「● 实时 / 距下次自动更新倒计时 / 自动更新开关」假实时面板已取消，
+       改为一份真实有用的「数据状态报告」（全部数字来自真实 JSON，不跳秒、不倒计时、不假开关） -->
+  <div class="report-card" id="updBanner"></div>
 
   <!-- v1.7.124 今日赛程 · 正路推荐正确率统计（只在今日赛程 Tab 显示） -->
   <div class="gr-view" id="goodRateView"></div>
@@ -1647,7 +1656,7 @@ footer b{color:var(--sub)}
       <code id="pageUrl">—</code>
       <button class="btn" id="copyUrlBtn">复制链接</button>
     </div>
-    <div class="tip" style="margin-top:10px">提示：云端自动巡检与全量流水线持续更新并部署到固定链接，点顶部「刷新数据」即可全站同步最新数据，无需更换链接。</div>
+    <div class="tip" style="margin-top:10px">提示：数据由后台全量流水线抓取 / 预测 / 回溯后部署到固定链接；点顶部「刷新数据」即可把云端当前最新批次全站同步到本机并重渲染所有 Tab，无需更换链接。</div>
     <div class="m-actions">
       <button class="btn ghost" id="closeInstall">我知道了</button>
     </div>
@@ -1810,15 +1819,27 @@ const nowStr = () => {
   return p(d.getHours())+":"+p(d.getMinutes())+":"+p(d.getSeconds());
 };
 
-/* ---------- 自动走动时钟 + 更新批次倒计时 ---------- */
-// 每日高频更新（与云端定时任务一致）：09:00-21:00 每30分钟
-const BATCH_SECS = Array.from({length: 25}, (_, i) => (9*60 + i*30) * 60).filter(s => s <= 21*3600);
-const BATCH_LABEL = "每日 09:00-21:00 每30分钟";
+/* v1.7.137：已删除「自动走动时钟 + 批次倒计时」整套假实时常量。
+   倒计时对应的云端定时任务从未真正兑现（实测数据 30 小时不更新仍照跳），
+   属于用户明确要求取消的「完全没用」的内容，不再保留。 */
 /* ---------- 版本号与更新日志 ---------- */
-const VERSION = "v1.7.136";
+const VERSION = "v1.7.137";
 // 文章正文来自外部站点，插入 innerHTML 前统一转义，避免原文里的引号/尖括号破坏结构
 const EZ = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c] || c));
 const CHANGELOG = [
+  {
+    version: "v1.7.137",
+    date: "2026-11-14",
+    title: "真实修复「按了刷新还是旧数据」：停止赌失败的云端 CI；取消没用的「实时」面板，换成有用的数据报告",
+    details: [
+      "用户反馈「按刷新按钮后还是旧数据，真实修复一下吧，那个实时数据取消了吧，完全没用，更改一个有用的报告」。取证结论：按钮历代都靠 POST /api/refresh 触发 GitHub Actions 抓取，但该 CI 在海外恒定 HTTP 567（竞彩官方接口封锁）→ run 全部 pending/cancelled/failure，部署守卫又跳过部署保护生产；线上数据自 11-13 11:51 起 30 小时没更新，按钮却弹「云端全量刷新已真实发起…完成后自动同步」——一个从未兑现过的假承诺。浏览器物理上无法执行 Python 抓取，这才是「按了还是旧数据」的真正病根，不是按钮坏了",
+      "① 真实拉新：本轮在沙箱本地跑完整 run_daily.sh deploy（500.com 备用源可达 HTTP 200），把线上数据批次从 11-13 推进到 11-14 当天，用户现在按刷新同步到的就是新数据，而不是旧快照",
+      "② 按钮彻底停止赌 CI：triggerRePull() 重写为它 100% 能真实做到的 —— 秒级同步云端 20+ 数据源 + renderAllTabs() 全站 9 Tab / 篮球 6 子页 / 全角标就地重渲染 + 诚实回执（云端当前批次 / 数据更新时间 / 距今时长 / 同步模块数）。不再 POST /api/refresh、不再轮询 run、不再弹「云端刷新中…完成后自动同步」；非今日批次如实说「这是云端最新一批」，不承诺凭空变新。新增 watchNewDeploy()：后台流水线真的上线新批次时，页面比对 version.json 自动同步一次",
+      "③ 取消「实时数据」：删除每秒跳秒的「● 实时 HH:MM:SS / 距下次数据自动更新倒计时 / 自动更新开关」整套假面板（数据在 30 小时没动时照样跳秒倒数，纯装饰且误导），连带删除 BATCH_SECS / nextBatch / autoReload / setInterval 每秒重绘等死代码；自动保鲜心跳也不再静默 POST 触发注定失败的 CI，改为纯「检测云端新部署 → 全站同步」",
+      "④ 换成「有用的报告」：原位置改为 📊 数据状态报告卡，全部数字取自真实 JSON —— 数据批次与距今时长、今日场次、分层串关档位、赛后回溯命中率（正路正确率 / 分层串关 / V站高信心 / 比分预测 / 篮球串关 / 专家榜首，与各 Tab 同源）、赛果回溯进度（已结算场次 / 专家已判定）、数据源健康（V站网关 / 后台保鲜巡检时间 / 巡检异常数 / 官方源备用）。不跳秒、不倒计时、不假开关，随全站刷新一起重算",
+      "⑤ 文案清理：通知面板「下次自动更新 / 每 2 分钟自动校核 / 点刷新触发云端全量抓取（约 1-3 分钟）」、引导弹层「每日 09:00-21:00 每30分钟自动更新」、空态「每30分钟自动生成」等一概改为诚实表述：抓取/预测/提取/回溯由后台全量流水线完成并部署，页面按钮只负责把云端当前最新批次同步到本机",
+    ]
+  },
   {
     version: "v1.7.136",
     date: "2026-11-13",
@@ -3327,76 +3348,89 @@ function __consumePull(){
     if(o && o.msg && (Date.now()-o.ts) < 30000) jcToast(o.msg, 5000);
   }catch(e){}
 }
-function nextBatchFromSec(sec){
-  for (const b of BATCH_SECS){ if (b > sec) return b; }
-  return BATCH_SECS[0] + 86400; // 已过全部批次，指向明日 09:00
-}
-function nextBatch(now){
-  return nextBatchFromSec(now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds());
-}
-function updBannerHtml(){
+/* v1.7.137：取消「●实时 / 距下次自动更新倒计时 / 自动更新开关」假实时面板。
+   旧面板每秒跳秒、倒数一个从未真正执行的「每30分钟自动更新」，还挂一个改不动
+   数据的开关，全是装饰——数据 30 小时没动它照样跳。用户明确要求「取消实时数据，
+   改成一个有用的报告」。这里渲染一份【数据状态报告】：批次新鲜度 + 各模块赛后
+   回溯命中率 + 赛果回溯进度 + 数据源/保鲜健康，全部数字取自真实 JSON，不跳秒、
+   不倒计时、不假开关，并随「刷新数据」全站重算一次。 */
+function renderDataReport(){
   const el = $("#updBanner");
-  if (!el) return;
-  const bj = __bjNow();                 // v1.7.130：统一北京时间，避免设备时区误判
-  const now = new Date();
-  const upd = state.meta.updateTime || "";
-  const dataDay = upd.slice(0,10);
-  const today = bj.day;
-  const nb = nextBatchFromSec(bj.hour*3600 + bj.min*60 + bj.sec);
-  const diff = Math.max(0, nb - (bj.hour*3600 + bj.min*60 + bj.sec));
-  const h = String(Math.floor(diff/3600)).padStart(2,"0");
-  const m = String(Math.floor(diff%3600/60)).padStart(2,"0");
-  const s = String(Math.floor(diff%60)).padStart(2,"0");
-  const cd = `<span class="ub-cd">${h}:${m}:${s}</span>`;
-  const isLive = bj.sec%2===0 ? "●" : "○";
-  const realtime = `${String(bj.hour).padStart(2,"0")}:${String(bj.min).padStart(2,"0")}:${String(bj.sec).padStart(2,"0")}`;
-  const autoTxt = state.autoReload ? `<button class="ub-btn" id="ubToggle">自动刷新:开</button>`
-                                   : `<button class="ub-btn off" id="ubToggle">自动刷新:关</button>`;
-  // 夜间宽容：凌晨 0-9 点打开页面时，昨晚 20:00 后的批次属正常「无新赛事」数据，
-  // 非抓取任务故障（定时批次 9:00 才启动），不应误报红色「已过期/任务未执行」。
-  const _y = new Date(Date.now() + 8*3600*1000 - 86400000);
-  const _yDay = _y.toISOString().slice(0,10);
-  const _isNight = bj.hour < 9;
-  const _isLateBatch = upd.slice(11,13) >= "20";
+  if(!el) return;
+  const upd = (state.meta && state.meta.updateTime) || "";
   const fresh = __dataFresh(upd);
-  const expireTxt = dataDay >= today
-    ? `<span>· 本日 ${BATCH_LABEL} 自动更新</span>`
-    : (_isNight && dataDay === _yDay && _isLateBatch)
-    ? `<span style="color:var(--warn);font-weight:700">· 夜间无新赛事批次（昨晚 ${upd.slice(11,16)} 仍为最新），09:00 首轮自动更新</span>`
-    : `<span style="color:var(--bad);font-weight:700">云端当前为 ${fresh.day.slice(5)||"旧"} 批次（约 ${Math.round(fresh.hours)} 小时前）；点刷新同步云端现有数据，后台更新完成后会自动同步</span>`;
-  el.innerHTML = `<span class="ub-live">${isLive} 实时 ${realtime}</span>
-    <span>· 距下次数据自动更新（${BATCH_LABEL}）还有 ${cd}</span>
-    <span>· 数据更新于 ${upd.slice(5,16)}</span>
-    ${expireTxt}
-    ${autoTxt}`;
-  const tb = document.getElementById("ubToggle");
-  if (tb){
-    tb.onclick = ()=>{
-      state.autoReload = !state.autoReload;
-      try{ localStorage.setItem("jcAutoReload", state.autoReload?"1":"0"); }catch(e){}
-      updBannerHtml();
-      const t=$("#toast");
-      t.textContent = state.autoReload? "已开启自动刷新：页面每 5 分钟自动重载检查新数据" : "已关闭自动刷新";
-      t.classList.add("show"); clearTimeout(window.__toastT);
-      window.__toastT=setTimeout(()=>t.classList.remove("show"),3500);
-    };
-  }
+  const hrs = Math.round((fresh.hours||0)*10)/10;
+  let bCls="ok", bTxt="今日批次 · 更新于 "+(upd.slice(5,16)||"—");
+  if(!upd){ bCls="bad"; bTxt="无数据时间戳"; }
+  else if(fresh.level==="stale"){ bCls = hrs>24?"bad":"warn"; bTxt="非今日批次 · 已 "+hrs+" 小时未更新"; }
+  else if(hrs>6){ bCls="warn"; bTxt="今日批次 · 已 "+hrs+" 小时"; }
+  const item=(label,val,sub)=>`<div class="rp-item"><div class="rp-label">${label}</div><div class="rp-val">${val}${sub?` <small>${sub}</small>`:""}</div></div>`;
+  const pct=(v)=> (typeof v==="number" && isFinite(v)) ? (Math.round(v*10)/10)+"%" : "—";
+  // 各模块真实统计口径（与各 Tab 完全同源，取自内存里已拉新的数据）
+  const GD=((typeof BUILT_DATA!=="undefined"&&BUILT_DATA&&BUILT_DATA.goodRateStats)||{});
+  const grO=GD.overall||{};
+  const VZ=((typeof BUILT_DATA!=="undefined"&&BUILT_DATA&&BUILT_DATA.vzHighStats)||{});
+  const vzO=VZ.overall||{};
+  const PH=state.parlayHistory||{};
+  const SP=((typeof BUILT_SCOREPRED!=="undefined"&&BUILT_SCOREPRED)||{});
+  const spAcc=SP.accuracy||{}, spM=SP.matches||[];
+  const spFin=spM.filter(m=>m&&(m.evaluated||(m.actH!=null&&m.actA!=null))).length;
+  const BKP=((typeof BUILT_BASKETBALL_PARLAY!=="undefined"&&BUILT_BASKETBALL_PARLAY)||{});
+  const ELB=(state.expert&&Array.isArray(state.expert.leaderboard))?state.expert.leaderboard:[];
+  const elb0=ELB[0]||{}, elbMeta=(state.expert&&state.expert.leaderboardMeta)||{};
+  const GW=((typeof BUILT_VZGW!=="undefined"&&BUILT_VZGW)||{});
+  const RM=window.__reportMeta||{}, AP=RM.autoPilot||{}, VER=RM.ver||{};
+  const todayN=(state.data||[]).length;
+  const tier=(state.safeParlay&&state.safeParlay.tierCount)||0;
+  const gwUp = GW.status==="up" || GW.status==="UP";
+  const apAt = AP.checkedAt || VER.lastPatrolAt || "";
+  const apHealth = AP.health || VER.patrolHealth || "";
+  const apErr = (AP.errorCount!=null?AP.errorCount:(VER.patrolErrorCount!=null?VER.patrolErrorCount:null));
+  const rateLine=(o)=> (typeof o==="number"?pct(o):"—");
+  el.innerHTML = `
+    <div class="rp-head">
+      <span class="rp-title">📊 数据状态报告</span>
+      <span class="rp-badge ${bCls}">${bTxt}</span>
+      <span class="rp-sub">数据批次 ${upd.slice(0,10)||"—"} · 今日 ${todayN} 场 · 分层串关 ${tier} 档</span>
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-t">赛后回溯命中率（真实结算口径）</div>
+      <div class="rp-grid">
+        ${item("今日赛程·正路", rateLine(grO.rate), grO.n?("n="+grO.n):"")}
+        ${item("分层串关", pct(PH.hitRate), PH.total?(PH.hit+"/"+PH.total+" 组"):"")}
+        ${item("V站·高信心方向", pct(vzO.dirRate), vzO.n?("n="+vzO.n):"")}
+        ${item("比分预测·方向", pct(spAcc.outcomeHit), spAcc.n?("n="+spAcc.n):"")}
+        ${item("篮球串关", pct(BKP.hitRate), BKP.total?(BKP.hit+"/"+BKP.total+" 组"):"")}
+        ${item("专家榜首", pct(elb0.hitRate), elb0.expert?("· "+elb0.expert):"")}
+      </div>
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-t">赛果回溯进度 / 数据源健康</div>
+      <div class="rp-grid">
+        ${item("比分预测已结算", spFin+" 场", "/ 共 "+spM.length)}
+        ${item("专家已判定", (elbMeta.judgedRecords!=null?elbMeta.judgedRecords:"—")+" 条", elbMeta.pendingRecords!=null?("待 "+elbMeta.pendingRecords):"")}
+        ${item("V站网关", gwUp?"正常":"未连通", GW.latencyMs!=null?(GW.latencyMs+"ms"):"")}
+        ${item("后台保鲜巡检", apAt?apAt.slice(5,16):"—", apHealth?("健康 "+apHealth):"")}
+        ${item("巡检异常数", apErr!=null?String(apErr):"—", apErr===0?"无异常":"")}
+        ${item("官方源", "备用源", "竞彩官方海外不可达")}
+      </div>
+    </div>
+    <div class="rp-foot">口径：命中率均由赛后官方赛果回溯实算，与各 Tab 统计面板同源。「刷新数据」按钮负责把云端已部署的最新批次全站同步到本机（抓取 / 预测 / 提取 / 回溯由后台全量流水线完成后部署）；若上方显示「非今日批次」，说明后台尚未产出新批次，同步到的就是云端当前最新的这批数据，不会假装凭空变出新数据。</div>`;
 }
 function updateClock(){
   try{
-    const t = state.meta.updateTime || "";
+    const t = (state.meta && state.meta.updateTime) || "";
     const u = document.getElementById("updTime");
-    if (u) u.textContent = (t? "数据更新 " + t + " · " : "") + "当前 " + nowStr();
+    if (u) u.textContent = t ? ("数据更新 " + t) : "—";
   }catch(e){}
   try{
     const hu = document.getElementById("histUpd");
-    if (hu) hu.textContent = (state.histUpdated? "历史库更新 " + state.histUpdated + " · " : "") + "当前 " + nowStr();
+    if (hu) hu.textContent = state.histUpdated ? ("历史库更新 " + state.histUpdated) : "—";
   }catch(e){}
-  updBannerHtml();
+  // v1.7.137：不再每秒跳秒重绘（真实数字不会每秒变）；报告卡在页面初始化
+  // 与「刷新数据」全站同步后各重算一次，见 renderAllTabs() 与下方初始化调用。
+  try{ renderDataReport(); }catch(e){}
 }
-window.__clockTick = 0;
-setInterval(()=>{ window.__clockTick++; }, 1000);
-setInterval(updateClock, 1000);
 const dname = d => d==="h"?"主胜":d==="d"?"平局":"客胜";
 const norm = x => x == null ? null : x;
 
@@ -3466,7 +3500,6 @@ const state = {
   filter: "all", view: "card", theme: "dark", tab: "today", histFilter: "all", bdFilter: "all", bdSubTab: "sched",
   lastFbTab: "today",
   histDate: "all", bdHistDate: "all", parlayDate: "all", expertView: "today", expertArticlesPage: 1, expertArticlesPerPage: 6, parlayTier: "parlay2", parlayNegOpen: false, parlayBatch: "",
-  autoReload: (function(){ try{ return localStorage.getItem("jcAutoReload") !== "0"; }catch(e){ return true; } })(),
   vzOnlyHot: false, vzBatch: ""   // v1.7.125：V站情报按竞彩批次切换，默认当天开售批次
 };
 /* 恢复主题偏好 */
@@ -3480,7 +3513,7 @@ const state = {
   }catch(e){}
 })();
 
-/* 自动刷新：每2分钟实时fetch最新数据，不刷新页面（数据每30分钟由云端任务更新） */
+/* v1.7.137：每 2 分钟比对云端批次，出现新部署时全站同步（不刷新整页） */
 /* 旧的5分钟页面刷新已移除，改为无感知实时数据刷新 */
 
 /* ---------- 通用日期筛选器 ---------- */
@@ -4868,7 +4901,7 @@ function renderDataFreshness(){
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
       <span style="font-size:11.5px;font-weight:700;color:var(--text)">📊 当前页数据状态</span>
       <span style="font-size:10.5px;font-weight:700;color:${color};background:${bg};padding:2px 8px;border-radius:999px">${label}</span>
-      <span style="font-size:10.5px;color:var(--sub)">页面加载后每 2 分钟自动校核</span>
+      <span style="font-size:10.5px;color:var(--sub)">以云端 version.json 的批次时间为准 · 全站同步后更新</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;font-size:11px">
       <div><div style="color:var(--sub)">数据更新时间</div><div style="font-weight:700;color:var(--text);margin-top:2px">${upd || "-"}</div></div>
@@ -4876,10 +4909,10 @@ function renderDataFreshness(){
       <div><div style="color:var(--sub)">智能引擎已校准</div><div style="font-weight:700;color:var(--text);margin-top:2px">${smartN} 场</div></div>
       <div><div style="color:var(--sub)">历史战绩库</div><div style="font-weight:700;color:var(--text);margin-top:2px">${histN} 条</div></div>
       <div><div style="color:var(--sub)">历史库更新</div><div style="font-weight:700;color:var(--text);margin-top:2px">${state.histUpdated || "-"}</div></div>
-      <div><div style="color:var(--sub)">下次自动更新</div><div style="font-weight:700;color:var(--text);margin-top:2px">${BATCH_LABEL}</div></div>
+      <div><div style="color:var(--sub)">数据批次</div><div style="font-weight:700;color:var(--text);margin-top:2px">${(upd.slice(0,10))||"-"}</div></div>
     </div>
     <div style="margin-top:8px;font-size:10.5px;color:var(--sub);line-height:1.6">
-      判定口径：以页头「数据更新于」时间为准；若显示「已过期」，点顶部黄色「刷新数据」按钮触发云端全量抓取（约 1-3 分钟），「最新数据」按钮只重拉已部署数据。
+      判定口径：以云端 version.json 的批次时间为准。抓取 / 预测 / 提取 / 回溯由后台全量流水线完成并部署；点顶部「刷新数据」按钮会把云端当前最新批次全站同步到本机并就地重渲染所有 Tab，不会凭空变出云端还没有的数据。
       版本日志只记录功能改动，数据是否最新以上方时间为准。
     </div>`;
 }
@@ -7242,7 +7275,7 @@ function renderBasketball(){
     if(bk.source) parts.push(`数据源 ${bk.source}${String(bk.source).indexOf("500") >= 0 ? "（500备用源：胜负/大小分赔率为市场共识参考值，让分与胜分差为真实盘口）" : ""}`);
     if(state.basketballHist && state.basketballHist.updatedAt) parts.push(`赛果档案更新 ${state.basketballHist.updatedAt}`);
     if(bk.stale) parts.push(`⚠️ 数据批次陈旧，请点顶部「刷新数据」`);
-    parts.push("每 30 分钟自动更新");
+    parts.push("后台流水线更新后自动部署");
     meta.innerHTML = parts.map(p => `<span>🕐 ${p}</span>`).join("");
   }
 
@@ -7312,7 +7345,7 @@ function renderBkSched(all){
   }
   let html = "";
   shown.forEach(m => { html += bkCardHtml(m); });
-  if(!shown.length) html = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球赛程数据（数据源每 30 分钟自动更新）</div>`;
+  if(!shown.length) html = `<div style="padding:20px;text-align:center;color:var(--sub)">暂无篮球赛程数据（后台流水线上线新批次后自动同步）</div>`;
   listBox.innerHTML = html;
 }
 
@@ -7506,7 +7539,7 @@ function renderBkAi(){
       + ` · <span style="color:var(--accent)">已开赛/已结束的比赛不再生成预测</span>`
       + (ai.note ? ` · <span style="color:var(--warn)">${ai.note}</span>` : "");
   }
-  if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">当前无在售未开赛比赛，保留上一批预测（不拿已结束的比赛凑数）<br>新批次开售后每 30 分钟自动生成</div>`; return; }
+  if(!preds.length){ listBox.innerHTML = `<div style="padding:20px;text-align:center;color:var(--sub)">当前无在售未开赛比赛，保留上一批预测（不拿已结束的比赛凑数）<br>新批次由后台流水线开售后自动生成</div>`; return; }
   listBox.innerHTML = preds.map(p => bkAiCardHtml(p)).join("");
 }
 
@@ -8359,7 +8392,7 @@ let __remoteVer = null;
 let __lastRealtimeFetch = null;
 let __realtimeFetching = false;
 
-/* 实时刷新数据：直接fetch matches.json，动态更新state.data，不需要刷新页面 */
+/* 数据同步：比对 matches.json，动态更新 state.data（不需要刷新整页） */
 const __cacheBust = ()=>"_t="+Date.now()+"_r="+Math.random().toString(36).slice(2,8);
 function __hardReload(){
   const url = location.href.split("?")[0] + "?" + __cacheBust();
@@ -8504,9 +8537,10 @@ function renderAllTabs(){
   // ⑤ 统一重算全部角标
   let counts={};
   run("角标", ()=>{ counts = refreshAllBadges(); });
-  // ⑥ 页头数据新鲜度/统计条（不改任何 view 显隐，避免打断用户所在页）
+  // ⑥ 页头数据新鲜度/统计条 + v1.7.137 数据状态报告（不改任何 view 显隐，避免打断用户所在页）
   try{ renderDataFreshness(); }catch(e){}
-  return { done: done, failed: failed, tabs: done.filter(x=>x.indexOf("篮球·")<0 && x!=="角标"), counts: counts };
+  run("数据报告", ()=>renderDataReport());
+  return { done: done, failed: failed, tabs: done.filter(x=>x.indexOf("篮球·")<0 && x!=="角标" && x!=="数据报告"), counts: counts };
 }
 
 async function loadLiveDatasets(showTip){
@@ -8610,12 +8644,14 @@ async function loadLiveDatasets(showTip){
       }
       if(ph && state){ state.parlayHistory = JSON.parse(JSON.stringify(ph)); }
     }catch(e){}
-    // 以云端 version.json 的时间戳作为「数据更新于」
-    let ver = null;
+    // 以云端 version.json 的时间戳作为「数据更新于」；同时拉巡检留痕供数据状态报告用
+    let ver = null, apstat = null;
     try{
-      ver = await get("version.json");
+      [ver, apstat] = await Promise.all([get("version.json"), get("auto_pilot_status.json")]);
       if(ver && ver.updateTime && state && state.meta) state.meta.updateTime = ver.updateTime;
     }catch(e){}
+    // v1.7.137：报告卡的保鲜巡检 / 数据源健康真实来源（每次全站同步一起拉新）
+    window.__reportMeta = { ver: ver || {}, autoPilot: apstat || {} };
     // v1.7.135：全站真实重渲染 —— 8 个足球 Tab + 竞彩篮球（共 9 个 Tab）+ 篮球 6 子页 + 全部角标，
     // 而不是旧的 render() 只覆盖当前 Tab + renderScorePred()。
     const receipt = renderAllTabs();
@@ -8623,12 +8659,15 @@ async function loadLiveDatasets(showTip){
     window.__liveLoading = false;
     if(showTip){
       const upd = (state && state.meta && state.meta.updateTime) || "";
-      let staleHrs = 0;
-      try{ if(upd){ const t=new Date(upd.replace(/-/g,"/")); staleHrs=(Date.now()-t.getTime())/3600000; } }catch(e){}
-      if(staleHrs > 2){
-        jcToast("⚠ 数据较旧（更新于 "+upd.slice(5,16)+"，已 "+Math.floor(staleHrs)+" 小时前）— 已发起云端全量刷新", 6000, true);
+      const fresh = __dataFresh(upd);
+      const hrs = Math.round((fresh.hours||0)*10)/10;
+      if(fresh.level === "stale"){
+        // v1.7.137：不再说「已发起云端全量刷新 / 完成后自动同步」这类注定失败、
+        // 又骗用户空等的假话。如实说明同步到的是云端当前这一批。
+        jcToast("已全站同步 " + receipt.tabs.length + " 个模块；云端当前为 " + (fresh.day.slice(5)||"旧")
+          + " 批次（" + hrs + " 小时前），这是云端最新一批数据", 5500, true);
       }else{
-        jcToast("✅ 全站已更新 "+receipt.tabs.length+" 个模块" + (upd?("（更新于 "+upd.slice(5,16)+"）"):""), 4000);
+        jcToast("已全站同步 " + receipt.tabs.length + " 个模块" + (upd?(" · 数据更新于 "+upd.slice(5,16)):""), 4000);
       }
     }
     return receipt;
@@ -8664,12 +8703,10 @@ function openFreshModal(){
   const steps = $("#freshSteps");
   $("#freshUrl").textContent = "https://jc-football-1eo.pages.dev/";
   const upd = state.meta.updateTime || "";
-  const now = new Date();
-  const nb = nextBatch(now);
-  const nextLabel = (()=>{ const b=nb>86400?nb-86400:nb; return String(Math.floor(b/3600)).padStart(2,"0")+":"+String(Math.floor(b%3600/60)).padStart(2,"0"); })();
-  tip.innerHTML = `本页数据更新于 <b>${upd.slice(0,16)}</b>。云端每天 ${BATCH_LABEL} 自动更新并部署到<b>同一链接</b>，你打开即最新，无需换链接。`;
-  steps.innerHTML = `<div class="istep"><span class="ino">1</span><span>点下面<b>刷新页面</b>，立即拉取云端最新数据</span></div>
-    <div class="istep"><span class="ino">2</span><span>最近一批将在 <b>今日 ${nextLabel}</b> 自动更新，之后点刷新即可</span></div>
+  const f = __dataFresh(upd);
+  tip.innerHTML = `当前云端批次数据更新于 <b>${upd.slice(0,16)||"—"}</b>${f.level==="stale"?("（距今约 "+Math.round(f.hours)+" 小时）"):""}。数据由后台全量流水线抓取 / 预测 / 回溯后部署到<b>同一链接</b>，无需换链接。`;
+  steps.innerHTML = `<div class="istep"><span class="ino">1</span><span>点下面<b>刷新页面</b>，立即把云端当前最新批次同步到本机</span></div>
+    <div class="istep"><span class="ino">2</span><span>抓取 / 预测 / 提取 / 回溯由后台全量流水线完成后自动部署；上线新批次时页面会自动同步</span></div>
     <div class="istep"><span class="ino">3</span><span>固定链接 jc-football-1eo.pages.dev，建议收藏或添加到主屏幕</span></div>`;
   $("#copyFreshBtn").textContent = "刷新页面";
   $("#copyFreshBtn").onclick = ()=>{ __hardReload(); };
@@ -8693,165 +8730,91 @@ function jcToast(msg, ms, bad){
   window.__jcToastT = setTimeout(()=>{ t.classList.remove("show"); t.style.borderColor=""; }, ms||3500);
 }
 var __rePullTimer = null;
-/* v1.7.135：「刷新数据」= 全站真实刷新，不再吞错、不再假装成功。
-   用户要求「只要我按了就全站 tab 内容更新，需要数据的拉新数据，需要预测的
-   就预测，需要提取的就提取，要真实做到」。真实边界要讲清楚：抓取 / 预测 /
-   提取 / 回溯 / 结算全部在云端流水线（GitHub Actions）里执行，浏览器做不到；
-   浏览器能真实做到的是 ① 秒级同步云端全部数据源并全站重渲染 ② 真实触发
-   云端全量流水线 ③ 真实读取回执、真实轮询本次运行状态与新部署 ④ 如实反馈
-   每一步成功 / 失败。旧实现把 POST 写成 .catch(()=>{}) 后仍弹「已重新加载
-   本页数据」，正是用户反复指出的「假成功」。
-   ① 全站同步：loadLiveDatasets() → renderAllTabs()（9 足球 Tab + 篮球 6 子页
-      + 全部角标），返回 receipt，明确告知覆盖了多少模块。
-   ② 通道探测：GET /api/refresh?health=1，先确认 GH_PAT 是否就绪，绝不触发 CI。
-   ③ 真实触发：POST /api/refresh，读取 ok / runId / error；失败如实报错。
-   ④ 真实轮询：GET /api/refresh?run_id=... 拿 conclusion，并比对 version.json
-      的 deployTime；出现新部署 → 再全站同步一次并明确报「云端刷新完成」。
-   ⑤ 全程按钮文案 + 阶段 toast；不再无条件 2.6s 硬重载（会打断状态机、闪屏，
-      且就地全站重渲染已满足「全站 tab 内容更新」）；仅当云端 pageVersion 与
-      本页 VERSION 不同时提示重开获取新版页面代码。 */
+/* v1.7.137：彻底停止「赌云端 CI」——这才是「按了还是旧数据」的真正病根。
+   历代版本让按钮 POST /api/refresh 触发 GitHub Actions，再弹「云端全量刷新
+   已真实发起（run #…）：抓取 / 预测 / 提取 / 回溯进行中，完成后自动同步」。
+   实测：该 CI 在海外恒定 HTTP 567（竞彩官方接口封锁），run 全部
+   pending / cancelled / failure，部署守卫又跳过部署保护生产——这个承诺从未
+   兑现过一次。浏览器物理上无法执行 Python 抓取，能真实做到的是把云端
+   【已部署】的全部数据源秒级同步到本机并全站重渲染。
+   新按钮 = 真实同步 + 诚实回执：
+   ① loadLiveDatasets() 同步云端 20+ 数据源 → renderAllTabs()（9 Tab + 6 子页
+      + 全角标 + 数据状态报告），秒级完成，不依赖任何后台任务，绝不再空等。
+   ② 回执如实显示：同步模块数、云端当前批次、数据更新时间、距今时长；
+      若是非今日批次，明说「这是云端最新一批」，不承诺会凭空变新。
+   ③ 顺带比对云端 version.json：若后台刚好推送了新批次 / 新页面版本，
+      自动再同步一次并提示；这是真实可发生的，不是赌 CI。
+   ④ 不再 POST /api/refresh、不再轮询 run、不再弹「云端刷新中…完成后自动同步」。
+      抓取 / 预测 / 提取 / 回溯由后台全量流水线（run_daily.sh deploy）完成并
+      部署，页面只负责同步，权责清楚、不再互相甩锅。 */
 var __rePullBusy = false;
 function triggerRePull(){
-  if(__rePullBusy){ jcToast("已有一轮刷新在进行中，请稍候…", 2500); return; }
+  if(__rePullBusy){ jcToast("已有一轮同步在进行中，请稍候…", 2500); return; }
   __rePullBusy = true;
   const btn = document.getElementById("rePullBtn");
   const orig = btn ? btn.innerHTML : "";
   const setBtn = (t)=>{ if(btn) btn.innerHTML = t; };
-  // v1.7.136：防止「① 全站同步」的延迟 toast 覆盖最终回执（云端失败 / 完成）。
-  // 主路径要拉 25+ 个 JSON，云端通道却可能几百毫秒就返回；若不设优先级，
-  // 用户会只看到「正在发起刷新」而看不到「发起失败」——又变成不诚实。
-  let finalShown = false;
-  const say = (msg, bad, ms)=>{ if(finalShown) return; jcToast(msg, ms||4000, !!bad); };
-  const done = (msg, bad, ms)=>{
-    finalShown = true;
-    __rePullBusy = false;
-    if(btn){ btn.disabled=false; btn.innerHTML=orig; }
-    if(window.__rePullTimer){ clearTimeout(window.__rePullTimer); window.__rePullTimer=null; }
-    jcToast(msg, ms||4500, !!bad);
-  };
-  const started = Date.now();
   const baseUpd = (state.meta && state.meta.updateTime) || "";
-  const cloud = { probed:false, ghPat:false, dispatched:false, runId:null,
-                  conclusion:null, newDeploy:false, error:null, syncedTabs:0 };
-  window.__lastCloudRefresh = cloud;   // 留痕：供自检 / 浏览器实测核对真实性
-
-  // ① 主路径：全站同步云端已部署的全部数据源（真实、秒级、一定有反馈）
-  setBtn('<span>① 全站同步中…</span>');
-  loadLiveDatasets(false).then((receipt)=>{
-    const n = (receipt && receipt.tabs && receipt.tabs.length) || 0;
-    const fail = (receipt && receipt.failed && receipt.failed.length) || 0;
-    cloud.syncedTabs = n;
-    const upd = (state.meta && state.meta.updateTime) || "";
-    say("① 已全站同步 " + n + " 个模块" + (fail?("（"+fail+" 个渲染异常）"):"")
-        + (upd?(" · 更新于 "+upd.slice(5,16)):"") + "；正在发起云端全量刷新", false, 4000);
-  }).catch((e)=>{
-    say("① 全站同步出错：" + (e && e.message ? e.message : e) + "；仍继续尝试云端刷新", true, 4500);
-  });
-
+  setBtn('<span>⏳ 全站同步中…</span>');
+  const receipt = { syncedTabs:0, updBefore:baseUpd, updAfter:"", fresh:null, newDeploy:false, error:null };
+  window.__lastCloudRefresh = receipt;   // 留痕：供自检 / 浏览器实测核对真实性
   // App 内通知原生壳立即拉一次线上数据（网页端无此对象，自动忽略）
   try{ if(window.AndroidSync && AndroidSync.syncNow) AndroidSync.syncNow(__cacheBust()); }catch(e){}
-
-  // ② 通道健康探测（绝不触发 CI）
-  fetch("/api/refresh?health=1&_t="+Date.now(), {cache:"no-store"})
-    .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-    .then(h=>{
-      cloud.probed = true;
-      cloud.ghPat = !!(h && h.ghPatConfigured);
-      if(!h || !h.ok || !cloud.ghPat){
-        cloud.error = (h && h.message) || "云端刷新通道未就绪";
-        done("② 云端刷新通道不可用（" + cloud.error + "）；已全站同步当前最新数据", true, 6000);
-        return null;
-      }
-      // ③ 真实触发云端全量流水线（抓取 / 预测 / 提取 / 回溯 / 结算 / 部署）
-      setBtn('<span>② 云端刷新中…</span>');
-      return fetch("/api/refresh", {method:"POST", cache:"no-store"})
-        .then(r=> r.json().then(j=>({okHttp:r.ok, j:j})) )
-        .then(({okHttp, j})=>{
-          if(!okHttp || !j || !j.ok){
-            cloud.error = (j && (j.error || j.detail)) || ("HTTP "+okHttp);
-            done("③ 云端全量刷新发起失败：" + cloud.error + "；已全站同步当前最新数据", true, 6500);
-            return false;                       // false = 已失败收尾，不再轮询
-          }
-          cloud.dispatched = true;
-          cloud.runId = j.runId || null;
-          say("③ 云端全量刷新已真实发起" + (cloud.runId?("（run #"+cloud.runId+"）"):"")
-              + "：抓取 / 预测 / 提取 / 回溯进行中，完成后自动同步", false, 5000);
-          return true;                          // true = 进入真实轮询
-        });
-    })
-    .then(go=>{
-      if(go !== true) return;                   // 探测失败 / 发起失败已收尾
-      // 先取云端 version.json 作为「本次刷新发起时」的基线，只认之后的变化，
-      // 避免把 ① 阶段刚同步到的既有数据误判成「云端新产出」。
-      return fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
-        .then(r=>r.ok?r.json():null).catch(()=>null)
-        .then(v0=>{
-          const baseU = (v0 && v0.updateTime) || baseUpd;
-          const baseD = (v0 && v0.deployTime) || "";
-          const runId = cloud.runId;
-          const MAX = 8*60*1000;
-          let verdict = "";
-          const poll = ()=>{
-            if(Date.now()-started > MAX){
-              done("④ 云端刷新仍在运行（已等待 8 分钟）；新部署上线后页面会自动同步", false, 6000);
-              return;
-            }
-            const pv = fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
-              .then(r=>r.ok?r.json():null).catch(()=>null);
-            const rv = runId
-              ? fetch("/api/refresh?run_id="+encodeURIComponent(runId)+"&_t="+Date.now(), {cache:"no-store"})
-                  .then(r=>r.ok?r.json():null).catch(()=>null)
-              : Promise.resolve(null);
-            Promise.all([pv, rv]).then(([v, r])=>{
-              const u=(v&&v.updateTime)||"", dep=(v&&v.deployTime)||"";
-              if(r && r.ok){
-                cloud.conclusion = r.conclusion || null;
-                if(r.status === "completed") verdict = r.conclusion || "completed";
-              }
-              const changed = (u && u!==baseU) || (dep && dep!==baseD);
-              if(changed){
-                // 云端真的产出了新部署 → 再全站同步一次，这才是「拉新」闭环
-                cloud.newDeploy = true;
-                setBtn('<span>③ 同步新数据…</span>');
-                loadLiveDatasets(false).then((receipt)=>{
-                  const n=(receipt&&receipt.tabs&&receipt.tabs.length)||0;
-                  const pv2=(v&&v.pageVersion)||"";
-                  let extra="";
-                  if(pv2 && typeof VERSION!=="undefined" && pv2!==VERSION)
-                    extra="；网页已升级到 "+pv2+"，重开页面可获取新版";
-                  done("✅ 云端全量刷新完成，全站 "+n+" 个模块已同步"
-                       +(u?("（"+u.slice(5,16)+"）"):"")+extra, false, 6500);
-                }).catch(()=>{
-                  done("✅ 云端已产出新部署，但二次同步失败；请再点一次刷新", true, 6000);
-                });
-                return;
-              }
-              if(verdict && verdict!=="success"){
-                done("④ 云端刷新运行结束，结论「"+verdict+"」；已全站同步当前最新数据（部署守卫可能在保护线上）", true, 6500);
-                return;
-              }
-              if(verdict==="success"){
-                done("④ 云端刷新运行成功，本次未产出新部署（无新数据或部署守卫跳过）；当前已是最新", false, 5500);
-                return;
-              }
-              window.__rePullTimer = setTimeout(poll, 15000);
-            }).catch(()=>{ window.__rePullTimer = setTimeout(poll, 15000); });
-          };
-          window.__rePullTimer = setTimeout(poll, 15000);
-        });
-    })
-    .catch((e)=>{
-      done("② 云端刷新通道异常：" + (e && e.message ? e.message : e)
-           + "；已全站同步当前最新数据", true, 6000);
-    });
+  // 主路径：全站真实同步（一定能完成，一定有回执，绝不吞错）
+  loadLiveDatasets(false).then((r)=>{
+    const n = (r && r.tabs && r.tabs.length) || 0;
+    const fail = (r && r.failed && r.failed.length) || 0;
+    receipt.syncedTabs = n;
+    const upd = (state.meta && state.meta.updateTime) || "";
+    receipt.updAfter = upd;
+    const fresh = __dataFresh(upd);
+    receipt.fresh = { level:fresh.level, day:fresh.day, hours:Math.round((fresh.hours||0)*10)/10 };
+    setBtn('<span>✓ 已同步</span>');
+    let msg;
+    if(!upd){ msg = "已全站同步 "+n+" 个模块，但云端未提供数据时间戳"; }
+    else if(upd !== baseUpd){ msg = "已同步到新批次 "+upd.slice(5,16)+" · 全站 "+n+" 个模块已更新"; }
+    else if(fresh.level === "stale"){
+      msg = "已全站同步 "+n+" 个模块；云端当前为 "+fresh.day.slice(5)+" 批次（"
+          + Math.round(fresh.hours) +" 小时前），这是云端最新一批";
+    } else { msg = "已全站同步 "+n+" 个模块 · 今日批次（更新于 "+upd.slice(5,16)+"）"; }
+    if(fail) msg += "（"+fail+" 个模块渲染异常）";
+    jcToast(msg, 5500, fresh.level === "stale");
+    __rePullBusy = false;
+    setTimeout(()=>{ if(btn) btn.innerHTML = orig; }, 1600);
+    watchNewDeploy(upd);   // 后台若刚好上线新批次，自动再同步一次（真实可发生，非赌 CI）
+  }).catch((e)=>{
+    receipt.error = String((e && e.message) || e);
+    __rePullBusy = false;
+    if(btn) btn.innerHTML = orig;
+    jcToast("全站同步失败：" + receipt.error, 5000, true);
+  });
 }
-/* v1.7.135：「刷新数据」= 全站真实重渲染 + 真实云端刷新回执（不再吞错、不再假成功）。
-   全站重渲染由 loadLiveDatasets() → renderAllTabs() 完成；云端刷新由上面的
-   状态机真实探测 / 真实 POST / 真实轮询 / 诚实收尾。 */
+/* v1.7.137：监听云端新部署 —— 后台全量流水线产出新批次并部署后页面自动再同步。
+   只认 version.json 的 updateTime 真的变化，不轮询任何 CI run、不触发任何任务。 */
+function watchNewDeploy(baseUpd){
+  const started = Date.now();
+  if(window.__rePullTimer){ clearTimeout(window.__rePullTimer); }
+  const poll = ()=>{
+    if(Date.now()-started > 3*60*1000) return;
+    fetch("/version.json?_t="+Date.now(), {cache:"no-store"})
+      .then(r=>r.ok?r.json():null).catch(()=>null)
+      .then(v=>{
+        const u=(v&&v.updateTime)||"";
+        if(u && u!==baseUpd){
+          if(window.__lastCloudRefresh) window.__lastCloudRefresh.newDeploy = true;
+          loadLiveDatasets(false).then(()=>{ jcToast("后台已上线新批次，数据已自动同步（"+u.slice(5,16)+"）",4500); }).catch(()=>{});
+        }else{ window.__rePullTimer = setTimeout(poll, 20000); }
+      }).catch(()=>{ window.__rePullTimer = setTimeout(poll, 20000); });
+  };
+  window.__rePullTimer = setTimeout(poll, 15000);
+}
+/* v1.7.137：「刷新数据」= 全站真实同步 + 诚实回执（不赌 CI、不假装成功）。
+   全站重渲染由 loadLiveDatasets() → renderAllTabs() 完成；数据变新由后台
+   全量流水线负责，页面不再弹注定失败的「云端刷新中…完成后自动同步」。 */
 $("#rePullBtn").addEventListener("click", ()=>{ triggerRePull(); });
 $("#closeFresh").addEventListener("click", ()=>$("#freshMask").classList.remove("show"));
 $("#freshMask").addEventListener("click", e=>{ if(e.target.id==="freshMask") $("#freshMask").classList.remove("show"); });
-/* 每2分钟实时刷新数据（直接fetch matches.json，不刷新页面）；每5分钟检测版本 */
+/* 每 2 分钟比对数据、每 5 分钟比对版本，出现新批次自动同步 */
 setInterval(()=>refreshRealtimeData(false), 120000);
 setInterval(()=>checkNewVersion(false), 300000);
 setTimeout(()=>refreshRealtimeData(false), 5000);
@@ -8859,48 +8822,37 @@ setTimeout(()=>refreshRealtimeData(false), 5000);
    这里仅消费旧版本页面可能写进 sessionStorage 的残留结果（兼容升级过渡）。 */
 setTimeout(__consumePull, 900);
 
-/* v1.7.134 自动保鲜心跳（第三层兜底：不提醒、不点按钮也会自己动）
-   自动保鲜任务每小时跑 + GitHub Actions 每天 6 次跑，但两者都曾因任务被
-   停用 / 沙箱冷启动而整体停摆（2026-11-12 16:59 后停了 14 小时无人察觉）。
-   页面自己再兜一层：打开 App 12 秒后检查线上数据是否跨天或超过 2 小时
-   没更新，若陈旧就静默触发一次云端流水线；新部署出现后自动同步视图。
-   localStorage 节流 60 分钟防刷爆 CI；不硬重载、不弹打扰提示、不假装成功。 */
+/* v1.7.137 自动同步心跳（真实有用，且不制造注定失败的 CI）
+   旧版「自动保鲜」在数据陈旧时静默 POST /api/refresh 触发 GitHub Actions，
+   但该 CI 在海外恒定 567 失败 / 被部署守卫跳过，实测制造了一串
+   pending / cancelled / failure 的垃圾 run，从未拉到过新数据——完全没用。
+   现改为浏览器真能做到的：打开页面 / 每隔一段时间，比对云端 version.json
+   的 updateTime，一旦后台全量流水线（run_daily.sh deploy）真的上线了新批次，
+   就静默 loadLiveDatasets() 全站同步并重渲染。不触发任何任务、不硬重载、
+   不弹打扰提示、不假装成功。抓取 / 预测 / 提取 / 回溯由后台负责，权责清楚。 */
 function __autoFresh(){
   try{
     if(!window.fetch) return;
+    // 轻量节流：只拉 version.json（不触发任何 CI），5 分钟内不重复发起，
+    // 避免页面常开时无意义的高频请求；键名沿用 jcAutoFreshLast 便于巡检核对。
     const KEY="jcAutoFreshLast";
-    let last=0; try{ last=parseInt(localStorage.getItem(KEY)||"0",10)||0; }catch(e){}
-    const now=Date.now();
-    if(now-last < 60*60*1000) return;                    // 60 分钟节流
+    let _last=0; try{ _last=parseInt(localStorage.getItem(KEY)||"0",10)||0; }catch(e){}
+    if(Date.now()-_last < 5*60*1000) return;
+    try{ localStorage.setItem(KEY,String(Date.now())); }catch(e){}
     const upd=(state.meta&&state.meta.updateTime)||"";
-    const f=__dataFresh(upd);
-    if(!(f.level==="stale" || f.hours>2 || !upd)) return; // 数据够新，不打扰云端
-    try{ localStorage.setItem(KEY,String(now)); }catch(e){}
-    // v1.7.135：自动保鲜也真实读取云端回执并留痕，不再 .catch(()=>{}) 静默吞错。
-    // 不弹打扰提示（用户没主动点按钮），但通道失败会明确记录，便于巡检核对
-    // 「自动刷新到底有没有真的发起」，而不是假装一切正常。
-    fetch("/api/refresh",{method:"POST",cache:"no-store"})
-      .then(r=>r.json().then(j=>({okHttp:r.ok,j:j})))
-      .then(({okHttp,j})=>{ window.__autoFreshLastResult = {
-        at:new Date().toISOString(), ok:!!(okHttp&&j&&j.ok),
-        runId:(j&&j.runId)||null, error:(j&&(j.error||j.detail))||null }; })
-      .catch(e=>{ window.__autoFreshLastResult = {
-        at:new Date().toISOString(), ok:false, error:String((e&&e.message)||e) }; });
-    // 新部署出现后自动同步（最多监听 8 分钟，全程不阻塞交互、不硬重载）
-    const t0=Date.now(), base=upd;
-    const poll=()=>{
-      if(Date.now()-t0>8*60*1000) return;
-      fetch("/version.json?_t="+Date.now(),{cache:"no-store"})
-        .then(r=>r.json()).then(v=>{
-          const u=(v&&v.updateTime)||"";
-          if(u&&u!==base){
-            loadLiveDatasets(false).then(()=>{
-              jcToast("已自动同步最新数据（"+u.slice(5,16)+"）",3500);
-            }).catch(()=>{});
-          }else{ setTimeout(poll,20000); }
-        }).catch(()=>{ setTimeout(poll,20000); });
-    };
-    setTimeout(poll,20000);
+    fetch("/version.json?_t="+Date.now(),{cache:"no-store"})
+      .then(r=>r.ok?r.json():null).catch(()=>null)
+      .then(v=>{
+        const u=(v&&v.updateTime)||"";
+        window.__autoFreshLastResult = {
+          at:new Date().toISOString(), cloudUpd:u||null, localUpd:upd||null,
+          newer: !!(u && u!==upd), synced:false };
+        if(u && u!==upd){
+          loadLiveDatasets(false).then(()=>{
+            window.__autoFreshLastResult.synced = true;
+          }).catch(()=>{});
+        }
+      }).catch(()=>{});
   }catch(e){}
 }
 setTimeout(__autoFresh,12000);

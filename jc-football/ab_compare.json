@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-12 20:09:23",
+ "updatedAt": "2026-11-13 11:53:51",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -33530,11 +33530,11 @@
    "jcNum": "周二007",
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 2,
+    "h": 3,
+    "a": 1,
     "exactHit": false,
     "outcomeHit": false,
-    "mae": 1.5
+    "mae": 2.5
    },
    "act": {
     "h": 0,
@@ -41433,15 +41433,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 1,
+    "h": 2,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-12\", \"亚美尼亚\", \"塞浦路斯\"]": {
@@ -41453,14 +41457,18 @@
    "ws": null,
    "model": {
     "h": 1,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-12\", \"阿尔巴尼亚\", \"芬兰\"]": {
@@ -41472,14 +41480,18 @@
    "ws": null,
    "model": {
     "h": 1,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.5
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-12\", \"黑山\", \"拉脱维亚\"]": {
@@ -41491,14 +41503,18 @@
    "ws": null,
    "model": {
     "h": 2,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-12\", \"英格兰\", \"克罗地亚\"]": {
@@ -41510,14 +41526,18 @@
    "ws": null,
    "model": {
     "h": 2,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"摩尔多瓦\", \"哈萨克斯坦\"]": {
@@ -41671,21 +41691,449 @@
    "sources": [
     "daily"
    ]
+  },
+  "[\"2026-11-04\", \"波尔图\", \"SSCNapoli\"]": {
+   "date": "2026-11-04",
+   "league": "CL",
+   "home": "FC Porto",
+   "away": "SSC Napoli",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1.5
+   },
+   "act": {
+    "h": 4,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-04\", \"多特蒙德\", \"皇家贝蒂斯\"]": {
+   "date": "2026-11-04",
+   "league": "CL",
+   "home": "Borussia Dortmund",
+   "away": "Real Betis Balompié",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.5
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-23\", \"IpswichTownFC\", \"NottinghamForestFC\"]": {
+   "date": "2026-10-23",
+   "league": "英超",
+   "home": "Ipswich Town FC",
+   "away": "Nottingham Forest FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
+   },
+   "act": {
+    "h": 1,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-23\", \"VitóriaSC\", \"马德拉航海\"]": {
+   "date": "2026-10-23",
+   "league": "葡超",
+   "home": "Vitória SC",
+   "away": "CS Marítimo",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2.5
+   },
+   "act": {
+    "h": 5,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-18\", \"特温特\", \"乌德勒支\"]": {
+   "date": "2026-10-18",
+   "league": "荷甲",
+   "home": "FC Twente '65",
+   "away": "FC Utrecht",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2.5
+   },
+   "act": {
+    "h": 1,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-17\", \"ManchesterCityFC\", \"IpswichTownFC\"]": {
+   "date": "2026-10-17",
+   "league": "英超",
+   "home": "Manchester City FC",
+   "away": "Ipswich Town FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 4,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 1.0
+   },
+   "act": {
+    "h": 3,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-10-17\", \"VillarrealCF\", \"ElcheCF\"]": {
+   "date": "2026-10-17",
+   "league": "西甲",
+   "home": "Villarreal CF",
+   "away": "Elche CF",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2.0
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-04\", \"费耶诺德\", \"国际米兰\"]": {
+   "date": "2026-11-04",
+   "league": "欧冠",
+   "home": "费耶诺德",
+   "away": "国际米兰",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2.0
+   },
+   "act": {
+    "h": 0,
+    "a": 3
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-04\", \"博德闪耀\", \"里尔\"]": {
+   "date": "2026-11-04",
+   "league": "欧冠",
+   "home": "博德闪耀",
+   "away": "里尔",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.5
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-02\", \"布拉干蒂诺RB\", \"布拉干蒂诺RB\"]": {
+   "date": "2026-11-02",
+   "league": "巴甲",
+   "home": "RB Bragantino",
+   "away": "RB Bragantino",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-05-29\", \"克鲁塞罗\", \"克鲁塞罗\"]": {
+   "date": "2026-05-29",
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2.0
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-04-29\", \"克鲁塞罗\", \"克鲁塞罗\"]": {
+   "date": "2026-04-29",
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 0,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-04-15\", \"克鲁塞罗\", \"克鲁塞罗\"]": {
+   "date": "2026-04-15",
+   "league": "CLI",
+   "home": "Cruzeiro EC",
+   "away": "Cruzeiro EC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
+   },
+   "act": {
+    "h": 1,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-03-11\", \"博塔弗戈\", \"博塔弗戈\"]": {
+   "date": "2026-03-11",
+   "league": "CLI",
+   "home": "Botafogo FR",
+   "away": "Botafogo FR",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 0.5
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-02-26\", \"博塔弗戈\", \"博塔弗戈\"]": {
+   "date": "2026-02-26",
+   "league": "CLI",
+   "home": "Botafogo FR",
+   "away": "Botafogo FR",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.0
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-12\", \"捷克\", \"西班牙\"]": {
+   "date": "2026-11-12",
+   "league": "欧国联",
+   "home": "捷克",
+   "away": "西班牙",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.0
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-15\", \"町田泽维亚\", \"神户胜利船\"]": {
+   "date": "2026-11-15",
+   "league": "日联赛杯",
+   "home": "町田泽维亚",
+   "away": "神户胜利船",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-15\", \"鹿岛鹿角\", \"横滨水手\"]": {
+   "date": "2026-11-15",
+   "league": "日联赛杯",
+   "home": "鹿岛鹿角",
+   "away": "横滨水手",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-15\", \"大阪樱花\", \"浦和红钻\"]": {
+   "date": "2026-11-15",
+   "league": "日联赛杯",
+   "home": "大阪樱花",
+   "away": "浦和红钻",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
+  },
+  "[\"2026-11-15\", \"柏太阳神\", \"川崎前锋\"]": {
+   "date": "2026-11-15",
+   "league": "日联赛杯",
+   "home": "柏太阳神",
+   "away": "川崎前锋",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
   }
  },
  "stats": {
   "paired_n": 45,
   "model": {
-   "n": 1287,
-   "exact": 7.5,
-   "dir": 38.3,
+   "n": 1308,
+   "exact": 7.3,
+   "dir": 37.9,
    "dir_ci": [
-    35.7,
-    41.0
+    35.3,
+    40.6
    ],
    "exact_ci": [
-    6.1,
-    9.0
+    6.0,
+    8.9
    ],
    "mae": 1.18
   },
@@ -41787,7 +42235,7 @@
   "three_way_n": 8,
   "by_league": {
    "巴甲": {
-    "n": 317,
+    "n": 318,
     "m_oc": 145,
     "w_oc": 0,
     "v_oc": 0
@@ -41805,25 +42253,25 @@
     "v_oc": 21
    },
    "西甲": {
-    "n": 135,
-    "m_oc": 40,
+    "n": 136,
+    "m_oc": 41,
     "w_oc": 10,
     "v_oc": 14
    },
    "英超": {
-    "n": 113,
-    "m_oc": 36,
+    "n": 115,
+    "m_oc": 37,
     "w_oc": 11,
     "v_oc": 18
    },
    "荷甲": {
-    "n": 95,
+    "n": 96,
     "m_oc": 40,
     "w_oc": 8,
     "v_oc": 11
    },
    "葡超": {
-    "n": 88,
+    "n": 89,
     "m_oc": 28,
     "w_oc": 3,
     "v_oc": 7
@@ -41859,7 +42307,7 @@
     "v_oc": 15
    }
   },
-  "verdict": "V站 方向命中率最高（43.8%，N=520）；其余 模型 38.3% / WhoScored 43.2%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
-  "total_records": 1720
+  "verdict": "V站 方向命中率最高（43.8%，N=520）；其余 模型 37.9% / WhoScored 43.2%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
+  "total_records": 1740
  }
 }

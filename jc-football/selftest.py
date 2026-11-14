@@ -689,88 +689,113 @@ def check_pipeline_safeguards():
         add("WARN", "刷新链路", "fetch_daily.py 不可读")
 
 
+
+def _code_only(html):
+    """剥离 CHANGELOG 字符串块与 JS/HTML 注释，只留真正会执行/渲染的代码。
+    v1.7.137 护栏用：CHANGELOG 里会描述「已删除 XX 假承诺」，全文匹配会误伤。"""
+    import re as _re
+    # 1) 去掉 CHANGELOG 数组（从 const CHANGELOG = [ 到匹配的 ];）
+    i = html.find("const CHANGELOG = [")
+    j = html.find("\n];", i)
+    if i >= 0 and j > i:
+        html = html[:i] + "/*CHANGELOG_STRIPPED*/" + html[j+3:]
+    # 2) 去掉 /* ... */ 块注释与 // 行注释（保留字符串里的 // 由后续精确串判定）
+    html = _re.sub(r"/\*[\s\S]*?\*/", "", html)
+    html = _re.sub(r"(?m)^\s*//[^\n]*", "", html)
+    # 3) 去掉 HTML 注释
+    html = _re.sub(r"<!--[\s\S]*?-->", "", html)
+    return html
+
+
 def check_refresh_chain():
-    """检查 12 刷新按钮链路（v1.7.129 起，v1.7.130 补新鲜度诚实反馈，
-    v1.7.136 升级为「全站真实刷新 + 诚实云端回执」）：
-    必须真实探测 / 真实 POST 读回执 / 真实轮询 / 如实失败，严禁吞错假成功。
-    注意：本护栏在 v1.7.136 整体重写过——旧版断言把「.catch(()=>{}) 吞错」
-    和「2.6s 无条件硬重载」当成必须存在，那正是用户反复投诉的『假成功』根源。"""
-    print("· 检查 12 刷新按钮链路（v1.7.136 全站真实刷新 / 不再吞错）")
-    # (1) 前端：主路径即时同步 + 全站重渲染 + 真实云端链路
+    """检查 12 刷新按钮链路（v1.7.137 整体重写）：
+    按钮不再赌注定失败的云端 CI，只做它 100% 能真实做到的 ——
+    秒级全站同步 + 全站重渲染 + 诚实回执；禁止任何「云端刷新中…完成后
+    自动同步」这类从未兑现的假承诺，也禁止静默 POST 触发垃圾 run。
+    v1.7.136 旧护栏强制要求 api/refresh?run_id= 轮询 / cloud.newDeploy /
+    cloud.ghPat 健康探测，正是「赌 CI」的实现——本版已全部移除，护栏同步升级。"""
+    print("· 检查 12 刷新按钮链路（v1.7.137 真实同步 / 不赌 CI / 诚实回执）")
     try:
         t = open("template.html", encoding="utf-8").read()
     except Exception:
         add("ERROR", "刷新链路", "template.html 不可读")
         return
+    # (1) 必须存在：真实全站同步 + 全站重渲染 + 诚实回执 + 报告卡
     must = {
+        "function triggerRePull": "缺刷新按钮入口",
         "function renderAllTabs": "缺全站重渲染入口（按刷新只会更新当前 Tab）",
         "function refreshAllBadges": "缺全站角标统一重算（角标会显示 0 像没更新）",
+        "function renderDataReport": "缺数据状态报告卡（用户要的「有用的报告」）",
         "loadLiveDatasets(false).then": "刷新按钮主路径未即时拉取云端全部数据",
-        "/api/refresh?health=1": "缺云端通道健康探测（无法在发起前判断 PAT 是否就绪）",
-        "window.__lastCloudRefresh": "缺刷新状态留痕（无法核对云端刷新是否真实发起）",
-        "api/refresh?run_id=": "缺本次 run 状态真实轮询（无法判断云端刷新成功/失败/取消）",
-        "deployTime": "缺新部署检测（云端产出新数据后不会自动二次同步）",
-        "cloud.newDeploy": "缺新部署标记（无法证明刷新闭环真的跑完）",
-        "cloud.ghPat": "缺 GH_PAT 就绪判定（凭证失效时仍会假装成功）",
+        "window.__lastCloudRefresh": "缺刷新状态留痕（无法核对真实同步结果）",
         "function __dataFresh": "缺数据新鲜度判定（云端旧批次会被误报成同步成功）",
         "function __bjToday": "缺北京时间今日批次判定（设备时区会误判新鲜度）",
+        "function watchNewDeploy": "缺云端新部署自动同步（后台上线新批次时页面不会自动同步）",
+        'get("auto_pilot_status.json")': "缺巡检留痕数据源（报告卡的保鲜状态会是空的）",
+        "已全站同步 ": "缺诚实的全站同步回执",
+        "这是云端最新一批": "缺「云端旧批次如实说明」文案（会误导为拉到了新数据）",
     }
     for token, msg in must.items():
         if token not in t:
             add("ERROR", "刷新链路", msg)
-    # v1.7.136：这些「假成功 / 打断状态机」旧特征必须消失
+    # (2) 严禁：赌 CI 的假承诺 / 静默 POST / 假实时面板 / 吞错
     forbid = {
         'fetch("/api/refresh", {method:"POST", cache:"no-store"}).catch(()=>{})':
-            "仍在用 .catch(()=>{}) 吞掉云端刷新错误（用户投诉的假成功根源）",
-        'fetch("/api/refresh",{method:"POST",cache:"no-store"}).catch(()=>{})':
-            "自动保鲜心跳仍在吞掉云端刷新错误",
-        "setTimeout(__hardReload, 2600)":
-            "仍在无条件 2.6s 硬重载（会打断真实轮询状态机并闪屏）",
+            "仍在用 .catch(()=>{}) 吞掉云端刷新错误",
+        'fetch("/api/refresh",{method:"POST",cache:"no-store"})':
+            "仍在静默 POST 触发注定失败的云端 CI（制造 pending/cancelled 垃圾 run）",
+        "api/refresh?run_id=": "仍在轮询 CI run 状态（回到「赌 CI」老路）",
+        "cloud.ghPat": "仍残留云端凭证状态机（按钮已不触发 CI）",
+        "云端全量刷新已真实发起": "仍残留「云端全量刷新已真实发起」假承诺文案",
+        "完成后自动同步": "仍残留「完成后自动同步」假承诺",
+        "● 实时": "仍残留假实时「● 实时」面板",
+        "距下次数据自动更新": "仍残留「距下次自动更新」倒计时",
+        "BATCH_SECS": "仍残留批次倒计时死代码",
+        "setInterval(updateClock, 1000)": "仍残留每秒跳秒定时器",
+        "setTimeout(__hardReload, 2600)": "仍在无条件 2.6s 硬重载（会闪屏且打断回执）",
         '"已重新加载本页数据"': "仍残留「已重新加载本页数据」假成功文案",
         "已拉取云端全部数据 · 当前批次更新于":
-            "仍残留含糊的『已拉取云端全部数据』旧文案（会误导为已拉到新数据）",
-        "云端任务失败(": "仍残留『赌 CI 结果』的旧报错逻辑",
-        "抓取耗时较长": "仍残留『赌 CI 结果』的旧超时逻辑",
+            "仍残留含糊的『已拉取云端全部数据』旧文案",
     }
+    code = _code_only(t)   # 只在真实代码里判定，CHANGELOG/注释描述修复的文字不算残留
     for token, msg in forbid.items():
-        if token in t:
+        if token in code:
             add("ERROR", "刷新链路", msg)
     # 统计类数据源必须随刷新一起拉新，且不得再请求云端不部署的 404 大文件
     for f in ("good_rate_stats.json", "vz_high_stats.json", "expert_leaderboard.json",
-              "whoscored_recent.json", "whoscored_history.json"):
-        if ('get("%s")' % f) not in t:
+              "whoscored_recent.json", "whoscored_history.json", "auto_pilot_status.json"):
+        if ('get("%s")' % f) not in t and f != "auto_pilot_status.json":
             add("ERROR", "刷新链路", "全站刷新漏拉统计数据源 %s（该面板会停在构建期旧值）" % f)
     if 'get("ab_compare.json")' in t:
         add("ERROR", "刷新链路", "仍在请求云端不部署的 ab_compare.json（必然 404）")
-    # (2) 后端函数存在且仍触发 workflow_dispatch + v1.7.136 健康探测
+    # (3) 后端函数：保留健康探测供巡检用，且 POST 不得再宣称产出新数据
     try:
         fn = open("functions/api/refresh.js", encoding="utf-8").read()
-        # refresh.js 用 `const WF = "daily.yml"` + 模板串 `${WF}/dispatches`
-        if 'WF = "daily.yml"' not in fn or "/dispatches" not in fn:
-            add("ERROR", "刷新链路", "refresh.js 未触发 daily.yml 的 workflow_dispatch")
         if "ghPatConfigured" not in fn or "probed" not in fn:
-            add("ERROR", "刷新链路", "refresh.js 缺无参 / ?health=1 健康探测分支")
+            add("ERROR", "刷新链路", "refresh.js 缺无参 / ?health=1 健康探测分支（自动巡检 C13 依赖）")
         if "if (!runId)" not in fn:
             add("ERROR", "刷新链路", "refresh.js 健康探测未做「无 run_id 不触发 CI」隔离")
+        if "willProduceData: false" not in fn:
+            add("WARN", "刷新链路", "refresh.js POST 回执未声明「此处不产出新数据」（可能又给出假承诺）")
+        if "云端正在构建并部署" in fn:
+            add("ERROR", "刷新链路", "refresh.js 仍宣称「云端正在构建并部署」（注定失败的假承诺）")
     except Exception:
         add("WARN", "刷新链路", "functions/api/refresh.js 不可读")
-    # (3) 生效的 workflow 配置：清队列 / 去 push / 收紧超时 / 墙钟
+    # (4) 生效的 workflow 配置：清队列 / 去 push / 收紧超时 / 墙钟
     for wf in (".github/workflows/daily.yml",):
-        # selftest 在 jc-football/ 下运行，根 workflow 在上一级；两份都查
         for path in (os.path.join(HERE, wf), os.path.join(os.path.dirname(HERE), wf)):
             if not os.path.exists(path):
                 continue
             w = open(path, encoding="utf-8").read()
             if "cancel-in-progress: true" not in w:
-                add("ERROR", "刷新链路", "%s 未开启 cancel-in-progress（僵尸 run 会排队堵塞刷新）" % path)
+                add("ERROR", "刷新链路", "%s 未开启 cancel-in-progress（僵尸 run 会排队堵塞）" % path)
             if "branches: [main]" in w and "on:" in w:
-                # push 触发已移除的判据：文件中不应再有 push 段
                 import re as _re
                 if _re.search(r"^\s*push:\s*$", w, _re.M):
-                    add("ERROR", "刷新链路", "%s 仍保留 push 自动触发（源码提交会拉起海外残缺抓取）" % path)
+                    add("ERROR", "刷新链路", "%s 仍保留 push 自动触发" % path)
             if "JC_FETCH_WALL_SEC" not in w and "JC_FETCH_TIMEOUT" not in w:
-                add("WARN", "刷新链路", "%s 未设置抓取墙钟环境变量（依赖脚本内置 600s）" % path)
-    print("  刷新按钮：全站重渲染 + 真实探测/POST/轮询 + 诚实回执，链路护栏齐全")
+                add("WARN", "刷新链路", "%s 未设置抓取墙钟环境变量" % path)
+    print("  刷新按钮：全站真实同步 + 诚实回执 + 数据报告；不赌 CI、不假实时、不吞错")
 
 
 def check_good_rate(data, hist):
@@ -1659,12 +1684,12 @@ def check_auto_pilot_guard():
 
 
 def check_fullsite_refresh_and_cleanup():
-    """检查 17（v1.7.136）：全站真实刷新 + 停用/无用内容清理护栏。
+    """检查 17（v1.7.137）：全站真实刷新 + 停用/无用内容清理 + 假实时取消 + 数据报告护栏。
     覆盖：renderAllTabs 是否真的调用 9 个足球 Tab + 篮球 6 子页渲染函数、
     全站角标是否统一实算、刷新回执是否落地、视觉噪音是否清干净、
     部署清单是否移除了无用大缓存、版本号是否同步。
     注意：断言一律用 HTML 精确串，避免误伤 CHANGELOG 里对本次修复的文字说明。"""
-    print("· 检查 17 全站真实刷新与停用/无用内容清理（v1.7.136）")
+    print("· 检查 17 全站真实刷新 / 停用清理 / 假实时取消 / 数据报告（v1.7.137）")
     try:
         t = open("template.html", encoding="utf-8").read()
     except Exception:
@@ -1705,17 +1730,40 @@ def check_fullsite_refresh_and_cleanup():
         "<b>2/3/4/5串1</b>": "关于弹层仍残留过时的串关档位说明",
         "09:00-21:00 每30分钟自动刷新赔率": "关于弹层仍残留过时的更新频率说明",
     }
+    code17 = _code_only(t)
     for token, msg in noise_forbid.items():
-        if token in t:
+        if token in code17:
             add("ERROR", cat, msg)
     # 高手推荐：不再逐场生成「暂无专家推荐」空卡，改为汇总一条
     if "暂无专家推荐</div>" in t:
         add("ERROR", cat, "高手推荐仍在逐场生成「暂无专家推荐」空卡")
     if "let _noRecCount = 0" not in t or "if(_noRecCount>0)" not in t:
         add("ERROR", cat, "高手推荐缺「无推荐场次汇总说明」（清理空卡后信息会丢）")
-    # (4) 版本号
-    if 'const VERSION = "v1.7.136"' not in t:
-        add("ERROR", cat, "网页 VERSION 未统一到 v1.7.136（部署脚本按模板哈希自动升版后须全资产对齐）")
+    # (4) 版本号 + v1.7.137 假实时取消 / 数据报告护栏
+    if 'const VERSION = "v1.7.137"' not in t:
+        add("ERROR", cat, "网页 VERSION 未统一到 v1.7.137（部署脚本按模板哈希自动升版后须全资产对齐）")
+    # 假实时面板必须彻底删除（用户明确要求「取消那个实时数据」）
+    for token, msg in {
+        "● 实时": "仍残留假实时「● 实时」跳秒",
+        "距下次数据自动更新": "仍残留「距下次数据自动更新」倒计时",
+        "自动刷新:开": "仍残留假「自动刷新开关」",
+        "setInterval(updateClock, 1000)": "仍残留每秒跳秒定时器",
+        "BATCH_SECS": "仍残留批次倒计时死代码",
+    }.items():
+        if token in code17:
+            add("ERROR", cat, msg)
+    # 有用的数据报告卡必须存在且读真实字段
+    for token, msg in {
+        'class="report-card" id="updBanner"': "缺数据报告卡容器",
+        "📊 数据状态报告": "缺报告卡标题",
+        "renderDataReport": "缺报告卡渲染函数",
+        "赛后回溯命中率（真实结算口径）": "报告卡缺命中率统计区",
+        "grO.rate": "报告卡未读正路正确率真实值",
+        "spAcc.outcomeHit": "报告卡未读比分预测命中率真实值",
+        'run("数据报告", ()=>renderDataReport())': "全站刷新未重算报告卡",
+    }.items():
+        if token not in t:
+            add("ERROR", cat, msg)
     # (5) 部署清单：无用大缓存必须移除
     try:
         d = open("deploy_cf.py", encoding="utf-8").read()
@@ -1727,7 +1775,7 @@ def check_fullsite_refresh_and_cleanup():
     for token in ('get("half_full_history.json")', 'get("ab_compare.json")'):
         if token in t:
             add("ERROR", cat, "刷新链路仍在拉取无用/404 文件：%s" % token)
-    print("  全站刷新：8 足球 Tab + 竞彩篮球（共 9 个 Tab）+ 篮球 6 子页 + 全角标 + 诚实回执；停用/空卡/死档已清")
+    print("  全站刷新：9 Tab + 篮球 6 子页 + 全角标 + 诚实回执；假实时已取消、数据报告已上线、停用/空卡/死档已清")
 
 
 def main():

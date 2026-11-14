@@ -1,7 +1,7 @@
 {
  "sample": {
   "total": 111,
-  "scored": 96,
+  "scored": 97,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
@@ -27,11 +27,11 @@
    "avg_total": 173.4
   },
   "美职篮": {
-   "n": 59,
-   "home_win_rate": 47.5,
-   "hdc_home_hit_rate": 50.8,
-   "hilo_over_rate": 42.4,
-   "avg_total": 227.2
+   "n": 60,
+   "home_win_rate": 46.7,
+   "hdc_home_hit_rate": 50.0,
+   "hilo_over_rate": 43.3,
+   "avg_total": 227.4
   },
   "西篮甲": {
    "n": 9,
@@ -43,14 +43,14 @@
  },
  "hdc_overall": {
   "h": 40,
-  "a": 56,
+  "a": 57,
   "d": 0,
-  "home_hit_rate": 41.7
+  "home_hit_rate": 41.2
  },
  "hilo_overall": {
-  "over": 45,
+  "over": 46,
   "under": 51,
-  "over_rate": 46.9
+  "over_rate": 47.4
  },
  "wnm_dist": {
   "l1": 11,
@@ -61,18 +61,18 @@
   "l6": 5
  },
  "home_advantage": {
-  "home_win_rate": 41.7
+  "home_win_rate": 41.2
  },
  "roi": {
   "hdc": {
-   "bet": 96,
-   "profit": 16.4,
-   "roi": 17.1
+   "bet": 97,
+   "profit": 15.4,
+   "roi": 15.9
   },
   "hilo": {
-   "bet": 96,
-   "profit": -19.5,
-   "roi": -20.3
+   "bet": 97,
+   "profit": -18.8,
+   "roi": -19.4
   },
   "mnl": {
    "bet": 95,
@@ -85,5 +85,5 @@
    "roi": 67.5
   }
  },
- "updatedAt": "2026-11-14 17:30:32"
+ "updatedAt": "2026-11-14 18:48:28"
 }

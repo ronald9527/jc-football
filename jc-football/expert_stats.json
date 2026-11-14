@@ -1,16 +1,16 @@
 {
-  "updatedAt": "2026-11-13 11:53:58",
-  "generatedAt": "2026-11-13 11:53:58",
+  "updatedAt": "2026-11-14 18:48:31",
+  "generatedAt": "2026-11-14 18:48:31",
   "source": "expert_history.json + matches.json + history.json 官方赛果",
   "scope": "已结算场次才计入命中率；未开奖/无官方赛果/方向无法判定一律保持待结算",
   "stats": {
     "史密斯": {
       "expert": "史密斯",
-      "total": 6,
+      "total": 7,
       "judged": 6,
       "hits": 2,
       "miss": 4,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 0,
@@ -18,6 +18,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "瑞典",
+          "away": "波黑",
+          "recommend": "让胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "特温特",
@@ -74,11 +82,11 @@
     },
     "工体博哥": {
       "expert": "工体博哥",
-      "total": 4,
+      "total": 5,
       "judged": 4,
       "hits": 2,
       "miss": 2,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 50.0,
       "recent10Rate": 50.0,
       "streak": 0,
@@ -86,6 +94,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "佛罗伦萨",
@@ -126,11 +142,11 @@
     },
     "布海东": {
       "expert": "布海东",
-      "total": 5,
+      "total": 6,
       "judged": 5,
       "hits": 3,
       "miss": 2,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 60.0,
       "recent10Rate": 60.0,
       "streak": 0,
@@ -138,6 +154,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "挪威",
+          "away": "威尔士",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "水晶宫",
@@ -186,11 +210,11 @@
     },
     "航哥": {
       "expert": "航哥",
-      "total": 8,
+      "total": 9,
       "judged": 7,
       "hits": 1,
       "miss": 6,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 14.3,
       "recent10Rate": 14.3,
       "streak": 1,
@@ -198,6 +222,14 @@
       "streakBonus": 2,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗马尼亚",
+          "away": "波兰",
+          "recommend": "让胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "阿尔克马尔",
@@ -354,11 +386,11 @@
     },
     "张磊": {
       "expert": "张磊",
-      "total": 5,
+      "total": 6,
       "judged": 4,
       "hits": 0,
       "miss": 4,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
@@ -366,6 +398,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "沙佩科恩斯",
+          "away": "瓦斯科达伽马",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "马德里竞技",
@@ -562,11 +602,11 @@
     },
     "杨震": {
       "expert": "杨震",
-      "total": 3,
+      "total": 4,
       "judged": 3,
       "hits": 2,
       "miss": 1,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 66.7,
       "recent10Rate": 66.7,
       "streak": 0,
@@ -574,6 +614,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗马尼亚",
+          "away": "波兰",
+          "recommend": "客胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "奥萨苏纳",
@@ -790,11 +838,11 @@
     },
     "中.誉": {
       "expert": "中.誉",
-      "total": 4,
+      "total": 5,
       "judged": 3,
       "hits": 1,
       "miss": 2,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 0,
@@ -802,6 +850,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "斯图加特",
@@ -842,11 +898,11 @@
     },
     "绿茵七号位": {
       "expert": "绿茵七号位",
-      "total": 5,
+      "total": 6,
       "judged": 3,
       "hits": 1,
       "miss": 2,
-      "pending": 2,
+      "pending": 3,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 1,
@@ -854,6 +910,14 @@
       "streakBonus": 2,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "马拉加",
@@ -1058,11 +1122,11 @@
     },
     "敬真": {
       "expert": "敬真",
-      "total": 4,
+      "total": 5,
       "judged": 4,
       "hits": 1,
       "miss": 3,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 25.0,
       "recent10Rate": 25.0,
       "streak": 0,
@@ -1070,6 +1134,14 @@
       "streakBonus": 0,
       "isNew": false,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗达JC",
+          "away": "福伦丹",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-10",
           "home": "伯顿",
@@ -1356,11 +1428,11 @@
     },
     {
       "expert": "杨震",
-      "total": 3,
+      "total": 4,
       "judged": 3,
       "hits": 2,
       "miss": 1,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 66.7,
       "recent10Rate": 66.7,
       "streak": 0,
@@ -1371,6 +1443,14 @@
       "ciLow": 20.8,
       "ciHigh": 93.9,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗马尼亚",
+          "away": "波兰",
+          "recommend": "客胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "奥萨苏纳",
@@ -1400,11 +1480,11 @@
     },
     {
       "expert": "布海东",
-      "total": 5,
+      "total": 6,
       "judged": 5,
       "hits": 3,
       "miss": 2,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 60.0,
       "recent10Rate": 60.0,
       "streak": 0,
@@ -1415,6 +1495,14 @@
       "ciLow": 23.1,
       "ciHigh": 88.2,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "挪威",
+          "away": "威尔士",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "水晶宫",
@@ -1446,25 +1534,17 @@
           "recommend": "客胜",
           "hit": true,
           "actualScore": "1:5"
-        },
-        {
-          "date": "2026-10-27",
-          "home": "萨索洛",
-          "away": "拉齐奥",
-          "recommend": "客胜",
-          "hit": true,
-          "actualScore": "2:6"
         }
       ],
       "rank": 3
     },
     {
       "expert": "工体博哥",
-      "total": 4,
+      "total": 5,
       "judged": 4,
       "hits": 2,
       "miss": 2,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 50.0,
       "recent10Rate": 50.0,
       "streak": 0,
@@ -1475,6 +1555,14 @@
       "ciLow": 15.0,
       "ciHigh": 85.0,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "佛罗伦萨",
@@ -1624,11 +1712,11 @@
     },
     {
       "expert": "史密斯",
-      "total": 6,
+      "total": 7,
       "judged": 6,
       "hits": 2,
       "miss": 4,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 0,
@@ -1639,6 +1727,14 @@
       "ciLow": 9.7,
       "ciHigh": 70.0,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "瑞典",
+          "away": "波黑",
+          "recommend": "让胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "特温特",
@@ -1670,14 +1766,6 @@
           "recommend": "主胜",
           "hit": true,
           "actualScore": "2:1"
-        },
-        {
-          "date": "2026-10-30",
-          "home": "尼斯",
-          "away": "雷恩",
-          "recommend": "客胜",
-          "hit": false,
-          "actualScore": "5:2"
         }
       ],
       "rank": 7
@@ -1744,11 +1832,11 @@
     },
     {
       "expert": "中.誉",
-      "total": 4,
+      "total": 5,
       "judged": 3,
       "hits": 1,
       "miss": 2,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 0,
@@ -1759,6 +1847,14 @@
       "ciLow": 6.1,
       "ciHigh": 79.2,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "主胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "斯图加特",
@@ -1840,11 +1936,11 @@
     },
     {
       "expert": "绿茵七号位",
-      "total": 5,
+      "total": 6,
       "judged": 3,
       "hits": 1,
       "miss": 2,
-      "pending": 2,
+      "pending": 3,
       "hitRate": 33.3,
       "recent10Rate": 33.3,
       "streak": 1,
@@ -1855,6 +1951,14 @@
       "ciLow": 6.1,
       "ciHigh": 79.2,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "奥地利",
+          "away": "爱尔兰",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-07",
           "home": "马拉加",
@@ -1886,25 +1990,17 @@
           "recommend": "让负",
           "hit": null,
           "actualScore": null
-        },
-        {
-          "date": "2026-10-30",
-          "home": "里尔",
-          "away": "朗斯",
-          "recommend": "让负",
-          "hit": false,
-          "actualScore": "1:0"
         }
       ],
       "rank": 11
     },
     {
       "expert": "敬真",
-      "total": 4,
+      "total": 5,
       "judged": 4,
       "hits": 1,
       "miss": 3,
-      "pending": 0,
+      "pending": 1,
       "hitRate": 25.0,
       "recent10Rate": 25.0,
       "streak": 0,
@@ -1915,6 +2011,14 @@
       "ciLow": 4.6,
       "ciHigh": 69.9,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗达JC",
+          "away": "福伦丹",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-10",
           "home": "伯顿",
@@ -2124,11 +2228,11 @@
     },
     {
       "expert": "航哥",
-      "total": 8,
+      "total": 9,
       "judged": 7,
       "hits": 1,
       "miss": 6,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 14.3,
       "recent10Rate": 14.3,
       "streak": 1,
@@ -2139,6 +2243,14 @@
       "ciLow": 2.6,
       "ciHigh": 51.3,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "罗马尼亚",
+          "away": "波兰",
+          "recommend": "让胜",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "阿尔克马尔",
@@ -2170,25 +2282,17 @@
           "recommend": "让胜",
           "hit": null,
           "actualScore": null
-        },
-        {
-          "date": "2026-11-02",
-          "home": "圣旺红星",
-          "away": "南锡",
-          "recommend": "让负",
-          "hit": false,
-          "actualScore": "1:4"
         }
       ],
       "rank": 16
     },
     {
       "expert": "张磊",
-      "total": 5,
+      "total": 6,
       "judged": 4,
       "hits": 0,
       "miss": 4,
-      "pending": 1,
+      "pending": 2,
       "hitRate": 0.0,
       "recent10Rate": 0.0,
       "streak": 0,
@@ -2199,6 +2303,14 @@
       "ciLow": 0.0,
       "ciHigh": 49.0,
       "recent": [
+        {
+          "date": "2026-11-14",
+          "home": "沙佩科恩斯",
+          "away": "瓦斯科达伽马",
+          "recommend": "让负",
+          "hit": null,
+          "actualScore": null
+        },
         {
           "date": "2026-11-08",
           "home": "马德里竞技",
@@ -2230,14 +2342,6 @@
           "recommend": "让负",
           "hit": false,
           "actualScore": "2:1"
-        },
-        {
-          "date": "2026-10-27",
-          "home": "多特蒙德",
-          "away": "云达不来梅",
-          "recommend": "让负",
-          "hit": false,
-          "actualScore": "3:2"
         }
       ],
       "rank": 17
@@ -2544,15 +2648,15 @@
     }
   ],
   "meta": {
-    "generatedAt": "2026-11-13 11:53:58",
+    "generatedAt": "2026-11-14 18:48:31",
     "source": "expert_history.json + matches.json + history.json 官方赛果",
-    "historyRecords": 97,
+    "historyRecords": 106,
     "judgedRecords": 87,
     "hits": 32,
-    "pendingRecords": 10,
+    "pendingRecords": 19,
     "newlySettled": 0,
-    "pendingBefore": 10,
-    "pendingAfter": 10,
+    "pendingBefore": 19,
+    "pendingAfter": 19,
     "experts": 26,
     "scope": "已结算场次才计入命中率；未开奖/无官方赛果/方向无法判定一律保持待结算",
     "rankRule": "已判定≥3场进主榜按命中率降序（再按Wilson下限、已判定场次）；1-2场样本不足者整体沉底，避免1战1中100%霸榜",

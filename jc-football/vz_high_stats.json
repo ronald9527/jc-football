@@ -1,6 +1,6 @@
 {
  "version": "v1.7.126",
- "generatedAt": "2026-11-13 11:53:57",
+ "generatedAt": "2026-11-14 18:48:30",
  "scope": "V站·呼死狗 🔥高信心预测 · 比分精确命中 / 胜平负方向命中",
  "source": {
   "predictions": "vzhan_data.json（V站 report/info 赛前预测比分）",
@@ -9,26 +9,20 @@
   "archive": "vzhan_history.json（赛前固化 highConf + 赛果归档）"
  },
  "today": {
-  "batchDate": "2026-11-13",
-  "batchLabel": "周五",
-  "batchPrefix": "周五",
+  "batchDate": "2026-11-14",
+  "batchLabel": "周六",
+  "batchPrefix": "周六",
   "isToday": true,
-  "totalMatches": 11,
-  "vzPredCount": 4,
-  "highCount": 4,
+  "totalMatches": 13,
+  "vzPredCount": 3,
+  "highCount": 0,
   "settledCount": 0,
-  "pendingCount": 4,
+  "pendingCount": 0,
   "batchesAvailable": [
-   {
-    "date": "2026-11-13",
-    "label": "周五",
-    "count": 11,
-    "highCount": 4
-   },
    {
     "date": "2026-11-14",
     "label": "周六",
-    "count": 6,
+    "count": 13,
     "highCount": 0
    },
    {
@@ -38,155 +32,66 @@
     "highCount": 0
    }
   ],
-  "picks": [
-   {
-    "num": "周五004",
-    "league": "欧国联",
-    "home": "苏格兰",
-    "away": "北马其顿",
-    "kickoff": "2026-11-14 03:45:00",
-    "predH": 2,
-    "predA": 0,
-    "predScore": "2:0",
-    "dir": "H",
-    "dirName": "主胜",
-    "modelPred": [
-     2,
-     0
-    ],
-    "confWhy": "V站·模型 方向共识",
-    "settled": false,
-    "score": null,
-    "exactHit": null,
-    "dirHit": null,
-    "note": "未开奖 · 不计入正确率"
-   },
-   {
-    "num": "周五005",
-    "league": "欧国联",
-    "home": "塞尔维亚",
-    "away": "德国",
-    "kickoff": "2026-11-14 03:45:00",
-    "predH": 1,
-    "predA": 2,
-    "predScore": "1:2",
-    "dir": "A",
-    "dirName": "客胜",
-    "modelPred": [
-     0,
-     2
-    ],
-    "confWhy": "V站·模型 方向共识",
-    "settled": false,
-    "score": null,
-    "exactHit": null,
-    "dirHit": null,
-    "note": "未开奖 · 不计入正确率"
-   },
-   {
-    "num": "周五008",
-    "league": "欧国联",
-    "home": "斯洛文尼",
-    "away": "瑞士",
-    "kickoff": "2026-11-14 03:45:00",
-    "predH": 0,
-    "predA": 2,
-    "predScore": "0:2",
-    "dir": "A",
-    "dirName": "客胜",
-    "modelPred": [
-     0,
-     1
-    ],
-    "confWhy": "V站·模型 方向共识",
-    "settled": false,
-    "score": null,
-    "exactHit": null,
-    "dirHit": null,
-    "note": "未开奖 · 不计入正确率"
-   },
-   {
-    "num": "周五009",
-    "league": "欧国联",
-    "home": "荷兰",
-    "away": "希腊",
-    "kickoff": "2026-11-14 03:45:00",
-    "predH": 2,
-    "predA": 1,
-    "predScore": "2:1",
-    "dir": "H",
-    "dirName": "主胜",
-    "modelPred": [
-     2,
-     0
-    ],
-    "confWhy": "V站·模型 方向共识",
-    "settled": false,
-    "score": null,
-    "exactHit": null,
-    "dirHit": null,
-    "note": "未开奖 · 不计入正确率"
-   }
-  ]
+  "picks": []
  },
  "overall": {
-  "n": 90,
+  "n": 94,
   "exactHit": 13,
-  "exactRate": 14.44,
+  "exactRate": 13.83,
   "exactWilson95": [
-   8.64,
-   23.16
+   8.26,
+   22.24
   ],
-  "dirHit": 45,
-  "dirRate": 50.0,
+  "dirHit": 48,
+  "dirRate": 51.06,
   "dirWilson95": [
-   39.88,
-   60.12
+   41.12,
+   60.93
   ],
-  "mae": 1.87,
-  "avgPredGoals": 2.9,
-  "avgActGoals": 2.9,
-  "exactBaseline": 8.31,
-  "exactVsBaseline": 6.13,
+  "mae": 1.89,
+  "avgPredGoals": 2.88,
+  "avgActGoals": 2.93,
+  "exactBaseline": 8.21,
+  "exactVsBaseline": 5.62,
   "exactTest": {
-   "pOneSided": 0.035031,
+   "pOneSided": 0.043706,
    "significant": true
   },
-  "dirBaseline": 34.07,
-  "dirVsBaseline": 15.93,
+  "dirBaseline": 34.33,
+  "dirVsBaseline": 16.73,
   "dirTest": {
-   "pOneSided": 0.001323,
+   "pOneSided": 0.00062,
    "significant": true
   }
  },
  "groups": {
   "high": {
-   "n": 22,
+   "n": 26,
    "exactHit": 3,
-   "exactRate": 13.64,
+   "exactRate": 11.54,
    "exactWilson95": [
-    4.75,
-    33.34
+    4.0,
+    28.98
    ],
-   "dirHit": 14,
-   "dirRate": 63.64,
+   "dirHit": 17,
+   "dirRate": 65.38,
    "dirWilson95": [
-    42.95,
-    80.27
+    46.22,
+    80.59
    ],
-   "mae": 1.86,
-   "avgPredGoals": 2.86,
-   "avgActGoals": 3.09,
-   "exactBaseline": 8.74,
-   "exactVsBaseline": 4.9,
+   "mae": 1.96,
+   "avgPredGoals": 2.81,
+   "avgActGoals": 3.15,
+   "exactBaseline": 8.67,
+   "exactVsBaseline": 2.87,
    "exactTest": {
-    "pOneSided": 0.301266,
+    "pOneSided": 0.39476,
     "significant": false
    },
-   "dirBaseline": 34.55,
-   "dirVsBaseline": 29.09,
+   "dirBaseline": 35.43,
+   "dirVsBaseline": 29.95,
    "dirTest": {
-    "pOneSided": 0.00506,
+    "pOneSided": 0.0018,
     "significant": true
    }
   },
@@ -207,16 +112,16 @@
    "mae": 1.86,
    "avgPredGoals": 2.82,
    "avgActGoals": 2.5,
-   "exactBaseline": 9.14,
-   "exactVsBaseline": 4.5,
+   "exactBaseline": 8.99,
+   "exactVsBaseline": 4.65,
    "exactTest": {
-    "pOneSided": 0.326184,
+    "pOneSided": 0.316823,
     "significant": false
    },
-   "dirBaseline": 36.36,
-   "dirVsBaseline": 4.55,
+   "dirBaseline": 36.32,
+   "dirVsBaseline": 4.59,
    "dirTest": {
-    "pOneSided": 0.404927,
+    "pOneSided": 0.403391,
     "significant": false
    }
   },
@@ -237,10 +142,10 @@
    "mae": 1.87,
    "avgPredGoals": 2.96,
    "avgActGoals": 3.0,
-   "exactBaseline": 7.71,
-   "exactVsBaseline": 7.51,
+   "exactBaseline": 7.56,
+   "exactVsBaseline": 7.66,
    "exactTest": {
-    "pOneSided": 0.061111,
+    "pOneSided": 0.056083,
     "significant": false
    },
    "dirBaseline": 32.75,
@@ -253,56 +158,56 @@
  },
  "comparison": {
   "exactHotVsNormal": {
-   "diffPt": 0.0,
-   "z": 0.0,
-   "pTwoSided": 1.0,
+   "diffPt": -2.1,
+   "z": -0.219,
+   "pTwoSided": 0.826666,
    "significant": false
   },
   "dirHotVsNormal": {
-   "diffPt": 22.73,
-   "z": 1.509,
-   "pTwoSided": 0.131269,
+   "diffPt": 24.48,
+   "z": 1.696,
+   "pTwoSided": 0.08994,
    "significant": false
   },
   "exactFisher": 1.0,
-  "dirFisher": 0.227056,
-  "hotShare": 50.0,
+  "dirFisher": 0.145833,
+  "hotShare": 54.17,
   "naiveDirBaseline": 33.33
  },
  "excluded": {
   "unknownConf": 46,
-  "pending": 4,
-  "noResult": 18
+  "pending": 3,
+  "noResult": 15
  },
- "conclusion": "V站 🔥高信心（V站·模型 方向共识）历史 22 场：预测比分精确命中 3 场（13.64%，Wilson 95%CI 4.75%~33.34%），方向命中 14 场（63.64%，Wilson 95%CI 42.95%~80.27%）。独立随机基线：比分 8.74%、方向 34.55%；高信心相对基线的比分超额 +4.90pt、方向超额 +29.09pt（二项精确单侧 p=0.3013 / 0.0051，至少一项达到统计显著）。与普通组（n=22，比分 13.64%、方向 40.91%）相比，方向差 +22.73pt（Fisher 双侧 p=0.2271，差异不显著）。可判定高信心口径的场次仅 44 场，样本有限、置信区间宽，方向表现显著优于随机基线；另有 46 场因赛前无模型快照无法判定，已单列不参与对比。结论：仅作回溯描述，不构成稳定优势证明，不构成投注建议。",
+ "conclusion": "V站 🔥高信心（V站·模型 方向共识）历史 26 场：预测比分精确命中 3 场（11.54%，Wilson 95%CI 4.00%~28.98%），方向命中 17 场（65.38%，Wilson 95%CI 46.22%~80.59%）。独立随机基线：比分 8.67%、方向 35.43%；高信心相对基线的比分超额 +2.87pt、方向超额 +29.95pt（二项精确单侧 p=0.3948 / 0.0018，至少一项达到统计显著）。与普通组（n=22，比分 13.64%、方向 40.91%）相比，方向差 +24.48pt（Fisher 双侧 p=0.1458，差异不显著）。可判定高信心口径的场次仅 48 场，样本有限、置信区间宽，方向表现显著优于随机基线；另有 46 场因赛前无模型快照无法判定，已单列不参与对比。结论：仅作回溯描述，不构成稳定优势证明，不构成投注建议。",
  "byGroup": [
   {
-   "n": 22,
+   "n": 26,
    "exactHit": 3,
-   "exactRate": 13.64,
+   "exactRate": 11.54,
    "exactWilson95": [
-    4.75,
-    33.34
+    4.0,
+    28.98
    ],
-   "dirHit": 14,
-   "dirRate": 63.64,
+   "dirHit": 17,
+   "dirRate": 65.38,
    "dirWilson95": [
-    42.95,
-    80.27
+    46.22,
+    80.59
    ],
-   "mae": 1.86,
-   "avgPredGoals": 2.86,
-   "avgActGoals": 3.09,
-   "exactBaseline": 8.74,
-   "exactVsBaseline": 4.9,
+   "mae": 1.96,
+   "avgPredGoals": 2.81,
+   "avgActGoals": 3.15,
+   "exactBaseline": 8.67,
+   "exactVsBaseline": 2.87,
    "exactTest": {
-    "pOneSided": 0.301266,
+    "pOneSided": 0.39476,
     "significant": false
    },
-   "dirBaseline": 34.55,
-   "dirVsBaseline": 29.09,
+   "dirBaseline": 35.43,
+   "dirVsBaseline": 29.95,
    "dirTest": {
-    "pOneSided": 0.00506,
+    "pOneSided": 0.0018,
     "significant": true
    },
    "key": "🔥高信心"
@@ -324,16 +229,16 @@
    "mae": 1.86,
    "avgPredGoals": 2.82,
    "avgActGoals": 2.5,
-   "exactBaseline": 9.14,
-   "exactVsBaseline": 4.5,
+   "exactBaseline": 8.99,
+   "exactVsBaseline": 4.65,
    "exactTest": {
-    "pOneSided": 0.326184,
+    "pOneSided": 0.316823,
     "significant": false
    },
-   "dirBaseline": 36.36,
-   "dirVsBaseline": 4.55,
+   "dirBaseline": 36.32,
+   "dirVsBaseline": 4.59,
    "dirTest": {
-    "pOneSided": 0.404927,
+    "pOneSided": 0.403391,
     "significant": false
    },
    "key": "普通（方向分歧）"
@@ -355,10 +260,10 @@
    "mae": 1.87,
    "avgPredGoals": 2.96,
    "avgActGoals": 3.0,
-   "exactBaseline": 7.71,
-   "exactVsBaseline": 7.51,
+   "exactBaseline": 7.56,
+   "exactVsBaseline": 7.66,
    "exactTest": {
-    "pOneSided": 0.061111,
+    "pOneSided": 0.056083,
     "significant": false
    },
    "dirBaseline": 32.75,
@@ -388,16 +293,16 @@
    "mae": 2.14,
    "avgPredGoals": 2.29,
    "avgActGoals": 3.29,
-   "exactBaseline": 7.3,
-   "exactVsBaseline": 21.27,
+   "exactBaseline": 7.14,
+   "exactVsBaseline": 21.43,
    "exactTest": {
-    "pOneSided": 0.087491,
+    "pOneSided": 0.084155,
     "significant": false
    },
-   "dirBaseline": 35.24,
-   "dirVsBaseline": 7.62,
+   "dirBaseline": 35.11,
+   "dirVsBaseline": 7.75,
    "dirTest": {
-    "pOneSided": 0.473224,
+    "pOneSided": 0.470242,
     "significant": false
    },
    "key": "2026-10-30"
@@ -419,16 +324,16 @@
    "mae": 1.85,
    "avgPredGoals": 2.85,
    "avgActGoals": 3.0,
-   "exactBaseline": 8.61,
-   "exactVsBaseline": 1.39,
+   "exactBaseline": 8.4,
+   "exactVsBaseline": 1.6,
    "exactTest": {
-    "pOneSided": 0.523565,
+    "pOneSided": 0.509862,
     "significant": false
    },
-   "dirBaseline": 35.33,
-   "dirVsBaseline": 24.67,
+   "dirBaseline": 35.37,
+   "dirVsBaseline": 24.63,
    "dirTest": {
-    "pOneSided": 0.021163,
+    "pOneSided": 0.021362,
     "significant": true
    },
    "key": "2026-10-31"
@@ -450,16 +355,16 @@
    "mae": 2.0,
    "avgPredGoals": 2.76,
    "avgActGoals": 2.88,
-   "exactBaseline": 9.15,
-   "exactVsBaseline": -9.15,
+   "exactBaseline": 9.07,
+   "exactVsBaseline": -9.07,
    "exactTest": {
     "pOneSided": 1.0,
     "significant": false
    },
-   "dirBaseline": 32.55,
-   "dirVsBaseline": 8.63,
+   "dirBaseline": 32.67,
+   "dirVsBaseline": 8.51,
    "dirTest": {
-    "pOneSided": 0.301015,
+    "pOneSided": 0.30481,
     "significant": false
    },
    "key": "2026-11-01"
@@ -481,16 +386,16 @@
    "mae": 2.8,
    "avgPredGoals": 2.4,
    "avgActGoals": 2.8,
-   "exactBaseline": 10.44,
-   "exactVsBaseline": -10.44,
+   "exactBaseline": 10.21,
+   "exactVsBaseline": -10.21,
    "exactTest": {
     "pOneSided": 1.0,
     "significant": false
    },
-   "dirBaseline": 38.67,
-   "dirVsBaseline": -18.67,
+   "dirBaseline": 38.72,
+   "dirVsBaseline": -18.72,
    "dirTest": {
-    "pOneSided": 0.913231,
+    "pOneSided": 0.913584,
     "significant": false
    },
    "key": "2026-11-02"
@@ -512,8 +417,8 @@
    "mae": 3.0,
    "avgPredGoals": 4.0,
    "avgActGoals": 3.33,
-   "exactBaseline": 6.3,
-   "exactVsBaseline": -6.3,
+   "exactBaseline": 6.03,
+   "exactVsBaseline": -6.03,
    "exactTest": {
     "pOneSided": 1.0,
     "significant": false
@@ -543,16 +448,16 @@
    "mae": 1.43,
    "avgPredGoals": 2.71,
    "avgActGoals": 2.33,
-   "exactBaseline": 7.99,
-   "exactVsBaseline": 6.3,
+   "exactBaseline": 7.75,
+   "exactVsBaseline": 6.54,
    "exactTest": {
-    "pOneSided": 0.233172,
+    "pOneSided": 0.21961,
     "significant": false
    },
-   "dirBaseline": 32.06,
-   "dirVsBaseline": 15.56,
+   "dirBaseline": 32.07,
+   "dirVsBaseline": 15.55,
    "dirTest": {
-    "pOneSided": 0.100157,
+    "pOneSided": 0.100336,
     "significant": false
    },
    "key": "2026-11-07"
@@ -574,19 +479,50 @@
    "mae": 1.43,
    "avgPredGoals": 3.43,
    "avgActGoals": 3.29,
-   "exactBaseline": 7.94,
-   "exactVsBaseline": 34.92,
+   "exactBaseline": 8.05,
+   "exactVsBaseline": 34.81,
    "exactTest": {
-    "pOneSided": 0.00043,
+    "pOneSided": 0.000463,
     "significant": true
    },
-   "dirBaseline": 35.24,
-   "dirVsBaseline": 36.19,
+   "dirBaseline": 35.11,
+   "dirVsBaseline": 36.32,
    "dirTest": {
-    "pOneSided": 0.006381,
+    "pOneSided": 0.006192,
     "significant": true
    },
    "key": "2026-11-08"
+  },
+  {
+   "n": 4,
+   "exactHit": 0,
+   "exactRate": 0.0,
+   "exactWilson95": [
+    0.0,
+    48.99
+   ],
+   "dirHit": 3,
+   "dirRate": 75.0,
+   "dirWilson95": [
+    30.06,
+    95.44
+   ],
+   "mae": 2.5,
+   "avgPredGoals": 2.5,
+   "avgActGoals": 3.5,
+   "exactBaseline": 9.04,
+   "exactVsBaseline": -9.04,
+   "exactTest": {
+    "pOneSided": 1.0,
+    "significant": false
+   },
+   "dirBaseline": 39.89,
+   "dirVsBaseline": 35.11,
+   "dirTest": {
+    "pOneSided": 0.177935,
+    "significant": false
+   },
+   "key": "2026-11-13"
   }
  ],
  "byLeague": [
@@ -607,16 +543,16 @@
    "mae": 1.94,
    "avgPredGoals": 3.0,
    "avgActGoals": 2.59,
-   "exactBaseline": 7.12,
-   "exactVsBaseline": 4.64,
+   "exactBaseline": 7.13,
+   "exactVsBaseline": 4.63,
    "exactTest": {
-    "pOneSided": 0.343845,
+    "pOneSided": 0.344484,
     "significant": false
    },
-   "dirBaseline": 33.33,
-   "dirVsBaseline": 13.73,
+   "dirBaseline": 33.35,
+   "dirVsBaseline": 13.71,
    "dirTest": {
-    "pOneSided": 0.17178,
+    "pOneSided": 0.172242,
     "significant": false
    },
    "key": "英超"
@@ -638,16 +574,16 @@
    "mae": 1.88,
    "avgPredGoals": 2.75,
    "avgActGoals": 3.12,
-   "exactBaseline": 9.03,
-   "exactVsBaseline": -2.78,
+   "exactBaseline": 8.84,
+   "exactVsBaseline": -2.59,
    "exactTest": {
-    "pOneSided": 0.780026,
+    "pOneSided": 0.772559,
     "significant": false
    },
-   "dirBaseline": 34.17,
-   "dirVsBaseline": 15.83,
+   "dirBaseline": 34.24,
+   "dirVsBaseline": 15.76,
    "dirTest": {
-    "pOneSided": 0.142448,
+    "pOneSided": 0.143834,
     "significant": false
    },
    "key": "意甲"
@@ -669,16 +605,16 @@
    "mae": 1.86,
    "avgPredGoals": 3.0,
    "avgActGoals": 3.0,
-   "exactBaseline": 7.94,
-   "exactVsBaseline": 13.49,
+   "exactBaseline": 7.6,
+   "exactVsBaseline": 13.83,
    "exactTest": {
-    "pOneSided": 0.094166,
+    "pOneSided": 0.084959,
     "significant": false
    },
-   "dirBaseline": 32.38,
-   "dirVsBaseline": 17.62,
+   "dirBaseline": 32.37,
+   "dirVsBaseline": 17.63,
    "dirTest": {
-    "pOneSided": 0.131735,
+    "pOneSided": 0.131556,
     "significant": false
    },
    "key": "德甲"
@@ -700,16 +636,16 @@
    "mae": 1.69,
    "avgPredGoals": 2.69,
    "avgActGoals": 2.08,
-   "exactBaseline": 9.15,
-   "exactVsBaseline": -1.46,
+   "exactBaseline": 9.0,
+   "exactVsBaseline": -1.31,
    "exactTest": {
-    "pOneSided": 0.712774,
+    "pOneSided": 0.706547,
     "significant": false
    },
-   "dirBaseline": 33.33,
-   "dirVsBaseline": -2.56,
+   "dirBaseline": 33.31,
+   "dirVsBaseline": -2.54,
    "dirTest": {
-    "pOneSided": 0.677484,
+    "pOneSided": 0.676933,
     "significant": false
    },
    "key": "西甲"
@@ -737,10 +673,10 @@
     "pOneSided": 0.404611,
     "significant": false
    },
-   "dirBaseline": 33.33,
-   "dirVsBaseline": 23.81,
+   "dirBaseline": 33.13,
+   "dirVsBaseline": 24.01,
    "dirTest": {
-    "pOneSided": 0.173246,
+    "pOneSided": 0.170187,
     "significant": false
    },
    "key": "法甲"
@@ -762,16 +698,16 @@
    "mae": 2.57,
    "avgPredGoals": 3.0,
    "avgActGoals": 4.43,
-   "exactBaseline": 9.52,
-   "exactVsBaseline": 4.77,
+   "exactBaseline": 9.73,
+   "exactVsBaseline": 4.56,
    "exactTest": {
-    "pOneSided": 0.503558,
+    "pOneSided": 0.511568,
     "significant": false
    },
-   "dirBaseline": 37.14,
-   "dirVsBaseline": 20.0,
+   "dirBaseline": 37.23,
+   "dirVsBaseline": 19.91,
    "dirTest": {
-    "pOneSided": 0.23657,
+    "pOneSided": 0.238176,
     "significant": false
    },
    "key": "荷甲"
@@ -793,8 +729,8 @@
    "mae": 3.0,
    "avgPredGoals": 4.0,
    "avgActGoals": 3.33,
-   "exactBaseline": 6.3,
-   "exactVsBaseline": -6.3,
+   "exactBaseline": 6.03,
+   "exactVsBaseline": -6.03,
    "exactTest": {
     "pOneSided": 1.0,
     "significant": false
@@ -806,6 +742,37 @@
     "significant": false
    },
    "key": "欧冠"
+  },
+  {
+   "n": 4,
+   "exactHit": 0,
+   "exactRate": 0.0,
+   "exactWilson95": [
+    0.0,
+    48.99
+   ],
+   "dirHit": 3,
+   "dirRate": 75.0,
+   "dirWilson95": [
+    30.06,
+    95.44
+   ],
+   "mae": 2.5,
+   "avgPredGoals": 2.5,
+   "avgActGoals": 3.5,
+   "exactBaseline": 9.04,
+   "exactVsBaseline": -9.04,
+   "exactTest": {
+    "pOneSided": 1.0,
+    "significant": false
+   },
+   "dirBaseline": 39.89,
+   "dirVsBaseline": 35.11,
+   "dirTest": {
+    "pOneSided": 0.177935,
+    "significant": false
+   },
+   "key": "欧国联"
   },
   {
    "n": 4,
@@ -824,16 +791,16 @@
    "mae": 0.5,
    "avgPredGoals": 2.25,
    "avgActGoals": 2.75,
-   "exactBaseline": 11.94,
-   "exactVsBaseline": 38.06,
+   "exactBaseline": 11.44,
+   "exactVsBaseline": 38.56,
    "exactTest": {
-    "pOneSided": 0.07253,
+    "pOneSided": 0.06706,
     "significant": false
    },
-   "dirBaseline": 40.0,
-   "dirVsBaseline": 60.0,
+   "dirBaseline": 39.89,
+   "dirVsBaseline": 60.11,
    "dirTest": {
-    "pOneSided": 0.0256,
+    "pOneSided": 0.02532,
     "significant": true
    },
    "key": "英冠"
@@ -855,16 +822,16 @@
    "mae": 0.5,
    "avgPredGoals": 2.0,
    "avgActGoals": 2.0,
-   "exactBaseline": 8.33,
-   "exactVsBaseline": 41.67,
+   "exactBaseline": 7.98,
+   "exactVsBaseline": 42.02,
    "exactTest": {
-    "pOneSided": 0.037154,
+    "pOneSided": 0.034265,
     "significant": true
    },
-   "dirBaseline": 36.67,
-   "dirVsBaseline": 63.33,
+   "dirBaseline": 36.7,
+   "dirVsBaseline": 63.3,
    "dirTest": {
-    "pOneSided": 0.018082,
+    "pOneSided": 0.018141,
     "significant": true
    },
    "key": "葡超"
@@ -872,125 +839,125 @@
  ],
  "windows": [
   {
-   "n": 35,
-   "exactHit": 9,
-   "exactRate": 25.71,
+   "n": 18,
+   "exactHit": 6,
+   "exactRate": 33.33,
    "exactWilson95": [
-    14.16,
-    42.07
+    16.28,
+    56.25
    ],
-   "dirHit": 20,
-   "dirRate": 57.14,
+   "dirHit": 13,
+   "dirRate": 72.22,
    "dirWilson95": [
-    40.86,
-    72.02
+    49.13,
+    87.5
    ],
-   "mae": 1.43,
-   "avgPredGoals": 3.0,
-   "avgActGoals": 2.71,
-   "exactBaseline": 7.97,
-   "exactVsBaseline": 17.74,
+   "mae": 1.67,
+   "avgPredGoals": 3.22,
+   "avgActGoals": 3.33,
+   "exactBaseline": 8.27,
+   "exactVsBaseline": 25.06,
    "exactTest": {
-    "pOneSided": 0.001352,
+    "pOneSided": 0.002478,
     "significant": true
    },
-   "dirBaseline": 33.33,
-   "dirVsBaseline": 23.81,
+   "dirBaseline": 36.17,
+   "dirVsBaseline": 36.05,
    "dirTest": {
-    "pOneSided": 0.003214,
+    "pOneSided": 0.002036,
     "significant": true
    },
    "key": "近7日"
   },
   {
-   "n": 90,
+   "n": 94,
    "exactHit": 13,
-   "exactRate": 14.44,
+   "exactRate": 13.83,
    "exactWilson95": [
-    8.64,
-    23.16
+    8.26,
+    22.24
    ],
-   "dirHit": 45,
-   "dirRate": 50.0,
+   "dirHit": 48,
+   "dirRate": 51.06,
    "dirWilson95": [
-    39.88,
-    60.12
+    41.12,
+    60.93
    ],
-   "mae": 1.87,
-   "avgPredGoals": 2.9,
-   "avgActGoals": 2.9,
-   "exactBaseline": 8.31,
-   "exactVsBaseline": 6.13,
+   "mae": 1.89,
+   "avgPredGoals": 2.88,
+   "avgActGoals": 2.93,
+   "exactBaseline": 8.21,
+   "exactVsBaseline": 5.62,
    "exactTest": {
-    "pOneSided": 0.035031,
+    "pOneSided": 0.043706,
     "significant": true
    },
-   "dirBaseline": 34.07,
-   "dirVsBaseline": 15.93,
+   "dirBaseline": 34.33,
+   "dirVsBaseline": 16.73,
    "dirTest": {
-    "pOneSided": 0.001323,
+    "pOneSided": 0.00062,
     "significant": true
    },
    "key": "近30日"
   },
   {
-   "n": 90,
+   "n": 94,
    "exactHit": 13,
-   "exactRate": 14.44,
+   "exactRate": 13.83,
    "exactWilson95": [
-    8.64,
-    23.16
+    8.26,
+    22.24
    ],
-   "dirHit": 45,
-   "dirRate": 50.0,
+   "dirHit": 48,
+   "dirRate": 51.06,
    "dirWilson95": [
-    39.88,
-    60.12
+    41.12,
+    60.93
    ],
-   "mae": 1.87,
-   "avgPredGoals": 2.9,
-   "avgActGoals": 2.9,
-   "exactBaseline": 8.31,
-   "exactVsBaseline": 6.13,
+   "mae": 1.89,
+   "avgPredGoals": 2.88,
+   "avgActGoals": 2.93,
+   "exactBaseline": 8.21,
+   "exactVsBaseline": 5.62,
    "exactTest": {
-    "pOneSided": 0.035031,
+    "pOneSided": 0.043706,
     "significant": true
    },
-   "dirBaseline": 34.07,
-   "dirVsBaseline": 15.93,
+   "dirBaseline": 34.33,
+   "dirVsBaseline": 16.73,
    "dirTest": {
-    "pOneSided": 0.001323,
+    "pOneSided": 0.00062,
     "significant": true
    },
    "key": "近60日"
   },
   {
-   "n": 90,
+   "n": 94,
    "exactHit": 13,
-   "exactRate": 14.44,
+   "exactRate": 13.83,
    "exactWilson95": [
-    8.64,
-    23.16
+    8.26,
+    22.24
    ],
-   "dirHit": 45,
-   "dirRate": 50.0,
+   "dirHit": 48,
+   "dirRate": 51.06,
    "dirWilson95": [
-    39.88,
-    60.12
+    41.12,
+    60.93
    ],
-   "mae": 1.87,
-   "avgPredGoals": 2.9,
-   "avgActGoals": 2.9,
-   "exactBaseline": 8.31,
-   "exactVsBaseline": 6.13,
+   "mae": 1.89,
+   "avgPredGoals": 2.88,
+   "avgActGoals": 2.93,
+   "exactBaseline": 8.21,
+   "exactVsBaseline": 5.62,
    "exactTest": {
-    "pOneSided": 0.035031,
+    "pOneSided": 0.043706,
     "significant": true
    },
-   "dirBaseline": 34.07,
-   "dirVsBaseline": 15.93,
+   "dirBaseline": 34.33,
+   "dirVsBaseline": 16.73,
    "dirTest": {
-    "pOneSided": 0.001323,
+    "pOneSided": 0.00062,
     "significant": true
    },
    "key": "全量"
@@ -1004,7 +971,7 @@
   "独立随机基线 = 该组预测方向（比分）分布 × 全量实际方向（比分）分布之积求和，代表「预测与赛果完全独立」时的期望命中率；另列朴素 1/3 仅作参照，不作为判定标准。",
   "显著性：小样本采用二项精确单侧检验（vs 基线）与 Fisher 精确检验 / 两比例 z 检验（组间），并给出 Wilson 95% 置信区间；p<0.05 才称显著，样本不足时如实标注。",
   "本统计不含赔率、返奖率与 ROI：命中率高于基线只说明方向判断可能优于随机，不代表可盈利；竞彩抽水决定长期期望为负。",
-  "今日清单严格按竞彩当天开售批次 2026-11-13（周五）隔离，只列当天 11 场里的高信心预测；未开奖 4 场不计入任何命中率，赛后自动回填纳入统计。",
+  "今日清单严格按竞彩当天开售批次 2026-11-14（周六）隔离，只列当天 13 场里的高信心预测；未开奖 0 场不计入任何命中率，赛后自动回填纳入统计。",
   "归档档案由 fetch_vzhan.py 每日增量累积、backfill_vzhan_history.py 一次性全量回溯重建，随部署上云跨轮保留；统计每次刷新重算。",
   "本统计只做可核对的回溯描述，不承诺盈利、不构成投注建议。"
  ]

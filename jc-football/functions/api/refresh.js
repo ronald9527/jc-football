@@ -88,11 +88,19 @@ export async function onRequestPost({ env }) {
       await sleep(3000);
       run = await findLatestDispatchRun(token, dispatchedAt);
     }
+    // v1.7.137：不再宣称「云端正在抓取并部署 / 完成后自动同步」。
+    // 实测该 workflow 在海外恒定 HTTP 567（竞彩官方接口封锁），run 全部
+    // pending / cancelled / failure，部署守卫会跳过部署保护生产——从未真正
+    // 产出过新数据。抓取 / 预测 / 提取 / 回溯由本地后台全量流水线
+    // （run_daily.sh deploy）完成后部署；浏览器按钮只负责同步已部署数据。
+    // 这里如实返回「已登记一次触发尝试」，不承诺任何新数据/time-to-result。
     return json({
       ok: true,
       runId: run ? run.id : null,
       htmlUrl: run ? run.html_url : null,
-      message: "已触发全面重新抓取（全部数据源 + 赛果回溯 + 命中统计），云端正在构建并部署",
+      dispatched: true,
+      willProduceData: false,
+      message: "已登记一次云端触发尝试；抓取/预测/回溯由后台全量流水线完成后部署，此处不产出新数据",
     });
   } catch (e) {
     return json({ ok: false, error: "服务端异常：" + (e && e.message ? e.message : e) }, 500);

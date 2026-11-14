@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>按刷新仍是旧数据与假实时面板 · 根治报告 v1.7.137</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--card2:#1c2430;--bd:#2a3441;--tx:#e6edf3;--sub:#9aa8b8;--good:#3fb950;--bad:#f85149;--warn:#d29922;--acc:#58a6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:18px;max-width:1000px;margin:0 auto}
+h1{font-size:23px;line-height:1.4;margin:0 0 6px}
+h2{font-size:18px;margin:30px 0 12px;padding-left:11px;border-left:4px solid var(--acc)}
+h3{font-size:15px;margin:20px 0 8px;color:var(--acc)}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin:12px 0}
+.hero{background:linear-gradient(135deg,#12243a,#161b22);border:1px solid #2c4a6b}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.b{display:inline-block;font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--card2);color:var(--sub)}
+.b.ok{color:var(--good);border-color:#265c34;background:#10281a}
+.b.warn{color:var(--warn);border-color:#6b5316;background:#2a2210}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+th,td{border:1px solid var(--bd);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--sub);font-weight:600;white-space:nowrap}
+td code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px;color:#a5d6ff}
+.quote{border-left:3px solid var(--warn);background:#251f12;padding:10px 14px;margin:12px 0;color:#e8d5a8;border-radius:0 8px 8px 0}
+.quote.good{border-left-color:var(--good);background:#12261a;color:#b9e6c3}
+.ok-t{color:var(--good)}.bad-t{color:var(--bad)}.warn-t{color:var(--warn)}
+ul{margin:8px 0;padding-left:22px}li{margin:5px 0}
+.small{font-size:12.5px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px}
+.kpi{background:var(--card2);border:1px solid var(--bd);border-radius:9px;padding:12px 14px}
+.kpi b{display:block;font-size:21px;color:var(--good)}
+.kpi b.red{color:var(--bad)}
+.kpi span{font-size:12px;color:var(--sub)}
+pre{background:#0b0f14;border:1px solid var(--bd);border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;color:#b8c7d9;line-height:1.6}
+a{color:var(--acc)}
+.foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--bd);color:var(--sub);font-size:12.5px}
+</style>
+</head>
+<body>
+
+<div class="card hero">
+  <h1>「按刷新还是旧数据」真实修复 · 假实时面板下线 · 数据状态报告上线</h1>
+  <p class="small">竞彩足球 / 篮球数据分析台 · 根治报告 · 2026-11-14 · 线上 <span class="mono">v1.7.137</span> / <span class="mono">pageBuild=b3c1a2695909</span></p>
+  <div class="badges">
+    <span class="b ok">真实拉新 2026-11-14 18:44:59</span>
+    <span class="b ok">自检 ERROR 0 / WARN 0</span>
+    <span class="b ok">POST /api/refresh 调用 0 次</span>
+    <span class="b ok">浏览器零 JS 错误</span>
+    <span class="b ok">APK 1.7.137(10837) 对齐</span>
+    <span class="b ok">自动保鲜任务已恢复启用</span>
+  </div>
+</div>
+
+<h2>一、用户诉求</h2>
+<div class="quote">「按刷新按钮后还是旧数据，真实修复一下吧，那个实时数据取消了吧，完全没用，更改一个有用的报告」</div>
+<p>截图证据：数据停在 <span class="mono">11-13 11:51</span>，页面却仍显示 <b>「● 实时 17:20:32」</b>、<b>「距下次自动更新 00:09:28」</b>、<b>「自动更新 开」</b>，以及 <b>「③ 云端全量刷新已真实发起…完成后自动同步」</b>。承接长期要求：<b>所有东西可核对、不要假装成功、不要让我再提醒、各模块按竞彩当天批次隔离</b>。</p>
+
+<h2>二、结论速览</h2>
+<div class="grid">
+  <div class="kpi"><b class="red">约 30 小时</b><span>数据停摆时长（11-13 11:51 → 11-14 18:44），本轮已真实拉新补齐</span></div>
+  <div class="kpi"><b>0 次</b><span>按钮对 <code>/api/refresh</code> 的 POST 调用，不再赌注定失败的海外 CI</span></div>
+  <div class="kpi"><b>9 个</b><span>模块全站同步（8 足球主 Tab + 篮球，含篮球 6 子页）</span></div>
+  <div class="kpi"><b>4 类</b><span>假实时元素彻底下线：跳秒时钟 / 倒计时 / 自动开关 / 假承诺回执</span></div>
+</div>
+<div class="quote good"><b>一句话</b>：以前按钮在「请求一次注定失败的云端任务并弹成功」；现在按钮<b>只做它物理上真能做的事</b>——把云端<b>已经部署</b>的最新批次全站同步到本机，并如实告诉你这批数据是什么时候的。真正产出新数据的是后台全量流水线，已恢复每小时自动运行。</div>
+
+<h2>三、取证：为什么按了还是旧数据</h2>
+<p>没有直接打补丁，先把四条链路的真实状态取出来：</p>
+<table>
+<tr><th>取证项</th><th>实测结果</th><th>结论</th></tr>
+<tr><td>线上 <code>version.json</code> / <code>matches.json</code> / <code>score_predict.json</code></td><td class="mono">updateTime = 2026-11-13 11:51:40 / 11:51:55</td><td class="bad-t">本地同源文件也停在 11-13，不是缓存问题，是<b>真的没产新数据</b></td></tr>
+<tr><td>权威北京时间（<code>beijing_clock.py</code> 校准）</td><td class="mono">2026-11-14 17:26（用户截图时刻）</td><td class="bad-t">与数据批次相差约 30 小时</td></tr>
+<tr><td>GitHub Actions 最近 runs</td><td>大量 <code>pending / cancelled / failure</code>；schedule 失败在「部署后在线校验（门禁）」</td><td class="bad-t">海外 CI 恒定 <code>HTTP 567</code>，<b>产不出新批次</b>，部署守卫也挡住了残缺数据覆盖生产</td></tr>
+<tr><td>数据源可达性</td><td>沙箱 <code>500.com</code> <span class="ok-t">HTTP 200</span>；竞彩官方 <code>webapi.sporttery.cn</code> <span class="bad-t">HTTP 567</span></td><td>唯一能拉新的链路是<b>沙箱本地全量流水线</b>，走 500.com 备用源</td></tr>
+<tr><td>线上 <code>auto_pilot_status.json</code></td><td class="mono">checkedAt = 2026-11-13 12:40:07</td><td class="bad-t">后台保鲜巡检也停了</td></tr>
+<tr><td>自动化定时任务 <code>id=14693059</code></td><td>「竞彩数据自动刷新」<code>status=0</code>（停用），<code>lastRunAt=2026-11-13 08:56</code></td><td class="bad-t"><b>停用是 30 小时停摆的直接原因</b></td></tr>
+</table>
+
+<h2>四、根因链（四层，逐层对应修复）</h2>
+<table>
+<tr><th>#</th><th>根因</th><th>对应修复</th></tr>
+<tr><td>1</td><td><b>产数链路唯一</b>：浏览器物理上不能跑 Python 抓取 / 预测 / 回溯；云端 CI 海外不可达；只有沙箱 <code>run_daily.sh deploy</code> 能出新批次</td><td>本轮<b>真实跑全量流水线</b>把数据推进到 <span class="mono">2026-11-14 18:44:59</span>；页面不再宣称自己产数据</td></tr>
+<tr><td>2</td><td><b>自动保鲜任务被停用</b>：<code>status=0</code>，30 小时没跑，线上数据停在 11-13</td><td>恢复 <code>status 0→1</code>（每小时整点，闭环入口 <code>auto_pilot.py</code>），并复核生效</td></tr>
+<tr><td>3</td><td><b>按钮假承诺</b>：POST <code>/api/refresh</code> → 等 <code>run_id</code> → 弹「云端全量刷新已真实发起…完成后自动同步」，但 CI 恒失败</td><td>重写 <code>triggerRePull()</code>：不 POST、不轮询、不弹假承诺；改为真实全站同步 + 诚实回执 + <code>window.__lastCloudRefresh</code> 留痕</td></tr>
+<tr><td>4</td><td><b>假实时视觉</b>：<code>● 实时</code> 每秒跳秒、倒计时、自动开关全是纯前端装饰，与数据新旧无关</td><td>整套删除；换成 <code>renderDataReport()</code> 生成的<b>真实数据状态报告卡</b></td></tr>
+</table>
+
+<h2>五、修复动作清单</h2>
+<table>
+<tr><th>项目</th><th>具体改动</th><th>文件 / 函数</th></tr>
+<tr><td>真实拉新</td><td class="ok-t">全量跑通：今日 <b>18</b> 场竞彩、历史 974 条、官方赛果 10 场、比分预测 <b>219</b> 场、篮球 63 场、分层串关 3 档；<code>selftest ERROR 0 / WARN 0</code>，<code>verify_deploy PASS</code></td><td class="mono">run_daily.sh deploy</td></tr>
+<tr><td>刷新按钮状态机</td><td>去掉 <code>POST /api/refresh</code>、<code>run_id</code> 轮询与假成功文案；改为 <code>loadLiveDatasets(false)</code> → <code>renderAllTabs()</code> → <code>refreshAllBadges()</code> → 诚实 toast；并发锁 <code>__rePullBusy</code></td><td class="mono">template.html · triggerRePull()</td></tr>
+<tr><td>后台上线自动同步</td><td>新增 <code>watchNewDeploy(baseUpd)</code>：只在 <code>version.json.updateTime</code> <b>真的变化</b>时二次同步并提示；3 分钟窗口、20 秒轮询</td><td class="mono">template.html · watchNewDeploy()</td></tr>
+<tr><td>自动同步心跳</td><td>旧 <code>__autoFresh()</code> 静默 POST CI → 改为比对云端版本、5 分钟节流、确实有新批次才同步，写 <code>window.__autoFreshLastResult</code> 留痕</td><td class="mono">template.html · __autoFresh()</td></tr>
+<tr><td>云端回执诚实化</td><td>POST 回执新增 <code>dispatched:true, willProduceData:false</code>，明确「此处不产出新数据」；保留 <code>GET ?health=1</code> 供巡检</td><td class="mono">functions/api/refresh.js</td></tr>
+<tr><td>假实时彻底删除</td><td>删 <code>.upd-banner</code> CSS、<code>BATCH_SECS</code> / <code>BATCH_LABEL</code> / <code>nextBatch()</code> / <code>state.autoReload</code> / <code>setInterval(updateClock,1000)</code>；<code>updateClock()</code> 只显示真实数据时间与历史库时间</td><td class="mono">template.html</td></tr>
+<tr><td>新建报告卡</td><td><code>renderDataReport()</code> 读 <code>version.json</code> + <code>auto_pilot_status.json</code> + 6 个真实统计源，展示命中率、回溯进度、V站网关、后台巡检、异常数、官方源状态；不跳秒、不倒计时、不放假开关</td><td class="mono">template.html · renderDataReport()</td></tr>
+<tr><td>文案清理</td><td>删「每 30 分钟自动更新」「实时刷新数据」「点刷新触发云端全量抓取（约 1-3 分钟）」等过时说明；<code>renderDataFreshness()</code> 改为「以云端 version.json 批次时间为准」</td><td class="mono">template.html · openFreshModal()</td></tr>
+<tr><td>浏览器实测缺陷</td><td>Playwright 抓出 <code>ReferenceError: __rePullBusy is not defined</code>（重写时漏删变量声明），补齐声明后重建部署复测通过</td><td class="mono">template.html</td></tr>
+<tr><td>自检护栏</td><td>新增 <code>_code_only()</code> 剥离 CHANGELOG/注释，避免把「描述已删除假承诺」的文字误判成残留；重写检查 12 / 17 硬门禁；检查 16 保留 <code>jcAutoFreshLast</code> 节流</td><td class="mono">selftest.py</td></tr>
+<tr><td>自动任务恢复</td><td class="ok-t"><code>status: 0 → 1</code>，复核 <code>cron=0 0 * * * *</code>（每小时 00 分），prompt 已指向 <code>auto_pilot.py</code> 全闭环</td><td class="mono">定时任务 14693059</td></tr>
+</table>
+
+<h2>六、假「实时」→ 真实报告：前后对照</h2>
+<table>
+<tr><th>页面元素</th><th>改造前（假）</th><th>改造后（真，已上线）</th></tr>
+<tr><td><code>● 实时 17:20:32</code></td><td class="bad-t">每秒跳秒的墙上时钟，与数据新旧完全无关</td><td class="ok-t">删除；改为「<b>今日批次 · 更新于 2026-11-14 18:44:59</b>」真实标记</td></tr>
+<tr><td><code>距下次自动更新 00:09:28</code></td><td class="bad-t">倒计时，到点不触发任何更新</td><td class="ok-t">删除；改为 <code>lastPatrolAt</code> 后台巡检时间留痕</td></tr>
+<tr><td><code>自动更新 开</code></td><td class="bad-t">纯开关装饰，无实际作用</td><td class="ok-t">删除；真实保鲜由后台每小时任务承担</td></tr>
+<tr><td><code>③ 云端全量刷新已真实发起…完成后自动同步</code></td><td class="bad-t">假承诺，海外 CI 恒定失败</td><td class="ok-t">删除；改为「<b>已全站同步 9 个模块 · 今日批次（更新于 11-14 18:44）</b>」诚实回执</td></tr>
+<tr><td>数据状态</td><td class="bad-t">无</td><td class="ok-t"><b>📊 数据状态报告</b>：真实命中率 / 赛果回溯进度 / 网关延迟 / 巡检健康 / 异常数</td></tr>
+</table>
+
+<h2>七、报告卡实测数值（全部来自赛后官方赛果回溯实算）</h2>
+<div class="grid">
+  <div class="kpi"><b>55.71%</b><span>今日赛程·正路推荐命中率（78/140）</span></div>
+  <div class="kpi"><b>20.0%</b><span>分层串关命中（17/88 组）</span></div>
+  <div class="kpi"><b>51.06%</b><span>V站·高信心方向（48/94）</span></div>
+  <div class="kpi"><b>38.1%</b><span>比分预测·方向命中（n=1350）</span></div>
+  <div class="kpi"><b>6.7%</b><span>篮球串关命中（2/33 组）</span></div>
+  <div class="kpi"><b>75.0%</b><span>专家榜首 · 冒险王</span></div>
+</div>
+<table>
+<tr><th>报告项</th><th>真实值</th><th>口径</th></tr>
+<tr><td>比分预测赛果回溯</td><td class="mono">201 / 219 场</td><td>按官方赛果逐场结算，未开赛不计入命中率分母</td></tr>
+<tr><td>专家推荐判定</td><td class="mono">已判定 87 条 / 待 19 条</td><td>expert_history + matches + history 官方赛果</td></tr>
+<tr><td>V站情报网关</td><td class="ok-t">正常 · 61ms</td><td><code>vzhan_gateway_status.json</code>，连续失败 0 / 44 次探测全通</td></tr>
+<tr><td>后台保鲜巡检</td><td class="ok-t">2026-11-14 18:52:20 · OK</td><td><code>14</code> 项巡检，ERROR 0 / WARN 0</td></tr>
+<tr><td>竞彩官方源</td><td class="warn-t">备用源（官方海外不可达）</td><td>如实标注，不假称直连官方</td></tr>
+</table>
+<p class="small">口径说明：所有命中率均由赛后官方赛果回溯实算，Wilson 95% 区间与显著性检验随统计源一并提供；「宁缺毋滥」原则下候选不足时不强行推荐，因此部分模块样本量偏小属正常。</p>
+
+<h2>八、全链路验证结果</h2>
+<table>
+<tr><th>验证项</th><th>结果</th></tr>
+<tr><td>自检护栏 <code>selftest.py</code></td><td class="ok-t">ERROR 0 / WARN 0（含检查 12 刷新链路、检查 17 全站刷新与假实时取消）</td></tr>
+<tr><td>部署校验 <code>verify_deploy.py</code></td><td class="ok-t">PASS</td></tr>
+<tr><td>线上 <code>version.json</code></td><td class="mono">v1.7.137 / b3c1a2695909 / updateTime=2026-11-14 18:44:59 / deployTime=2026-11-14 18:56:58</td></tr>
+<tr><td>线上数据源可达</td><td class="ok-t">auto_pilot_status / score_predict / good_rate_stats / vz_high_stats / parlay_history / expert_leaderboard 全部 HTTP 200</td></tr>
+<tr><td>云端通道 <code>/api/refresh?health=1</code></td><td class="ok-t"><code>ok:true, probed:true, ghPatConfigured:true</code></td></tr>
+<tr><td>Playwright 浏览器端到端</td><td class="ok-t">报告卡渲染、按钮真实同步 9 模块、角标刷新、诚实 toast、刷新后报告卡重算；<code>jsErrors: []</code>，<code>POST /api/refresh</code> 调用 <b>0</b> 次</td></tr>
+<tr><td>APK</td><td class="ok-t"><code>1.7.137(10837)</code>，内嵌页 11 项校验通过，与网页版本一致</td></tr>
+<tr><td>自动保鲜任务</td><td class="ok-t"><code>14693059</code> <code>status=1</code>，每小时整点，闭环入口 <code>auto_pilot.py</code></td></tr>
+</table>
+
+<h2>九、交付清单</h2>
+<table>
+<tr><th>交付物</th><th>位置 / 链接</th></tr>
+<tr><td>线上页面（含新报告卡）</td><td><a href="https://jc-football-1eo.pages.dev/">https://jc-football-1eo.pages.dev/</a> · <span class="mono">v1.7.137</span></td></tr>
+<tr><td>本轮报告</td><td class="mono">/workspace/按刷新仍是旧数据与假实时面板-根治报告-v1.7.137.html</td></tr>
+<tr><td>Android APK</td><td class="mono">/workspace/竞彩足球数据分析台-v1.7.137.apk</td></tr>
+<tr><td>源码仓库</td><td class="mono">ronald9527/jc-football</td></tr>
+<tr><td>浏览器实测截图</td><td class="mono">verify_137_report.png（顶部假实时消失、中部报告卡、底部诚实回执）</td></tr>
+</table>
+
+<h2>十、如何自己核对（3 步复现）</h2>
+<pre>1) 打开 https://jc-football-1eo.pages.dev/version.json
+   确认 updateTime=2026-11-14 18:44:59、pageVersion=v1.7.137、patrolHealth=OK
+2) 打开页面，顶部应看到「📊 数据状态报告」而不是「● 实时 / 倒计时 / 自动更新 开」
+3) 点「刷新数据」，应看到「已全站同步 9 个模块 · 今日批次（更新于 11-14 18:44）」
+   浏览器 DevTools → Network 里不会出现 POST /api/refresh；
+   Console 输入 window.__lastCloudRefresh 可看到 syncedTabs / updBefore / updAfter / fresh / newDeploy / error
+   输入 window.__autoFreshLastResult 可看到心跳比对的 cloudUpd / localUpd / newer / synced</pre>
+
+<h2>十一、诚实边界（不夸大）</h2>
+<ul>
+<li><b>浏览器按钮不生产新数据</b>。抓取 / 预测 / 提取 / 赛果回溯必须由后台 Python 流水线完成后部署到 Pages，按钮只把云端<b>当前已部署</b>的最新批次同步到本机。这是物理边界，不是偷懒。</li>
+<li><b>数据能否持续变新，取决于后台每小时自动保鲜任务</b>。该任务此前被停用（status=0）导致 30 小时停摆，本轮已恢复为启用并复核生效；下一个整点会自动跑 <code>auto_pilot.py</code> 全闭环。</li>
+<li><b>竞彩官方接口在海外不可达</b>（HTTP 567），当前走 500.com 备用源，页面上如实标注「备用源」，不假称直连官方。</li>
+<li>海外 CI 的 <code>/api/refresh</code> 通道仍保留健康探测与 run 状态查询，但<b>不再由前端按钮触发</b>，也不再对外宣称会产出数据。</li>
+</ul>
+
+<div class="foot">生成时间 2026-11-14 · 所有数值直接读取与线上同源的本地 JSON，未手工填写 · 竞彩足球 / 篮球数据分析台 v1.7.137</div>
+
+</body>
+</html>
