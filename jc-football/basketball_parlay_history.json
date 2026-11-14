@@ -4342,7 +4342,10 @@
      "sameOddsHit": null,
      "sameOddsN": 4,
      "pTrue": 61.2,
-     "canon": 8.408
+     "canon": 8.408,
+     "legHit": true,
+     "hit": "hit",
+     "actualScore": "142:111"
     },
     {
      "id": "2042746",
@@ -4362,13 +4365,16 @@
      "sameOddsHit": null,
      "sameOddsN": 0,
      "pTrue": 62.0,
-     "canon": 24.619
+     "canon": 24.619,
+     "legHit": false,
+     "hit": "miss",
+     "actualScore": "142:111"
     }
    ],
    "recommended": false,
    "ev": -0.1059,
    "realEv": -0.1059,
-   "result": "pending",
+   "result": "miss",
    "engineVer": "v1.7.119",
    "savedAt": "2026-11-13 23:12:48",
    "snapshot": {
@@ -4426,7 +4432,8 @@
     "empirical": true,
     "recommended": false,
     "score": 30.604
-   }
+   },
+   "checkedAt": "2026-11-14 17:30:33"
   },
   {
    "date": "2026-11-13",
@@ -4846,7 +4853,7 @@
    "realEv": 0.1439,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-14 12:40:39",
+   "savedAt": "2026-11-14 17:30:33",
    "snapshot": {
     "type": "稳健2串1",
     "tier": "bk2",
@@ -4973,11 +4980,11 @@
     }
    ],
    "recommended": true,
-   "ev": 0.1088,
-   "realEv": 0.1088,
+   "ev": 0.1225,
+   "realEv": 0.1225,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-14 12:40:39",
+   "savedAt": "2026-11-14 17:30:33",
    "snapshot": {
     "type": "均衡3串1",
     "tier": "bk3",
@@ -5046,20 +5053,20 @@
     ],
     "totalOdds": 4.91,
     "avgConfidence": 65.2,
-    "jointProb": 0.2257,
-    "realHit": 0.2257,
-    "ev": 0.1088,
-    "realEv": 0.1088,
+    "jointProb": 0.2285,
+    "realHit": 0.2285,
+    "ev": 0.1225,
+    "realEv": 0.1225,
     "empirical": true,
     "recommended": true,
-    "score": 23.874
+    "score": 24.318
    }
   },
   {
    "date": "2026-11-14",
    "type": "精锐4串1",
    "tier": "bk4",
-   "totalOdds": 12.82,
+   "totalOdds": 13.02,
    "avgConfidence": 64.0,
    "legs": [
     {
@@ -5112,15 +5119,15 @@
      "playKey": "hdc",
      "dir": "a",
      "label": "让分客胜",
-     "playDesc": "让分(+4.5)",
-     "goalLine": "+4.5",
-     "odds": 2.61,
+     "playDesc": "让分(+5.5)",
+     "goalLine": "+5.5",
+     "odds": 2.65,
      "kickoff": "2026-11-15 02:30",
-     "confidence": 60.6,
+     "confidence": 60.3,
      "sameOddsHit": null,
-     "sameOddsN": 4,
-     "pTrue": 60.6,
-     "canon": 51.01
+     "sameOddsN": 1,
+     "pTrue": 60.3,
+     "canon": 51.808
     },
     {
      "id": "2042793",
@@ -5144,11 +5151,11 @@
     }
    ],
    "recommended": true,
-   "ev": 0.3556,
-   "realEv": 0.3556,
+   "ev": 0.3943,
+   "realEv": 0.3943,
    "result": "pending",
    "engineVer": "v1.7.119",
-   "savedAt": "2026-11-14 12:40:39",
+   "savedAt": "2026-11-14 17:30:33",
    "snapshot": {
     "type": "精锐4串1",
     "tier": "bk4",
@@ -5205,14 +5212,14 @@
       "playKey": "hdc",
       "dir": "a",
       "label": "让分客胜",
-      "playDesc": "让分(+4.5)",
-      "goalLine": "+4.5",
-      "odds": 2.61,
-      "confidence": 60.6,
+      "playDesc": "让分(+5.5)",
+      "goalLine": "+5.5",
+      "odds": 2.65,
+      "confidence": 60.3,
       "sameOddsHit": null,
-      "sameOddsN": 4,
-      "pTrue": 60.6,
-      "canon": 51.01
+      "sameOddsN": 1,
+      "pTrue": 60.3,
+      "canon": 51.808
      },
      {
       "id": "2042793",
@@ -5235,23 +5242,23 @@
       "canon": 34.657
      }
     ],
-    "totalOdds": 12.82,
+    "totalOdds": 13.02,
     "avgConfidence": 64.0,
-    "jointProb": 0.1057,
-    "realHit": 0.1057,
-    "ev": 0.3556,
-    "realEv": 0.3556,
+    "jointProb": 0.1071,
+    "realHit": 0.1071,
+    "ev": 0.3943,
+    "realEv": 0.3943,
     "empirical": true,
     "recommended": true,
-    "score": 14.839
+    "score": 15.442
    }
   }
  ],
  "total": 33,
  "hit": 2,
- "miss": 27,
- "pending": 4,
- "updatedAt": "2026-11-14 12:40:39",
- "hitRate": 6.9,
- "recent7Rate": 5.9
+ "miss": 28,
+ "pending": 3,
+ "updatedAt": "2026-11-14 17:30:33",
+ "hitRate": 6.7,
+ "recent7Rate": 5.6
 }
