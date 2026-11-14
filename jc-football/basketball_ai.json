@@ -1,736 +1,10 @@
 {
- "updatedAt": "2026-11-14 22:04:40",
+ "updatedAt": "2026-11-15 03:02:35",
  "dataDate": "2026-11-14",
  "source": "500.com",
- "upcomingCount": 12,
+ "upcomingCount": 6,
  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主",
  "predictions": [
-  {
-   "id": "2042788",
-   "num": "周六303",
-   "league": "西篮甲",
-   "home": "卢戈",
-   "away": "布尔戈斯",
-   "kickoff": "2026-11-15 01:00",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 3.99,
-     "confidence": 50.0,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
-     "pTrue": 21.6,
-     "canon": -0.813,
-     "edge": -0.6,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.14,
-       "confidence": 54.9,
-       "sameOddsHit": 41.2,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.22,
-     "confidence": 83.0,
-     "sameOddsHit": null,
-     "sameOddsN": 4,
-     "pTrue": 83.0,
-     "canon": 14.826,
-     "edge": 7.0,
-     "goalLine": "-10.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 3.85,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 4
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 55.7,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 55.7,
-     "canon": 11.949,
-     "edge": 5.7,
-     "goalLine": "191.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 34.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 8.9,
-     "canon": 0.467,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 8.4,
-       "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l2",
-       "odds": 10.0,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 21.0,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l5",
-       "odds": 47.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 70.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042789",
-   "num": "周六304",
-   "league": "德国篮球联赛",
-   "home": "班堡",
-   "away": "波恩",
-   "kickoff": "2026-11-15 01:30",
-   "hr": "10",
-   "ar": "4",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 1.83,
-     "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 47.7,
-     "canon": -1.062,
-     "edge": -0.7,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.72,
-       "confidence": 50.0,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 2.01,
-     "confidence": 50.3,
-     "sameOddsHit": null,
-     "sameOddsN": 4,
-     "pTrue": 53.9,
-     "canon": 15.903,
-     "edge": 7.7,
-     "goalLine": "+1.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.73,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 4
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 62.7,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 66.3,
-     "canon": 33.226,
-     "edge": 16.3,
-     "goalLine": "168.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l5",
-     "odds": 21.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 6.2,
-     "canon": 0.364,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.15,
-       "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l2",
-       "odds": 4.4,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 7.5,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l4",
-       "odds": 13.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 23.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042790",
-   "num": "周六305",
-   "league": "德国篮球联赛",
-   "home": "乌尔姆",
-   "away": "耶拿科学城",
-   "kickoff": "2026-11-15 01:30",
-   "hr": "13",
-   "ar": "15",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 4.38,
-     "confidence": 51.2,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
-     "pTrue": 28.2,
-     "canon": 16.422,
-     "edge": 8.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.11,
-       "confidence": 64.0,
-       "sameOddsHit": 41.2,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 4.81,
-     "confidence": 51.2,
-     "sameOddsHit": 0.0,
-     "sameOddsN": 6,
-     "pTrue": 32.9,
-     "canon": 27.529,
-     "edge": 13.5,
-     "goalLine": "-9.5",
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.16,
-       "confidence": 67.1,
-       "sameOddsHit": 100.0,
-       "sameOddsN": 6
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 67.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 65.8,
-     "canon": 32.269,
-     "edge": 15.8,
-     "goalLine": "167.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 45.0,
-     "confidence": 51.2,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 7.4,
-     "canon": 0.497,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 8.8,
-       "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l2",
-       "odds": 11.0,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 22.0,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l5",
-       "odds": 58.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 80.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042791",
-   "num": "周六306",
-   "league": "西篮甲",
-   "home": "安道尔BC",
-   "away": "特内里费",
-   "kickoff": "2026-11-15 02:30",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 2.64,
-     "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 29.8,
-     "canon": -7.067,
-     "edge": -3.7,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.33,
-       "confidence": 50.0,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 2.73,
-     "confidence": 59.9,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 59.9,
-     "canon": 52.604,
-     "edge": 26.0,
-     "goalLine": "+6.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.4,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 57.3,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 57.3,
-     "canon": 15.167,
-     "edge": 7.3,
-     "goalLine": "176.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l1",
-     "odds": 4.0,
-     "confidence": 50.0,
-     "sameOddsHit": 27.5,
-     "sameOddsN": 40,
-     "pTrue": 25.2,
-     "canon": 0.346,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l2",
-       "odds": 3.5,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 5.0,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l4",
-       "odds": 8.8,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l5",
-       "odds": 13.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 15.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042792",
-   "num": "周六307",
-   "league": "德国篮球联赛",
-   "home": "汉堡塔楼",
-   "away": "维尔茨堡",
-   "kickoff": "2026-11-15 03:00",
-   "hr": "16",
-   "ar": "7",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 2.5,
-     "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 33.9,
-     "canon": -2.664,
-     "edge": -1.5,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.37,
-       "confidence": 51.4,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 2.36,
-     "confidence": 56.5,
-     "sameOddsHit": 0.0,
-     "sameOddsN": 5,
-     "pTrue": 61.9,
-     "canon": 45.368,
-     "edge": 22.4,
-     "goalLine": "+4.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.54,
-       "confidence": 50.0,
-       "sameOddsHit": 100.0,
-       "sameOddsN": 5
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 58.1,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 63.5,
-     "canon": 27.58,
-     "edge": 13.5,
-     "goalLine": "169.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 8.4,
-     "confidence": 50.0,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 12.4,
-     "canon": 0.348,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 3.95,
-       "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l2",
-       "odds": 3.6,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 5.7,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l5",
-       "odds": 14.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 15.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042793",
-   "num": "周六308",
-   "league": "德国篮球联赛",
-   "home": "奥尔登堡",
-   "away": "阿尔巴",
-   "kickoff": "2026-11-15 03:00",
-   "hr": "11",
-   "ar": "9",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 2.71,
-     "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 37.2,
-     "canon": 9.346,
-     "edge": 4.5,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.32,
-       "confidence": 57.9,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 2.86,
-     "confidence": 51.2,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 52.4,
-     "canon": 40.318,
-     "edge": 19.9,
-     "goalLine": "+5.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.38,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 66.0,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 67.2,
-     "canon": 35.059,
-     "edge": 17.2,
-     "goalLine": "163.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l1",
-     "odds": 4.15,
-     "confidence": 50.0,
-     "sameOddsHit": 27.5,
-     "sameOddsN": 40,
-     "pTrue": 24.0,
-     "canon": 0.345,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l2",
-       "odds": 3.5,
-       "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l3",
-       "odds": 5.15,
-       "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l4",
-       "odds": 8.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l5",
-       "odds": 12.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
-      },
-      {
-       "dir": "l6",
-       "odds": 13.0,
-       "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
   {
    "id": "2042794",
    "num": "周六309",
@@ -745,8 +19,8 @@
      "dir": "a",
      "odds": 2.87,
      "confidence": 50.0,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
+     "sameOddsHit": 60.7,
+     "sameOddsN": 84,
      "pTrue": 28.3,
      "canon": -4.616,
      "edge": -2.5,
@@ -756,28 +30,28 @@
        "dir": "h",
        "odds": 1.28,
        "confidence": 51.3,
-       "sameOddsHit": 41.2,
-       "sameOddsN": 97
+       "sameOddsHit": 39.3,
+       "sameOddsN": 84
       }
      ]
     },
     "hdc": {
      "dir": "a",
-     "odds": 1.31,
-     "confidence": 79.4,
-     "sameOddsHit": 80.0,
-     "sameOddsN": 10,
-     "pTrue": 79.4,
-     "canon": 18.87,
-     "edge": 9.0,
+     "odds": 1.32,
+     "confidence": 79.5,
+     "sameOddsHit": 77.8,
+     "sameOddsN": 9,
+     "pTrue": 79.5,
+     "canon": 18.592,
+     "edge": 8.9,
      "goalLine": "-6.5",
      "alts": [
       {
        "dir": "h",
-       "odds": 3.12,
+       "odds": 3.16,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 10
+       "sameOddsHit": 22.2,
+       "sameOddsN": 9
       }
      ]
     },
@@ -786,7 +60,7 @@
      "odds": 1.7,
      "confidence": 56.7,
      "sameOddsHit": null,
-     "sameOddsN": 3,
+     "sameOddsN": 2,
      "pTrue": 56.7,
      "canon": 13.96,
      "edge": 6.7,
@@ -797,7 +71,7 @@
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 3
+       "sameOddsN": 2
       }
      ]
     },
@@ -805,8 +79,8 @@
      "dir": "l5",
      "odds": 34.0,
      "confidence": 50.0,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
+     "sameOddsHit": 9.1,
+     "sameOddsN": 33,
      "pTrue": 6.4,
      "canon": 0.416,
      "edge": 0.0,
@@ -816,36 +90,36 @@
        "dir": "l1",
        "odds": 6.3,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l2",
        "odds": 6.8,
        "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
+       "sameOddsHit": 27.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
        "odds": 15.0,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l4",
        "odds": 25.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 6.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l6",
        "odds": 50.0,
        "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
@@ -866,37 +140,37 @@
      "dir": "h",
      "odds": 5.36,
      "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 37.0,
-     "canon": 41.371,
-     "edge": 20.5,
+     "sameOddsHit": 39.3,
+     "sameOddsN": 84,
+     "pTrue": 36.1,
+     "canon": 39.571,
+     "edge": 19.6,
      "goalLine": null,
      "alts": [
       {
        "dir": "a",
        "odds": 1.06,
-       "confidence": 77.2,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
+       "confidence": 76.3,
+       "sameOddsHit": 60.7,
+       "sameOddsN": 84
       }
      ]
     },
     "hdc": {
      "dir": "a",
-     "odds": 5.17,
+     "odds": 5.3,
      "confidence": 50.0,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 27.3,
-     "canon": 18.72,
-     "edge": 9.1,
+     "pTrue": 30.1,
+     "canon": 24.92,
+     "edge": 12.2,
      "goalLine": "+13.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.15,
-       "confidence": 72.7,
+       "confidence": 69.9,
        "sameOddsHit": null,
        "sameOddsN": 0
       }
@@ -905,20 +179,20 @@
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 50.2,
+     "confidence": 51.9,
      "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 52.0,
-     "canon": 4.49,
-     "edge": 2.0,
-     "goalLine": "236.5",
+     "sameOddsN": 1,
+     "pTrue": 53.7,
+     "canon": 7.909,
+     "edge": 3.7,
+     "goalLine": "237.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 3
+       "sameOddsN": 1
       }
      ]
     },
@@ -926,8 +200,8 @@
      "dir": "l2",
      "odds": 4.0,
      "confidence": 50.0,
-     "sameOddsHit": 25.0,
-     "sameOddsN": 40,
+     "sameOddsHit": 27.3,
+     "sameOddsN": 33,
      "pTrue": 20.1,
      "canon": 0.334,
      "edge": 0.0,
@@ -937,36 +211,36 @@
        "dir": "l1",
        "odds": 7.15,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
        "odds": 3.6,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l4",
        "odds": 5.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 6.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l5",
        "odds": 6.2,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l6",
        "odds": 4.6,
        "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
@@ -985,38 +259,38 @@
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 2.0,
+     "odds": 1.9,
      "confidence": 51.8,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
-     "pTrue": 47.5,
-     "canon": 6.81,
-     "edge": 3.2,
+     "sameOddsHit": 60.7,
+     "sameOddsN": 84,
+     "pTrue": 48.5,
+     "canon": 4.009,
+     "edge": 1.8,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.59,
-       "confidence": 54.4,
-       "sameOddsHit": 41.2,
-       "sameOddsN": 97
+       "odds": 1.66,
+       "confidence": 52.5,
+       "sameOddsHit": 39.3,
+       "sameOddsN": 84
       }
      ]
     },
     "hdc": {
      "dir": "h",
-     "odds": 1.95,
-     "confidence": 55.9,
+     "odds": 1.79,
+     "confidence": 57.2,
      "sameOddsHit": 20.0,
      "sameOddsN": 5,
-     "pTrue": 54.1,
-     "canon": 11.358,
-     "edge": 5.4,
+     "pTrue": 55.4,
+     "canon": 5.367,
+     "edge": 2.4,
      "goalLine": "-1.5",
      "alts": [
       {
        "dir": "a",
-       "odds": 1.85,
+       "odds": 2.02,
        "confidence": 50.0,
        "sameOddsHit": 80.0,
        "sameOddsN": 5
@@ -1026,12 +300,12 @@
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 56.6,
+     "confidence": 57.0,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 54.8,
-     "canon": 10.157,
-     "edge": 4.8,
+     "pTrue": 55.2,
+     "canon": 10.962,
+     "edge": 5.2,
      "goalLine": "232.5",
      "alts": [
       {
@@ -1045,54 +319,54 @@
     },
     "wnm": {
      "dir": "l5",
-     "odds": 23.0,
+     "odds": 20.0,
      "confidence": 51.8,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 6.6,
-     "canon": 0.395,
+     "sameOddsHit": 9.1,
+     "sameOddsN": 33,
+     "pTrue": 7.2,
+     "canon": 0.39,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 5.1,
+       "odds": 5.0,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l2",
-       "odds": 5.3,
+       "odds": 5.1,
        "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
+       "sameOddsHit": 27.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
-       "odds": 8.7,
+       "odds": 8.3,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l4",
-       "odds": 13.0,
+       "odds": 12.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 6.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l6",
-       "odds": 24.0,
+       "odds": 21.0,
        "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
    },
-   "topPlay": "hilo"
+   "topPlay": "hdc"
   },
   {
    "id": "2042797",
@@ -1108,59 +382,59 @@
      "dir": "h",
      "odds": 2.33,
      "confidence": 50.0,
-     "sameOddsHit": 41.2,
-     "sameOddsN": 97,
-     "pTrue": 39.5,
-     "canon": 3.141,
-     "edge": 1.4,
+     "sameOddsHit": 39.3,
+     "sameOddsN": 84,
+     "pTrue": 38.8,
+     "canon": 1.94,
+     "edge": 0.8,
      "goalLine": null,
      "alts": [
       {
        "dir": "a",
        "odds": 1.43,
-       "confidence": 53.8,
-       "sameOddsHit": 58.8,
-       "sameOddsN": 97
+       "confidence": 53.2,
+       "sameOddsHit": 60.7,
+       "sameOddsN": 84
       }
      ]
     },
     "hdc": {
      "dir": "a",
-     "odds": 2.58,
-     "confidence": 54.7,
-     "sameOddsHit": 0.0,
-     "sameOddsN": 5,
-     "pTrue": 55.9,
-     "canon": 38.751,
-     "edge": 19.1,
+     "odds": 2.56,
+     "confidence": 55.8,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
+     "pTrue": 57.0,
+     "canon": 40.762,
+     "edge": 20.1,
      "goalLine": "+4.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.5,
        "confidence": 50.0,
-       "sameOddsHit": 100.0,
-       "sameOddsN": 5
+       "sameOddsHit": null,
+       "sameOddsN": 4
       }
      ]
     },
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 55.8,
+     "confidence": 55.0,
      "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 57.0,
-     "canon": 14.552,
-     "edge": 7.0,
-     "goalLine": "230.5",
+     "sameOddsN": 2,
+     "pTrue": 56.2,
+     "canon": 12.943,
+     "edge": 6.2,
+     "goalLine": "228.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 3
+       "sameOddsN": 2
       }
      ]
     },
@@ -1168,8 +442,8 @@
      "dir": "l4",
      "odds": 8.4,
      "confidence": 50.0,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
+     "sameOddsHit": 6.1,
+     "sameOddsN": 33,
      "pTrue": 12.9,
      "canon": 0.35,
      "edge": 0.0,
@@ -1179,41 +453,41 @@
        "dir": "l1",
        "odds": 4.05,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l2",
        "odds": 4.2,
        "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
+       "sameOddsHit": 27.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
        "odds": 6.2,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l5",
        "odds": 13.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l6",
        "odds": 12.0,
        "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
    },
-   "topPlay": "hilo"
+   "topPlay": "hdc"
   },
   {
    "id": "2042798",
@@ -1227,114 +501,114 @@
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 2.68,
+     "odds": 2.48,
      "confidence": 54.2,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
-     "pTrue": 37.6,
-     "canon": 9.638,
-     "edge": 4.6,
+     "sameOddsHit": 60.7,
+     "sameOddsN": 84,
+     "pTrue": 36.8,
+     "canon": 2.432,
+     "edge": 1.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.32,
-       "confidence": 58.0,
-       "sameOddsHit": 41.2,
-       "sameOddsN": 97
+       "odds": 1.38,
+       "confidence": 53.9,
+       "sameOddsHit": 39.3,
+       "sameOddsN": 84
       }
      ]
     },
     "hdc": {
-     "dir": "h",
-     "odds": 2.49,
-     "confidence": 54.2,
-     "sameOddsHit": 10.0,
-     "sameOddsN": 10,
-     "pTrue": 43.6,
-     "canon": 11.793,
-     "edge": 5.7,
-     "goalLine": "-5.5",
+     "dir": "a",
+     "odds": 1.6,
+     "confidence": 67.8,
+     "sameOddsHit": null,
+     "sameOddsN": 2,
+     "pTrue": 63.6,
+     "canon": 8.874,
+     "edge": 4.1,
+     "goalLine": "-4.5",
      "alts": [
       {
-       "dir": "a",
-       "odds": 1.52,
-       "confidence": 56.4,
-       "sameOddsHit": 90.0,
-       "sameOddsN": 10
+       "dir": "h",
+       "odds": 2.35,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 2
       }
      ]
     },
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 59.6,
-     "sameOddsHit": 66.7,
-     "sameOddsN": 6,
-     "pTrue": 55.4,
-     "canon": 11.388,
-     "edge": 5.4,
-     "goalLine": "229.5",
+     "confidence": 62.3,
+     "sameOddsHit": null,
+     "sameOddsN": 2,
+     "pTrue": 58.1,
+     "canon": 16.818,
+     "edge": 8.1,
+     "goalLine": "230.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.7,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 6
+       "sameOddsHit": null,
+       "sameOddsN": 2
       }
      ]
     },
     "wnm": {
      "dir": "l5",
-     "odds": 40.0,
+     "odds": 32.0,
      "confidence": 54.2,
-     "sameOddsHit": 7.5,
-     "sameOddsN": 40,
-     "pTrue": 5.1,
-     "canon": 0.45,
+     "sameOddsHit": 9.1,
+     "sameOddsN": 33,
+     "pTrue": 5.9,
+     "canon": 0.441,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 5.9,
+       "odds": 6.0,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l2",
        "odds": 6.2,
        "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
+       "sameOddsHit": 27.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
-       "odds": 14.0,
+       "odds": 12.0,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l4",
-       "odds": 22.0,
+       "odds": 16.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 6.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l6",
-       "odds": 46.0,
+       "odds": 36.0,
        "confidence": 50.0,
-       "sameOddsHit": 12.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
    },
-   "topPlay": "hilo"
+   "topPlay": "hdc"
   },
   {
    "id": "2042799",
@@ -1349,30 +623,30 @@
     "mnl": {
      "dir": "a",
      "odds": 8.08,
-     "confidence": 79.0,
-     "sameOddsHit": 58.8,
-     "sameOddsN": 97,
-     "pTrue": 73.6,
-     "canon": -52.073,
-     "edge": -26.4,
+     "confidence": 78.9,
+     "sameOddsHit": 60.7,
+     "sameOddsN": 84,
+     "pTrue": 73.5,
+     "canon": -52.274,
+     "edge": -26.5,
      "goalLine": null,
      "alts": []
     },
     "hdc": {
      "dir": "h",
-     "odds": 6.58,
+     "odds": 6.88,
      "confidence": 55.4,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 30.4,
-     "canon": 32.382,
-     "edge": 15.9,
+     "pTrue": 29.5,
+     "canon": 32.184,
+     "edge": 15.8,
      "goalLine": "-15.5",
      "alts": [
       {
        "dir": "a",
-       "odds": 1.11,
-       "confidence": 69.6,
+       "odds": 1.1,
+       "confidence": 70.5,
        "sameOddsHit": null,
        "sameOddsN": 0
       }
@@ -1402,8 +676,8 @@
      "dir": "l6",
      "odds": 120.0,
      "confidence": 55.4,
-     "sameOddsHit": 12.5,
-     "sameOddsN": 40,
+     "sameOddsHit": 9.1,
+     "sameOddsN": 33,
      "pTrue": 5.1,
      "canon": 0.707,
      "edge": 0.0,
@@ -1413,36 +687,36 @@
        "dir": "l1",
        "odds": 20.0,
        "confidence": 50.0,
-       "sameOddsHit": 27.5,
-       "sameOddsN": 40
+       "sameOddsHit": 30.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l2",
        "odds": 22.0,
        "confidence": 50.0,
-       "sameOddsHit": 25.0,
-       "sameOddsN": 40
+       "sameOddsHit": 27.3,
+       "sameOddsN": 33
       },
       {
        "dir": "l3",
        "odds": 36.0,
        "confidence": 50.0,
-       "sameOddsHit": 20.0,
-       "sameOddsN": 40
+       "sameOddsHit": 18.2,
+       "sameOddsN": 33
       },
       {
        "dir": "l4",
        "odds": 45.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 6.1,
+       "sameOddsN": 33
       },
       {
        "dir": "l5",
        "odds": 100.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.5,
-       "sameOddsN": 40
+       "sameOddsHit": 9.1,
+       "sameOddsN": 33
       }
      ]
     }
