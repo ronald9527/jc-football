@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全 Tab 更新回执 · 2026-11-15</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--card2:#1c2430;--bd:#2a3441;--tx:#e6edf3;--sub:#9aa8b8;--good:#3fb950;--bad:#f85149;--warn:#d29922;--acc:#58a6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:18px;max-width:1000px;margin:0 auto}
+h1{font-size:23px;line-height:1.4;margin:0 0 6px}
+h2{font-size:18px;margin:30px 0 12px;padding-left:11px;border-left:4px solid var(--acc)}
+p{margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;margin:12px 0}
+.hero{background:linear-gradient(135deg,#12243a,#161b22);border:1px solid #2c4a6b}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.b{display:inline-block;font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--card2);color:var(--sub)}
+.b.ok{color:var(--good);border-color:#265c34;background:#10281a}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--card2);color:var(--sub);font-weight:600;white-space:nowrap}
+td code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;color:#a5d6ff}
+.quote{border-left:3px solid var(--warn);background:#251f12;padding:10px 14px;margin:12px 0;color:#e8d5a8;border-radius:0 8px 8px 0}
+.quote.good{border-left-color:var(--good);background:#12261a;color:#b9e6c3}
+.ok-t{color:var(--good)}.bad-t{color:var(--bad)}.warn-t{color:var(--warn)}
+ul{margin:8px 0;padding-left:22px}li{margin:5px 0}
+.small{font-size:12.5px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.kpi{background:var(--card2);border:1px solid var(--bd);border-radius:9px;padding:12px 14px}
+.kpi b{display:block;font-size:20px;color:var(--good)}
+.kpi span{font-size:12px;color:var(--sub)}
+pre{background:#0b0f14;border:1px solid var(--bd);border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;color:#b8c7d9;line-height:1.6}
+a{color:var(--acc)}
+.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--bd);color:var(--sub);font-size:12.5px}
+</style>
+</head>
+<body>
+
+<div class="card hero">
+  <h1>全 Tab 数据更新回执 · 2026-11-15</h1>
+  <p class="small">竞彩足球 / 篮球数据分析台 · 线上 <span class="mono">v1.7.137</span> / <span class="mono">pageBuild=b3c1a2695909</span> · 数据批次 <span class="mono">2026-11-15 17:53:55</span></p>
+  <div class="badges">
+    <span class="b ok">17 个数据源全部拉新</span>
+    <span class="b ok">自检 ERROR 0 / WARN 0</span>
+    <span class="b ok">巡检 14 项全 OK</span>
+    <span class="b ok">线上校验 PASS</span>
+    <span class="b ok">APK 内嵌页同步到新批次</span>
+    <span class="b ok">自动保鲜任务已修复并恢复</span>
+  </div>
+</div>
+
+<h2>一、本次诉求</h2>
+<div class="quote">「全tab更新」</div>
+<p>即把足球 <b>9 个主 Tab</b> + 篮球 <b>6 个子页</b> 依赖的全部数据源真实拉到最新竞彩批次，不是只刷一个页面、也不是弹个成功提示。承接长期要求：<b>刷新必须真实拉新、所有东西可核对、不要让我反复提醒</b>。</p>
+
+<h2>二、更新前后对照</h2>
+<div class="grid">
+  <div class="kpi"><b>2026-11-14 18:44:59</b><span>更新前：线上与本地数据全部停在此批次（约 23 小时未动）</span></div>
+  <div class="kpi"><b>2026-11-15 17:53:55</b><span>更新后：真实跑通全量流水线，主批次 = 权威竞彩当天 11-15</span></div>
+  <div class="kpi"><b>7 场</b><span>今日竞彩赛程（比分预测展示窗 189 场）</span></div>
+  <div class="kpi"><b>2026-11-15 18:04:45</b><span>最终部署时间（新 APK + 新自举包 + 新巡检留痕一并上线）</span></div>
+</div>
+<p>权威北京时间校准为 <span class="mono">2026-11-15 17:49</span>（HTTP Date 对时，drift -1s）。全量流水线 <code>bash run_daily.sh deploy</code> 实跑 <b>7 分 03 秒</b>，<code>EXIT_CODE=0</code>，<code>selftest ERROR 0 / WARN 0</code>，<code>verify_deploy PASS</code>。</p>
+
+<h2>三、全 Tab 数据源逐项核对</h2>
+<p class="small">下表时间戳全部直接读取本地 JSON（与线上同源），未手工填写；线上 8 个关键文件另用 HTTP 抽查，时间戳一致。</p>
+<table>
+<tr><th>Tab / 模块</th><th>数据源文件</th><th>本次更新时间</th><th>说明</th></tr>
+<tr><td>今日赛程</td><td class="mono">matches.json</td><td class="mono ok-t">2026-11-15 17:53:55</td><td class="small">竞彩当天场次 / 正路推荐 / 五维雷达</td></tr>
+<tr><td>历史战绩</td><td class="mono">history.json</td><td class="mono ok-t">2026-11-15 17:53:55</td><td class="small">历史赛果库（赛后回溯主库）</td></tr>
+<tr><td>强弱对战</td><td class="mono">strongweak_history.json</td><td class="mono ok-t">2026-11-15 17:53:55（50 条 · 文件时间）</td><td class="small">强弱对战历史样本</td></tr>
+<tr><td>港澳赔率</td><td class="mono">hkmo_history.json</td><td class="mono ok-t">2026-11-15 17:53:55（1 条 · 文件时间）</td><td class="small">港澳盘口历史</td></tr>
+<tr><td>分层串关</td><td class="mono">parlay_history.json</td><td class="mono ok-t">2026-11-15 17:53:55</td><td class="small">按竞彩当天批次独立成档的串关推荐与结算</td></tr>
+<tr><td>高手推荐</td><td class="mono">expert_recommendations.json</td><td class="mono ok-t">2026-11-15 17:57:41</td><td class="small">当天专家文章 / 主推 / 逐条命中率</td></tr>
+<tr><td>官方赛果</td><td class="mono">fd_data.json</td><td class="mono ok-t">2026-11-15 17:54:19</td><td class="small">football-data.org + 500体育 官方赛果</td></tr>
+<tr><td>比分预测</td><td class="mono">score_predict.json</td><td class="mono ok-t">2026-11-15 17:56:00</td><td class="small">Poisson 模型 / WhoScored / V站 一等字段</td></tr>
+<tr><td>篮球·赛程</td><td class="mono">basketball.json</td><td class="mono ok-t">2026-11-15 17:57:48</td><td class="small">篮球当日赛程</td></tr>
+<tr><td>篮球·AI预测</td><td class="mono">basketball_ai.json</td><td class="mono ok-t">2026-11-15 17:57:52</td><td class="small">篮球 AI 预测与回溯</td></tr>
+<tr><td>篮球·串关</td><td class="mono">basketball_parlay_history.json</td><td class="mono ok-t">2026-11-15 17:57:54</td><td class="small">篮球串关推荐与历史结算</td></tr>
+<tr><td>篮球·赛果库</td><td class="mono">basketball_history.json</td><td class="mono ok-t">2026-11-15 17:57:48</td><td class="small">篮球赛果回溯库</td></tr>
+<tr><td>正路正确率</td><td class="mono">good_rate_stats.json</td><td class="mono ok-t">2026-11-15 17:57:54</td><td class="small">今日赛程·正路推荐命中率（赛后实算）</td></tr>
+<tr><td>V站高信心</td><td class="mono">vz_high_stats.json</td><td class="mono ok-t">2026-11-15 17:57:55</td><td class="small">V站高信心方向命中率</td></tr>
+<tr><td>专家排行榜</td><td class="mono">expert_leaderboard.json</td><td class="mono ok-t">2026-11-15 17:57:55</td><td class="small">全部专家命中率与排行榜</td></tr>
+<tr><td>A/B 三源对比</td><td class="mono">ab_stats.json</td><td class="mono ok-t">2026-11-15 17:57:48（云端）</td><td class="small">WhoScored / V站 / 模型 三源 AB 统计</td></tr>
+<tr><td>V站网关状态</td><td class="mono">vzhan_gateway_status.json</td><td class="mono ok-t">2026-11-15 17:57:19</td><td class="small">情报网关延迟与连通性</td></tr>
+</table>
+
+<h2>四、顺带查到并修掉的真问题：自动任务又被停用</h2>
+<p>取证时发现，上一轮已恢复为启用的每小时保鲜任务 <code>id=14693059</code> 又变回 <code>status=0</code>：<code>lastRunAt=2026-11-14 19:59</code> 只跑了<b>一次</b>，<code>20:02</code> 即被停用，之后 21 小时没再跑 —— 这正是数据又停在旧批次的直接原因。</p>
+<table>
+<tr><th>项目</th><th>变更前</th><th>变更后（已生效）</th></tr>
+<tr><td>任务状态</td><td class="bad-t"><code>status=0</code>（停用）</td><td class="ok-t"><code>status=1</code>（启用），<code>cron=0 0 * * * *</code> 每小时整点</td></tr>
+<tr><td>凭证重建方式</td><td class="bad-t">heredoc 结束符写成 <code>'  EOF'</code>（带前导空格）；bash 要求顶格，否则整段脚本被吞进凭证文件导致任务失败</td><td class="ok-t">改用 <code>python3 -c</code> 直接写 JSON + <code>os.chmod(0o600)</code>，彻底避开 heredoc；复核残留缩进 EOF = 0</td></tr>
+<tr><td>凭证有效性</td><td>任务内写死的 <code>cfut_</code> 与本地 <code>cf_config.json</code> 完全一致，<code>status=active</code></td><td class="ok-t">保持不变（已实测 Cloudflare <code>/user/tokens/verify</code> 返回 active）</td></tr>
+<tr><td>冷启动自举包</td><td>线上包已是 v1.7.137</td><td class="ok-t">随本次部署重新打包并上线，内含新 APK；下个整点不会回退旧代码</td></tr>
+</table>
+<div class="quote good">推测链路：heredoc 缩进导致任务执行失败 → 调度系统失败后自动停用 → 数据停摆。运行历史端点被网关限制（403 path not allowed）无法直接调日志，但缺陷本身是确定存在的，已消除后再恢复启用；<b>下一个整点会真实跑一次并留下巡检留痕，可自行核对</b>。</div>
+
+<h2>五、验证与交付</h2>
+<table>
+<tr><th>验证项</th><th>结果</th></tr>
+<tr><td><code>selftest.py</code></td><td class="ok-t">ERROR 0 / WARN 0（检查 12/13/14/15/16/17 全过）</td></tr>
+<tr><td><code>auto_pilot.py --check-only</code></td><td class="ok-t">14 项巡检全 OK，<code>health=OK</code>，留痕 <span class="mono">2026-11-15 18:03:21</span> 已随部署上云</td></tr>
+<tr><td>线上 <code>version.json</code></td><td class="mono">v1.7.137 / b3c1a2695909 / updateTime=2026-11-15 17:53:55 / deployTime=2026-11-15 18:04:45 / patrolHealth=OK</td></tr>
+<tr><td>线上数据抽查</td><td class="ok-t">matches / score_predict / parlay_history / basketball_parlay_history / expert_leaderboard / good_rate_stats / vz_high_stats / basketball_ai 全部时间戳推进到 11-15 17:53~17:57</td></tr>
+<tr><td>APK</td><td class="ok-t"><code>1.7.137(10837)</code> 重建，内嵌 <code>BUILT_DATA.meta.updateTime=2026-11-15 17:53:55</code>；已随部署与自举包上线</td></tr>
+<tr><td>版本一致性</td><td class="ok-t">网页 <code>v1.7.137</code> = APK <code>1.7.137(10837)</code>，<code>version_sync.py --check</code> 通过</td></tr>
+</table>
+
+<h2>六、交付清单</h2>
+<table>
+<tr><th>交付物</th><th>位置 / 链接</th></tr>
+<tr><td>线上页面（全 Tab 新批次）</td><td><a href="https://jc-football-1eo.pages.dev/">https://jc-football-1eo.pages.dev/</a></td></tr>
+<tr><td>本回执</td><td class="mono">/workspace/全Tab更新回执-2026-11-15.html</td></tr>
+<tr><td>Android APK</td><td class="mono">/workspace/竞彩足球数据分析台-v1.7.137.apk</td></tr>
+<tr><td>源码仓库</td><td class="mono">ronald9527/jc-football</td></tr>
+</table>
+
+<h2>七、如何自己核对</h2>
+<pre>1) 打开 https://jc-football-1eo.pages.dev/version.json
+   确认 updateTime=2026-11-15 17:53:55、count=7、lastPatrolAt=2026-11-15 18:03:21、patrolHealth=OK
+2) 打开页面点「刷新数据」→ 应回执「已全站同步 9 个模块 · 今日批次（更新于 11-15 17:53）」
+3) 逐个切 Tab：今日赛程 7 场、比分预测 189 场、分层串关/高手推荐/篮球
+   各页数据与顶部「📊 数据状态报告」应同源、无旧批次提示
+4) 明天再看 version.json 的 lastPatrolAt 是否逐小时推进 —— 用来验证自动保鲜确实在自动跑</pre>
+
+<div class="foot">生成时间 2026-11-15 · 所有数值读取与线上同源的本地 JSON / 线上 version.json，未手工填写 · 竞彩足球 / 篮球数据分析台 v1.7.137</div>
+
+</body>
+</html>

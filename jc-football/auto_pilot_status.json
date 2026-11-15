@@ -1,6 +1,6 @@
 {
- "checkedAt": "2026-11-14 18:52:20",
- "beijingNow": "2026-11-14 18:52:20",
+ "checkedAt": "2026-11-15 18:03:21",
+ "beijingNow": "2026-11-15 18:03:21",
  "clockSource": "HTTP Date(jc-football-1eo.pages.dev)",
  "health": "OK",
  "errorCount": 0,
@@ -14,17 +14,17 @@
   {
    "name": "主批次=权威竞彩当天",
    "level": "OK",
-   "detail": "线上 2026-11-14 / 权威 2026-11-14"
+   "detail": "线上 2026-11-15 / 权威 2026-11-15"
   },
   {
    "name": "分层串关无死锁",
    "level": "OK",
-   "detail": "合格 4 / 档位 3"
+   "detail": "合格 2 / 档位 1"
   },
   {
    "name": "V站 一等字段已合并",
    "level": "OK",
-   "detail": "合并 3/3，matches 带V站 3，V站有预测 3"
+   "detail": "合并 2/2，matches 带V站 2，V站有预测 2"
   },
   {
    "name": "比分预测日期含当天",
@@ -39,17 +39,17 @@
   {
    "name": "串关历史统计自洽",
    "level": "OK",
-   "detail": "顶层 total=88 / records实算=88"
+   "detail": "顶层 total=89 / records实算=89"
   },
   {
    "name": "篮球串关历史未缩水",
    "level": "OK",
-   "detail": "已结算 30/基线 27，日期 11 个，丢失日期 无（pending 随停售清洗可波动）"
+   "detail": "已结算 33/基线 30，日期 12 个，丢失日期 无（pending 随停售清洗可波动）"
   },
   {
    "name": "ab_stats 云端可用",
    "level": "OK",
-   "detail": "stats keys=13 updatedAt=2026-11-13 11:53:51"
+   "detail": "stats keys=13 updatedAt=2026-11-15 17:57:48"
   },
   {
    "name": "无空壳专家文章",
@@ -59,7 +59,7 @@
   {
    "name": "线上数据新鲜度",
    "level": "OK",
-   "detail": "updateTime=2026-11-14 18:44:59，距今 7 分钟（阈值 90）"
+   "detail": "updateTime=2026-11-15 17:53:55，距今 9 分钟（阈值 90）"
   },
   {
    "name": "线上/源码版本一致",
@@ -80,12 +80,12 @@
  "actions": [],
  "l1Touched": [],
  "version": {
-  "updateTime": "2026-11-14 18:44:59",
-  "deployTime": "2026-11-14 18:50:23",
-  "count": 18,
+  "updateTime": "2026-11-15 17:53:55",
+  "deployTime": "2026-11-15 17:57:56",
+  "count": 7,
   "pageVersion": "v1.7.137",
-  "pageBuild": "99b9f91109d5",
-  "lastPatrolAt": "2026-11-13 12:40:07",
+  "pageBuild": "b3c1a2695909",
+  "lastPatrolAt": "2026-11-14 18:52:20",
   "patrolHealth": "OK",
   "patrolErrorCount": 0
  },

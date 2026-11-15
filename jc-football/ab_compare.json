@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-13 11:53:51",
+ "updatedAt": "2026-11-15 17:57:48",
  "records": {
   "[\"2026-10-27\", \"USSassuoloCalcio\", \"SSLazio\"]": {
    "date": "2026-10-27",
@@ -41549,14 +41549,18 @@
    "ws": null,
    "model": {
     "h": 1,
-    "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"保加利亚\", \"冰岛\"]": {
@@ -41567,15 +41571,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 0,
+    "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 6
    },
-   "act": null,
+   "act": {
+    "h": 0,
+    "a": 5
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"苏格兰\", \"北马其顿\"]": {
@@ -41583,38 +41591,60 @@
    "league": "欧国联",
    "home": "苏格兰",
    "away": "北马其顿",
-   "jcNum": null,
+   "jcNum": "周五004",
    "ws": null,
    "model": {
     "h": 2,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 1
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "model_hist",
+    "vz_hist"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": true
+   }
   },
   "[\"2026-11-13\", \"塞尔维亚\", \"德国\"]": {
    "date": "2026-11-13",
    "league": "欧国联",
    "home": "塞尔维亚",
    "away": "德国",
-   "jcNum": null,
+   "jcNum": "周五005",
    "ws": null,
    "model": {
-    "h": 0,
+    "h": 2,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 3
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "model_hist",
+    "vz_hist"
+   ],
+   "vz": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true
+   }
   },
   "[\"2026-11-13\", \"卢森堡\", \"爱沙尼亚\"]": {
    "date": "2026-11-13",
@@ -41625,14 +41655,18 @@
    "ws": null,
    "model": {
     "h": 1,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 0,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"斯洛伐克\", \"法罗群岛\"]": {
@@ -41643,15 +41677,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 2,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 2,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"斯洛文尼亚\", \"瑞士\"]": {
@@ -41662,15 +41700,19 @@
    "jcNum": null,
    "ws": null,
    "model": {
-    "h": 0,
+    "h": 2,
     "a": 1,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
    },
-   "act": null,
+   "act": {
+    "h": 0,
+    "a": 0
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-13\", \"荷兰\", \"希腊\"]": {
@@ -41678,19 +41720,30 @@
    "league": "欧国联",
    "home": "荷兰",
    "away": "希腊",
-   "jcNum": null,
+   "jcNum": "周五009",
    "ws": null,
    "model": {
     "h": 2,
-    "a": 0,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 7
    },
-   "act": null,
+   "act": {
+    "h": 7,
+    "a": 0
+   },
    "sources": [
-    "daily"
-   ]
+    "daily",
+    "model_hist",
+    "vz_hist"
+   ],
+   "vz": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": true
+   }
   },
   "[\"2026-11-04\", \"波尔图\", \"SSCNapoli\"]": {
    "date": "2026-11-04",
@@ -42054,13 +42107,17 @@
    "model": {
     "h": 1,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-15\", \"鹿岛鹿角\", \"横滨水手\"]": {
@@ -42073,13 +42130,17 @@
    "model": {
     "h": 2,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
    },
-   "act": null,
+   "act": {
+    "h": 3,
+    "a": 2
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-15\", \"大阪樱花\", \"浦和红钻\"]": {
@@ -42092,13 +42153,17 @@
    "model": {
     "h": 2,
     "a": 2,
-    "exactHit": null,
-    "outcomeHit": null,
-    "mae": null
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
    },
-   "act": null,
+   "act": {
+    "h": 1,
+    "a": 1
+   },
    "sources": [
-    "daily"
+    "daily",
+    "model_hist"
    ]
   },
   "[\"2026-11-15\", \"柏太阳神\", \"川崎前锋\"]": {
@@ -42119,23 +42184,504 @@
    "sources": [
     "daily"
    ]
+  },
+  "[\"2026-11-14\", \"湘南海洋\", \"横滨FC\"]": {
+   "date": "2026-11-14",
+   "league": "日乙",
+   "home": "湘南海洋",
+   "away": "横滨FC",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"大宫松鼠RB\", \"山形山神\"]": {
+   "date": "2026-11-14",
+   "league": "日乙",
+   "home": "大宫松鼠RB",
+   "away": "山形山神",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"MirassolFC\", \"米内罗竞技\"]": {
+   "date": "2026-11-14",
+   "league": "巴甲",
+   "home": "Mirassol FC",
+   "away": "CA Mineiro",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 0,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"沙佩科恩斯\", \"瓦斯科达伽马\"]": {
+   "date": "2026-11-14",
+   "league": "巴甲",
+   "home": "Chapecoense AF",
+   "away": "CR Vasco da Gama",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1.0
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-13\", \"哥伦比亚\", \"智利\"]": {
+   "date": "2026-11-13",
+   "league": "国际赛",
+   "home": "哥伦比亚",
+   "away": "智利",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-13\", \"阿根廷\", \"乌拉圭\"]": {
+   "date": "2026-11-13",
+   "league": "国际赛",
+   "home": "阿根廷",
+   "away": "乌拉圭",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": true,
+    "outcomeHit": true,
+    "mae": 0
+   },
+   "act": {
+    "h": 1,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-13\", \"新加坡\", \"巴拉圭\"]": {
+   "date": "2026-11-13",
+   "league": "国际赛",
+   "home": "新加坡",
+   "away": "巴拉圭",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 1,
+    "a": 4
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"米拉索尔\", \"米内罗竞技\"]": {
+   "date": "2026-11-14",
+   "league": "巴甲",
+   "home": "米拉索尔",
+   "away": "米内罗竞技",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"奥地利\", \"爱尔兰\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "奥地利",
+   "away": "爱尔兰",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 1,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"瑞典\", \"波黑\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "瑞典",
+   "away": "波黑",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 3,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"罗马尼亚\", \"波兰\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "罗马尼亚",
+   "away": "波兰",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 1
+   },
+   "act": {
+    "h": 2,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"葡萄牙\", \"丹麦\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "葡萄牙",
+   "away": "丹麦",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 1,
+    "a": 4
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"罗达JC\", \"福伦丹\"]": {
+   "date": "2026-11-14",
+   "league": "荷乙",
+   "home": "罗达JC",
+   "away": "福伦丹",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"瓦尔韦克\", \"登博思\"]": {
+   "date": "2026-11-14",
+   "league": "荷乙",
+   "home": "瓦尔韦克",
+   "away": "登博思",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 4
+   },
+   "act": {
+    "h": 4,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"阿尔梅勒城\", \"海尔蒙特\"]": {
+   "date": "2026-11-14",
+   "league": "荷乙",
+   "home": "阿尔梅勒城",
+   "away": "海尔蒙特",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 5
+   },
+   "act": {
+    "h": 6,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"格鲁吉亚\", \"匈牙利\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "格鲁吉亚",
+   "away": "匈牙利",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 1,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 3
+   },
+   "act": {
+    "h": 0,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"挪威\", \"威尔士\"]": {
+   "date": "2026-11-14",
+   "league": "欧国联",
+   "home": "挪威",
+   "away": "威尔士",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 3,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"布雷达\", \"埃门\"]": {
+   "date": "2026-11-14",
+   "league": "荷乙",
+   "home": "布雷达",
+   "away": "埃门",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 4,
+    "a": 2
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-14\", \"中国\", \"马来西亚\"]": {
+   "date": "2026-11-14",
+   "league": "国际赛",
+   "home": "中国",
+   "away": "马来西亚",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 2,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false,
+    "mae": 2
+   },
+   "act": {
+    "h": 2,
+    "a": 0
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-06\", \"勒沃库森\", \"马赛\"]": {
+   "date": "2026-11-06",
+   "league": "欧罗巴",
+   "home": "勒沃库森",
+   "away": "马赛",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": true,
+    "mae": 2
+   },
+   "act": {
+    "h": 0,
+    "a": 1
+   },
+   "sources": [
+    "model_hist"
+   ]
+  },
+  "[\"2026-11-13\", \"斯洛文尼\", \"瑞士\"]": {
+   "date": "2026-11-13",
+   "league": "欧国联",
+   "home": "斯洛文尼",
+   "away": "瑞士",
+   "jcNum": "周五008",
+   "ws": null,
+   "model": null,
+   "vz": {
+    "h": 0,
+    "a": 2,
+    "exactHit": false,
+    "outcomeHit": false
+   },
+   "act": {
+    "h": 0,
+    "a": 0
+   },
+   "sources": [
+    "vz_hist"
+   ]
+  },
+  "[\"2026-11-15\", \"马斯特里赫特\", \"维迪斯\"]": {
+   "date": "2026-11-15",
+   "league": "荷乙",
+   "home": "马斯特里赫特",
+   "away": "维迪斯",
+   "jcNum": null,
+   "ws": null,
+   "model": {
+    "h": 1,
+    "a": 1,
+    "exactHit": null,
+    "outcomeHit": null,
+    "mae": null
+   },
+   "act": null,
+   "sources": [
+    "daily"
+   ]
   }
  },
  "stats": {
   "paired_n": 45,
   "model": {
-   "n": 1308,
-   "exact": 7.3,
-   "dir": 37.9,
+   "n": 1339,
+   "exact": 7.2,
+   "dir": 37.3,
    "dir_ci": [
-    35.3,
-    40.6
+    34.8,
+    40.0
    ],
    "exact_ci": [
     6.0,
-    8.9
+    8.8
    ],
-   "mae": 1.18
+   "mae": 1.21
   },
   "ws": {
    "n": 438,
@@ -42152,16 +42698,16 @@
    "mae": null
   },
   "vz": {
-   "n": 520,
-   "exact": 9.8,
-   "dir": 43.8,
+   "n": 524,
+   "exact": 9.7,
+   "dir": 44.1,
    "dir_ci": [
-    39.6,
-    48.1
+    39.9,
+    48.4
    ],
    "exact_ci": [
     7.5,
-    12.7
+    12.6
    ],
    "mae": null
   },
@@ -42201,18 +42747,18 @@
   "pair_mv": {
    "a": "模型",
    "b": "V站",
-   "n": 67,
-   "a_dir": 19.4,
-   "b_dir": 50.7,
-   "a_exact": 6.0,
-   "b_exact": 16.4,
+   "n": 70,
+   "a_dir": 18.6,
+   "b_dir": 52.9,
+   "a_exact": 5.7,
+   "b_exact": 15.7,
    "both_right": 5,
    "both_wrong": 25,
    "a_only_dir": 8,
-   "b_only_dir": 29,
+   "b_only_dir": 32,
    "a_only_exact": 1,
    "b_only_exact": 8,
-   "sign_p_dir": 0.0008,
+   "sign_p_dir": 0.0002,
    "sign_p_exact": 0.0391
   },
   "pair_wv": {
@@ -42235,7 +42781,7 @@
   "three_way_n": 8,
   "by_league": {
    "巴甲": {
-    "n": 318,
+    "n": 321,
     "m_oc": 145,
     "w_oc": 0,
     "v_oc": 0
@@ -42307,7 +42853,7 @@
     "v_oc": 15
    }
   },
-  "verdict": "V站 方向命中率最高（43.8%，N=520）；其余 模型 37.9% / WhoScored 43.2%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
-  "total_records": 1740
+  "verdict": "V站 方向命中率最高（44.1%，N=524）；其余 模型 37.3% / WhoScored 43.2%。显著性以配对符号检验 p 值判定，详见下方三两配对。",
+  "total_records": 1762
  }
 }

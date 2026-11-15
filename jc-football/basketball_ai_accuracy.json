@@ -12237,29 +12237,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "h",
      "conf": 53.2,
      "gl": "+12.5",
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "l",
      "conf": 50.0,
      "gl": "+234.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "116:108"
   },
   {
    "date": "2026-11-14",
@@ -12276,29 +12276,29 @@
      "dir": "a",
      "conf": 51.8,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "h",
      "conf": 60.2,
      "gl": "-3.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 55.2,
      "gl": "+231.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l3",
      "conf": 51.8,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "117:127"
   },
   {
    "date": "2026-11-14",
@@ -12315,29 +12315,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     },
     "hdc": {
      "dir": "a",
      "conf": 63.5,
      "gl": "+4.5",
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "l",
      "conf": 54.4,
      "gl": "+229.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "117:137"
   },
   {
    "date": "2026-11-14",
@@ -12354,29 +12354,29 @@
      "dir": "a",
      "conf": 54.2,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "h",
      "conf": 57.9,
      "gl": "-7.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 58.9,
      "gl": "+228.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l5",
      "conf": 54.2,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "110:129"
   },
   {
    "date": "2026-11-14",
@@ -12393,380 +12393,29 @@
      "dir": "a",
      "conf": 79.0,
      "gl": null,
-     "hit": null
+     "hit": false
     },
     "hdc": {
      "dir": "h",
      "conf": 57.1,
      "gl": "-15.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 68.5,
      "gl": "+237.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l6",
      "conf": 55.4,
      "gl": "",
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042794",
-   "num": "周六309",
-   "league": "西篮甲",
-   "home": "约文图特",
-   "away": "萨拉戈萨",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 79.5,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 50.0,
-     "gl": null,
-     "hit": true
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 79.5,
-     "gl": "-6.5",
-     "hit": true
-    },
-    "hilo": {
-     "dir": "h",
-     "conf": 56.7,
-     "gl": "177.5",
-     "hit": true
-    },
-    "wnm": {
-     "dir": "l5",
-     "conf": 50.0,
-     "gl": null,
      "hit": false
     }
    },
-   "topHit": true,
-   "score": "94:99"
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042795",
-   "num": "周六310",
-   "league": "美职篮",
-   "home": "鹈鹕",
-   "away": "掘金",
-   "topPlay": "hilo",
-   "topDir": "l",
-   "topConf": 51.9,
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 50.0,
-     "gl": "+13.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 51.9,
-     "gl": "237.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l2",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042796",
-   "num": "周六311",
-   "league": "美职篮",
-   "home": "骑士",
-   "away": "独行侠",
-   "topPlay": "hdc",
-   "topDir": "h",
-   "topConf": 57.2,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 51.8,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "h",
-     "conf": 57.2,
-     "gl": "-1.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 57.0,
-     "gl": "232.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l5",
-     "conf": 51.8,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042797",
-   "num": "周六312",
-   "league": "美职篮",
-   "home": "热火",
-   "away": "活塞",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 55.8,
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 55.8,
-     "gl": "+4.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 55.0,
-     "gl": "228.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l4",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042798",
-   "num": "周六313",
-   "league": "美职篮",
-   "home": "灰熊",
-   "away": "篮网",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 67.8,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 54.2,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 67.8,
-     "gl": "-4.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 62.3,
-     "gl": "230.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l5",
-     "conf": 54.2,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042799",
-   "num": "周六314",
-   "league": "美职篮",
-   "home": "森林狼",
-   "away": "公牛",
-   "topPlay": "mnl",
-   "topDir": "a",
-   "topConf": 78.9,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 78.9,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "h",
-     "conf": 55.4,
-     "gl": "-15.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 67.6,
-     "gl": "235.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l6",
-     "conf": 55.4,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
-  },
-  {
-   "date": "2026-11-14",
-   "id": "2042786",
-   "num": "周六301",
-   "league": "澳大利亚篮球联赛",
-   "home": "墨尔本联",
-   "away": "东南墨尔本凤凰",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 80.1,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 50.0,
-     "gl": null,
-     "hit": true
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 80.1,
-     "gl": "-6.5",
-     "hit": true
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 63.9,
-     "gl": "203.5",
-     "hit": true
-    },
-    "wnm": {
-     "dir": "l5",
-     "conf": 50.0,
-     "gl": null,
-     "hit": false
-    }
-   },
-   "topHit": true,
-   "score": "95:102"
-  },
-  {
-   "date": "2026-11-14",
-   "id": "2042787",
-   "num": "周六302",
-   "league": "澳大利亚篮球联赛",
-   "home": "珀斯野猫",
-   "away": "伊拉瓦拉老鹰",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 75.0,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 50.0,
-     "gl": null,
-     "hit": true
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 75.0,
-     "gl": "-3.5",
-     "hit": true
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 59.9,
-     "gl": "199.5",
-     "hit": false
-    },
-    "wnm": {
-     "dir": "l6",
-     "conf": 50.0,
-     "gl": null,
-     "hit": false
-    }
-   },
-   "topHit": true,
-   "score": "100:111"
-  },
-  {
-   "date": "2026-11-15",
-   "id": "2042800",
-   "num": "周日301",
-   "league": "澳大利亚篮球联赛",
-   "home": "布里斯班子弹",
-   "away": "塔斯马尼亚跳蚁",
-   "topPlay": "hdc",
-   "topDir": "a",
-   "topConf": 68.8,
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    },
-    "hdc": {
-     "dir": "a",
-     "conf": 68.8,
-     "gl": "+1.5",
-     "hit": null
-    },
-    "hilo": {
-     "dir": "l",
-     "conf": 50.2,
-     "gl": "186.5",
-     "hit": null
-    },
-    "wnm": {
-     "dir": "l4",
-     "conf": 50.0,
-     "gl": null,
-     "hit": null
-    }
-   },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "117:106"
   },
   {
    "date": "2026-11-15",
@@ -12786,21 +12435,21 @@
      "hit": null
     },
     "hdc": {
-     "dir": "h",
-     "conf": 50.0,
+     "dir": "a",
+     "conf": 61.8,
      "gl": "-17.5",
      "hit": null
     },
     "hilo": {
      "dir": "l",
-     "conf": 53.7,
-     "gl": "189.5",
+     "conf": 54.5,
+     "gl": "+191.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l5",
+     "dir": "l6",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -12816,30 +12465,30 @@
    "away": "曼雷萨",
    "topPlay": "hdc",
    "topDir": "a",
-   "topConf": 72.1,
+   "topConf": 66.4,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 72.1,
+     "conf": 66.4,
      "gl": "-3.5",
      "hit": null
     },
     "hilo": {
      "dir": "l",
      "conf": 51.8,
-     "gl": "191.5",
+     "gl": "+191.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l3",
+     "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -12864,21 +12513,21 @@
      "hit": null
     },
     "hdc": {
-     "dir": "h",
-     "conf": 50.0,
+     "dir": "a",
+     "conf": 59.8,
      "gl": "-13.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 55.9,
-     "gl": "180.5",
+     "conf": 55.2,
+     "gl": "+181.5",
      "hit": null
     },
     "wnm": {
      "dir": "l6",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -12894,30 +12543,30 @@
    "away": "费希塔",
    "topPlay": "hilo",
    "topDir": "h",
-   "topConf": 70.8,
+   "topConf": 71.5,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 56.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "h",
-     "conf": 56.0,
+     "conf": 62.1,
      "gl": "-6.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 70.8,
-     "gl": "173.5",
+     "conf": 71.5,
+     "gl": "+173.5",
      "hit": null
     },
     "wnm": {
      "dir": "l5",
      "conf": 56.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -12933,30 +12582,30 @@
    "away": "特里尔角斗士",
    "topPlay": "hilo",
    "topDir": "h",
-   "topConf": 63.2,
+   "topConf": 62.3,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 50.0,
+     "conf": 52.9,
      "gl": "+3.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 63.2,
-     "gl": "180.5",
+     "conf": 62.3,
+     "gl": "+182.5",
      "hit": null
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -12982,20 +12631,20 @@
     },
     "hdc": {
      "dir": "h",
-     "conf": 50.6,
+     "conf": 64.5,
      "gl": "-15.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 66.9,
-     "gl": "168.5",
+     "conf": 68.3,
+     "gl": "+168.5",
      "hit": null
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.6,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13011,7 +12660,7 @@
    "away": "奥布拉多伊罗",
    "topPlay": "hdc",
    "topDir": "a",
-   "topConf": 87.3,
+   "topConf": 66.8,
    "plays": {
     "mnl": {
      "dir": "a",
@@ -13021,20 +12670,20 @@
     },
     "hdc": {
      "dir": "a",
-     "conf": 87.3,
+     "conf": 66.8,
      "gl": "-13.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
      "conf": 51.3,
-     "gl": "182.5",
+     "gl": "+182.5",
      "hit": null
     },
     "wnm": {
      "dir": "l6",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13050,30 +12699,30 @@
    "away": "穆尔西亚天主大学",
    "topPlay": "hdc",
    "topDir": "a",
-   "topConf": 69.7,
+   "topConf": 68.8,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 69.7,
+     "conf": 68.8,
      "gl": "-1.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 55.5,
-     "gl": "178.5",
+     "conf": 56.2,
+     "gl": "+178.5",
      "hit": null
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13089,30 +12738,30 @@
    "away": "不伦瑞克雄狮",
    "topPlay": "hilo",
    "topDir": "h",
-   "topConf": 61.8,
+   "topConf": 62.5,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "h",
-     "conf": 50.0,
+     "conf": 54.6,
      "gl": "-7.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 61.8,
-     "gl": "176.5",
+     "conf": 62.5,
+     "gl": "+176.5",
      "hit": null
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13128,30 +12777,30 @@
    "away": "皇马",
    "topPlay": "hdc",
    "topDir": "a",
-   "topConf": 58.5,
+   "topConf": 70.0,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 58.5,
-     "gl": "+5.5",
+     "conf": 70.0,
+     "gl": "+6.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
      "conf": 51.9,
-     "gl": "186.5",
+     "gl": "+185.5",
      "hit": null
     },
     "wnm": {
      "dir": "l6",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13165,32 +12814,32 @@
    "league": "美职篮",
    "home": "76人",
    "away": "步行者",
-   "topPlay": "hilo",
-   "topDir": "l",
-   "topConf": 55.0,
+   "topPlay": "hdc",
+   "topDir": "h",
+   "topConf": 59.9,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 54.8,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "h",
-     "conf": 54.8,
-     "gl": "-7.5",
+     "conf": 59.9,
+     "gl": "-8.5",
      "hit": null
     },
     "hilo": {
      "dir": "l",
-     "conf": 55.0,
-     "gl": "222.5",
+     "conf": 56.7,
+     "gl": "+224.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l5",
+     "dir": "l6",
      "conf": 54.8,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13204,26 +12853,32 @@
    "league": "美职篮",
    "home": "太阳",
    "away": "湖人",
-   "topPlay": "mnl",
-   "topDir": "h",
-   "topConf": 50.0,
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 51.9,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
+     "hit": null
+    },
+    "hdc": {
+     "dir": "a",
+     "conf": 51.9,
+     "gl": "+4.5",
      "hit": null
     },
     "hilo": {
      "dir": "l",
      "conf": 50.0,
-     "gl": "229.5",
+     "gl": "+230.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l5",
+     "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13239,30 +12894,30 @@
    "away": "黄蜂",
    "topPlay": "hilo",
    "topDir": "h",
-   "topConf": 55.4,
+   "topConf": 53.8,
    "plays": {
     "mnl": {
      "dir": "a",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 52.5,
-     "gl": "-3.5",
+     "conf": 53.6,
+     "gl": "-2.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 55.4,
-     "gl": "214.5",
+     "conf": 53.8,
+     "gl": "+216.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l5",
+     "dir": "l6",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13278,16 +12933,16 @@
    "away": "马刺",
    "topPlay": "mnl",
    "topDir": "h",
-   "topConf": 79.6,
+   "topConf": 79.5,
    "plays": {
     "mnl": {
      "dir": "h",
-     "conf": 79.6,
+     "conf": 79.5,
      "gl": null,
      "hit": null
     },
     "hdc": {
-     "dir": "a",
+     "dir": "h",
      "conf": 50.0,
      "gl": "+16.5",
      "hit": null
@@ -13295,13 +12950,13 @@
     "hilo": {
      "dir": "h",
      "conf": 50.0,
-     "gl": "224.5",
+     "gl": "+226.5",
      "hit": null
     },
     "wnm": {
-     "dir": "l6",
+     "dir": "l2",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13315,32 +12970,32 @@
    "league": "美职篮",
    "home": "猛龙",
    "away": "尼克斯",
-   "topPlay": "hilo",
-   "topDir": "h",
-   "topConf": 54.3,
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 55.4,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 50.0,
+     "conf": 55.4,
      "gl": "+4.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
-     "conf": 54.3,
-     "gl": "218.5",
+     "conf": 54.8,
+     "gl": "+218.5",
      "hit": null
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13354,9 +13009,9 @@
    "league": "美职篮",
    "home": "凯尔特人",
    "away": "独行侠",
-   "topPlay": "hilo",
-   "topDir": "h",
-   "topConf": 55.8,
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 57.2,
    "plays": {
     "mnl": {
      "dir": "a",
@@ -13364,16 +13019,22 @@
      "gl": null,
      "hit": null
     },
+    "hdc": {
+     "dir": "a",
+     "conf": 57.2,
+     "gl": "-13.5",
+     "hit": null
+    },
     "hilo": {
-     "dir": "h",
-     "conf": 55.8,
-     "gl": "217.5",
+     "dir": "l",
+     "conf": 57.0,
+     "gl": "+219.5",
      "hit": null
     },
     "wnm": {
      "dir": "l4",
      "conf": 55.4,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13389,12 +13050,12 @@
    "away": "火箭",
    "topPlay": "hilo",
    "topDir": "h",
-   "topConf": 50.3,
+   "topConf": 50.8,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
@@ -13405,14 +13066,14 @@
     },
     "hilo": {
      "dir": "h",
-     "conf": 50.3,
-     "gl": "222.5",
+     "conf": 50.8,
+     "gl": "+223.5",
      "hit": null
     },
     "wnm": {
      "dir": "l1",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13426,32 +13087,32 @@
    "league": "美职篮",
    "home": "雄鹿",
    "away": "老鹰",
-   "topPlay": "mnl",
-   "topDir": "h",
-   "topConf": 50.0,
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 54.3,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 50.0,
-     "gl": "+7.5",
+     "conf": 54.3,
+     "gl": "+8.5",
      "hit": null
     },
     "hilo": {
      "dir": "l",
-     "conf": 50.0,
-     "gl": "232.5",
+     "conf": 50.4,
+     "gl": "+234.5",
      "hit": null
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
@@ -13465,38 +13126,116 @@
    "league": "美职篮",
    "home": "国王",
    "away": "雷霆",
-   "topPlay": "mnl",
-   "topDir": "h",
-   "topConf": 50.0,
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 59.9,
    "plays": {
     "mnl": {
      "dir": "h",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     },
     "hdc": {
      "dir": "a",
-     "conf": 50.0,
+     "conf": 59.9,
      "gl": "+11.5",
      "hit": null
     },
     "hilo": {
      "dir": "h",
      "conf": 50.0,
-     "gl": "222.5",
+     "gl": "+223.5",
      "hit": null
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.0,
-     "gl": null,
+     "gl": "",
      "hit": null
     }
    },
    "topHit": null,
    "score": null
+  },
+  {
+   "date": "2026-11-14",
+   "id": "2042786",
+   "num": "周六301",
+   "league": "澳大利亚篮球联赛",
+   "home": "墨尔本联",
+   "away": "东南墨尔本凤凰",
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 78.6,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": true
+    },
+    "hdc": {
+     "dir": "a",
+     "conf": 78.6,
+     "gl": "-6.5",
+     "hit": true
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 61.9,
+     "gl": "203.5",
+     "hit": true
+    },
+    "wnm": {
+     "dir": "l5",
+     "conf": 50.0,
+     "gl": null,
+     "hit": false
+    }
+   },
+   "topHit": true,
+   "score": "95:102"
+  },
+  {
+   "date": "2026-11-14",
+   "id": "2042787",
+   "num": "周六302",
+   "league": "澳大利亚篮球联赛",
+   "home": "珀斯野猫",
+   "away": "伊拉瓦拉老鹰",
+   "topPlay": "hdc",
+   "topDir": "a",
+   "topConf": 72.9,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": true
+    },
+    "hdc": {
+     "dir": "a",
+     "conf": 72.9,
+     "gl": "-3.5",
+     "hit": true
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 57.6,
+     "gl": "199.5",
+     "hit": false
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": false
+    }
+   },
+   "topHit": true,
+   "score": "100:111"
   }
  ],
- "updatedAt": "2026-11-15 12:27:36"
+ "updatedAt": "2026-11-15 17:57:54"
 }

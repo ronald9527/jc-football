@@ -2703,12 +2703,49 @@
   "2026-11-13": [],
   "2026-11-14": [
     {
+      "num": "周六007",
+      "league": "欧国联",
+      "home": "挪威",
+      "away": "威尔士",
+      "kickoff": "2026-11-15 01:00",
+      "date": "2026-11-14",
+      "recommend": "主胜",
+      "recommendKey": "h",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "布海东",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-330004.htm",
+      "trackRecord": "",
+      "reason": "个人观点：让2球胜 比分参考：4-1",
+      "scorePred": "比分4比1",
+      "directionEvidence": "个人观点：让2球胜",
+      "scoreEvidence": "比分参考：4-1",
+      "hit": true,
+      "actualScore": "3:1",
+      "isExpert": true,
+      "expertStats": {
+        "total": 6,
+        "judged": 5,
+        "hits": 3,
+        "miss": 2,
+        "hitRate": 60.0,
+        "recent10Rate": 60.0,
+        "streak": 0,
+        "isNew": false
+      },
+      "otherExperts": [],
+      "expertCount": 1,
+      "contentRebuilt": true,
+      "result": "3:1"
+    },
+    {
       "num": "周六008",
       "league": "荷乙",
       "home": "罗达JC",
       "away": "福伦丹",
       "kickoff": "2026-11-15 03:00",
-      "date": "2026-11-15",
+      "date": "2026-11-14",
       "recommend": "让负",
       "recommendKey": "ha",
       "odds": "-",
@@ -2721,8 +2758,8 @@
       "scorePred": "比分1比1、1比2",
       "directionEvidence": "方向：让球负",
       "scoreEvidence": "比分：1-1/1-2",
-      "hit": null,
-      "actualScore": null,
+      "hit": false,
+      "actualScore": "3:1",
       "isExpert": true,
       "expertStats": {
         "total": 5,
@@ -2736,7 +2773,8 @@
       },
       "otherExperts": [],
       "expertCount": 1,
-      "contentRebuilt": true
+      "contentRebuilt": true,
+      "result": "3:1"
     },
     {
       "num": "周六011",
@@ -2744,7 +2782,7 @@
       "home": "奥地利",
       "away": "爱尔兰",
       "kickoff": "2026-11-15 03:45",
-      "date": "2026-11-15",
+      "date": "2026-11-14",
       "recommend": "主胜",
       "recommendKey": "h",
       "odds": "-",
@@ -2757,8 +2795,8 @@
       "scorePred": "",
       "directionEvidence": "奥地利主场取胜是更合理的方向。",
       "scoreEvidence": "",
-      "hit": null,
-      "actualScore": null,
+      "hit": true,
+      "actualScore": "1:0",
       "isExpert": true,
       "expertStats": {
         "total": 5,
@@ -2771,16 +2809,6 @@
         "isNew": false
       },
       "otherExperts": [
-        {
-          "expertName": "晓哥看球",
-          "recommend": "主胜",
-          "scorePred": "比分2比1、2比0",
-          "reason": "观点：胜（奥地利取胜） 内容：2-1 2-0",
-          "sourceUrl": "https://www.92wq.com/view-330034.htm",
-          "hitRate": 33.3,
-          "judged": 6,
-          "isNew": false
-        },
         {
           "expertName": "绿茵七号位",
           "recommend": "让负",
@@ -2802,8 +2830,9 @@
           "isNew": false
         }
       ],
-      "expertCount": 4,
-      "contentRebuilt": true
+      "expertCount": 3,
+      "contentRebuilt": true,
+      "result": "1:0"
     },
     {
       "num": "周六012",
@@ -2811,7 +2840,7 @@
       "home": "瑞典",
       "away": "波黑",
       "kickoff": "2026-11-15 03:45",
-      "date": "2026-11-15",
+      "date": "2026-11-14",
       "recommend": "让胜",
       "recommendKey": "hh",
       "odds": "-",
@@ -2824,8 +2853,8 @@
       "scorePred": "比分2比0、3比1",
       "directionEvidence": "推荐：竞彩让胜",
       "scoreEvidence": "比分参考：2比0、3比1",
-      "hit": null,
-      "actualScore": null,
+      "hit": false,
+      "actualScore": "3:2",
       "isExpert": true,
       "expertStats": {
         "total": 7,
@@ -2839,7 +2868,8 @@
       },
       "otherExperts": [],
       "expertCount": 1,
-      "contentRebuilt": true
+      "contentRebuilt": true,
+      "result": "3:2"
     },
     {
       "num": "周六013",
@@ -2847,7 +2877,7 @@
       "home": "罗马尼亚",
       "away": "波兰",
       "kickoff": "2026-11-15 03:45",
-      "date": "2026-11-15",
+      "date": "2026-11-14",
       "recommend": "客胜",
       "recommendKey": "a",
       "odds": "-",
@@ -2860,8 +2890,8 @@
       "scorePred": "",
       "directionEvidence": "本场对决，罗马尼亚实在没有高估的理由，看波兰作客赢球。",
       "scoreEvidence": "",
-      "hit": null,
-      "actualScore": null,
+      "hit": false,
+      "actualScore": "2:1",
       "isExpert": true,
       "expertStats": {
         "total": 4,
@@ -2882,55 +2912,22 @@
           "sourceUrl": "https://www.92wq.com/view-330012.htm",
           "hitRate": 14.3,
           "judged": 7,
-          "isNew": false
+          "isNew": false,
+          "hit": true,
+          "actualScore": "2:1"
         }
       ],
       "expertCount": 2,
-      "contentRebuilt": true
-    },
-    {
-      "num": "周六015",
-      "league": "巴甲",
-      "home": "米拉索尔",
-      "away": "米竞技",
-      "kickoff": "2026-11-15 05:30",
-      "date": "2026-11-15",
-      "recommend": "主胜",
-      "recommendKey": "h",
-      "odds": "-",
-      "confidence": 78,
-      "expertName": "彭雷",
-      "source": "92玩球",
-      "sourceUrl": "https://www.92wq.com/view-329983.htm",
-      "trackRecord": "",
-      "reason": "让球力度主场给出态度，米竞技定位高，米拉索还是有机会“爆冷”取胜的？ 主胜，比分2比0和1比0。",
-      "scorePred": "比分2比0、1比0",
-      "directionEvidence": "让球力度主场给出态度，米竞技定位高，米拉索还是有机会“爆冷”取胜的？",
-      "scoreEvidence": "主胜，比分2比0和1比0。",
-      "hit": null,
-      "actualScore": null,
-      "isExpert": true,
-      "expertStats": {
-        "total": 2,
-        "judged": 1,
-        "hits": 0,
-        "miss": 1,
-        "hitRate": 0.0,
-        "recent10Rate": 0.0,
-        "streak": 0,
-        "isNew": true
-      },
-      "otherExperts": [],
-      "expertCount": 1,
-      "contentRebuilt": true
+      "contentRebuilt": true,
+      "result": "2:1"
     },
     {
       "num": "周六016",
       "league": "巴甲",
-      "home": "沙佩科",
-      "away": "达伽马",
+      "home": "沙佩科恩斯",
+      "away": "瓦斯科达伽马",
       "kickoff": "2026-11-15 07:30",
-      "date": "2026-11-15",
+      "date": "2026-11-14",
       "recommend": "让负",
       "recommendKey": "ha",
       "odds": "-",
@@ -2943,8 +2940,8 @@
       "scorePred": "比分0比2",
       "directionEvidence": "关注方向：让球0",
       "scoreEvidence": "比分参考：0-2",
-      "hit": null,
-      "actualScore": null,
+      "hit": false,
+      "actualScore": "0:2",
       "isExpert": true,
       "expertStats": {
         "total": 6,
@@ -2958,14 +2955,15 @@
       },
       "otherExperts": [],
       "expertCount": 1,
-      "contentRebuilt": true
+      "contentRebuilt": true,
+      "result": "0:2"
     }
   ],
   "2026-11-15": [
     {
       "num": "周日005",
       "league": "荷乙",
-      "home": "马斯特里",
+      "home": "马斯特里赫特",
       "away": "维迪斯",
       "kickoff": "2026-11-15 21:30",
       "date": "2026-11-15",
@@ -2999,6 +2997,42 @@
       "contentRebuilt": true
     },
     {
+      "num": "周日006",
+      "league": "欧国联",
+      "home": "拉脱维亚",
+      "away": "亚美尼亚",
+      "kickoff": "2026-11-15 22:00",
+      "date": "2026-11-15",
+      "recommend": "让负",
+      "recommendKey": "ha",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "随风解球",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-330103.htm",
+      "trackRecord": "",
+      "reason": "个人更倾向于客队守住底线，推荐芬兰让负，推荐比分芬兰3-0，3-1",
+      "scorePred": "比分3比0、3比1",
+      "directionEvidence": "个人更倾向于客队守住底线，推荐芬兰让负，推荐比分芬兰3-0，3-1",
+      "scoreEvidence": "个人更倾向于客队守住底线，推荐芬兰让负，推荐比分芬兰3-0，3-1",
+      "hit": null,
+      "actualScore": null,
+      "isExpert": true,
+      "expertStats": {
+        "total": 3,
+        "judged": 2,
+        "hits": 0,
+        "miss": 2,
+        "hitRate": 0.0,
+        "recent10Rate": 0.0,
+        "streak": 0,
+        "isNew": true
+      },
+      "otherExperts": [],
+      "expertCount": 1,
+      "contentRebuilt": true
+    },
+    {
       "num": "周日007",
       "league": "欧国联",
       "home": "塞浦路斯",
@@ -3021,12 +3055,156 @@
       "actualScore": null,
       "isExpert": true,
       "expertStats": {
-        "total": 6,
-        "judged": 5,
-        "hits": 3,
+        "total": 7,
+        "judged": 6,
+        "hits": 4,
         "miss": 2,
-        "hitRate": 60.0,
-        "recent10Rate": 60.0,
+        "hitRate": 66.7,
+        "recent10Rate": 66.7,
+        "streak": 1,
+        "isNew": false
+      },
+      "otherExperts": [
+        {
+          "expertName": "杨震",
+          "recommend": "客胜",
+          "scorePred": "",
+          "reason": "鉴于塞浦路斯已经没有追求，状态保持上佳的黑山，还是有机会作客带走3分。",
+          "sourceUrl": "https://www.92wq.com/view-330097.htm",
+          "hitRate": 50.0,
+          "judged": 4,
+          "isNew": false
+        },
+        {
+          "expertName": "晓哥看球",
+          "recommend": "让胜",
+          "scorePred": "比分1比1、1比0",
+          "reason": "观点：让胜（塞浦路斯不败） 内容：1-1 1-0",
+          "sourceUrl": "https://www.92wq.com/view-330092.htm",
+          "hitRate": 33.3,
+          "judged": 6,
+          "isNew": false
+        },
+        {
+          "expertName": "张磊",
+          "recommend": "客胜",
+          "scorePred": "比分1比2",
+          "reason": "关注方向：0 比分参考：1-2",
+          "sourceUrl": "https://www.92wq.com/view-330095.htm",
+          "hitRate": 0.0,
+          "judged": 5,
+          "isNew": false
+        },
+        {
+          "expertName": "彭雷",
+          "recommend": "让胜",
+          "scorePred": "比分1比1、0比0",
+          "reason": "让胜，比分1比1和0比0，很有可能闷平。",
+          "sourceUrl": "https://www.92wq.com/view-330094.htm",
+          "hitRate": 0.0,
+          "judged": 1,
+          "isNew": true
+        }
+      ],
+      "expertCount": 5,
+      "contentRebuilt": true
+    },
+    {
+      "num": "周日008",
+      "league": "欧国联",
+      "home": "芬兰",
+      "away": "圣马力诺",
+      "kickoff": "2026-11-16 01:00",
+      "date": "2026-11-15",
+      "recommend": "让胜",
+      "recommendKey": "hh",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "中.誉",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-330119.htm",
+      "trackRecord": "昨天欧国联，主队一球小胜，艰险红单。",
+      "reason": "结合市场来看，这场比赛主队难大胜，我建议让四球负。",
+      "scorePred": "",
+      "directionEvidence": "结合市场来看，这场比赛主队难大胜，我建议让四球负。",
+      "scoreEvidence": "",
+      "hit": null,
+      "actualScore": null,
+      "isExpert": true,
+      "expertStats": {
+        "total": 6,
+        "judged": 3,
+        "hits": 1,
+        "miss": 2,
+        "hitRate": 33.3,
+        "recent10Rate": 33.3,
+        "streak": 0,
+        "isNew": false
+      },
+      "otherExperts": [
+        {
+          "expertName": "航哥",
+          "recommend": "让胜",
+          "scorePred": "比分5比0",
+          "reason": "我的观点：让胜 参考比分：5比0/胜其他",
+          "sourceUrl": "https://www.92wq.com/view-330077.htm",
+          "hitRate": 25.0,
+          "judged": 8,
+          "isNew": false
+        },
+        {
+          "expertName": "罗辑",
+          "recommend": "让负",
+          "scorePred": "比分3比0、4比1",
+          "reason": "芬兰让负 比分 3比0 4比1",
+          "sourceUrl": "https://www.92wq.com/view-330105.htm",
+          "hitRate": 25.0,
+          "judged": 4,
+          "isNew": false
+        },
+        {
+          "expertName": "敬真",
+          "recommend": "让负",
+          "scorePred": "比分3比0、3比1",
+          "reason": "方向：让球负 比分：3-0/3-1",
+          "sourceUrl": "https://www.92wq.com/view-330098.htm",
+          "hitRate": 20.0,
+          "judged": 5,
+          "isNew": false
+        }
+      ],
+      "expertCount": 4,
+      "contentRebuilt": true
+    },
+    {
+      "num": "周日009",
+      "league": "欧国联",
+      "home": "克罗地亚",
+      "away": "捷克",
+      "kickoff": "2026-11-16 03:45",
+      "date": "2026-11-15",
+      "recommend": "主胜",
+      "recommendKey": "h",
+      "odds": "-",
+      "confidence": 78,
+      "expertName": "史密斯",
+      "source": "92玩球",
+      "sourceUrl": "https://www.92wq.com/view-330074.htm",
+      "trackRecord": "",
+      "reason": "推荐：竞彩主胜/让胜 比分参考：2比0、3比0",
+      "scorePred": "比分2比0、3比0",
+      "directionEvidence": "推荐：竞彩主胜/让胜",
+      "scoreEvidence": "比分参考：2比0、3比0",
+      "hit": null,
+      "actualScore": null,
+      "isExpert": true,
+      "expertStats": {
+        "total": 8,
+        "judged": 7,
+        "hits": 2,
+        "miss": 5,
+        "hitRate": 28.6,
+        "recent10Rate": 28.6,
         "streak": 0,
         "isNew": false
       },
