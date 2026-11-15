@@ -12432,29 +12432,29 @@
      "dir": "a",
      "conf": 68.7,
      "gl": null,
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 61.8,
      "gl": "-17.5",
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "l",
      "conf": 54.5,
      "gl": "+191.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l6",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "97:111"
   },
   {
    "date": "2026-11-15",
@@ -12471,29 +12471,29 @@
      "dir": "a",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     },
     "hdc": {
      "dir": "a",
      "conf": 66.4,
      "gl": "-3.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 51.8,
      "gl": "+191.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "98:92"
   },
   {
    "date": "2026-11-15",
@@ -12510,29 +12510,29 @@
      "dir": "a",
      "conf": 71.0,
      "gl": null,
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 59.8,
      "gl": "-13.5",
-     "hit": null
+     "hit": true
     },
     "hilo": {
      "dir": "h",
      "conf": 55.2,
      "gl": "+181.5",
-     "hit": null
+     "hit": false
     },
     "wnm": {
      "dir": "l6",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": true,
+   "score": "70:82"
   },
   {
    "date": "2026-11-15",
@@ -13237,5 +13237,5 @@
    "score": "100:111"
   }
  ],
- "updatedAt": "2026-11-15 17:57:54"
+ "updatedAt": "2026-11-15 22:38:06"
 }
