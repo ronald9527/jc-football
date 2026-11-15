@@ -105,6 +105,17 @@ a{color:var(--acc)}
 <tr><td>线上数据抽查</td><td class="ok-t">matches / score_predict / parlay_history / basketball_parlay_history / expert_leaderboard / good_rate_stats / vz_high_stats / basketball_ai 全部时间戳推进到 11-15 17:53~17:57</td></tr>
 <tr><td>APK</td><td class="ok-t"><code>1.7.137(10837)</code> 重建，内嵌 <code>BUILT_DATA.meta.updateTime=2026-11-15 17:53:55</code>；已随部署与自举包上线</td></tr>
 <tr><td>版本一致性</td><td class="ok-t">网页 <code>v1.7.137</code> = APK <code>1.7.137(10837)</code>，<code>version_sync.py --check</code> 通过</td></tr>
+<tr><td>线上资源逐字节一致</td><td class="ok-t">首页 / <code>version.json</code> / <code>auto_pilot_status.json</code> / <code>code-bundle.tar.gz</code> / 线上 APK 五份与本地 sha256 全相同</td></tr>
+</table>
+
+<h3>浏览器端到端实测（逐个点开，不是只看首页）</h3>
+<table>
+<tr><th>项目</th><th>实测结果</th></tr>
+<tr><td>9 个主 Tab 渲染内容长度</td><td class="mono">今日 8830 / 历史 146907 / 强弱 187 / 港澳 2593 / 分层串关 15846 / 高手 2512 / 官方赛果 782 / 比分预测 11104 / 篮球 4080 —— <span class="ok-t">全部非空</span></td></tr>
+<tr><td>篮球 6 个子页</td><td class="ok-t">赛程赔率 / 赛后回看 / AI预测 / 篮球串关 / 历史统计 / AI命中率 全部在位</td></tr>
+<tr><td>页面内数据批次</td><td class="mono">state.meta 与 __reportMeta.ver 均为 <code>2026-11-15 17:53:55</code>；今日 7 场、比分预测 189 场、串关历史 89 组、专家 26 位</td></tr>
+<tr><td>刷新数据按钮</td><td class="ok-t">回执「已全站同步 9 个模块 · 今日批次（更新于 11-15 17:53）」；<code>renderFailed=0</code>，<code>POST /api/refresh = 0</code> 次</td></tr>
+<tr><td>报告卡 / JS 错误</td><td class="ok-t">报告卡显示 11-15 新批次、无假实时；<code>jsErrors = []</code></td></tr>
 </table>
 
 <h2>六、交付清单</h2>
