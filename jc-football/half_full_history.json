@@ -11092,5 +11092,70 @@
     }
    }
   ]
+ },
+ "2026-11-16": {
+  "date": "2026-11-16",
+  "generatedAt": "2026-11-16 12:19:30",
+  "count": 2,
+  "matches": [
+   {
+    "num": "周一001",
+    "home": "法罗群岛",
+    "away": "摩尔多瓦",
+    "league": "欧国联",
+    "kickoff": "2026-11-16 23:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 28.7,
+    "recommend2": "负负",
+    "confidence2": 18.2,
+    "probDist": {
+     "胜胜": 28.7,
+     "负负": 18.2,
+     "平胜": 16.1,
+     "平平": 11.3,
+     "平负": 7.9,
+     "胜平": 6.7,
+     "负平": 4.9,
+     "负胜": 4.3,
+     "胜负": 1.8
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 4,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一002",
+    "home": "哈萨克",
+    "away": "斯洛伐克",
+    "league": "欧国联",
+    "kickoff": "2026-11-16 23:00",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 28.7,
+    "recommend2": "胜胜",
+    "confidence2": 18.6,
+    "probDist": {
+     "负负": 28.7,
+     "胜胜": 18.6,
+     "平胜": 12.1,
+     "平负": 11.7,
+     "平平": 11.2,
+     "负平": 6.7,
+     "胜平": 5.0,
+     "胜负": 4.3,
+     "负胜": 1.9
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 4
+    }
+   }
+  ]
  }
 }
