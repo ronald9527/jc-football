@@ -11157,5 +11157,186 @@
     }
    }
   ]
+ },
+ "2026-11-17": {
+  "date": "2026-11-17",
+  "generatedAt": "2026-11-17 00:41:45",
+  "count": 6,
+  "matches": [
+   {
+    "num": "周一004",
+    "home": "冰岛",
+    "away": "卢森堡",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 01:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 37.2,
+    "recommend2": "平胜",
+    "confidence2": 15.5,
+    "probDist": {
+     "胜胜": 37.2,
+     "平胜": 15.5,
+     "负负": 13.5,
+     "平平": 9.7,
+     "胜平": 8.0,
+     "平负": 5.0,
+     "负胜": 4.8,
+     "负平": 4.0,
+     "胜负": 2.2
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 0,
+     "away": 3
+    }
+   },
+   {
+    "num": "周一008",
+    "home": "希腊",
+    "away": "塞尔维亚",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 03:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 33.7,
+    "recommend2": "平胜",
+    "confidence2": 15.7,
+    "probDist": {
+     "胜胜": 33.7,
+     "平胜": 15.7,
+     "负负": 15.5,
+     "平平": 10.3,
+     "胜平": 7.5,
+     "平负": 6.1,
+     "负胜": 4.7,
+     "负平": 4.4,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 1,
+     "away": 0
+    }
+   },
+   {
+    "num": "周一007",
+    "home": "北马其顿",
+    "away": "斯洛文尼",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 03:45",
+    "recommend": "负负",
+    "recommendKey": "aa",
+    "confidence": 32.8,
+    "recommend2": "胜胜",
+    "confidence2": 15.7,
+    "probDist": {
+     "负负": 32.8,
+     "胜胜": 15.7,
+     "平负": 12.1,
+     "平平": 10.6,
+     "平胜": 10.4,
+     "负平": 7.3,
+     "胜负": 4.6,
+     "胜平": 4.4,
+     "负胜": 2.0
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一005",
+    "home": "瑞士",
+    "away": "苏格兰",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 03:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 29.7,
+    "recommend2": "负负",
+    "confidence2": 17.8,
+    "probDist": {
+     "胜胜": 29.7,
+     "负负": 17.8,
+     "平胜": 15.9,
+     "平平": 11.1,
+     "平负": 7.5,
+     "胜平": 6.8,
+     "负平": 4.9,
+     "负胜": 4.4,
+     "胜负": 1.9
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 1,
+     "away": 4
+    }
+   },
+   {
+    "num": "周一003",
+    "home": "爱沙尼亚",
+    "away": "保加利亚",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 01:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 27.3,
+    "recommend2": "负负",
+    "confidence2": 18.7,
+    "probDist": {
+     "胜胜": 27.3,
+     "负负": 18.7,
+     "平胜": 16.4,
+     "平平": 11.7,
+     "平负": 8.5,
+     "胜平": 6.4,
+     "负平": 5.0,
+     "负胜": 4.1,
+     "胜负": 1.8
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 1
+    }
+   },
+   {
+    "num": "周一006",
+    "home": "德国",
+    "away": "荷兰",
+    "league": "欧国联",
+    "kickoff": "2026-11-17 03:45",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 27.2,
+    "recommend2": "负负",
+    "confidence2": 20.6,
+    "probDist": {
+     "胜胜": 27.2,
+     "负负": 20.6,
+     "平胜": 15.0,
+     "平平": 10.9,
+     "平负": 8.2,
+     "胜平": 6.4,
+     "负平": 5.4,
+     "负胜": 4.2,
+     "胜负": 2.1
+    },
+    "actualHalfFull": "?a",
+    "hit": null,
+    "fullScore": {
+     "home": 0,
+     "away": 1
+    }
+   }
+  ]
  }
 }

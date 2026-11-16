@@ -1,37 +1,30 @@
 {
  "sample": {
-  "total": 110,
-  "scored": 100,
+  "total": 93,
+  "scored": 85,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
-  "澳大利亚篮球联赛": {
-   "n": 8,
-   "home_win_rate": 37.5,
-   "hdc_home_hit_rate": 37.5,
-   "hilo_over_rate": 62.5,
-   "avg_total": 199.2
-  },
-  "西篮甲": {
-   "n": 15,
-   "home_win_rate": 33.3,
-   "hdc_home_hit_rate": 33.3,
-   "hilo_over_rate": 46.7,
-   "avg_total": 184.5
+  "美职篮": {
+   "n": 51,
+   "home_win_rate": 47.1,
+   "hdc_home_hit_rate": 49.0,
+   "hilo_over_rate": 51.0,
+   "avg_total": 230.0
   },
   "德国篮球联赛": {
-   "n": 13,
-   "home_win_rate": 53.8,
-   "hdc_home_hit_rate": 46.2,
-   "hilo_over_rate": 53.8,
-   "avg_total": 167.5
+   "n": 10,
+   "home_win_rate": 50.0,
+   "hdc_home_hit_rate": 50.0,
+   "hilo_over_rate": 60.0,
+   "avg_total": 171.5
   },
-  "美职篮": {
-   "n": 56,
-   "home_win_rate": 46.4,
-   "hdc_home_hit_rate": 46.4,
-   "hilo_over_rate": 51.8,
-   "avg_total": 230.4
+  "澳大利亚篮球联赛": {
+   "n": 7,
+   "home_win_rate": 28.6,
+   "hdc_home_hit_rate": 28.6,
+   "hilo_over_rate": 71.4,
+   "avg_total": 200.3
   },
   "欧篮联": {
    "n": 8,
@@ -39,51 +32,58 @@
    "hdc_home_hit_rate": 25.0,
    "hilo_over_rate": 75.0,
    "avg_total": 180.9
+  },
+  "西篮甲": {
+   "n": 9,
+   "home_win_rate": 44.4,
+   "hdc_home_hit_rate": 44.4,
+   "hilo_over_rate": 44.4,
+   "avg_total": 186.6
   }
  },
  "hdc_overall": {
-  "h": 42,
-  "a": 58,
+  "h": 38,
+  "a": 47,
   "d": 0,
-  "home_hit_rate": 42.0
+  "home_hit_rate": 44.7
  },
  "hilo_overall": {
-  "over": 54,
-  "under": 46,
-  "over_rate": 54.0
+  "over": 47,
+  "under": 38,
+  "over_rate": 55.3
  },
  "wnm_dist": {
-  "l1": 10,
-  "l2": 15,
+  "l1": 8,
+  "l2": 12,
   "l3": 9,
-  "l4": 3,
+  "l4": 2,
   "l5": 2,
   "l6": 4
  },
  "home_advantage": {
-  "home_win_rate": 43.0
+  "home_win_rate": 43.5
  },
  "roi": {
   "hdc": {
-   "bet": 100,
-   "profit": 9.3,
-   "roi": 9.3
+   "bet": 85,
+   "profit": 8.9,
+   "roi": 10.4
   },
   "hilo": {
-   "bet": 100,
-   "profit": -8.2,
-   "roi": -8.2
+   "bet": 85,
+   "profit": -5.1,
+   "roi": -6.0
   },
   "mnl": {
-   "bet": 98,
-   "profit": -30.8,
-   "roi": -31.4
+   "bet": 83,
+   "profit": -23.2,
+   "roi": -27.9
   },
   "wnm": {
-   "bet": 43,
-   "profit": 21.5,
-   "roi": 50.0
+   "bet": 37,
+   "profit": 8.0,
+   "roi": 21.8
   }
  },
- "updatedAt": "2026-11-16 12:26:47"
+ "updatedAt": "2026-11-17 00:48:40"
 }

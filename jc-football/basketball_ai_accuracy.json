@@ -13095,29 +13095,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 54.3,
      "gl": "+8.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "l",
      "conf": 50.4,
      "gl": "+234.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l4",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": false
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "113:106"
   },
   {
    "date": "2026-11-15",
@@ -13134,29 +13134,29 @@
      "dir": "h",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     },
     "hdc": {
      "dir": "a",
      "conf": 59.9,
      "gl": "+11.5",
-     "hit": null
+     "hit": false
     },
     "hilo": {
      "dir": "h",
      "conf": 50.0,
      "gl": "+223.5",
-     "hit": null
+     "hit": true
     },
     "wnm": {
      "dir": "l5",
      "conf": 50.0,
      "gl": "",
-     "hit": null
+     "hit": true
     }
    },
-   "topHit": null,
-   "score": null
+   "topHit": false,
+   "score": "125:103"
   },
   {
    "date": "2026-11-14",
@@ -13586,7 +13586,271 @@
    },
    "topHit": true,
    "score": "104:92"
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042820",
+   "num": "周一301",
+   "league": "美职篮",
+   "home": "凯尔特人",
+   "away": "魔术",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 55.0,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 55.0,
+     "gl": "215.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l5",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042821",
+   "num": "周一302",
+   "league": "美职篮",
+   "home": "奇才",
+   "away": "灰熊",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 50.2,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 50.2,
+     "gl": "233.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042822",
+   "num": "周一303",
+   "league": "美职篮",
+   "home": "骑士",
+   "away": "公牛",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 61.1,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 61.1,
+     "gl": "241.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l4",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042823",
+   "num": "周一304",
+   "league": "美职篮",
+   "home": "热火",
+   "away": "火箭",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 56.5,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 56.5,
+     "gl": "232.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042824",
+   "num": "周一305",
+   "league": "美职篮",
+   "home": "篮网",
+   "away": "76人",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 52.6,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 52.6,
+     "gl": "226.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l2",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042825",
+   "num": "周一306",
+   "league": "美职篮",
+   "home": "森林狼",
+   "away": "开拓者",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 53.8,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 53.8,
+     "gl": "231.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l3",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042826",
+   "num": "周一307",
+   "league": "美职篮",
+   "home": "鹈鹕",
+   "away": "勇士",
+   "topPlay": "hilo",
+   "topDir": "h",
+   "topConf": 53.4,
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "h",
+     "conf": 53.4,
+     "gl": "226.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l6",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
+  },
+  {
+   "date": "2026-11-17",
+   "id": "2042827",
+   "num": "周一308",
+   "league": "美职篮",
+   "home": "掘金",
+   "away": "太阳",
+   "topPlay": "hilo",
+   "topDir": "l",
+   "topConf": 55.6,
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    },
+    "hilo": {
+     "dir": "l",
+     "conf": 55.6,
+     "gl": "229.5",
+     "hit": null
+    },
+    "wnm": {
+     "dir": "l4",
+     "conf": 50.0,
+     "gl": null,
+     "hit": null
+    }
+   },
+   "topHit": null,
+   "score": null
   }
  ],
- "updatedAt": "2026-11-16 12:26:49"
+ "updatedAt": "2026-11-17 00:48:41"
 }
