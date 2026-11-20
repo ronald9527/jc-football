@@ -11266,38 +11266,9 @@
  },
  "2026-11-20": {
   "date": "2026-11-20",
-  "generatedAt": "2026-11-20 00:16:25",
-  "count": 7,
+  "generatedAt": "2026-11-20 13:19:49",
+  "count": 3,
   "matches": [
-   {
-    "num": "周五002",
-    "home": "柏太阳神",
-    "away": "千叶市原",
-    "league": "日职",
-    "kickoff": "2026-11-20 18:00",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 31.8,
-    "recommend2": "负负",
-    "confidence2": 16.9,
-    "probDist": {
-     "胜胜": 31.8,
-     "负负": 16.9,
-     "平胜": 15.6,
-     "平平": 10.5,
-     "胜平": 7.2,
-     "平负": 6.7,
-     "负平": 4.7,
-     "负胜": 4.6,
-     "胜负": 2.0
-    },
-    "actualHalfFull": "?h",
-    "hit": null,
-    "fullScore": {
-     "home": 2,
-     "away": 1
-    }
-   },
    {
     "num": "周五003",
     "home": "鹿岛鹿角",
@@ -11306,25 +11277,54 @@
     "kickoff": "2026-11-20 18:00",
     "recommend": "胜胜",
     "recommendKey": "hh",
-    "confidence": 31.5,
+    "confidence": 33.2,
     "recommend2": "负负",
-    "confidence2": 16.9,
+    "confidence2": 15.9,
     "probDist": {
-     "胜胜": 31.5,
-     "负负": 16.9,
-     "平胜": 15.8,
-     "平平": 10.6,
-     "胜平": 7.1,
-     "平负": 6.9,
-     "负平": 4.7,
-     "负胜": 4.5,
-     "胜负": 2.0
+     "胜胜": 33.2,
+     "负负": 15.9,
+     "平胜": 15.7,
+     "平平": 10.4,
+     "胜平": 7.4,
+     "平负": 6.3,
+     "负胜": 4.6,
+     "负平": 4.5,
+     "胜负": 2.1
     },
     "actualHalfFull": "?a",
     "hit": null,
     "fullScore": {
      "home": 0,
      "away": 5
+    }
+   },
+   {
+    "num": "周五002",
+    "home": "柏太阳神",
+    "away": "千叶市原",
+    "league": "日职",
+    "kickoff": "2026-11-20 18:00",
+    "recommend": "胜胜",
+    "recommendKey": "hh",
+    "confidence": 32.8,
+    "recommend2": "负负",
+    "confidence2": 16.4,
+    "probDist": {
+     "胜胜": 32.8,
+     "负负": 16.4,
+     "平胜": 15.5,
+     "平平": 10.3,
+     "胜平": 7.4,
+     "平负": 6.4,
+     "负胜": 4.6,
+     "负平": 4.6,
+     "胜负": 2.0
+    },
+    "actualHalfFull": "?h",
+    "hit": null,
+    "fullScore": {
+     "home": 2,
+     "away": 1
     }
    },
    {
@@ -11335,18 +11335,18 @@
     "kickoff": "2026-11-20 16:40",
     "recommend": "胜胜",
     "recommendKey": "hh",
-    "confidence": 29.1,
+    "confidence": 29.7,
     "recommend2": "负负",
-    "confidence2": 19.0,
+    "confidence2": 18.8,
     "probDist": {
-     "胜胜": 29.1,
-     "负负": 19.0,
-     "平胜": 15.3,
-     "平平": 10.8,
-     "平负": 7.6,
-     "胜平": 6.8,
+     "胜胜": 29.7,
+     "负负": 18.8,
+     "平胜": 15.1,
+     "平平": 10.6,
+     "平负": 7.4,
+     "胜平": 6.9,
      "负平": 5.1,
-     "负胜": 4.4,
+     "负胜": 4.5,
      "胜负": 1.9
     },
     "actualHalfFull": "?a",
@@ -11354,122 +11354,6 @@
     "fullScore": {
      "home": 1,
      "away": 4
-    }
-   },
-   {
-    "num": "周四004",
-    "home": "西雅图",
-    "away": "盐湖城",
-    "league": "美职足",
-    "kickoff": "2026-11-20 11:00",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 28.1,
-    "recommend2": "负负",
-    "confidence2": 19.6,
-    "probDist": {
-     "胜胜": 28.1,
-     "负负": 19.6,
-     "平胜": 15.3,
-     "平平": 11.0,
-     "平负": 8.0,
-     "胜平": 6.6,
-     "负平": 5.2,
-     "负胜": 4.3,
-     "胜负": 1.9
-    },
-    "actualHalfFull": "?h",
-    "hit": null,
-    "fullScore": {
-     "home": 2,
-     "away": 1
-    }
-   },
-   {
-    "num": "周四003",
-    "home": "奥兰多",
-    "away": "辛辛那提",
-    "league": "美职足",
-    "kickoff": "2026-11-20 08:30",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 24.1,
-    "recommend2": "胜胜",
-    "confidence2": 22.0,
-    "probDist": {
-     "负负": 24.1,
-     "胜胜": 22.0,
-     "平胜": 14.6,
-     "平平": 11.5,
-     "平负": 9.9,
-     "负平": 6.1,
-     "胜平": 5.4,
-     "负胜": 3.6,
-     "胜负": 2.8
-    },
-    "actualHalfFull": "?h",
-    "hit": null,
-    "fullScore": {
-     "home": 2,
-     "away": 0
-    }
-   },
-   {
-    "num": "周四002",
-    "home": "圣保罗",
-    "away": "弗鲁米嫩",
-    "league": "巴甲",
-    "kickoff": "2026-11-20 08:30",
-    "recommend": "负负",
-    "recommendKey": "aa",
-    "confidence": 24.0,
-    "recommend2": "胜胜",
-    "confidence2": 21.0,
-    "probDist": {
-     "负负": 24.0,
-     "胜胜": 21.0,
-     "平胜": 15.1,
-     "平平": 12.0,
-     "平负": 10.4,
-     "负平": 6.0,
-     "胜平": 5.2,
-     "负胜": 3.4,
-     "胜负": 2.8
-    },
-    "actualHalfFull": "?d",
-    "hit": null,
-    "fullScore": {
-     "home": 1,
-     "away": 1
-    }
-   },
-   {
-    "num": "周四001",
-    "home": "维多利亚",
-    "away": "布拉干蒂诺RB",
-    "league": "巴甲",
-    "kickoff": "2026-11-20 06:30",
-    "recommend": "胜胜",
-    "recommendKey": "hh",
-    "confidence": 23.5,
-    "recommend2": "负负",
-    "confidence2": 22.4,
-    "probDist": {
-     "胜胜": 23.5,
-     "负负": 22.4,
-     "平胜": 14.1,
-     "平平": 11.6,
-     "平负": 10.5,
-     "胜平": 6.0,
-     "负平": 5.5,
-     "胜负": 3.6,
-     "负胜": 2.8
-    },
-    "actualHalfFull": "?a",
-    "hit": null,
-    "fullScore": {
-     "home": 1,
-     "away": 2
     }
    }
   ]
