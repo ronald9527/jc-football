@@ -1,30 +1,23 @@
 {
  "sample": {
-  "total": 113,
-  "scored": 94,
+  "total": 104,
+  "scored": 90,
   "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主"
  },
  "leagues": {
   "澳大利亚篮球联赛": {
-   "n": 8,
-   "home_win_rate": 25.0,
-   "hdc_home_hit_rate": 25.0,
-   "hilo_over_rate": 75.0,
+   "n": 7,
+   "home_win_rate": 28.6,
+   "hdc_home_hit_rate": 28.6,
+   "hilo_over_rate": 57.1,
    "avg_total": 196.1
   },
   "欧篮联": {
-   "n": 16,
-   "home_win_rate": 25.0,
-   "hdc_home_hit_rate": 25.0,
-   "hilo_over_rate": 50.0,
-   "avg_total": 171.8
-  },
-  "美职篮": {
-   "n": 52,
-   "home_win_rate": 51.9,
-   "hdc_home_hit_rate": 48.1,
-   "hilo_over_rate": 53.8,
-   "avg_total": 230.2
+   "n": 13,
+   "home_win_rate": 30.8,
+   "hdc_home_hit_rate": 30.8,
+   "hilo_over_rate": 38.5,
+   "avg_total": 169.0
   },
   "德国篮球联赛": {
    "n": 9,
@@ -32,6 +25,13 @@
    "hdc_home_hit_rate": 44.4,
    "hilo_over_rate": 55.6,
    "avg_total": 170.8
+  },
+  "美职篮": {
+   "n": 52,
+   "home_win_rate": 53.8,
+   "hdc_home_hit_rate": 50.0,
+   "hilo_over_rate": 53.8,
+   "avg_total": 229.3
   },
   "西篮甲": {
    "n": 9,
@@ -42,48 +42,48 @@
   }
  },
  "hdc_overall": {
-  "h": 39,
-  "a": 55,
+  "h": 40,
+  "a": 50,
   "d": 0,
-  "home_hit_rate": 41.5
+  "home_hit_rate": 44.4
  },
  "hilo_overall": {
-  "over": 51,
-  "under": 43,
-  "over_rate": 54.3
+  "over": 46,
+  "under": 44,
+  "over_rate": 51.1
  },
  "wnm_dist": {
   "l1": 10,
-  "l2": 9,
+  "l2": 10,
   "l3": 14,
   "l4": 2,
   "l5": 3,
   "l6": 3
  },
  "home_advantage": {
-  "home_win_rate": 43.6
+  "home_win_rate": 46.7
  },
  "roi": {
   "hdc": {
-   "bet": 94,
-   "profit": 3.5,
-   "roi": 3.7
+   "bet": 90,
+   "profit": 3.6,
+   "roi": 4.1
   },
   "hilo": {
-   "bet": 94,
-   "profit": -7.3,
-   "roi": -7.8
+   "bet": 90,
+   "profit": -11.8,
+   "roi": -13.2
   },
   "mnl": {
-   "bet": 93,
-   "profit": -34.0,
-   "roi": -36.5
+   "bet": 89,
+   "profit": -31.5,
+   "roi": -35.4
   },
   "wnm": {
-   "bet": 41,
-   "profit": 23.9,
-   "roi": 58.2
+   "bet": 42,
+   "profit": 30.9,
+   "roi": 73.6
   }
  },
- "updatedAt": "2026-11-20 13:29:44"
+ "updatedAt": "2026-11-21 00:08:32"
 }
