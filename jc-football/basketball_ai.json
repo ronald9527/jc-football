@@ -1,572 +1,88 @@
 {
- "updatedAt": "2026-11-21 00:08:32",
- "dataDate": "2026-11-20",
+ "updatedAt": "2026-11-21 13:26:29",
+ "dataDate": "2026-11-21",
  "source": "500.com",
- "upcomingCount": 14,
+ "upcomingCount": 15,
  "note": "样本薄（仅数十场历史赛果），同指命中率统计仅供参考，预测以市场共识为主",
  "predictions": [
   {
-   "id": "2042888",
-   "num": "周五302",
-   "league": "欧篮联",
-   "home": "埃菲斯",
-   "away": "阿斯维尔",
-   "kickoff": "2026-11-21 01:30",
+   "id": "2042950",
+   "num": "周六301",
+   "league": "澳大利亚篮球联赛",
+   "home": "塔斯马尼亚跳蚁",
+   "away": "伊拉瓦拉老鹰",
+   "kickoff": "2026-11-21 14:30",
    "hr": "",
    "ar": "",
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 3.37,
+     "odds": 2.46,
      "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 25.5,
-     "canon": -1.013,
-     "edge": -0.7,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 31.3,
+     "canon": -8.818,
+     "edge": -4.6,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.2,
-       "confidence": 54.0,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
+       "odds": 1.38,
+       "confidence": 50.0,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
      "dir": "a",
-     "odds": 1.28,
-     "confidence": 80.3,
-     "sameOddsHit": 85.7,
-     "sameOddsN": 7,
-     "pTrue": 80.3,
-     "canon": 16.399,
-     "edge": 7.8,
-     "goalLine": "-7.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 3.38,
-       "confidence": 50.0,
-       "sameOddsHit": 14.3,
-       "sameOddsN": 7
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 64.6,
+     "odds": 1.43,
+     "confidence": 76.6,
      "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 64.6,
-     "canon": 29.845,
-     "edge": 14.6,
-     "goalLine": "178.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l5",
-     "odds": 40.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 6.4,
-     "canon": 0.439,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 7.3,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 8.2,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 18.0,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 28.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 58.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042889",
-   "num": "周五303",
-   "league": "德国篮球联赛",
-   "home": "维尔茨堡",
-   "away": "费希塔",
-   "kickoff": "2026-11-21 03:00",
-   "hr": "9",
-   "ar": "14",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 2.56,
-     "confidence": 53.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 38.2,
-     "canon": 7.824,
-     "edge": 3.7,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.35,
-       "confidence": 56.8,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 2.43,
-     "confidence": 53.0,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 42.9,
-     "canon": 10.128,
-     "edge": 4.8,
-     "goalLine": "-5.5",
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.5,
-       "confidence": 57.1,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 69.0,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 66.0,
-     "canon": 32.689,
-     "edge": 16.0,
-     "goalLine": "168.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l5",
-     "odds": 30.0,
-     "confidence": 53.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 6.5,
-     "canon": 0.432,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 6.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 6.2,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 12.0,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 22.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 38.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042890",
-   "num": "周五304",
-   "league": "欧篮联",
-   "home": "奥林匹亚",
-   "away": "皇马",
-   "kickoff": "2026-11-21 03:15",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 1.84,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 42.0,
-     "canon": -11.818,
-     "edge": -6.1,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.71,
-       "confidence": 50.0,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.71,
-     "confidence": 67.3,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 67.3,
-     "canon": 26.472,
-     "edge": 12.9,
-     "goalLine": "-2.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 2.04,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 61.5,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 61.5,
-     "canon": 23.613,
+     "sameOddsN": 4,
+     "pTrue": 76.6,
+     "canon": 23.763,
      "edge": 11.5,
-     "goalLine": "176.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 15.0,
-     "confidence": 50.0,
-     "sameOddsHit": 4.8,
-     "sameOddsN": 42,
-     "pTrue": 9.3,
-     "canon": 0.369,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.4,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 4.5,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 7.8,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 24.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 30.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042891",
-   "num": "周五305",
-   "league": "欧篮联",
-   "home": "巴萨",
-   "away": "贝红星",
-   "kickoff": "2026-11-21 03:30",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 2.08,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 35.6,
-     "canon": -13.42,
-     "edge": -6.9,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.54,
-       "confidence": 50.0,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.63,
-     "confidence": 71.7,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 71.7,
-     "canon": 30.315,
-     "edge": 14.8,
-     "goalLine": "-4.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 2.15,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 62.2,
-     "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 62.2,
-     "canon": 25.021,
-     "edge": 12.2,
-     "goalLine": "173.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 0
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 36.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 4.4,
-     "canon": 0.38,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.9,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 5.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 9.0,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 18.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 27.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042892",
-   "num": "周五306",
-   "league": "欧篮联",
-   "home": "贝游击",
-   "away": "贝西克塔",
-   "kickoff": "2026-11-21 03:45",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 2.53,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 36.7,
-     "canon": 3.791,
-     "edge": 1.7,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.36,
-       "confidence": 54.7,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.45,
-     "confidence": 63.9,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 63.9,
-     "canon": 0.63,
-     "edge": -0.0,
      "goalLine": "-5.5",
      "alts": [
       {
        "dir": "h",
-       "odds": 2.57,
+       "odds": 2.67,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 2
+       "sameOddsN": 4
       }
      ]
     },
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 51.3,
+     "confidence": 56.0,
      "sameOddsHit": null,
-     "sameOddsN": 0,
-     "pTrue": 51.3,
-     "canon": 3.101,
-     "edge": 1.3,
-     "goalLine": "164.5",
+     "sameOddsN": 1,
+     "pTrue": 56.0,
+     "canon": 12.553,
+     "edge": 6.0,
+     "goalLine": "194.5",
      "alts": [
       {
        "dir": "h",
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 0
+       "sameOddsN": 1
       }
      ]
     },
     "wnm": {
-     "dir": "l5",
-     "odds": 31.0,
+     "dir": "l3",
+     "odds": 12.0,
      "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 6.2,
-     "canon": 0.401,
+     "sameOddsHit": 30.4,
+     "sameOddsN": 46,
+     "pTrue": 15.5,
+     "canon": 0.397,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
@@ -574,36 +90,36 @@
        "dir": "l1",
        "odds": 5.7,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
-       "odds": 6.1,
+       "odds": 6.8,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 12.0,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l4",
-       "odds": 22.0,
+       "odds": 16.0,
        "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 28.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       },
       {
        "dir": "l6",
-       "odds": 44.0,
+       "odds": 30.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
@@ -611,186 +127,65 @@
    "topPlay": "hdc"
   },
   {
-   "id": "2042893",
-   "num": "周五307",
-   "league": "美职篮",
-   "home": "老鹰",
-   "away": "黄蜂",
-   "kickoff": "2026-11-21 08:00",
+   "id": "2042951",
+   "num": "周六302",
+   "league": "澳大利亚篮球联赛",
+   "home": "墨尔本联",
+   "away": "新西兰破坏者",
+   "kickoff": "2026-11-21 16:30",
    "hr": "",
    "ar": "",
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 2.83,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 37.6,
-     "canon": 12.999,
-     "edge": 6.3,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.29,
-       "confidence": 60.0,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
      "odds": 2.89,
      "confidence": 50.0,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 47.6,
-     "canon": 30.506,
-     "edge": 15.0,
-     "goalLine": "-8.5",
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.4,
-       "confidence": 52.4,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "h",
-     "odds": 1.7,
-     "confidence": 50.8,
-     "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 50.8,
-     "canon": 2.095,
-     "edge": 0.8,
-     "goalLine": "222.5",
-     "alts": [
-      {
-       "dir": "l",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 2
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l3",
-     "odds": 16.0,
-     "confidence": 50.0,
-     "sameOddsHit": 33.3,
-     "sameOddsN": 42,
-     "pTrue": 13.4,
-     "canon": 0.414,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 6.65,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 7.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 20.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 31.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 34.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042894",
-   "num": "周五308",
-   "league": "美职篮",
-   "home": "活塞",
-   "away": "猛龙",
-   "kickoff": "2026-11-21 08:30",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 3.26,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 34.3,
-     "canon": 14.603,
-     "edge": 7.1,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 28.6,
+     "canon": -3.815,
+     "edge": -2.1,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.22,
-       "confidence": 61.7,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
+       "odds": 1.28,
+       "confidence": 51.7,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
-     "dir": "h",
-     "odds": 3.17,
-     "confidence": 50.0,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 43.6,
-     "canon": 28.308,
-     "edge": 13.9,
-     "goalLine": "-8.5",
+     "dir": "a",
+     "odds": 1.36,
+     "confidence": 77.2,
+     "sameOddsHit": 88.9,
+     "sameOddsN": 9,
+     "pTrue": 77.2,
+     "canon": 18.569,
+     "edge": 8.9,
+     "goalLine": "-7.5",
      "alts": [
       {
-       "dir": "a",
-       "odds": 1.34,
-       "confidence": 56.4,
-       "sameOddsHit": null,
-       "sameOddsN": 3
+       "dir": "h",
+       "odds": 2.93,
+       "confidence": 50.0,
+       "sameOddsHit": 11.1,
+       "sameOddsN": 9
       }
      ]
     },
     "hilo": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 53.1,
+     "confidence": 50.5,
      "sameOddsHit": null,
      "sameOddsN": 1,
-     "pTrue": 53.1,
-     "canon": 6.721,
-     "edge": 3.1,
-     "goalLine": "218.5",
+     "pTrue": 50.5,
+     "canon": 1.492,
+     "edge": 0.5,
+     "goalLine": "186.5",
      "alts": [
       {
        "dir": "l",
@@ -802,237 +197,116 @@
      ]
     },
     "wnm": {
-     "dir": "l6",
-     "odds": 45.0,
+     "dir": "l4",
+     "odds": 23.0,
      "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 5.5,
-     "canon": 0.434,
+     "sameOddsHit": 4.3,
+     "sameOddsN": 46,
+     "pTrue": 9.5,
+     "canon": 0.417,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 7.3,
+       "odds": 5.5,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
-       "odds": 7.7,
+       "odds": 8.4,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l3",
-       "odds": 18.0,
+       "odds": 19.0,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 27.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
       },
       {
        "dir": "l5",
-       "odds": 40.0,
+       "odds": 33.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 32.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
    },
-   "topPlay": "hilo"
+   "topPlay": "hdc"
   },
   {
-   "id": "2042895",
-   "num": "周五309",
-   "league": "美职篮",
-   "home": "骑士",
-   "away": "步行者",
-   "kickoff": "2026-11-21 08:30",
-   "hr": "",
-   "ar": "",
+   "id": "2042952",
+   "num": "周六303",
+   "league": "德国篮球联赛",
+   "home": "耶拿科学城",
+   "away": "罗斯托克海狼",
+   "kickoff": "2026-11-21 23:00",
+   "hr": "17",
+   "ar": "2",
    "plays": {
     "mnl": {
-     "dir": "a",
-     "odds": 2.8,
+     "dir": "h",
+     "odds": 3.33,
      "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 38.4,
-     "canon": 13.8,
-     "edge": 6.7,
+     "sameOddsHit": 46.9,
+     "sameOddsN": 98,
+     "pTrue": 39.6,
+     "canon": 26.209,
+     "edge": 12.9,
      "goalLine": null,
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.3,
-       "confidence": 60.4,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
+       "dir": "a",
+       "odds": 1.21,
+       "confidence": 67.6,
+       "sameOddsHit": 53.1,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
-     "dir": "h",
-     "odds": 2.94,
+     "dir": "a",
+     "odds": 3.27,
      "confidence": 50.0,
      "sameOddsHit": 14.3,
      "sameOddsN": 7,
-     "pTrue": 47.7,
-     "canon": 31.306,
-     "edge": 15.4,
-     "goalLine": "-7.5",
+     "pTrue": 36.2,
+     "canon": 17.106,
+     "edge": 8.3,
+     "goalLine": "+7.5",
      "alts": [
       {
-       "dir": "a",
-       "odds": 1.4,
-       "confidence": 52.3,
+       "dir": "h",
+       "odds": 1.27,
+       "confidence": 63.8,
        "sameOddsHit": 85.7,
        "sameOddsN": 7
       }
      ]
     },
     "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 58.1,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 58.1,
-     "canon": 16.776,
-     "edge": 8.1,
-     "goalLine": "235.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l3",
-     "odds": 14.0,
-     "confidence": 50.0,
-     "sameOddsHit": 33.3,
-     "sameOddsN": 42,
-     "pTrue": 15.1,
-     "canon": 0.412,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 6.4,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 7.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 22.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 33.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 37.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042896",
-   "num": "周五310",
-   "league": "美职篮",
-   "home": "篮网",
-   "away": "魔术",
-   "kickoff": "2026-11-21 08:30",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "h",
-     "odds": 2.53,
-     "confidence": 50.0,
-     "sameOddsHit": 47.2,
-     "sameOddsN": 89,
-     "pTrue": 47.8,
-     "canon": 26.204,
-     "edge": 12.9,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 1.36,
-       "confidence": 65.9,
-       "sameOddsHit": 52.8,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "h",
-     "odds": 1.4,
-     "confidence": 70.8,
-     "sameOddsHit": 83.3,
-     "sameOddsN": 6,
-     "pTrue": 70.8,
-     "canon": 7.503,
-     "edge": 3.4,
-     "goalLine": "+7.5",
-     "alts": [
-      {
-       "dir": "a",
-       "odds": 2.89,
-       "confidence": 50.0,
-       "sameOddsHit": 16.7,
-       "sameOddsN": 6
-      }
-     ]
-    },
-    "hilo": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 56.7,
+     "confidence": 59.6,
      "sameOddsHit": null,
      "sameOddsN": 2,
-     "pTrue": 56.7,
-     "canon": 13.96,
-     "edge": 6.7,
-     "goalLine": "224.5",
+     "pTrue": 67.6,
+     "canon": 35.795,
+     "edge": 17.6,
+     "goalLine": "168.5",
      "alts": [
       {
        "dir": "l",
@@ -1044,171 +318,50 @@
      ]
     },
     "wnm": {
-     "dir": "l4",
-     "odds": 8.0,
+     "dir": "l6",
+     "odds": 9.5,
      "confidence": 50.0,
-     "sameOddsHit": 4.8,
-     "sameOddsN": 42,
-     "pTrue": 12.9,
-     "canon": 0.347,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 9.6,
+     "canon": 0.34,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 4.2,
+       "odds": 4.7,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
-       "odds": 3.8,
+       "odds": 3.3,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l3",
-       "odds": 5.5,
+       "odds": 4.6,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 6.8,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l5",
-       "odds": 12.0,
+       "odds": 9.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 12.5,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hdc"
-  },
-  {
-   "id": "2042897",
-   "num": "周五311",
-   "league": "美职篮",
-   "home": "公牛",
-   "away": "奇才",
-   "kickoff": "2026-11-21 09:00",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 2.07,
-     "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 42.8,
-     "canon": 0.389,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.55,
-       "confidence": 51.5,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
-      }
-     ]
-    },
-    "hdc": {
-     "dir": "a",
-     "odds": 1.68,
-     "confidence": 57.7,
-     "sameOddsHit": 20.0,
-     "sameOddsN": 5,
-     "pTrue": 57.7,
-     "canon": 3.171,
-     "edge": 1.3,
-     "goalLine": "-3.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 2.17,
-       "confidence": 50.0,
-       "sameOddsHit": 80.0,
-       "sameOddsN": 5
-      }
-     ]
-    },
-    "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 62.9,
-     "sameOddsHit": null,
-     "sameOddsN": 1,
-     "pTrue": 62.9,
-     "canon": 26.428,
-     "edge": 12.9,
-     "goalLine": "241.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 1
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l4",
-     "odds": 16.0,
-     "confidence": 50.0,
-     "sameOddsHit": 4.8,
-     "sameOddsN": 42,
-     "pTrue": 9.8,
-     "canon": 0.38,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.8,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 5.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 10.5,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 24.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l6",
-       "odds": 32.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
@@ -1216,64 +369,306 @@
    "topPlay": "hilo"
   },
   {
-   "id": "2042898",
-   "num": "周五312",
-   "league": "美职篮",
-   "home": "雷霆",
-   "away": "鹈鹕",
-   "kickoff": "2026-11-21 09:00",
+   "id": "2042953",
+   "num": "周六304",
+   "league": "西篮甲",
+   "home": "布尔戈斯",
+   "away": "马拉加",
+   "kickoff": "2026-11-22 01:00",
    "hr": "",
    "ar": "",
    "plays": {
     "mnl": {
-     "dir": "a",
-     "odds": 4.93,
+     "dir": "h",
+     "odds": 2.75,
      "confidence": 50.0,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 30.3,
-     "canon": 25.018,
-     "edge": 12.3,
+     "sameOddsHit": 46.9,
+     "sameOddsN": 98,
+     "pTrue": 39.9,
+     "canon": 15.601,
+     "edge": 7.6,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.31,
+       "confidence": 61.1,
+       "sameOddsHit": 53.1,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "a",
+     "odds": 3.04,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 44.3,
+     "canon": 28.507,
+     "edge": 14.0,
+     "goalLine": "+5.5",
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.32,
+       "confidence": 55.7,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 63.4,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 63.4,
+     "canon": 27.433,
+     "edge": 13.4,
+     "goalLine": "179.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l6",
+     "odds": 14.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 7.1,
+     "canon": 0.345,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 4.1,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 3.45,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 4.9,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 8.4,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 12.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042954",
+   "num": "周六305",
+   "league": "德国篮球联赛",
+   "home": "不伦瑞克雄狮",
+   "away": "班堡",
+   "kickoff": "2026-11-22 01:30",
+   "hr": "14",
+   "ar": "11",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 2.98,
+     "confidence": 50.0,
+     "sameOddsHit": 46.9,
+     "sameOddsN": 98,
+     "pTrue": 39.2,
+     "canon": 19.406,
+     "edge": 9.5,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.26,
+       "confidence": 63.5,
+       "sameOddsHit": 53.1,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "a",
+     "odds": 2.6,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 46.6,
+     "canon": 21.704,
+     "edge": 10.6,
+     "goalLine": "+6.5",
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.46,
+       "confidence": 53.4,
+       "sameOddsHit": null,
+       "sameOddsN": 3
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 63.5,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 65.3,
+     "canon": 31.234,
+     "edge": 15.3,
+     "goalLine": "175.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 3
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l6",
+     "odds": 11.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 8.7,
+     "canon": 0.343,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 4.45,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 3.4,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 4.8,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 7.6,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 10.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042955",
+   "num": "周六306",
+   "league": "美职篮",
+   "home": "76人",
+   "away": "雄鹿",
+   "kickoff": "2026-11-22 02:00",
+   "hr": "东1",
+   "ar": "东15",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 4.9,
+     "confidence": 58.0,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 25.7,
+     "canon": 15.691,
+     "edge": 7.6,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
        "odds": 1.08,
-       "confidence": 68.7,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
+       "confidence": 64.0,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
      "dir": "h",
-     "odds": 5.07,
-     "confidence": 50.0,
+     "odds": 5.04,
+     "confidence": 58.0,
      "sameOddsHit": null,
-     "sameOddsN": 2,
-     "pTrue": 44.6,
-     "canon": 52.719,
-     "edge": 26.1,
-     "goalLine": "-12.5",
+     "sameOddsN": 1,
+     "pTrue": 31.3,
+     "canon": 25.799,
+     "edge": 12.6,
+     "goalLine": "-11.5",
      "alts": [
       {
        "dir": "a",
-       "odds": 1.15,
-       "confidence": 55.4,
+       "odds": 1.16,
+       "confidence": 68.7,
        "sameOddsHit": null,
-       "sameOddsN": 2
+       "sameOddsN": 1
       }
      ]
     },
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 53.8,
+     "confidence": 65.9,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 53.8,
-     "canon": 8.128,
-     "edge": 3.8,
+     "pTrue": 57.9,
+     "canon": 16.453,
+     "edge": 7.9,
      "goalLine": "229.5",
      "alts": [
       {
@@ -1286,50 +681,50 @@
      ]
     },
     "wnm": {
-     "dir": "l6",
-     "odds": 78.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 4.8,
-     "canon": 0.51,
+     "dir": "l4",
+     "odds": 36.0,
+     "confidence": 58.0,
+     "sameOddsHit": 4.3,
+     "sameOddsN": 46,
+     "pTrue": 10.3,
+     "canon": 0.588,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 11.0,
+       "odds": 10.0,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
        "odds": 13.0,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l3",
-       "odds": 23.0,
+       "odds": 25.0,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 35.0,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
       },
       {
        "dir": "l5",
-       "odds": 62.0,
+       "odds": 74.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 82.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
@@ -1337,178 +732,670 @@
    "topPlay": "hilo"
   },
   {
-   "id": "2042899",
-   "num": "周五313",
-   "league": "美职篮",
-   "home": "爵士",
-   "away": "太阳",
-   "kickoff": "2026-11-21 10:30",
+   "id": "2042956",
+   "num": "周六307",
+   "league": "西篮甲",
+   "home": "曼雷萨",
+   "away": "安道尔BC",
+   "kickoff": "2026-11-22 02:30",
    "hr": "",
    "ar": "",
    "plays": {
     "mnl": {
-     "dir": "h",
-     "odds": 2.31,
+     "dir": "a",
+     "odds": 2.87,
      "confidence": 50.0,
-     "sameOddsHit": 47.2,
-     "sameOddsN": 89,
-     "pTrue": 44.0,
-     "canon": 11.596,
-     "edge": 5.6,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 33.9,
+     "canon": 6.394,
+     "edge": 3.0,
      "goalLine": null,
      "alts": [
       {
-       "dir": "a",
-       "odds": 1.44,
-       "confidence": 58.0,
-       "sameOddsHit": 52.8,
-       "sameOddsN": 89
+       "dir": "h",
+       "odds": 1.28,
+       "confidence": 56.9,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
-     "dir": "a",
-     "odds": 2.51,
+     "dir": "h",
+     "odds": 3.27,
      "confidence": 50.0,
      "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 48.6,
-     "canon": 22.304,
-     "edge": 10.9,
-     "goalLine": "+6.5",
+     "sameOddsN": 4,
+     "pTrue": 30.6,
+     "canon": 4.695,
+     "edge": 2.1,
+     "goalLine": "-5.5",
      "alts": [
       {
-       "dir": "h",
-       "odds": 1.52,
-       "confidence": 51.4,
+       "dir": "a",
+       "odds": 1.3,
+       "confidence": 69.4,
        "sameOddsHit": null,
-       "sameOddsN": 3
+       "sameOddsN": 4
       }
      ]
     },
     "hilo": {
-     "dir": "l",
-     "odds": 1.7,
-     "confidence": 51.0,
-     "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 51.0,
-     "canon": 2.497,
-     "edge": 1.0,
-     "goalLine": "227.5",
-     "alts": [
-      {
-       "dir": "h",
-       "odds": 1.7,
-       "confidence": 50.0,
-       "sameOddsHit": null,
-       "sameOddsN": 3
-      }
-     ]
-    },
-    "wnm": {
-     "dir": "l6",
-     "odds": 16.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 6.8,
-     "canon": 0.351,
-     "edge": 0.0,
-     "goalLine": null,
-     "alts": [
-      {
-       "dir": "l1",
-       "odds": 4.0,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l2",
-       "odds": 3.9,
-       "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l3",
-       "odds": 6.0,
-       "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l4",
-       "odds": 8.7,
-       "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
-      },
-      {
-       "dir": "l5",
-       "odds": 14.0,
-       "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
-      }
-     ]
-    }
-   },
-   "topPlay": "hilo"
-  },
-  {
-   "id": "2042900",
-   "num": "周五314",
-   "league": "美职篮",
-   "home": "湖人",
-   "away": "国王",
-   "kickoff": "2026-11-21 11:00",
-   "hr": "",
-   "ar": "",
-   "plays": {
-    "mnl": {
-     "dir": "a",
-     "odds": 7.59,
-     "confidence": 76.8,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 76.8,
-     "canon": -45.698,
-     "edge": -23.2,
-     "goalLine": null,
-     "alts": []
-    },
-    "hdc": {
      "dir": "h",
-     "odds": 6.54,
-     "confidence": 50.0,
+     "odds": 1.7,
+     "confidence": 56.6,
      "sameOddsHit": null,
      "sameOddsN": 0,
-     "pTrue": 38.6,
-     "canon": 48.728,
-     "edge": 24.1,
-     "goalLine": "-14.5",
+     "pTrue": 56.6,
+     "canon": 13.759,
+     "edge": 6.6,
+     "goalLine": "185.5",
      "alts": [
       {
-       "dir": "a",
-       "odds": 1.11,
-       "confidence": 61.4,
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 0
       }
      ]
     },
+    "wnm": {
+     "dir": "l5",
+     "odds": 34.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 6.4,
+     "canon": 0.416,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 6.3,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 6.8,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 15.0,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 25.0,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 50.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042957",
+   "num": "周六308",
+   "league": "德国篮球联赛",
+   "home": "特里尔角斗士",
+   "away": "开姆尼茨",
+   "kickoff": "2026-11-22 03:00",
+   "hr": "",
+   "ar": "16",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 5.08,
+     "confidence": 50.0,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 31.8,
+     "canon": 29.219,
+     "edge": 14.4,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.07,
+       "confidence": 70.9,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 3.85,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
+     "pTrue": 49.4,
+     "canon": 50.912,
+     "edge": 25.2,
+     "goalLine": "-10.5",
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.23,
+       "confidence": 50.6,
+       "sameOddsHit": null,
+       "sameOddsN": 4
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 62.5,
+     "sameOddsHit": null,
+     "sameOddsN": 2,
+     "pTrue": 62.5,
+     "canon": 25.624,
+     "edge": 12.5,
+     "goalLine": "182.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 2
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l6",
+     "odds": 90.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 4.3,
+     "canon": 0.518,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 10.0,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 14.0,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 24.0,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 48.0,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 65.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042958",
+   "num": "周六309",
+   "league": "德国篮球联赛",
+   "home": "奥尔登堡",
+   "away": "法兰克福",
+   "kickoff": "2026-11-22 03:00",
+   "hr": "12",
+   "ar": "7",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 1.83,
+     "confidence": 50.0,
+     "sameOddsHit": 46.9,
+     "sameOddsN": 98,
+     "pTrue": 49.4,
+     "canon": 2.19,
+     "edge": 0.9,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.72,
+       "confidence": 51.2,
+       "sameOddsHit": 53.1,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "a",
+     "odds": 1.81,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
+     "pTrue": 52.1,
+     "canon": 1.692,
+     "edge": 0.6,
+     "goalLine": "+1.5",
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.92,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 4
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 64.8,
+     "sameOddsHit": null,
+     "sameOddsN": 1,
+     "pTrue": 67.8,
+     "canon": 36.247,
+     "edge": 17.8,
+     "goalLine": "163.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 1
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l4",
+     "odds": 13.0,
+     "confidence": 50.0,
+     "sameOddsHit": 4.3,
+     "sameOddsN": 46,
+     "pTrue": 10.0,
+     "canon": 0.363,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 4.1,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 4.3,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 7.8,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 22.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 23.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042959",
+   "num": "周六310",
+   "league": "西篮甲",
+   "home": "穆尔西亚天主大学",
+   "away": "萨拉戈萨",
+   "kickoff": "2026-11-22 04:00",
+   "hr": "",
+   "ar": "",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 3.04,
+     "confidence": 50.0,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 33.0,
+     "canon": 7.996,
+     "edge": 3.8,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.25,
+       "confidence": 58.0,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 3.13,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 32.9,
+     "canon": 7.097,
+     "edge": 3.3,
+     "goalLine": "-6.5",
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.32,
+       "confidence": 67.1,
+       "sameOddsHit": null,
+       "sameOddsN": 3
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 59.8,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 59.8,
+     "canon": 20.194,
+     "edge": 9.8,
+     "goalLine": "180.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l5",
+     "odds": 35.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 6.6,
+     "canon": 0.424,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 6.7,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 7.3,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 16.0,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 26.0,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 52.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042960",
+   "num": "周六311",
+   "league": "美职篮",
+   "home": "尼克斯",
+   "away": "开拓者",
+   "kickoff": "2026-11-22 08:30",
+   "hr": "东6",
+   "ar": "西6",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 2.68,
+     "confidence": 50.0,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 39.7,
+     "canon": 13.799,
+     "edge": 6.7,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.32,
+       "confidence": 60.1,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 2.75,
+     "confidence": 50.0,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
+     "pTrue": 47.9,
+     "canon": 26.905,
+     "edge": 13.2,
+     "goalLine": "-5.5",
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.46,
+       "confidence": 52.1,
+       "sameOddsHit": null,
+       "sameOddsN": 4
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 54.8,
+     "sameOddsHit": null,
+     "sameOddsN": 2,
+     "pTrue": 54.8,
+     "canon": 10.139,
+     "edge": 4.8,
+     "goalLine": "218.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 2
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l5",
+     "odds": 40.0,
+     "confidence": 50.0,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 5.1,
+     "canon": 0.408,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 5.9,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 6.2,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 14.0,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 22.0,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 46.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
+  },
+  {
+   "id": "2042961",
+   "num": "周六312",
+   "league": "美职篮",
+   "home": "独行侠",
+   "away": "快船",
+   "kickoff": "2026-11-22 09:00",
+   "hr": "西9",
+   "ar": "西12",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 2.68,
+     "confidence": 51.8,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 41.9,
+     "canon": 18.221,
+     "edge": 8.9,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.32,
+       "confidence": 62.3,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hdc": {
+     "dir": "h",
+     "odds": 2.77,
+     "confidence": 54.9,
+     "sameOddsHit": null,
+     "sameOddsN": 4,
+     "pTrue": 53.1,
+     "canon": 37.754,
+     "edge": 18.6,
+     "goalLine": "-5.5",
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.46,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 4
+      }
+     ]
+    },
     "hilo": {
      "dir": "l",
      "odds": 1.7,
-     "confidence": 56.9,
+     "confidence": 52.5,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 56.9,
-     "canon": 14.362,
-     "edge": 6.9,
-     "goalLine": "230.5",
+     "pTrue": 50.7,
+     "canon": 1.912,
+     "edge": 0.7,
+     "goalLine": "228.5",
      "alts": [
       {
        "dir": "h",
@@ -1521,49 +1408,142 @@
     },
     "wnm": {
      "dir": "l5",
-     "odds": 90.0,
-     "confidence": 50.0,
-     "sameOddsHit": 7.1,
-     "sameOddsN": 42,
-     "pTrue": 6.4,
-     "canon": 0.631,
+     "odds": 40.0,
+     "confidence": 51.8,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 5.1,
+     "canon": 0.426,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 18.0,
+       "odds": 5.9,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
-       "odds": 20.0,
+       "odds": 6.2,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l3",
-       "odds": 35.0,
+       "odds": 14.0,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
       },
       {
        "dir": "l4",
-       "odds": 52.0,
+       "odds": 22.0,
        "confidence": 50.0,
-       "sameOddsHit": 4.8,
-       "sameOddsN": 42
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l6",
-       "odds": 100.0,
+       "odds": 46.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hdc"
+  },
+  {
+   "id": "2042962",
+   "num": "周六313",
+   "league": "美职篮",
+   "home": "马刺",
+   "away": "鹈鹕",
+   "kickoff": "2026-11-22 09:00",
+   "hr": "西2",
+   "ar": "西13",
+   "plays": {
+    "mnl": {
+     "dir": "a",
+     "odds": 9.7,
+     "confidence": 82.9,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 76.3,
+     "canon": -46.624,
+     "edge": -23.7,
+     "goalLine": null,
+     "alts": []
+    },
+    "hilo": {
+     "dir": "l",
+     "odds": 1.7,
+     "confidence": 61.8,
+     "sameOddsHit": null,
+     "sameOddsN": 3,
+     "pTrue": 55.2,
+     "canon": 11.01,
+     "edge": 5.2,
+     "goalLine": "227.5",
+     "alts": [
+      {
+       "dir": "h",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 3
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l6",
+     "odds": 160.0,
+     "confidence": 56.6,
+     "sameOddsHit": 6.5,
+     "sameOddsN": 46,
+     "pTrue": 4.6,
+     "canon": 0.793,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l1",
+       "odds": 20.0,
+       "confidence": 50.0,
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l2",
+       "odds": 26.0,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 52.0,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 65.0,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 140.0,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
@@ -1571,49 +1551,49 @@
    "topPlay": "mnl"
   },
   {
-   "id": "2042901",
-   "num": "周五315",
+   "id": "2042963",
+   "num": "周六314",
    "league": "美职篮",
-   "home": "掘金",
-   "away": "火箭",
-   "kickoff": "2026-11-21 11:00",
-   "hr": "",
-   "ar": "",
+   "home": "森林狼",
+   "away": "灰熊",
+   "kickoff": "2026-11-22 09:00",
+   "hr": "西5",
+   "ar": "西4",
    "plays": {
     "mnl": {
      "dir": "a",
-     "odds": 1.82,
-     "confidence": 51.7,
-     "sameOddsHit": 52.8,
-     "sameOddsN": 89,
-     "pTrue": 51.7,
-     "canon": 6.209,
-     "edge": 2.9,
+     "odds": 2.67,
+     "confidence": 50.0,
+     "sameOddsHit": 53.1,
+     "sameOddsN": 98,
+     "pTrue": 46.9,
+     "canon": 27.805,
+     "edge": 13.7,
      "goalLine": null,
      "alts": [
       {
        "dir": "h",
-       "odds": 1.73,
-       "confidence": 53.2,
-       "sameOddsHit": 47.2,
-       "sameOddsN": 89
+       "odds": 1.33,
+       "confidence": 67.0,
+       "sameOddsHit": 46.9,
+       "sameOddsN": 98
       }
      ]
     },
     "hdc": {
      "dir": "h",
-     "odds": 2.0,
-     "confidence": 57.3,
+     "odds": 2.83,
+     "confidence": 57.9,
      "sameOddsHit": null,
      "sameOddsN": 4,
-     "pTrue": 57.3,
-     "canon": 20.774,
-     "edge": 10.1,
-     "goalLine": "-1.5",
+     "pTrue": 58.5,
+     "canon": 49.785,
+     "edge": 24.6,
+     "goalLine": "-5.5",
      "alts": [
       {
        "dir": "a",
-       "odds": 1.79,
+       "odds": 1.45,
        "confidence": 50.0,
        "sameOddsHit": null,
        "sameOddsN": 4
@@ -1623,73 +1603,174 @@
     "hilo": {
      "dir": "h",
      "odds": 1.7,
-     "confidence": 50.3,
+     "confidence": 53.4,
      "sameOddsHit": null,
-     "sameOddsN": 3,
-     "pTrue": 50.3,
-     "canon": 1.09,
-     "edge": 0.3,
-     "goalLine": "227.5",
+     "sameOddsN": 4,
+     "pTrue": 54.0,
+     "canon": 8.525,
+     "edge": 4.0,
+     "goalLine": "228.5",
      "alts": [
       {
        "dir": "l",
        "odds": 1.7,
        "confidence": 50.0,
        "sameOddsHit": null,
-       "sameOddsN": 3
+       "sameOddsN": 4
       }
      ]
     },
     "wnm": {
      "dir": "l4",
-     "odds": 12.5,
+     "odds": 21.0,
      "confidence": 50.0,
-     "sameOddsHit": 4.8,
-     "sameOddsN": 42,
-     "pTrue": 11.0,
-     "canon": 0.368,
+     "sameOddsHit": 4.3,
+     "sameOddsN": 46,
+     "pTrue": 9.6,
+     "canon": 0.406,
      "edge": 0.0,
      "goalLine": null,
      "alts": [
       {
        "dir": "l1",
-       "odds": 4.4,
+       "odds": 6.3,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 28.3,
+       "sameOddsN": 46
       },
       {
        "dir": "l2",
-       "odds": 4.7,
+       "odds": 6.5,
        "confidence": 50.0,
-       "sameOddsHit": 23.8,
-       "sameOddsN": 42
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
       },
       {
        "dir": "l3",
-       "odds": 8.6,
+       "odds": 15.0,
        "confidence": 50.0,
-       "sameOddsHit": 33.3,
-       "sameOddsN": 42
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
       },
       {
        "dir": "l5",
-       "odds": 21.0,
+       "odds": 28.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       },
       {
        "dir": "l6",
-       "odds": 22.0,
+       "odds": 30.0,
        "confidence": 50.0,
-       "sameOddsHit": 7.1,
-       "sameOddsN": 42
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
       }
      ]
     }
    },
    "topPlay": "hdc"
+  },
+  {
+   "id": "2042964",
+   "num": "周六315",
+   "league": "美职篮",
+   "home": "国王",
+   "away": "凯尔特人",
+   "kickoff": "2026-11-22 11:00",
+   "hr": "西15",
+   "ar": "东2",
+   "plays": {
+    "mnl": {
+     "dir": "h",
+     "odds": 6.67,
+     "confidence": 50.0,
+     "sameOddsHit": 46.9,
+     "sameOddsN": 98,
+     "pTrue": 33.6,
+     "canon": 41.029,
+     "edge": 20.3,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "a",
+       "odds": 1.02,
+       "confidence": 77.7,
+       "sameOddsHit": 53.1,
+       "sameOddsN": 98
+      }
+     ]
+    },
+    "hilo": {
+     "dir": "h",
+     "odds": 1.7,
+     "confidence": 52.3,
+     "sameOddsHit": null,
+     "sameOddsN": 0,
+     "pTrue": 60.1,
+     "canon": 20.72,
+     "edge": 10.1,
+     "goalLine": "217.5",
+     "alts": [
+      {
+       "dir": "l",
+       "odds": 1.7,
+       "confidence": 50.0,
+       "sameOddsHit": null,
+       "sameOddsN": 0
+      }
+     ]
+    },
+    "wnm": {
+     "dir": "l1",
+     "odds": 7.6,
+     "confidence": 50.0,
+     "sameOddsHit": 28.3,
+     "sameOddsN": 46,
+     "pTrue": 10.2,
+     "canon": 0.332,
+     "edge": 0.0,
+     "goalLine": null,
+     "alts": [
+      {
+       "dir": "l2",
+       "odds": 4.1,
+       "confidence": 50.0,
+       "sameOddsHit": 23.9,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l3",
+       "odds": 3.4,
+       "confidence": 50.0,
+       "sameOddsHit": 30.4,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l4",
+       "odds": 4.7,
+       "confidence": 50.0,
+       "sameOddsHit": 4.3,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l5",
+       "odds": 5.7,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      },
+      {
+       "dir": "l6",
+       "odds": 4.2,
+       "confidence": 50.0,
+       "sameOddsHit": 6.5,
+       "sameOddsN": 46
+      }
+     ]
+    }
+   },
+   "topPlay": "hilo"
   }
  ]
 }
